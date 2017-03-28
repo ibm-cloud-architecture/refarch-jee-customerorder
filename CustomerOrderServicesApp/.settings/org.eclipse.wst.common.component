@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="CustomerOrderServicesApp">
+        <wb-resource deploy-path="/" source-path="/"/>
+        <dependent-module deploy-path="/" handle="module:/resource/CustomerOrderServices/CustomerOrderServices">
+            <dependent-object>Module_1226007978250</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/resource/CustomerOrderServicesTest/CustomerOrderServicesTest">
+            <dependent-object>Module_1226008125058</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="CustomerOrderServicesWeb.war" deploy-path="/" handle="module:/resource/CustomerOrderServicesWeb/CustomerOrderServicesWeb">
+            <dependent-object>Module_1268840240126</dependent-object>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jackson-all-1.7.1.jar" deploy-path="/lib" handle="module:/classpath/lib/lib/jackson-all-1.7.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

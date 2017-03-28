@@ -1,0 +1,9 @@
+#Tue Jan 25 19:05:55 EST 2011
+dojo-root=/CustomerOrderServicesWeb/WebContent/dojo
+dojo-bootstrap-js=dojo/dojo.js
+dojo-css=dojo/resources/dojo.css
+eclipse.preferences.version=1
+dojo-type-attribute-name=dojotype
+dojo-dijit-css=dijit/themes/dijit.css
+dojo-source-metadata-root=/CustomerOrderServicesWeb/WebContent/dojo
+dojo-theme-css=dijit/themes/tundra/tundra.css

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--xtools2_universal_type_manager-->
+<?com.ibm.xtools.emf.core.signature <signature id="com.ibm.xtools.mmi.ui.signatures.diagram" version="7.0.0"><feature description="" name="Rational Modeling Platform (com.ibm.xtools.rmp)" url="" version="7.0.0"/></signature>?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmlns:umlnotation="http://www.ibm.com/xtools/1.5.2/Umlnotation" xmi:id="_kp78QDaEEd-I3NZztgHBUA" type="Class" name="model.dnx">
+  <eAnnotations xmi:id="_kqLz4DaEEd-I3NZztgHBUA" source="com.ibm.xtools.common.ui.reduction.editingCapabilities">
+    <details xmi:id="_kqLz4TaEEd-I3NZztgHBUA" key="com.ibm.xtools.activities.EJB3VisualizerActivity" value="1"/>
+    <details xmi:id="_kqLz4jaEEd-I3NZztgHBUA" key="com.ibm.xtools.viz.java.webservice.capability" value="1"/>
+    <details xmi:id="_kqLz4zaEEd-I3NZztgHBUA" key="com.ibm.xtools.activities.EJB3JPAVisualizerActivity" value="1"/>
+    <details xmi:id="_kqLz5DaEEd-I3NZztgHBUA" key="com.ibm.xtools.activities.javaVisualizerActivity" value="1"/>
+  </eAnnotations>
+  <children xmi:id="_saUIUDaEEd-I3NZztgHBUA">
+    <children xmi:id="_scqRsDaEEd-I3NZztgHBUA" type="ImageCompartment">
+      <layoutConstraint xmi:type="notation:Size" xmi:id="_scqRsTaEEd-I3NZztgHBUA" width="530" height="530"/>
+    </children>
+    <children xmi:id="_sc6wYDaEEd-I3NZztgHBUA" type="Stereotype"/>
+    <children xmi:id="_sc7-gDaEEd-I3NZztgHBUA" type="Kind"/>
+    <children xmi:id="_sc8lkDaEEd-I3NZztgHBUA" type="Name"/>
+    <children xmi:id="_sc8lkTaEEd-I3NZztgHBUA" type="Parent"/>
+    <children xmi:id="_sc9zsDaEEd-I3NZztgHBUA" type="AttributeCompartment">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sc9zsTaEEd-I3NZztgHBUA"/>
+    </children>
+    <children xmi:id="_sc-awDaEEd-I3NZztgHBUA" type="OperationCompartment">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sc-awTaEEd-I3NZztgHBUA"/>
+    </children>
+    <children xmi:id="_sc_B0DaEEd-I3NZztgHBUA" visible="false" type="SignalCompartment">
+      <styles xmi:type="umlnotation:UMLListCompartmentStyle" xmi:id="_sc_B0TaEEd-I3NZztgHBUA"/>
+    </children>
+    <styles xmi:type="umlnotation:UMLClassifierStyle" xmi:id="_saUIUTaEEd-I3NZztgHBUA" fontName="Sans" showStereotype="Label" useClassifierShape="true"/>
+    <element xmi:type="uml:Interface" href="mmi:///#jsrctype%5Ename=CustomerOrderServices%5Bjcu%5Ename=CustomerOrderServices.java%5Bjpack%5Ename=org.pwte.example.service%5Bjsrcroot%5Esrcfolder=ejbModule%5Bproject%5Eid=CustomerOrderServices%5D%5D%5D%5D$uml.Interface"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_saUIUjaEEd-I3NZztgHBUA" x="3306" y="4777"/>
+  </children>
+  <styles xmi:type="umlnotation:UMLDiagramStyle" xmi:id="_kqLM0DaEEd-I3NZztgHBUA"/>
+  <element xsi:nil="true"/>
+</notation:Diagram>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project name="Movie and Electronic Depot Build" default="all"
+	basedir=".">
+	<target name="init">
+		<property environment="env" />
+		<property name="workspace.home" value="/Web2JavaEEBootcamp/DojoLab6/workspace" />
+		<property name="web.home" value="${workspace.home}/CustomerOrderServicesWeb/WebContent" />
+		<property name="out.home" value="${web.home}" />
+		<property name="dojo.src.dir" value="${web.home}/dojo" />
+		<property name="builtDir" value="${web.home}/dojo_built" />
+		<property name="releaseDir" value="${out.home}/export/dojo_min" />
+		<property name="internStrings" value="true" />
+		<property name="profileFile" value="${basedir}/depot.profile.js" />
+		<property name="version" value="" />
+		<property name="releaseName" value="DepotBuilt" />
+		<property name="loader" value="default" />
+		<property name="copyTests" value="false" />
+		<property name="action" value="release" />
+		<property name="optimize" value="shrinksafe" />
+
+	</target>
+	<echo message="${basedir}" />
+	<echo message="${ant.version}" />
+	
+	<!-- indentify the OS to run the correct bat or shell script  -->
+	<target name="chooseOS">
+		<echo message="${os.name}" />
+		<antcall target="FrameworkDojoBuild-${os.name}"></antcall>
+	</target>
+	
+	<target name="FrameworkDojoBuild-Windows Vista">
+		<echo message="${os.name}" />
+		<antcall target="FrameworkDojoBuild-Windows XP"></antcall>
+	</target>
+	
+	<target name="FrameworkDojoBuild-Windows XP">
+		<echo message="${os.name}" />
+		<exec dir="${dojo.src.dir}/util/buildscripts/"
+			executable="${dojo.src.dir}/util/buildscripts/build.bat"
+			os="${os.name}" failonerror="yes">
+			<!-- arguments that are passed from the commandline are used here else the default value from the env task is used -->
+			<arg
+				line=" optimize=${optimize} layerOptimize=${optimize} action=${action} releaseDir=${builtDir}/ internStrings=${internStrings} profileFile=${profileFile} cssOptimize=comments" />
+		</exec>
+	</target>
+	
+	<target name="FrameworkDojoBuild-Mac OS X">
+		<echo message="${os.name}" />
+		<antcall target="FrameworkDojoBuild-Linux"></antcall>
+	</target>
+
+	<target name="FrameworkDojoBuild-Linux">
+		<echo message="${os.name}" />
+		<exec dir="${dojo.src.dir}/util/buildscripts"
+			executable="${dojo.src.dir}/util/buildscripts/build.sh" os="${os.name}"
+			failonerror="yes">
+			<!-- arguments that are passed from the commandline are used here else the default value from the env task is used -->
+			<arg
+				line=" optimize=${optimize} layerOptimize=${optimize} action=${action} releaseDir=${builtDir}/ internStrings=${internStrings} profileFile=${profileFile} cssOptimize=comments" />
+		</exec>
+	</target>
+	<target name="all" depends="init,chooseOS" />
+</project>

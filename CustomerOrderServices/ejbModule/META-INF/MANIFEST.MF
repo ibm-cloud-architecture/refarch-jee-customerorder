@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: jackson-core-asl-1.5.0.jar 
+ jackson-jaxrs-1.5.0.jar 
+ jackson-mapper-asl-1.5.0.jar
+
