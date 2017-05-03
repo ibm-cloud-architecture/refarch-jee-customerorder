@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,14 +42,18 @@ import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
 
 @Path("/Customer")
-@Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class CustomerOrderResource {
-	@EJB CustomerOrderServices customerOrderServices;
+	CustomerOrderServices customerOrderServices = null;
 	
 	public CustomerOrderResource() 
 	{
-		
+		try {
+			InitialContext ctx = new InitialContext();
+			customerOrderServices = (CustomerOrderServices) ctx.lookup("ejblocal:org.pwte.example.service.CustomerOrderServices");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} 
 	}
 
 	@GET
@@ -65,11 +69,13 @@ public class CustomerOrderResource {
 			}
 			return Response.ok(customer).build();
 		} catch (CustomerDoesNotExistException e) {
+			e.printStackTrace(System.out);
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		} catch (GeneralPersistenceException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace(System.out);
 			throw new WebApplicationException(e);
 		}
+		
 	}
 	
 	@PUT
