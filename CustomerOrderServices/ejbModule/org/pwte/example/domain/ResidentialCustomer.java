@@ -2,10 +2,10 @@ package org.pwte.example.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Basic;
 
 
 @Entity
@@ -22,6 +22,7 @@ public class ResidentialCustomer extends AbstractCustomer implements
 	
 	
 	@Column(name="RESIDENTIAL_FREQUENT_CUSTOMER")
+	@Basic
 	protected boolean frequentCustomer;
 
 

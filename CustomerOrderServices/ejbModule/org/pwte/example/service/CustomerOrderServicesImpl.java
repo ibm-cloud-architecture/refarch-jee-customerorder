@@ -10,19 +10,14 @@ import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
-
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.pwte.example.domain.AbstractCustomer;
 import org.pwte.example.domain.Address;
 import org.pwte.example.domain.BusinessCustomer;
 import org.pwte.example.domain.LineItem;
-import org.pwte.example.domain.LineItemId;
 import org.pwte.example.domain.Order;
 import org.pwte.example.domain.Product;
 import org.pwte.example.domain.ResidentialCustomer;
@@ -34,8 +29,6 @@ import org.pwte.example.exception.OrderAlreadyOpenException;
 import org.pwte.example.exception.OrderModifiedException;
 import org.pwte.example.exception.OrderNotOpenException;
 import org.pwte.example.exception.ProductDoesNotExistException;
-
-
 
 @Stateless
 @RolesAllowed(value="SecureShopper")
