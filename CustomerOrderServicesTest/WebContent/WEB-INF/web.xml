@@ -56,4 +56,40 @@
 	<mime-mapping>
 		<extension>json</extension>
 		<mime-type>application/json</mime-type>
-	</mime-mapping></web-app>
+	</mime-mapping>
+	<env-entry>
+		<env-entry-name>DBUNIT_DRIVER_CLASS</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>com.ibm.db2.jcc.DB2Driver</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>DBUNIT_CONNECTION_URL</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>jdbc:db2://localhost:50000/ORDERDB</env-entry-value>
+	</env-entry>
+		<env-entry>
+		<env-entry-name>DBUNIT_SCHEMA</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>DB2INST1</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>DBUNIT_USERNAME</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>DB2INST1</env-entry-value>
+	</env-entry>
+		<env-entry>
+		<env-entry-name>DBUNIT_PASSWORD</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>Object00</env-entry-value>
+	</env-entry>
+		<env-entry>
+			<env-entry-name>CUSTOMER_ORDER_SERVICES_WEB_ENDPOINT</env-entry-name>
+			<env-entry-type>java.lang.String</env-entry-type>
+			<env-entry-value>https://localhost:9443/CustomerOrderServicesWeb/</env-entry-value>
+		</env-entry>
+		<env-entry>
+			<env-entry-name>CUSTOMER_ORDER_SERVICES_TEST_ENDPOINT</env-entry-name>
+			<env-entry-type>java.lang.String</env-entry-type>
+			<env-entry-value>http://localhost:9080/CustomerOrderServicesTest/</env-entry-value>
+		</env-entry>
+</web-app>
