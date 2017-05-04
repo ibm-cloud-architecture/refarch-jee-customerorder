@@ -23,6 +23,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @IdClass(LineItemId.class)
 public class LineItem implements Serializable {
 
+	private static final long serialVersionUID = -447939565773238603L;
+
 	@Id
 	@Column(name = "ORDER_ID")
 	private int orderId;

@@ -20,6 +20,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @NamedQuery(name="top.level.category",query="select c from Category c where c.parent IS NULL")
 public class Category implements Serializable {
 	
+	private static final long serialVersionUID = -2872694133550658771L;
+
 	@Id
 	@Column(name="CAT_ID")
 	private int categoryID;

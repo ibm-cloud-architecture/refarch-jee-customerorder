@@ -18,7 +18,7 @@ public class InvalidQuantityException extends Exception {
 	 * 
 	 */
 	public InvalidQuantityException() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class InvalidQuantityException extends Exception {
 	 */
 	public InvalidQuantityException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class InvalidQuantityException extends Exception {
 	 */
 	public InvalidQuantityException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class InvalidQuantityException extends Exception {
 	 */
 	public InvalidQuantityException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 }

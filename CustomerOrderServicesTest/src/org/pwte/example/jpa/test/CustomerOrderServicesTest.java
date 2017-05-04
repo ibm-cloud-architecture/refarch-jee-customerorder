@@ -179,30 +179,22 @@ public class CustomerOrderServicesTest extends DBTestCase{
 			
 			*/
 			
-			
-			
 		} catch (CustomerDoesNotExistException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("Customer Does Not Exist");
 		} catch (GeneralPersistenceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("Persistence Error");
 		}  catch (OrderNotOpenException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("Order Not Open");
 		} catch (ProductDoesNotExistException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("No Such Product");
 		} catch (InvalidQuantityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("InvalidQuantity");
 		} catch (NoLineItemsException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("No Line Item");
 		}
@@ -224,7 +216,6 @@ public class CustomerOrderServicesTest extends DBTestCase{
 			customerOrderServices.openOrder();
 			}
 			catch (OrderAlreadyOpenException e) {
-				// TODO Auto-generated catch block
 				assertTrue("This is the Correct Exception",true);
 			}
 			customerOrderServices.addLineItem(, 1, 1);
@@ -238,19 +229,15 @@ public class CustomerOrderServicesTest extends DBTestCase{
 			fail("General Persistence Error");
 		} 
 		catch (OrderNotOpenException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("Order Not Open");
 		} catch (ProductDoesNotExistException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("No Such Product");
 		} catch (InvalidQuantityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("InvalidQuantity");
 		} catch (NoLineItemsException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			fail("No Line Item");
 		}
@@ -269,7 +256,7 @@ public class CustomerOrderServicesTest extends DBTestCase{
 			AbstractCustomer customer = customerOrderServices.loadCustomer();
 			Set<LineItem> lineItems = customer.getOpenOrder().getLineitems();
 			assertEquals(order.getLineitems().size(),lineItems.size());
-			LineItem li = ((LineItem)(lineItems.iterator().next()));
+			//LineItem li = ((LineItem)(lineItems.iterator().next()));
 			/*
 			assertEquals(li.getProductId(),lineItem.getProductId());
 			assertEquals(li.getOrderId(),lineItem.getOrderId());
@@ -332,14 +319,12 @@ public class CustomerOrderServicesTest extends DBTestCase{
 				System.out.println(item.getAmount() + "  -  " + item.getProduct().getName());
 				total = total.add(item.getAmount()).setScale(2,BigDecimal.ROUND_HALF_UP);
 			}
-
 			
 			assertEquals(total, order.getTotal());
 			customerOrderServices.submit(order.getVersion());
 			System.out.println("DONE TEST LINEITEM");
 			
 		} catch (CustomerDoesNotExistException e) {
-			// TODO Auto-generated catch block
 			fail("Customer does not exist.");
 		} 
 		catch (GeneralPersistenceException e) {
@@ -360,7 +345,7 @@ public class CustomerOrderServicesTest extends DBTestCase{
 	}
 
 	public void testSubmit() {
-		Order openOrder;
+		//Order openOrder;
 		try {
 			try {
 				customerOrderServices.submit(0);
@@ -406,7 +391,6 @@ public class CustomerOrderServicesTest extends DBTestCase{
 			fail("No Line Items");
 		}
 		catch (OrderModifiedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		

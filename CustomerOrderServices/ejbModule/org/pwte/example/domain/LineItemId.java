@@ -6,22 +6,29 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class LineItemId implements Serializable {
-	
+
+	private static final long serialVersionUID = -2981956753791571664L;
+
 	protected int orderId;
+
 	protected int productId;
+
 	public int getOrderId() {
 		return orderId;
 	}
+
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
+
 	public int getProductId() {
 		return productId;
 	}
+
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
@@ -46,6 +53,5 @@ public class LineItemId implements Serializable {
 			return false;
 		return true;
 	}
-
 
 }

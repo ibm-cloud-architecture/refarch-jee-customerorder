@@ -10,8 +10,10 @@ import javax.persistence.Column;
 @DiscriminatorValue("BUSINESS")
 public class BusinessCustomer extends AbstractCustomer implements Serializable {
 
+	private static final long serialVersionUID = 1713153640263735000L;
+
 	public BusinessCustomer() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	@Column(name="BUSINESS_VOLUME_DISCOUNT")

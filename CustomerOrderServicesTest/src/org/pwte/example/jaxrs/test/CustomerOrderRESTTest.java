@@ -171,6 +171,7 @@ public class CustomerOrderRESTTest extends TestCase {
 		long newQuan = ((Long)li2.get("quantity")) +((Long)li3.get("quantity"))  ;
 		
 		JSONArray lis = (JSONArray)openOrder.get("lineitems");
+		@SuppressWarnings("unchecked")
 		ListIterator<JSONObject> liJSON = lis.listIterator();
 		while(liJSON.hasNext())
 		{

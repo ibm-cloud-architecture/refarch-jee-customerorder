@@ -18,7 +18,7 @@ public class NoLineItemsException extends Exception {
 	 * 
 	 */
 	public NoLineItemsException() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class NoLineItemsException extends Exception {
 	 */
 	public NoLineItemsException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class NoLineItemsException extends Exception {
 	 */
 	public NoLineItemsException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class NoLineItemsException extends Exception {
 	 */
 	public NoLineItemsException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 }

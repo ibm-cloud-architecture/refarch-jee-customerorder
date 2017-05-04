@@ -291,7 +291,6 @@ public class CustomerOrderResource {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 		catch (GeneralPersistenceException e) {
-			// TODO Auto-generated catch block
 			throw new WebApplicationException(e);
 		}
 	}

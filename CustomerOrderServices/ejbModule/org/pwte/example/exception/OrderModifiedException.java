@@ -2,23 +2,22 @@ package org.pwte.example.exception;
 
 public class OrderModifiedException extends Exception {
 
+	private static final long serialVersionUID = -7003204590830712051L;
+
 	public OrderModifiedException() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public OrderModifiedException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	public OrderModifiedException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	public OrderModifiedException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -18,7 +18,7 @@ public class CustomerDoesNotExistException extends Exception {
 	 * 
 	 */
 	public CustomerDoesNotExistException() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class CustomerDoesNotExistException extends Exception {
 	 */
 	public CustomerDoesNotExistException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class CustomerDoesNotExistException extends Exception {
 	 */
 	public CustomerDoesNotExistException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class CustomerDoesNotExistException extends Exception {
 	 */
 	public CustomerDoesNotExistException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
+
 	}
 
 }

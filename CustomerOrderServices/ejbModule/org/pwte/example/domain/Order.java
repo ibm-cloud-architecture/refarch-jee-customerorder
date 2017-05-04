@@ -18,13 +18,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.apache.openjpa.persistence.jdbc.Columns;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name="ORDERS")
 public class Order implements Serializable {
 	
+	private static final long serialVersionUID = -7488064826451093257L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

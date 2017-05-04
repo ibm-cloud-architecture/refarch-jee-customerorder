@@ -12,7 +12,6 @@ import org.pwte.example.exception.CustomerDoesNotExistException;
 import org.pwte.example.exception.GeneralPersistenceException;
 import org.pwte.example.exception.InvalidQuantityException;
 import org.pwte.example.exception.NoLineItemsException;
-import org.pwte.example.exception.OrderAlreadyOpenException;
 import org.pwte.example.exception.OrderModifiedException;
 import org.pwte.example.exception.OrderNotOpenException;
 import org.pwte.example.exception.ProductDoesNotExistException;
