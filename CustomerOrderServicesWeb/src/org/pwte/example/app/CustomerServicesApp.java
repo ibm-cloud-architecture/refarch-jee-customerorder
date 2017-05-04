@@ -19,6 +19,8 @@ public class CustomerServicesApp extends Application {
 		classes.add(CategoryResource.class);
 		classes.add(CustomerOrderResource.class);
 		classes.add(ProductResource.class);
+		
+		classes.add(org.codehaus.jackson.jaxrs.JacksonJsonProvider.class);
 
 		return classes;
 
