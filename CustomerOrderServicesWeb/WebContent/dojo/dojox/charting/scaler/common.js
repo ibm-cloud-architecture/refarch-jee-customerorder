@@ -1,38 +1,23 @@
-define(["dojo/_base/lang"], function(lang){
+dojo.provide("dojox.charting.scaler.common");
 
+(function(){
 	var eq = function(/*Number*/ a, /*Number*/ b){
-		// summary:
-		//		compare two FP numbers for equality
+		// summary: compare two FP numbers for equality
 		return Math.abs(a - b) <= 1e-6 * (Math.abs(a) + Math.abs(b));	// Boolean
 	};
 	
-	var common = lang.getObject("dojox.charting.scaler.common", true);
-	
-	var testedModules = {};
-
-	return lang.mixin(common, {
-		doIfLoaded: function(moduleName, ifloaded, ifnotloaded){
-			if(testedModules[moduleName] == undefined){
-				try{
-					testedModules[moduleName] = require(moduleName);
-				}catch(e){
-					testedModules[moduleName] = null;
-				}
+	dojo.mixin(dojox.charting.scaler.common, {
+		findString: function(/*String*/ val, /*Array*/ text){
+			val = val.toLowerCase();
+			for(var i = 0; i < text.length; ++i){
+				if(val == text[i]){ return true; }
 			}
-			if(testedModules[moduleName]){
-				return ifloaded(testedModules[moduleName]);
-			}else{
-				return ifnotloaded();
-			}
+			return false;
 		},
 		getNumericLabel: function(/*Number*/ number, /*Number*/ precision, /*Object*/ kwArgs){
-			var def = "";
-			common.doIfLoaded("dojo/number", function(numberLib){
-				def = (kwArgs.fixed ? numberLib.format(number, {places : precision < 0 ? -precision : 0}) :
-					numberLib.format(number)) || "";
-			}, function(){
-				def = kwArgs.fixed ? number.toFixed(precision < 0 ? -precision : 0) : number.toString();
-			});
+			var def = kwArgs.fixed ? 
+						number.toFixed(precision < 0 ? -precision : 0) : 
+						number.toString();
 			if(kwArgs.labelFunc){
 				var r = kwArgs.labelFunc(def, number, precision);
 				if(r){ return r; }
@@ -40,7 +25,6 @@ define(["dojo/_base/lang"], function(lang){
 			}
 			if(kwArgs.labels){
 				// classic binary search
-				// TODO: working only if the array is sorted per value should be better documented or sorted automatically
 				var l = kwArgs.labels, lo = 0, hi = l.length;
 				while(lo < hi){
 					var mid = Math.floor((lo + hi) / 2), val = l[mid].value;
@@ -67,4 +51,4 @@ define(["dojo/_base/lang"], function(lang){
 			return def;
 		}
 	});
-});
+})();

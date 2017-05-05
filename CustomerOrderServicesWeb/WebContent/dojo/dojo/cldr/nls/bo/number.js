@@ -1,9 +1,7 @@
-define(
-//begin v1.x content
-{
-	"group": ",",
-	"nan": "ཨང་མེན་",
-	"percentFormat": "#,##0%"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'group':",",
+	'nan':"NaN",
+	'nan':"ཨང་མེན་",
+	'percentFormat':"#,##0%"
+})

@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "鏈結內容",
 	insertImageTitle: "影像內容",
@@ -11,4 +10,4 @@ define(
 	topWindow: "最上面的視窗",
 	newWindow: "新視窗"
 })
-);
+

@@ -1,11 +1,15 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
+dojo.provide("dojox.charting.themes.Tom");
 
-	// created by Tom Trenka
-	
-	var g = Theme.generateGradient,
+dojo.require("dojox.gfx.gradutils");
+dojo.require("dojox.charting.Theme");
+
+// created by Tom Trenka
+
+(function(){
+	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
 	
-	themes.Tom = new Theme({
+	themes.Tom = new dc.Theme({
 		chart: {
 			fill:      "#181818",
 			stroke:    {color: "#181818"},
@@ -23,7 +27,7 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 				color:     "#888c76",
 				position:  "center",
 				font:      "normal normal normal 7pt Helvetica, Arial, sans-serif",	// labels on axis
-				fontColor: "#888c76"	// color of labels
+				fontColor: "#888c76"								// color of labels
 			}
 		},
 		series: {
@@ -40,17 +44,17 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 		},
 		seriesThemes: [
 			{fill: g(defaultFill, "#bf9e0a", "#ecc20c")},
-			{fill: g(defaultFill, "#73b086", "#95e5af")},
-			{fill: g(defaultFill, "#c7212d", "#ed2835")},
-			{fill: g(defaultFill, "#87ab41", "#b6e557")},
-			{fill: g(defaultFill, "#b86c25", "#d37d2a")}
+			{fill: g(defaultFill, "#73b086", "#95e5af")},	
+			{fill: g(defaultFill, "#c7212d", "#ed2835")},	
+			{fill: g(defaultFill, "#87ab41", "#b6e557")},	
+			{fill: g(defaultFill, "#b86c25", "#d37d2a")}	
 		],
 		markerThemes: [
-			{fill: "#bf9e0a", stroke: {color: "#ecc20c"}},
+			{fill: "#bf9e0a", stroke: {color: "#ecc20c"}},	
 			{fill: "#73b086", stroke: {color: "#95e5af"}},
-			{fill: "#c7212d", stroke: {color: "#ed2835"}},
-			{fill: "#87ab41", stroke: {color: "#b6e557"}},
-			{fill: "#b86c25", stroke: {color: "#d37d2a"}}
+			{fill: "#c7212d", stroke: {color: "#ed2835"}},	
+			{fill: "#87ab41", stroke: {color: "#b6e557"}},	
+			{fill: "#b86c25", stroke: {color: "#d37d2a"}}	
 		]
 	});
 	
@@ -76,10 +80,8 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 	themes.Tom.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
+			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-	
-	return themes.Tom;
-});
+})();

@@ -1,11 +1,9 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"../gfx"
-], function(dojo){
-	dojo.getObject("sketch", true, dojox);
+dojo.provide("dojox.sketch.Anchor");
+dojo.require("dojox.gfx");
 
-	dojox.sketch.Anchor=function(an, id, isControl){
+(function(){
+	var ta=dojox.sketch;
+	ta.Anchor=function(an, id, isControl){
 		var self=this;
 		var size=4;	//	.5 * size of anchor.
 		var rect=null;
@@ -14,12 +12,12 @@ define([
 		this.annotation=an;
 
 		this.id=id;
-		this._key="anchor-" + dojox.sketch.Anchor.count++;
+		this._key="anchor-" + ta.Anchor.count++;
 		this.shape=null;
 		this.isControl=(isControl!=null)?isControl:true;
 
 		this.beginEdit=function(){
-			this.annotation.beginEdit(dojox.sketch.CommandTypes.Modify);
+			this.annotation.beginEdit(ta.CommandTypes.Modify);
 		};
 		this.endEdit=function(){
 			this.annotation.endEdit();
@@ -64,6 +62,5 @@ define([
 			rect=null;
 		};
 	};
-	dojox.sketch.Anchor.count=0;
-	return dojox.sketch.Anchor;
-});
+	ta.Anchor.count=0;
+})();

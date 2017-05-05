@@ -1,6 +1,9 @@
-define(["../_base"], function(dh){
+dojo.provide("dojox.highlight.languages.javascript");
 
-	var dhc = dh.constants;
+dojo.require("dojox.highlight._base");
+
+(function(){
+	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.javascript = {
 		defaultMode: {
 			lexems: [dhc.UNDERSCORE_IDENT_RE],
@@ -45,6 +48,4 @@ define(["../_base"], function(dh){
 			}
 		]
 	};
-
-	return dh.languages.javascript;
-});
+})();

@@ -1,3 +1,6 @@
-.nihilo .dijitTitlePaneRtl .dijitClosed .dijitArrowNode, .nihilo .dijitFieldsetRtl .dijitFieldsetTitleClosed .dijitArrowNode {
-	background-position: 0 top;
+.dijitRtl .nihilo .dijitTitlePane .dijitClosed .dijitArrowNode {
+	background-position: 0px top;
+}
+.dj_ie6-rtl .nihilo .dijitTitlePane .dijitClosed .dijitArrowNode {
+	background-position: 0px top;
 }

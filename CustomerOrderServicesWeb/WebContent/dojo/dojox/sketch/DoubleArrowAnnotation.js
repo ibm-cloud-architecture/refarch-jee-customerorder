@@ -1,7 +1,10 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], function(dojo){
-	dojo.getObject("sketch", true, dojox);
+dojo.provide("dojox.sketch.DoubleArrowAnnotation");
+
+dojo.require("dojox.sketch.Annotation");
+dojo.require("dojox.sketch.Anchor");
+
+(function(){
 	var ta=dojox.sketch;
-	console.log(ta);
 	ta.DoubleArrowAnnotation=function(figure, id){
 		ta.Annotation.call(this, figure, id);
 		this.transform={ dx:0, dy:0 };
@@ -52,15 +55,15 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], fun
 		if(this.control.y<this.end.y){ offset*=-1; }
 		else { offset+=this.textYOffset; }
 		var ab={
-			x:((this.control.x-this.start.x)*.5)+this.start.x,
+			x:((this.control.x-this.start.x)*.5)+this.start.x, 
 			y:((this.control.y-this.start.y)*.5)+this.start.y
 		};
 		var bc={
-			x:((this.end.x-this.control.x)*.5)+this.control.x,
+			x:((this.end.x-this.control.x)*.5)+this.control.x, 
 			y:((this.end.y-this.control.y)*.5)+this.control.y
 		};
 		this.textPosition={
-			x:((bc.x-ab.x)*.5)+ab.x,
+			x:((bc.x-ab.x)*.5)+ab.x, 
 			y:(((bc.y-ab.y)*.5)+ab.y)+offset
 		};
 	};
@@ -132,9 +135,9 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], fun
 		this.endArrow=this.endArrowGroup.createPath();//("M" + this.end.x + "," + this.end.y + " l-20,-5 3,5 -3,5 Z").setFill(this.property('fill'));
 
 		this.labelShape=this.shape.createText({
-				x:this.textPosition.x,
-				y:this.textPosition.y,
-				text:this.property('label'),
+				x:this.textPosition.x, 
+				y:this.textPosition.y, 
+				text:this.property('label'), 
 				align:this.textAlign
 			})
 			//.setFont(font)
@@ -173,8 +176,8 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], fun
 		this.endArrowGroup.setTransform(endRot);
 		this.endArrow.setFill(this.property('fill'));
 		this.labelShape.setShape({
-				x:this.textPosition.x,
-				y:this.textPosition.y,
+				x:this.textPosition.x, 
+				y:this.textPosition.y, 
 				text:this.property('label')
 			})
 			.setFill(this.property('fill'));
@@ -228,5 +231,4 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./Annotation", "./Anchor"], fun
 	};
 
 	ta.Annotation.register("DoubleArrow");
-	return dojox.sketch.DoubleArrowAnnotation;
-});
+})();

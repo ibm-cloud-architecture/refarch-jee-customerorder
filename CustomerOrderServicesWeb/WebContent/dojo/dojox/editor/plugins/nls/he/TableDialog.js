@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "הוספת טבלה",
 	modifyTableTitle: "שינוי טבלה",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "רוחב טבלה:",
 	backgroundColor: "צבע רקע:",
 	borderColor: "צבע גבול:",
-	borderThickness: "עובי גבול:",
+	borderThickness: "עובי גבול",
 	percent: "אחוז",
 	pixels: "פיקסלים",
 	"default": "ברירת מחדל",
@@ -19,15 +18,12 @@ define(
 	right: "שמאל",
 	buttonSet: "הגדרה", // translated elsewhere?
 	buttonInsert: "הוספה",
-	buttonCancel: "ביטול",
+
 	selectTableLabel: "בחירת טבלה",
 	insertTableRowBeforeLabel: "הוספת שורה לפני",
 	insertTableRowAfterLabel: "הוספת שורה אחרי",
 	insertTableColumnBeforeLabel: "הוספת עמודה לפני",
 	insertTableColumnAfterLabel: "הוספת עמודה אחרי",
 	deleteTableRowLabel: "מחיקת שורה",
-	deleteTableColumnLabel: "מחיקת עמודה",
-	colorTableCellTitle: "צבע רקע של תא בטבלה",
-	tableContextMenuTitle: "תפריט הקשר של טבלה"
+	deleteTableColumnLabel: "מחיקת עמודה"
 })
-);

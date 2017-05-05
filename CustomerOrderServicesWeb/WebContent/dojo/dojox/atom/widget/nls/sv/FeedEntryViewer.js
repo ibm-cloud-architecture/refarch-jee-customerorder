@@ -1,13 +1,11 @@
-define(
 ({
-	displayOptions: "[visningsalternativ]",
-	title: "Namn",
+	displayOptions: "[Visningsalternativ]",
+	title: "Rubrik",
 	authors: "Författare",
 	contributors: "Medverkande",
 	id: "ID",
-	close: "[stäng]",
+	close: "[Stäng]",
 	updated: "Uppdaterat",
-	summary: "Översikt",
+	summary: "Sammanfattning",
 	content: "Innehåll"
 })
-);

@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'ตัวหนา',
 	'copy': 'คัดลอก',
@@ -9,8 +8,8 @@ define(
 	'insertOrderedList': 'ลำดับเลข',
 	'insertUnorderedList': 'หัวข้อย่อย',
 	'italic': 'ตัวเอียง',
-	'justifyCenter': 'จัดแนวกึ่งกลาง',
-	'justifyFull': 'ชิดขอบ',
+	'justifyCenter': 'จัดกึ่งกลาง',
+	'justifyFull': 'จัดชิดขอบ',
 	'justifyLeft': 'จัดชิดซ้าย',
 	'justifyRight': 'จัดชิดขวา',
 	'outdent': 'ลดการเยื้อง',
@@ -26,7 +25,7 @@ define(
 	'unlink': 'ลบลิงก์ออก',
 	'createLink': 'สร้างลิงก์',
 	'toggleDir': 'สลับทิศทาง',
-	'insertImage': 'แทรกรูปภาพ',
+	'insertImage': 'แทรกอิมเมจ',
 	'insertTable': 'แทรก/แก้ไขตาราง',
 	'toggleTableBorder': 'สลับเส้นขอบตาราง',
 	'deleteTable': 'ลบตาราง',
@@ -44,8 +43,6 @@ define(
 	"print": "พิมพ์",
 	"newPage": "หน้าใหม่",
 	/* Error messages */
-	'systemShortcut': 'แอ็กชัน "${0}" ใช้งานได้เฉพาะกับเบราว์เซอร์ของคุณโดยใช้แป้นพิมพ์ลัด ใช้ ${1}',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'การดำเนินการ"${0}" ใช้งานได้เฉพาะกับเบราว์เซอร์ของคุณโดยใช้แป้นพิมพ์ลัด ใช้ ${1}'
 })
-);
+

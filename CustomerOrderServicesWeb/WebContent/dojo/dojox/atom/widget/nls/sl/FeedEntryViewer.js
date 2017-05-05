@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",
@@ -7,7 +6,7 @@ define(
 	id: "ID",
 	close: "[zapri]",
 	updated: "Posodobljeno",
-	summary: "Seštevek",
+	summary: "Povzetek",
 	content: "Vsebina"
 })
-);
+

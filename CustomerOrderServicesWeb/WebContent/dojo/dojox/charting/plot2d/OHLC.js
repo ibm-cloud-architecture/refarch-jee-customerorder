@@ -1,22 +1,32 @@
-define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has", "./CartesianBase", "./_PlotEvents", "./common",
-	"dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"],
-	function(lang, arr, declare, has, CartesianBase, _PlotEvents, dc, df, dfr, du, fx){
+dojo.provide("dojox.charting.plot2d.OHLC");
 
-	var purgeGroup = dfr.lambda("item.purgeGroup()");
+dojo.require("dojox.charting.plot2d.common");
+dojo.require("dojox.charting.plot2d.Base");
+
+dojo.require("dojox.lang.utils");
+dojo.require("dojox.lang.functional");
+dojo.require("dojox.lang.functional.reversed");
+
+(function(){
+	var df = dojox.lang.functional, du = dojox.lang.utils,
+		dc = dojox.charting.plot2d.common,
+		purgeGroup = df.lambda("item.purgeGroup()");
 
 	//	Candlesticks are based on the Bars plot type; we expect the following passed
 	//	as values in a series:
 	//	{ x?, open, close, high, low }
 	//	if x is not provided, the array index is used.
 	//	failing to provide the OHLC values will throw an error.
-	return declare("dojox.charting.plot2d.OHLC", [CartesianBase, _PlotEvents], {
-		// summary:
+	dojo.declare("dojox.charting.plot2d.OHLC", dojox.charting.plot2d.Base, {
+		//	summary:
 		//		A plot that represents typical open/high/low/close (financial reporting, primarily).
 		//		Unlike most charts, the Candlestick expects data points to be represented by
 		//		an object of the form { x?, open, close, high, low, mid? }, where both
 		//		x and mid are optional parameters.  If x is not provided, the index of the
 		//		data array is used.
 		defaultParams: {
+			hAxis: "x",		// use a horizontal axis named "x"
+			vAxis: "y",		// use a vertical axis named "y"
 			gap:	2,		// gap between columns in pixels
 			animate: null	// animate chart to place
 		},
@@ -33,37 +43,40 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 		},
 
 		constructor: function(chart, kwArgs){
-			// summary:
+			//	summary:
 			//		The constructor for a candlestick chart.
-			// chart: dojox/charting/Chart
+			//	chart: dojox.charting.Chart2D
 			//		The chart this plot belongs to.
-			// kwArgs: dojox.charting.plot2d.__BarCtorArgs?
+			//	kwArgs: dojox.charting.plot2d.__BarCtorArgs?
 			//		An optional keyword arguments object to help define the plot.
-			this.opt = lang.clone(this.defaultParams);
+			this.opt = dojo.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			this.series = [];
+			this.hAxis = this.opt.hAxis;
+			this.vAxis = this.opt.vAxis;
 			this.animate = this.opt.animate;
 		},
 
 		collectStats: function(series){
-			// summary:
+			//	summary:
 			//		Collect all statistics for drawing this chart.  Since the common
 			//		functionality only assumes x and y, OHLC must create it's own
 			//		stats (since data has no y value, but open/close/high/low instead).
-			// series: dojox/charting/Series[]
+			//	series: dojox.charting.Series[]
 			//		The data series array to be drawn on this plot.
-			// returns: Object
+			//	returns: Object
 			//		Returns an object in the form of { hmin, hmax, vmin, vmax }.
 
 			//	we have to roll our own, since we need to use all four passed
 			//	values to figure out our stats, and common only assumes x and y.
-			var stats = lang.delegate(dc.defaultStats);
+			var stats = dojo.delegate(dc.defaultStats);
 			for(var i=0; i<series.length; i++){
 				var run = series[i];
 				if(!run.data.length){ continue; }
 				var old_vmin = stats.vmin, old_vmax = stats.vmax;
 				if(!("ymin" in run) || !("ymax" in run)){
-					arr.forEach(run.data, function(val, idx){
+					dojo.forEach(run.data, function(val, idx){
 						if(val !== null){
 							var x = val.x || idx + 1;
 							stats.hmin = Math.min(stats.hmin, x);
@@ -76,28 +89,28 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 				if("ymin" in run){ stats.vmin = Math.min(old_vmin, run.ymin); }
 				if("ymax" in run){ stats.vmax = Math.max(old_vmax, run.ymax); }
 			}
-			return stats; // Object
+			return stats;
 		},
 
 		getSeriesStats: function(){
-			// summary:
+			//	summary:
 			//		Calculate the min/max on all attached series in both directions.
-			// returns: Object
+			//	returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
 			var stats = this.collectStats(this.series);
 			stats.hmin -= 0.5;
 			stats.hmax += 0.5;
-			return stats; // Object
+			return stats;
 		},
 
 		render: function(dim, offsets){
-			// summary:
+			//	summary:
 			//		Run the calculations for any axes for this plot.
-			// dim: Object
+			//	dim: Object
 			//		An object in the form of { width, height }
-			// offsets: Object
+			//	offsets: Object
 			//		An object of the form { l, r, t, b}.
-			// returns: dojox/charting/plot2d/OHLC
+			//	returns: dojox.charting.plot2d.OHLC
 			//		A reference to this plot for functional chaining.
 			if(this.zoom && !this.isDataDirty()){
 				return this.performZoom(dim, offsets);
@@ -105,15 +118,17 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 			this.resetEvents();
 			this.dirty = this.isDirty();
 			if(this.dirty){
-				arr.forEach(this.series, purgeGroup);
+				dojo.forEach(this.series, purgeGroup);
 				this._eventSeries = {};
 				this.cleanGroup();
-				var s = this.getGroup();
+				var s = this.group;
 				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
 			}
 			var t = this.chart.theme, f, gap, width,
 				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
 				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
+				baseline = Math.max(0, this._vScaler.bounds.lower),
+				baselineHeight = vt(baseline),
 				events = this.events();
 			f = dc.calculateBarSize(this._hScaler.bounds.scale, this.opt);
 			gap = f.gap;
@@ -150,14 +165,14 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 							var hl = {x1: width/2, x2: width/2, y1: y - high, y2: y - low},
 								op = {x1: 0, x2: ((width/2) + ((finalTheme.series.stroke.width||1)/2)), y1: y-open, y2: y-open},
 								cl = {x1: ((width/2) - ((finalTheme.series.stroke.width||1)/2)), x2: width, y1: y-close, y2: y-close};
-							var shape = s.createGroup();
+							shape = s.createGroup();
 							shape.setTransform({dx: x, dy: 0});
 							var inner = shape.createGroup();
 							inner.createLine(hl).setStroke(finalTheme.series.stroke);
 							inner.createLine(op).setStroke(finalTheme.series.stroke);
 							inner.createLine(cl).setStroke(finalTheme.series.stroke);
 
-							// TODO: double check this.
+							//	TODO: double check this.
 							run.dyn.stroke = finalTheme.series.stroke;
 							if(events){
 								var o = {
@@ -186,15 +201,10 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 				run.dirty = false;
 			}
 			this.dirty = false;
-			// chart mirroring starts
-			if(has("dojo-bidi")){
-				this._checkOrientation(this.group, dim, offsets);
-			}
-			// chart mirroring ends
-			return this;	//	dojox/charting/plot2d/OHLC
+			return this;	//	dojox.charting.plot2d.OHLC
 		},
 		_animateOHLC: function(shape, voffset, vsize){
-			fx.animateTransform(lang.delegate({
+			dojox.gfx.fx.animateTransform(dojo.delegate({
 				shape: shape,
 				duration: 1200,
 				transform: [
@@ -205,4 +215,4 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has",
 			}, this.animate)).play();
 		}
 	});
-});
+})();

@@ -1,31 +1,43 @@
-define(["dojo/_base/lang", "../../util/oo", "../_Plugin", "../../manager/_registry"],
-function(lang, oo, Plugin, registry){
+dojo.provide("dojox.drawing.plugins.tools.Zoom");
+dojo.require("dojox.drawing.plugins._Plugin");
 
-	// zoomInc: Float
+(function(){
+	//
+	// 	zoomInc: Float
 	//		The amount of zoom that will occur upon each click.
 	var zoomInc = Math.pow(2.0,0.25),
-
-	// maxZoom: Number
+	//
+	//	maxZoom: Number
 	//		The maximum the canvas can be zoomed in. 10 = 1000%
 	maxZoom = 10,
-
-	// minZoom: Float
+	//
+	//	minZoom: Float
 	//		The most the canvas can be zoomed out. .1 = 10%
 	minZoom = 0.1,
-
-	// zoomFactor: [readonly] Float
+	//
+	//	zoomFactor: [readonly] Float
 	//		The current zoom amount
-	zoomFactor = 1, 
-	dt;
+	zoomFactor = 1,
 	
-	if(!lang.getObject('dojox.drawing.plugins.tools')){
-		lang.setObject('dojox.drawing.plugins.tools', {});
-	}
 	dt = dojox.drawing.plugins.tools;
 	
-	dt.ZoomIn = oo.declare(
+	dt.ZoomIn = dojox.drawing.util.oo.declare(
 		// summary:
-		Plugin,
+		//		A plugin that allows for zooming the canvas in and out. An
+		//		action-tool is added to the toolbar with plus, minus and 100%
+		//		buttons.
+		//
+		function(options){
+			// mix in private vars
+			
+		},
+		{}
+	);
+	
+	
+	dt.ZoomIn = dojox.drawing.util.oo.declare(
+		// summary:
+		dojox.drawing.plugins._Plugin,
 		function(options){
 			
 		},
@@ -34,7 +46,7 @@ function(lang, oo, Plugin, registry){
 			onZoomIn: function(){
 				// summary:
 				//		Handles zoom in.
-
+				//
 				zoomFactor *= zoomInc;
 				zoomFactor = Math.min(zoomFactor, maxZoom);
 				this.canvas.setZoom(zoomFactor);
@@ -46,9 +58,9 @@ function(lang, oo, Plugin, registry){
 		}
 	);
 	
-	dt.Zoom100 = oo.declare(
+	dt.Zoom100 = dojox.drawing.util.oo.declare(
 		// summary:
-		Plugin,
+		dojox.drawing.plugins._Plugin,
 		function(options){
 			
 		},
@@ -57,7 +69,7 @@ function(lang, oo, Plugin, registry){
 			onZoom100: function(){
 				// summary:
 				//		Zooms to 100%
-
+				//
 				zoomFactor = 1;
 				this.canvas.setZoom(zoomFactor);
 				this.mouse.setZoom(zoomFactor);
@@ -68,9 +80,9 @@ function(lang, oo, Plugin, registry){
 		}
 	);
 	
-	dt.ZoomOut = oo.declare(
+	dt.ZoomOut = dojox.drawing.util.oo.declare(
 		// summary:
-		Plugin,
+		dojox.drawing.plugins._Plugin,
 		function(options){
 			
 		},
@@ -79,7 +91,7 @@ function(lang, oo, Plugin, registry){
 			onZoomOut: function(){
 				// summary:
 				//		Handles zoom out.
-
+				//
 				zoomFactor /= zoomInc;
 				zoomFactor = Math.max(zoomFactor, minZoom);
 				this.canvas.setZoom(zoomFactor);
@@ -96,20 +108,18 @@ function(lang, oo, Plugin, registry){
 		name:"dojox.drawing.plugins.tools.ZoomIn",
 		tooltip:"Zoom In"
 	};
-	registry.register(dt.ZoomIn.setup, "plugin");
+	dojox.drawing.register(dt.ZoomIn.setup, "plugin");
 	
 	dt.Zoom100.setup = {
 		name:"dojox.drawing.plugins.tools.Zoom100",
 		tooltip:"Zoom to 100%"
 	};
-	registry.register(dt.Zoom100.setup, "plugin");
+	dojox.drawing.register(dt.Zoom100.setup, "plugin");
 	
 	dt.ZoomOut.setup = {
 		name:"dojox.drawing.plugins.tools.ZoomOut",
 		tooltip:"Zoom In"
 	};
-	registry.register(dt.ZoomOut.setup, "plugin");
+	dojox.drawing.register(dt.ZoomOut.setup, "plugin");
 
-	return dt;
-
-});
+})();

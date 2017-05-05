@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",
@@ -6,8 +5,7 @@ define(
 	contributors: "المساهمين",
 	id: "الكود",
 	close: "[اغلاق]",
-	updated: "تحديث في",
+	updated: "تعديل في",
 	summary: "الملخص",
-	content: "المحتويات"
+	content: "محتويات"
 })
-);

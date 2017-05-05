@@ -1,11 +1,15 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
+dojo.provide("dojox.charting.themes.Chris");
 
-	// created by Christopher Anderson
+dojo.require("dojox.gfx.gradutils");
+dojo.require("dojox.charting.Theme");
 
-	var g = Theme.generateGradient,
+// created by Christopher Anderson
+
+(function(){
+	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 100};
 	
-	themes.Chris = new Theme({
+	themes.Chris = new dc.Theme({
 		chart: {
 			fill:   "#c1c1c1",
 			stroke: {color: "#666"}
@@ -66,10 +70,8 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 	themes.Chris.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
+			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-	
-	return themes.Chris;
-});
+})();

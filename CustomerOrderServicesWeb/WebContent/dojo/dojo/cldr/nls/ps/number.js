@@ -1,13 +1,15 @@
-define(
-//begin v1.x content
-{
-	"exponential": "E",
-	"group": ".",
-	"currencyFormat": "#,##0.00 ¤",
-	"decimal": ",",
-	"percentSign": "%",
-	"plusSign": "‎+",
-	"minusSign": "‎−"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'decimal':",",
+	'decimal':"٫",
+	'group':".",
+	'group':"٬",
+	'percentSign':"%",
+	'percentSign':"٪",
+	'nativeZeroDigit':"0",
+	'nativeZeroDigit':"۰",
+	'minusSign':"−",
+	'exponential':"E",
+	'exponential':"×۱۰^",
+	'currencyFormat':"#,##0.00 ¤"
+})

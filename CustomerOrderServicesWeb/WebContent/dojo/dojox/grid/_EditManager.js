@@ -1,28 +1,24 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/declare",
-	"dojo/_base/connect",
-	"dojo/_base/sniff",
-	"./util"
-], function(lang, array, declare, connect, has, util){
+dojo.provide("dojox.grid._EditManager");
 
-return declare("dojox.grid._EditManager", null, {
+dojo.require("dojox.grid.util");
+
+dojo.declare("dojox.grid._EditManager", null, {
 	// summary:
 	//		Controls grid cell editing process. Owned by grid and used internally for editing.
 	constructor: function(inGrid){
 		// inGrid: dojox.Grid
 		//		The dojox.Grid this editor should be attached to
 		this.grid = inGrid;
-		this.connections = !has('ie') ? [] : [connect.connect(document.body, "onfocus", lang.hitch(this, "_boomerangFocus"))];
-		this.connections.push(connect.connect(this.grid, 'onBlur', this, 'apply'));
-		this.connections.push(connect.connect(this.grid, 'prerender', this, '_onPreRender'));
+		this.connections = [];
+		if(dojo.isIE){
+			this.connections.push(dojo.connect(document.body, "onfocus", dojo.hitch(this, "_boomerangFocus")));
+		}
 	},
 	
 	info: {},
 
 	destroy: function(){
-		array.forEach(this.connections, connect.disconnect);
+		dojo.forEach(this.connections,dojo.disconnect);
 	},
 
 	cellFocus: function(inCell, inRowIndex){
@@ -107,7 +103,7 @@ return declare("dojox.grid._EditManager", null, {
 	},
 
 	_focusEditor: function(inCell, inRowIndex){
-		util.fire(inCell, "focus", [inRowIndex]);
+		dojox.grid.util.fire(inCell, "focus", [inRowIndex]);
 	},
 
 	focusEditor: function(){
@@ -134,14 +130,11 @@ return declare("dojox.grid._EditManager", null, {
 	},
 	_doCatchBoomerang: function(){
 		// give ourselves a few ms to boomerang IE focus effects
-		if(has('ie')){this._catchBoomerang = new Date().getTime() + this._boomerangWindow;}
+		if(dojo.isIE){this._catchBoomerang = new Date().getTime() + this._boomerangWindow;}
 	},
 	// end boomerang fix API
 
 	start: function(inCell, inRowIndex, inEditing){
-		if(!this._isValidInput()){
-			return;
-		}
 		this.grid.beginUpdate();
 		this.editorApply();
 		if(this.isEditing() && !this.isEditRow(inRowIndex)){
@@ -150,7 +143,7 @@ return declare("dojox.grid._EditManager", null, {
 		}
 		if(inEditing){
 			this.info = { cell: inCell, rowIndex: inRowIndex };
-			this.grid.doStartEdit(inCell, inRowIndex);
+			this.grid.doStartEdit(inCell, inRowIndex); 
 			this.grid.updateRow(inRowIndex);
 		}else{
 			this.info = {};
@@ -193,7 +186,7 @@ return declare("dojox.grid._EditManager", null, {
 	apply: function(){
 		// summary:
 		//		Apply a grid edit
-		if(this.isEditing() && this._isValidInput()){
+		if(this.isEditing()){
 			this.grid.beginUpdate();
 			this.editorApply();
 			this.applyRowEdit();
@@ -239,25 +232,7 @@ return declare("dojox.grid._EditManager", null, {
 		//		Grid view
 		var c = this.info.cell;
 		if(this.isEditRow(inRowIndex) && c.view == inView && c.editable){
-			c.restore(this.info.rowIndex);
-		}
-	},
-	
-	_isValidInput: function(){
-		var w = (this.info.cell || {}).widget;		
-		if(!w || !w.isValid){
-			//no validation needed
-			return true;
-		}		
-		w.focused = true;
-		return w.isValid(true);
-	},
-	
-	_onPreRender: function(){
-		if(this.isEditing()){
-			//cache the current editing value before render
-			this.info.value = this.info.cell.getValue();
+			c.restore(c, this.info.rowIndex);
 		}
 	}
-});
 });

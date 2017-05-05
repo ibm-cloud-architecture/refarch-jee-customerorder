@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': '太字',
 	'copy': 'コピー',
@@ -8,7 +7,7 @@ define(
 	'insertHorizontalRule': '水平罫線',
 	'insertOrderedList': '番号付きリスト',
 	'insertUnorderedList': '黒丸付きリスト',
-	'italic': 'イタリック',
+	'italic': '斜体',
 	'justifyCenter': '中央揃え',
 	'justifyFull': '両端揃え',
 	'justifyLeft': '左揃え',
@@ -16,7 +15,7 @@ define(
 	'outdent': 'アウトデント',
 	'paste': '貼り付け',
 	'redo': 'やり直し',
-	'removeFormat': '形式の削除',
+	'removeFormat': '形式の除去',
 	'selectAll': 'すべて選択',
 	'strikethrough': '取り消し線',
 	'subscript': '下付き文字',
@@ -44,8 +43,5 @@ define(
 	"print": "印刷",
 	"newPage": "新しいページ",
 	/* Error messages */
-	'systemShortcut': '"${0}" アクションを使用できるのは、ブラウザーでキーボードショートカットを使用する場合のみです。 ${1} を使用してください。',
-	'ctrlKey':'Ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': '"${0}" アクションを使用できるのは、ブラウザーでキーボードショートカットを使用する場合のみです。 ${1} を使用してください。'
 })
-);

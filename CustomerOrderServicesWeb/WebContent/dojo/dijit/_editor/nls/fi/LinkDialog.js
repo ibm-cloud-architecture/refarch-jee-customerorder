@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Linkin ominaisuudet",
 	insertImageTitle: "Kuvan ominaisuudet",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Päällimmäinen ikkuna",
 	newWindow: "Uusi ikkuna"
 })
-);
+

@@ -1,13 +1,13 @@
-define(["dojo", "../../util/oo", "../../plugins/_Plugin", "../../manager/_registry"], 
-function(dojo, oo, Plugin, registry){
+dojo.provide("dojox.drawing.ui.dom.Pan");
+dojo.require("dojox.drawing.plugins._Plugin");
 dojo.deprecated("dojox.drawing.ui.dom.Pan", "It may not even make it to the 1.4 release.", 1.4);
 
-var Pan = oo.declare(
+dojox.drawing.ui.dom.Pan = dojox.drawing.util.oo.declare(
 	// NOTE:
-	//		dojox.drawing.ui.dom.Pan is DEPRECATED.
-	//		This was a temporary DOM solution. Use the non-dom
-	//		tools for Toolbar and Plugins.
-
+	//			dojox.drawing.ui.dom.Pan is DEPRECATED.
+	//			This was a temporary DOM solution. Use the non-dom
+	//			tools for Toobar and Plugins.
+	//
 	// summary:
 	//		A plugin that allows for a scrolling canvas. An action
 	//		tool is added to the toolbar that allows for panning. Holding
@@ -19,8 +19,8 @@ var Pan = oo.declare(
 	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
 	//		|		<div plugin="dojox.drawing.ui.dom.Pan" options="{}">Pan</div>
 	//		|	</div>
-
-	Plugin,
+	//
+	dojox.drawing.plugins._Plugin,
 	function(options){
 		
 		this.domNode = options.node;
@@ -59,7 +59,7 @@ var Pan = oo.declare(
 			}
 		},
 		
-		onSetPan: function(/*Boolean|Event*/ bool){
+		onSetPan: function(/*Boolean | Event*/ bool){
 			if(bool === true || bool === false){
 				this.selected = !bool;
 			}
@@ -93,16 +93,17 @@ var Pan = oo.declare(
 		},
 		
 		checkBounds: function(){
+			
+			//watch("CHECK BOUNDS DISABLED", true); return;
+			
+			
 			// summary:
 			//		Scans all items on the canvas and checks if they are out of
-			//		bounds. If so, a scroll bar (in Canvas) is shown. If the position
-			//		is left or top, the canvas is scrolled all items are relocated
-			//		the distance of the scroll. Ideally, it should look as if the
-			//		items do not move.
-
-			//watch("CHECK BOUNDS DISABLED", true); return;
-
-
+			// 		bounds. If so, a scroll bar (in Canvas) is shown. If the position
+			// 		is left or top, the canvas is scrolled all items are relocated
+			// 		the distance of the scroll. Ideally, it should look as if the
+			// 		items do not move.
+			
 			// logging stuff here so it can be turned on and off. This method is
 			// very high maintenance.
 			var log = function(){
@@ -118,7 +119,7 @@ var Pan = oo.declare(
 				mx = this.stencils.group ? this.stencils.group.getTransform() : {dx:0, dy:0},
 				sc = this.mouse.scrollOffset(),
 				// scY, scX: the scrollbar creates the need for extra dimension
-				scY = sc.left ? 10 : 0,
+				scY = sc.left ? 10 : 0, 
 				scX = sc.top ? 10 : 0,
 				// ch, cw: the current size of the canvas
 				ch = this.canvas.height,
@@ -151,7 +152,7 @@ var Pan = oo.declare(
 			b *= z;
 			var xscroll = 0, yscroll = 0;
 			log("Bottom test", "b:", b, "z:", z, "ch:", ch, "pch:", pch, "top:", sc.top, "sy:", sy);
-			if(b > pch || sc.top ){
+			if(b > pch || sc.top ){ 
 				log("*bottom scroll*");
 				// item off bottom
 				ch = Math.max(b, pch + sc.top);
@@ -199,14 +200,10 @@ var Pan = oo.declare(
 	}
 );
 
-dojo.setObject("dojox.drawing.ui.dom.Pan", Pan);
-Pan.setup = {
+dojox.drawing.ui.dom.Pan.setup = {
 	name:"dojox.drawing.ui.dom.Pan",
 	tooltip:"Pan Tool",
 	iconClass:"iconPan"
 };
 
-registry.register(Pan.setup, "plugin");
-
-return Pan;
-});
+dojox.drawing.register(dojox.drawing.ui.dom.Pan.setup, "plugin");

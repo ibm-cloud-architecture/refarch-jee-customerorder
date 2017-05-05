@@ -1,9 +1,2 @@
-define(['./drawing/_base'],function(){
-	/*=====
-	 return {
-	 // summary:
-	 //		Deprecated.  Should require dojox/drawing modules directly rather than trying to access them through
-	 //		this module.
-	 };
-	 =====*/
-});
+dojo.provide("dojox.drawing");
+dojo.require("dojox.drawing._base");

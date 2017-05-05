@@ -1,6 +1,6 @@
 /* DnD avatar-specific settings */
 .dojoDndAvatar			{font-size: 75%; color: black;}
-.dojoDndAvatarHeader td	{padding-left: 20px; padding-right: 4px;  height: 16px;}
+.dojoDndAvatarHeader td	{padding-left: 20px; padding-right: 4px;}
 .dojoDndAvatarHeader	{background: #ccc;}
 .dojoDndAvatarItem		{background: #eee;}
 .dojoDndMove .dojoDndAvatarHeader	{background-image: url(images/dndNoMove.png); background-repeat: no-repeat;}
@@ -11,6 +11,6 @@
 .dojoDndHandle {cursor: move;}
 .dojoDndIgnore {cursor: default;}
 
-.dj_a11y .dojoDndAvatar { font-size: 1em; font-weight:bold;}
-.dj_a11y .dojoDndAvatarHeader td {padding-left:2px !important;}
-.dj_a11y .dojoDndAvatarHeader td span {padding-right: 5px;}
+.dijit_a11y .dojoDndAvatar { font-size: 1em; font-weight:bold;}
+.dijit_a11y .dojoDndAvatarHeader td {padding-left:2px !important;}
+.dijit_a11y .dojoDndAvatarHeader td span {padding-right: 5px;}

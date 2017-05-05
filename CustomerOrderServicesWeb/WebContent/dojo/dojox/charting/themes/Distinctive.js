@@ -1,5 +1,8 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Distinctive = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Distinctive");
+dojo.require("dojox.charting.Theme");
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Distinctive=new dxc.Theme({  
 		colors: [
 			"#497c91",
 			"#ada9d6",
@@ -32,9 +35,8 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#efdeb0",
 			"#b17044",
 			"#ddc0c0",
-			"#a5a5a5"
+			"#a5a5a5" 
 		
 		]
 	});
-	return themes.Distinctive;
-});
+})();

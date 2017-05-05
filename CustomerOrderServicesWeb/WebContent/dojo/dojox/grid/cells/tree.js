@@ -1,33 +1,20 @@
-define([
-	"dojo/_base/kernel",
-	"../../main",
-	"dojo/_base/lang",
-	"../cells"
-], function(dojo, dojox, lang){
+dojo.provide("dojox.grid.cells.tree");
+
+dojo.require("dojox.grid.cells");
 
 dojox.grid.cells.TreeCell = {
 	formatAggregate: function(inItem, level, inRowIndexes){
-		var f, g=this.grid, i=g.edit.info,
+		var f, g=this.grid, i=g.edit.info, 
 			d=g.aggregator ? g.aggregator.getForCell(this, level, inItem, level === this.level ? "cnt" : this.parentCell.aggregate) : (this.value || this.defaultValue);
-		var ret = this._defaultFormat(d, [d, level - this.level, inRowIndexes, this]);
-		var dir = this.textDir || this.grid.textDir;
-		if(dir && this._enforceTextDirWithUcc){
-		    ret = this._enforceTextDirWithUcc(dir, ret);
-		}
-		return ret;
+		return this._defaultFormat(d, [d, level - this.level, inRowIndexes, this]);
 	},
 	formatIndexes: function(inRowIndexes, inItem){
-		var f, g=this.grid, i=g.edit.info,
+		var f, g=this.grid, i=g.edit.info, 
 			d=this.get ? this.get(inRowIndexes[0], inItem, inRowIndexes) : (this.value || this.defaultValue);
 		if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndexes[0] && i.cell==this))){
 			return this.formatEditing(d, inRowIndexes[0], inRowIndexes);
 		}else{
-			var ret = this._defaultFormat(d, [d, inRowIndexes[0], inRowIndexes, this]);
-			var dir = this.textDir || this.grid.textDir;
-			if(dir && this._enforceTextDirWithUcc){
-			    ret = this._enforceTextDirWithUcc(dir, ret);
-			}
-			return ret;
+			return this._defaultFormat(d, [d, inRowIndexes[0], inRowIndexes, this]);
 		}
 	},
 	getOpenState: function(itemId){
@@ -43,7 +30,7 @@ dojox.grid.cells.TreeCell = {
 		return this.openStates[itemId];
 	},
 	formatAtLevel: function(inRowIndexes, inItem, level, summaryRow, toggleClass, cellClasses){
-		if(!lang.isArray(inRowIndexes)){
+		if(!dojo.isArray(inRowIndexes)){
 			inRowIndexes = [inRowIndexes];
 		}
 		var result = "";
@@ -64,7 +51,7 @@ dojox.grid.cells.TreeCell = {
 					id = store.getIdentity(inItem);
 				}
 				cellClasses.push("dojoxGridExpandoCell");
-				ret = '<span ' + dojo._scopeName + 'Type="dojox.grid._Expando" level="' + level + '" class="dojoxGridExpando"' +
+				ret = '<span dojoType="dojox.grid._Expando" level="' + level + '" class="dojoxGridExpando"' +
 						'" toggleClass="' + toggleClass + '" itemId="' + id + '" cellIdx="' + this.index + '"></span>';
 			}
 			result = ret + this.formatIndexes(inRowIndexes, inItem);
@@ -78,7 +65,3 @@ dojox.grid.cells.TreeCell = {
 		return result;
 	}
 };
-
-return dojox.grid.cells.TreeCell;
-
-});

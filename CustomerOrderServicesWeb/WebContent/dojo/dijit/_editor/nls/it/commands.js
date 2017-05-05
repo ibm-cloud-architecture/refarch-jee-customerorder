@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Grassetto',
 	'copy': 'Copia',
@@ -44,8 +43,6 @@ define(
 	"print": "Stampa",
 	"newPage": "Nuova pagina",
 	/* Error messages */
-	'systemShortcut': 'La azione "${0}" è disponibile solo nel browser tramite un tasto di scelta rapida. Utilizzare ${1}.',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'La azione "${0}" è disponibile solo nel browser tramite un tasto di scelta rapida. Utilizzare ${1}.'
 })
-);
+

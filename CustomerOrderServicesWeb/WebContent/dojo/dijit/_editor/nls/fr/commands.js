@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Gras',
 	'copy': 'Copier',
@@ -39,13 +38,11 @@ define(
 	'fontSize': 'Taille de police',
 	'fontName': 'Nom de police',
 	'tabIndent': 'Retrait de tabulation',
-	"fullScreen": "Basculer en plein écran",
+	"fullScreen": "Basculer vers le mode plein écran",
 	"viewSource": "Afficher la source HTML",
 	"print": "Imprimer",
 	"newPage": "Nouvelle page",
 	/* Error messages */
-	'systemShortcut': 'Action "${0}" uniquement disponible dans votre navigateur via un raccourci clavier. Utilisez ${1}.',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'Action "${0}" uniquement disponible dans votre navigateur via un raccourci clavier. Utilisez ${1}.'
 })
-);
+

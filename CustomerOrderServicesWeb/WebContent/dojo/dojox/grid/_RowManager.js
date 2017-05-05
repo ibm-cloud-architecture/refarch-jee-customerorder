@@ -1,9 +1,6 @@
-define([
-	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/dom-class"
-], function(declare, lang, domClass){
+dojo.provide("dojox.grid._RowManager");
 
+(function(){
 	var setStyleText = function(inNode, inStyleText){
 		if(inNode.style.cssText == undefined){
 			inNode.setAttribute("style", inStyleText);
@@ -12,7 +9,7 @@ define([
 		}
 	};
 
-	return declare("dojox.grid._RowManager", null, {
+	dojo.declare("dojox.grid._RowManager", null, {
 		//	Stores information about grid rows. Owned by grid and used internally.
 		constructor: function(inGrid){
 			this.grid = inGrid;
@@ -22,7 +19,7 @@ define([
 		// styles
 		prepareStylingRow: function(inRowIndex, inRowNode){
 			return {
-				index: inRowIndex,
+				index: inRowIndex, 
 				node: inRowNode,
 				odd: Boolean(inRowIndex&1),
 				selected: !!this.grid.selection.isSelected(inRowIndex),
@@ -51,13 +48,13 @@ define([
 		setOverRow: function(inRowIndex){
 			var last = this.overRow;
 			this.overRow = inRowIndex;
-			if((last!=this.overRow)&&(lang.isString(last) || last >= 0)){
+			if((last!=this.overRow)&&(dojo.isString(last) || last >= 0)){
 				this.updateStyles(last);
 			}
 			this.updateStyles(this.overRow);
 		},
 		isOver: function(inRowIndex){
-			return (this.overRow == inRowIndex && !domClass.contains(this.grid.domNode, "dojoxGridColumnResizing"));
+			return (this.overRow == inRowIndex && !dojo.hasClass(this.grid.domNode, "dojoxGridColumnResizing"));
 		}
 	});
-});
+})();

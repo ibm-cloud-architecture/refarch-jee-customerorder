@@ -1,7 +1,5 @@
-define(
 ({
-next: "Tovább",
+next: "Következő",
 previous: "Előző",
 done: "Kész"
 })
-);

@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Bağlantı Özellikleri",
 	insertImageTitle: "Resim Özellikleri",
@@ -11,4 +10,4 @@ define(
 	topWindow: "En Üst Pencere",
 	newWindow: "Yeni Pencere"
 })
-);
+

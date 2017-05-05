@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.MiamiNice = new SimpleTheme({
+dojo.provide("dojox.charting.themes.MiamiNice");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.MiamiNice=new dxc.Theme({
 		colors: [
 			"#7f9599",
 			"#45b8cc",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#cc4482"
 		]
 	});
-	return themes.MiamiNice;
-});
+})();

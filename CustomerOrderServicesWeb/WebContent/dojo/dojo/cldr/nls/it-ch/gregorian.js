@@ -1,11 +1,9 @@
-define(
-//begin v1.x content
-{
-	"dateFormat-short": "dd.MM.yy",
-	"dateFormat-medium": "d-MMM-y",
-	"dateFormat-long": "d MMMM y",
-	"timeFormat-full": "HH.mm:ss 'h' zzzz",
-	"dateFormat-full": "EEEE, d MMMM y"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/calendars/calendar-gregorian
+({
+	'dateFormat-full': "EEEE, d MMMM y",
+	'dateFormat-long': "d MMMM y",
+	'dateFormat-medium': "d-MMM-y",
+	'dateFormat-short': "dd.MM.yy",
+	'timeFormat-full': "HH.mm:ss 'h' zzzz"
+})
+                        

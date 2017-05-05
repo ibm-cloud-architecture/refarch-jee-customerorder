@@ -1,30 +1,23 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_Widget",
-	"dijit/_TemplatedMixin",
-	"dijit/_Contained",
-	"dijit/Toolbar",
-	"dijit/Menu",
-	"dijit/MenuItem",
-	"dijit/MenuSeparator",
-	"dijit/_editor/_Plugin",
-	"dijit/form/Button",
-	"dijit/form/ComboButton",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/string",
-	"dojo/i18n!dojox/editor/plugins/nls/Breadcrumb"
-], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _Contained, Toolbar, Menu, MenuItem,
-	MenuSeparator, _Plugin) {
+dojo.provide("dojox.editor.plugins.Breadcrumb");
+
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit._editor.range");
+dojo.require("dojo.i18n");
+dojo.require("dojo.string");
+dojo.require("dijit.Toolbar");
+dojo.require("dijit.form.Button");
+dojo.require("dijit._editor.selection");
+dojo.require("dijit.Menu");
+dojo.require("dijit.MenuItem");
+dojo.require("dijit.MenuSeparator");
 
 dojo.experimental("dojox.editor.plugins.Breadcrumb");
 
-var BreadcrumbMenuTitle = dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[_Widget, _TemplatedMixin, _Contained],{
+dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb");
+
+dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._Templated, dijit._Contained],{
 	// summary:
-	//		Simple internal, non-clickable, menu entry to act as a menu title bar.
+	//		SImple internal, non-clickable, menu entry to act as a menu title bar.
 	templateString: "<tr><td dojoAttachPoint=\"title\" colspan=\"4\" class=\"dijitToolbar\" style=\"font-weight: bold; padding: 3px;\"></td></tr>",
 
 	menuTitle: "",
@@ -32,7 +25,7 @@ var BreadcrumbMenuTitle = dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitl
 	postCreate: function(){
 		dojo.setSelectable(this.domNode, false);
 		var label = this.id+"_text";
-		this.domNode.setAttribute("aria-labelledby", label);
+		dijit.setWaiState(this.domNode, "labelledby", label);
 	},
 
 	_setMenuTitleAttr: function(str){
@@ -44,16 +37,17 @@ var BreadcrumbMenuTitle = dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitl
 });
 
 
-var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
+dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides Breadcrumb capability to the editor. As you move
-	//		around the editor, it updates with your current indention depth.
+	//		This plugin provides Breadcrumb cabability to the editor.  When 
+	//		As you move around the editor, it updates with your current indention 
+	//		depth.
 
-	// _menu: [private] Object
+	//	_menu: [private]
 	//		The popup menu that is displayed.
 	_menu: null,
 
-	// breadcrumbBar: [protected] dijit/Toolbar
+	//	breadcrumbBar: [protected]
 	//		The toolbar containing the breadcrumb.
 	breadcrumbBar: null,
 
@@ -86,7 +80,7 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 			});
 			
 			// Build the menu
-			this._menuTitle = new BreadcrumbMenuTitle({menuTitle: strings.nodeActions});
+			this._menuTitle = new dojox.editor.plugins._BreadcrumbMenuTitle({menuTitle: strings.nodeActions});
 			this._selCMenu = new dijit.MenuItem({label: strings.selectContents, onClick: dojo.hitch(this, this._selectContents)});
 			this._delCMenu = new dijit.MenuItem({label: strings.deleteContents, onClick: dojo.hitch(this, this._deleteContents)});
 			this._selEMenu = new dijit.MenuItem({label: strings.selectElement, onClick: dojo.hitch(this, this._selectElement)});
@@ -94,14 +88,14 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 			this._moveSMenu = new dijit.MenuItem({label: strings.moveStart, onClick: dojo.hitch(this, this._moveCToStart)});
 			this._moveEMenu = new dijit.MenuItem({label: strings.moveEnd, onClick: dojo.hitch(this, this._moveCToEnd)});
 
-			this._menu.addChild(this._menuTitle);
-			this._menu.addChild(this._selCMenu);
-			this._menu.addChild(this._delCMenu);
-			this._menu.addChild(new dijit.MenuSeparator({}));
-			this._menu.addChild(this._selEMenu);
-			this._menu.addChild(this._delEMenu);
-			this._menu.addChild(new dijit.MenuSeparator({}));
-			this._menu.addChild(this._moveSMenu);
+			this._menu.addChild(this._menuTitle); 
+			this._menu.addChild(this._selCMenu); 
+			this._menu.addChild(this._delCMenu); 
+			this._menu.addChild(new dijit.MenuSeparator({})); 
+			this._menu.addChild(this._selEMenu); 
+			this._menu.addChild(this._delEMenu); 
+			this._menu.addChild(new dijit.MenuSeparator({})); 
+			this._menu.addChild(this._moveSMenu); 
 			this._menu.addChild(this._moveEMenu);
 
 			body._ddConnect = dojo.connect(body, "openDropDown", dojo.hitch(this, function(){
@@ -142,10 +136,12 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 				case 'area':
 				case 'basefont':
 						break;
-				default:
+				default: 
 					try{
-						this.editor._sCall("collapse", [null]);
-						this.editor._sCall("selectElementChildren", [this._menuTarget]);
+						dojo.withGlobal(this.editor.window, 
+							"collapse", dijit._editor.selection, [null]);
+						dojo.withGlobal(this.editor.window, 
+							"selectElementChildren", dijit._editor.selection, [this._menuTarget]);
 						this.editor.onDisplayChanged();
 					}catch(e){/*squelch*/}
 			}
@@ -158,7 +154,8 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectContents();
-			this.editor._sCall("remove", [this._menuTarget]);
+			dojo.withGlobal(this.editor.window, 
+				"remove", dijit._editor.selection, [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
 			this.editor.onDisplayChanged();
@@ -170,8 +167,10 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		//		Internal function for selecting the contents of a node.
 		this.editor.focus();
 		if(this._menuTarget){
-			this.editor._sCall("collapse", [null]);
-			this.editor._sCall("selectElement", [this._menuTarget]);
+			dojo.withGlobal(this.editor.window, 
+				"collapse", dijit._editor.selection, [null]);
+			dojo.withGlobal(this.editor.window, 
+				"selectElement", dijit._editor.selection, [this._menuTarget]);
 			this.editor.onDisplayChanged();
 			
 		}
@@ -183,7 +182,8 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectElement();
-			this.editor._sCall("remove", [this._menuTarget]);
+			dojo.withGlobal(this.editor.window, 
+				"remove", dijit._editor.selection, [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
 			this.editor.onDisplayChanged();
@@ -196,7 +196,8 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			this.editor._sCall("collapse", [true]);
+			dojo.withGlobal(this.editor.window, 
+				"collapse", dijit._editor.selection, [true]);
 		}
 	},
 
@@ -206,7 +207,8 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			this.editor._sCall("collapse", [false]);
+			dojo.withGlobal(this.editor.window, 
+				"collapse", dijit._editor.selection, [false]);
 		}
 	},
 
@@ -222,7 +224,8 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 				var range = sel.getRangeAt(0);
                 
 				// Check the getSelectedElement call.  Needed when dealing with img tags.
-				var node = ed._sCall("getSelectedElement", []) || range.startContainer;
+				var node = dojo.withGlobal(ed.window, 
+					"getSelectedElement", dijit._editor.selection) || range.startContainer;
 				//var node = range.startContainer;
 				var bcList = [];
 
@@ -231,7 +234,7 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 				if(node && node.ownerDocument === ed.document){
 					while(node && node !== ed.editNode && node != ed.document.body && node != ed.document){
 						if(node.nodeType === 1){
-							bcList.push({type: node.tagName.toLowerCase(), node: node});
+							bcList.push({type: node.tagName.toLowerCase(), node: node}); 
 						}
 						node = node.parentNode;
 					}
@@ -307,7 +310,7 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 		// summary:
 		//		Over-ride of updateState to hide the toolbar when the iframe is not visible.
 		//		Also triggers the breadcrumb update.
-		if(dojo.style(this.editor.iframe, "display") === "none" || this.get("disabled")){
+		if(dojo.style(this.editor.iframe, "display") === "none"){
 			dojo.style(this.breadcrumbBar.domNode, "display", "none");
 		}else{
 			if(dojo.style(this.breadcrumbBar.domNode, "display") === "none"){
@@ -338,18 +341,11 @@ var Breadcrumb = dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 	}
 });
 
-// For monkey patching
-Breadcrumb._BreadcrumbMenuTitle = BreadcrumbMenuTitle;
-
 // Register this plugin.
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "breadcrumb"){
-		o.plugin = new Breadcrumb({});
+		o.plugin = new dojox.editor.plugins.Breadcrumb({});
 	}
-});
-
-return Breadcrumb;
-
 });

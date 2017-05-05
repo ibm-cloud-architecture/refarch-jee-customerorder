@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Krepko',
 	'copy': 'Prekopiraj',
@@ -10,13 +9,13 @@ define(
 	'insertUnorderedList': 'Naštevni seznam',
 	'italic': 'Ležeče',
 	'justifyCenter': 'Poravnaj na sredino',
-	'justifyFull': 'Poravnaj obojestransko',
+	'justifyFull': 'Obojestranska poravnava',
 	'justifyLeft': 'Poravnaj levo',
 	'justifyRight': 'Poravnaj desno',
-	'outdent': 'Primakni',
+	'outdent': 'Viseč odstavek',
 	'paste': 'Prilepi',
 	'redo': 'Znova uveljavi',
-	'removeFormat': 'Odstrani oblikovanje',
+	'removeFormat': 'Odstrani obliko zapisa',
 	'selectAll': 'Izberi vse',
 	'strikethrough': 'Prečrtano',
 	'subscript': 'Podpisano',
@@ -25,10 +24,10 @@ define(
 	'undo': 'Razveljavi',
 	'unlink': 'Odstrani povezavo',
 	'createLink': 'Ustvari povezavo',
-	'toggleDir': 'Preklopi smer',
+	'toggleDir': 'Preklopi na usmeritev',
 	'insertImage': 'Vstavi sliko',
 	'insertTable': 'Vstavi/uredi tabelo',
-	'toggleTableBorder': 'Preklopi na obrobo tabele',
+	'toggleTableBorder': 'Preklopi na rob tabele',
 	'deleteTable': 'Izbriši tabelo',
 	'tableProp': 'Lastnost tabele',
 	'htmlToggle': 'Izvorna koda HTML',
@@ -44,8 +43,6 @@ define(
 	"print": "Natisni",
 	"newPage": "Nova stran",
 	/* Error messages */
-	'systemShortcut': 'Dejanje "${0}" lahko v vašem brskalniku uporabite samo z bližnjico na tipkovnici. Uporabite ${1}.',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'Dejanje "${0}" lahko v vašem brskalniku uporabite samo z bližnjico na tipkovnici. Uporabite ${1}.'
 })
-);
+

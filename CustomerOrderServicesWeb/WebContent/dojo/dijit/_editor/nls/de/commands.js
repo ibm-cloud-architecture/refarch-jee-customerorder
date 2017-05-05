@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Fett',
 	'copy': 'Kopieren',
@@ -15,7 +14,7 @@ define(
 	'justifyRight': 'Rechtsbündig',
 	'outdent': 'Ausrücken',
 	'paste': 'Einfügen',
-	'redo': 'Wiederholen',
+	'redo': 'Wiederherstellen',
 	'removeFormat': 'Formatierung entfernen',
 	'selectAll': 'Alles auswählen',
 	'strikethrough': 'Durchgestrichen',
@@ -25,7 +24,7 @@ define(
 	'undo': 'Rückgängig',
 	'unlink': 'Link entfernen',
 	'createLink': 'Link erstellen',
-	'toggleDir': 'Richtung wechseln',
+	'toggleDir': 'Wechselrichtung',
 	'insertImage': 'Grafik einfügen',
 	'insertTable': 'Tabelle einfügen/bearbeiten',
 	'toggleTableBorder': 'Tabellenumrandung ein-/ausschalten',
@@ -38,14 +37,13 @@ define(
 	'formatBlock': 'Absatzstil',
 	'fontSize': 'Schriftgröße',
 	'fontName': 'Schriftartname',
-	'tabIndent': 'Registerkarteneinrückung',
+	'tabIndent': 'Tabulatoreinrückung',
 	"fullScreen": "Gesamtanzeige",
 	"viewSource": "HTML-Quelle",
 	"print": "Drucken",
 	"newPage": "Neue Seite",
 	/* Error messages */
 	'systemShortcut': 'Die Aktion "${0}" ist nur über einen Direktaufruf in Ihrem Browser verfügbar. Verwenden Sie ${1}.',
-	'ctrlKey':'Strg+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'ctrlKey':'Strg+${0}'
 })
-);
+

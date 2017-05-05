@@ -1,22 +1,14 @@
-define(["dojo/_base/lang", "./common"], 
-	function(lang, common){
-	var linear = lang.getObject("dojox.charting.scaler.linear", true);
-	
-	var deltaLimit = 3,	// pixels
-		getLabel = common.getNumericLabel;
+dojo.provide("dojox.charting.scaler.linear");
+dojo.require("dojox.charting.scaler.common");
 
-		function findString(/*String*/ val, /*Array*/ text){
-			val = val.toLowerCase();
-			for(var i = text.length - 1; i >= 0; --i){
-				if(val === text[i]){
-					return true;
-				}
-			}
-			return false;
-		}
+(function(){
+	var deltaLimit = 3,	// pixels
+		dc = dojox.charting, dcs = dc.scaler, dcsc = dcs.common,
+		findString = dcsc.findString,
+		getLabel = dcsc.getNumericLabel;
 	
 	var calcTicks = function(min, max, kwArgs, majorTick, minorTick, microTick, span){
-		kwArgs = lang.delegate(kwArgs);
+		kwArgs = dojo.delegate(kwArgs);
 		if(!majorTick){
 			if(kwArgs.fixUpper == "major"){ kwArgs.fixUpper = "minor"; }
 			if(kwArgs.fixLower == "major"){ kwArgs.fixLower = "minor"; }
@@ -64,7 +56,7 @@ define(["dojo/_base/lang", "./common"],
 			microPerMinor  = microTick ? Math.round(minorTick / microTick) : 0,
 			majorPrecision = majorTick ? Math.floor(Math.log(majorTick) / Math.LN10) : 0,
 			minorPrecision = minorTick ? Math.floor(Math.log(minorTick) / Math.LN10) : 0,
-			scale = span / (max - min);
+			scale = span / (max - min);	
 		if(!isFinite(scale)){ scale = 1; }
 		
 		return {
@@ -96,19 +88,18 @@ define(["dojo/_base/lang", "./common"],
 			},
 			minorPerMajor:	minorPerMajor,
 			microPerMinor:	microPerMinor,
-			scaler:			linear
+			scaler:			dcs.linear
 		};
 	};
 	
-	return lang.mixin(linear, {
-		buildScaler: function(/*Number*/ min, /*Number*/ max, /*Number*/ span, /*Object*/ kwArgs, /*Number?*/ delta, /*Number?*/ minorDelta){
+	dojo.mixin(dojox.charting.scaler.linear, {
+		buildScaler: function(/*Number*/ min, /*Number*/ max, /*Number*/ span, /*Object*/ kwArgs){
 			var h = {fixUpper: "none", fixLower: "none", natural: false};
 			if(kwArgs){
 				if("fixUpper" in kwArgs){ h.fixUpper = String(kwArgs.fixUpper); }
 				if("fixLower" in kwArgs){ h.fixLower = String(kwArgs.fixLower); }
 				if("natural"  in kwArgs){ h.natural  = Boolean(kwArgs.natural); }
 			}
-			minorDelta = !minorDelta || minorDelta < deltaLimit ? deltaLimit : minorDelta;
 			
 			// update bounds
 			if("min" in kwArgs){ min = kwArgs.min; }
@@ -135,11 +126,9 @@ define(["dojo/_base/lang", "./common"],
 			if(max <= min){
 				return calcTicks(min, max, h, 0, 0, 0, span);	// Object
 			}
-			if(!delta){
-				delta = max - min;
-			}
-			var mag = Math.floor(Math.log(delta) / Math.LN10),
-				major = kwArgs && ("majorTickStep" in kwArgs) ? kwArgs.majorTickStep : Math.pow(10, mag),
+			
+			var mag = Math.floor(Math.log(max - min) / Math.LN10),
+				major = kwArgs && ("majorTickStep" in kwArgs) ? kwArgs.majorTickStep : Math.pow(10, mag), 
 				minor = 0, micro = 0, ticks;
 				
 			// calculate minor ticks
@@ -150,17 +139,17 @@ define(["dojo/_base/lang", "./common"],
 					minor = major / 10;
 					if(!h.natural || minor > 0.9){
 						ticks = calcTicks(min, max, h, major, minor, 0, span);
-						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+						if(ticks.bounds.scale * ticks.minor.tick > deltaLimit){ break; }
 					}
 					minor = major / 5;
 					if(!h.natural || minor > 0.9){
 						ticks = calcTicks(min, max, h, major, minor, 0, span);
-						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+						if(ticks.bounds.scale * ticks.minor.tick > deltaLimit){ break; }
 					}
 					minor = major / 2;
 					if(!h.natural || minor > 0.9){
 						ticks = calcTicks(min, max, h, major, minor, 0, span);
-						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+						if(ticks.bounds.scale * ticks.minor.tick > deltaLimit){ break; }
 					}
 					return calcTicks(min, max, h, major, 0, 0, span);	// Object
 				}while(false);
@@ -195,8 +184,8 @@ define(["dojo/_base/lang", "./common"],
 		},
 		buildTicks: function(/*Object*/ scaler, /*Object*/ kwArgs){
 			var step, next, tick,
-				nextMajor = scaler.major.start,
-				nextMinor = scaler.minor.start,
+				nextMajor = scaler.major.start, 
+				nextMinor = scaler.minor.start, 
 				nextMicro = scaler.micro.start;
 			if(kwArgs.microTicks && scaler.micro.tick){
 				step = scaler.micro.tick, next = nextMicro;
@@ -259,4 +248,4 @@ define(["dojo/_base/lang", "./common"],
 			return function(x){ return x / scale + offset; };	// Function
 		}
 	});
-});
+})();

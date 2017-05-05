@@ -1,19 +1,19 @@
-define(["dojo/_base/lang"], function(lang) {
-	
-	var base64 = lang.getObject("dojox.encoding.base64", true);
+dojo.provide("dojox.encoding.base64");
 
+(function(){
 	var p="=";
 	var tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	var dxe=dojox.encoding;
 
-	base64.encode=function(/* byte[] */ba){
-		// summary:
-		//		Encode an array of bytes as a base64-encoded string
+	dxe.base64.encode=function(/* byte[] */ba){
+		//	summary
+		//	Encode an array of bytes as a base64-encoded string
 		var s=[], l=ba.length;
 		var rm=l%3;
 		var x=l-rm;
 		for (var i=0; i<x;){
 			var t=ba[i++]<<16|ba[i++]<<8|ba[i++];
-			s.push(tab.charAt((t>>>18)&0x3f));
+			s.push(tab.charAt((t>>>18)&0x3f)); 
 			s.push(tab.charAt((t>>>12)&0x3f));
 			s.push(tab.charAt((t>>>6)&0x3f));
 			s.push(tab.charAt(t&0x3f));
@@ -40,9 +40,9 @@ define(["dojo/_base/lang"], function(lang) {
 		return s.join("");	//	string
 	};
 
-	base64.decode=function(/* string */str){
-		// summary:
-		//		Convert a base64-encoded string to an array of bytes
+	dxe.base64.decode=function(/* string */str){
+		//	summary
+		//	Convert a base64-encoded string to an array of bytes
 		var s=str.split(""), out=[];
 		var l=s.length;
 		while(s[--l]==p){ }	//	strip off trailing padding
@@ -59,6 +59,4 @@ define(["dojo/_base/lang"], function(lang) {
 		while(out[out.length-1]==0){ out.pop(); }
 		return out;	//	byte[]
 	};
-	
-	return base64;
-});
+})();

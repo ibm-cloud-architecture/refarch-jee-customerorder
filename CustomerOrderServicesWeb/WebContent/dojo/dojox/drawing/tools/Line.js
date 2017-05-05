@@ -1,27 +1,26 @@
-define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Line"],
-function(lang, oo, registry, StencilLine){
+dojo.provide("dojox.drawing.tools.Line");
 
-//dojox.drawing.tools.Line 
-var Line = oo.declare(
-	StencilLine,
+dojox.drawing.tools.Line = dojox.drawing.util.oo.declare(
+	// summary:
+	//		Class for a drawable Line
+	dojox.drawing.stencil.Line,
 	function(){
-		// summary:
-		//		constructor
+		// summary: constructor
 	},
 	{
-		// summary:
-		//		Class for a drawable Line
-
 		draws:true,
 		showAngle:true,
 		onTransformEnd: function(/*manager.Anchor*/anchor){
+			// summary:
+			//	Overwrites _Base.onTransformEnd
+			//
 			this._toggleSelected();
-			if(this.getRadius()<this.minimumSize){
-				var p = this.points;
-				this.setPoints([
-					{x:p[0].x, y:p[0].y},
-					{x:p[0].x, y:p[0].y}
-				]);
+			if(this.getRadius()<this.minimumSize){ 
+				var p = this.points; 
+				this.setPoints([ 
+					{x:p[0].x, y:p[0].y}, 
+					{x:p[0].x, y:p[0].y} 
+				]); 
 			}else{
 				var d = this.data;
 				var obj = {start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
@@ -37,6 +36,8 @@ var Line = oo.declare(
 		},
 		
 		onDrag: function(/*EventObject*/obj){
+			// summary: See stencil._Base.onDrag
+			//
 			if(this.created){ return; }
 			var x1 = obj.start.x,
 				y1 = obj.start.y,
@@ -71,6 +72,8 @@ var Line = oo.declare(
 		},
 		
 		onUp: function(/*EventObject*/obj){
+			// summary: See stencil._Base.onUp
+			//
 			if(this.created || !this._downOnCanvas){ return; }
 			this._downOnCanvas = false;
 			//Default shape on single click
@@ -104,14 +107,12 @@ var Line = oo.declare(
 	}
 );
 
-lang.setObject("dojox.drawing.tools.Line", Line);
-Line.setup = {
+dojox.drawing.tools.Line.setup = {
+	// summary: See stencil._Base ToolsSetup
+	//
 	name:"dojox.drawing.tools.Line",
 	tooltip:"Line Tool",
 	iconClass:"iconLine"
 };
 
-registry.register(Line.setup, "tool");
-
-return Line;
-});
+dojox.drawing.register(dojox.drawing.tools.Line.setup, "tool");

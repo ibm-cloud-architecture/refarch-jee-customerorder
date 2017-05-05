@@ -1,4 +1,3 @@
-define(
 ({
 	"nodeActions": "${nodeName} 操作",
 	"selectContents": "选择内容",
@@ -8,4 +7,4 @@ define(
 	"moveStart": "将光标移至开头",
 	"moveEnd": "将光标移至结尾"
 })
-);
+

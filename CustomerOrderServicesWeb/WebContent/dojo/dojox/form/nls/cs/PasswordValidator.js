@@ -1,6 +1,5 @@
-define(
 ({
         nomatchMessage: "Hesla se neshodují.",
-	badPasswordMessage: "Neplatné heslo."
+		badPasswordMessage: "Neplatné heslo."
 })
-);
+

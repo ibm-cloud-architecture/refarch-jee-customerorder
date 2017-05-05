@@ -1,5 +1,4 @@
-define(
 ({
 	"pageBreak": "Întrerupere pagină"
 })
-);
+

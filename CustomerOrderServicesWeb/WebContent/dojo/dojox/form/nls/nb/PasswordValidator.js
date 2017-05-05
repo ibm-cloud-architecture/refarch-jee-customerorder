@@ -1,6 +1,5 @@
-define(
 ({
         nomatchMessage: "Passordene samsvarer ikke.",
-	badPasswordMessage: "Ugyldig passord."
+		badPasswordMessage: "Ugyldig passord."
 })
-);
+

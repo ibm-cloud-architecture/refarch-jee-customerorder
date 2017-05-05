@@ -1,13 +1,10 @@
-define([
-	"dijit/form/Select",
-	"./_SelectStackMixin",
-	"dojo/_base/declare"
-], function(Select, _SelectStackMixin, declare){
-/*=====
-return {
-	// summary:
-	//		A dropdown-based select stack.
-};
-=====*/
-	return declare("dojox.form.DropDownStack", [ Select, _SelectStackMixin ]);
+dojo.provide("dojox.form.DropDownStack");
+
+dojo.require("dijit.form.Select");
+dojo.require("dojox.form._SelectStackMixin");
+
+dojo.declare("dojox.form.DropDownStack",
+	[ dijit.form.Select, dojox.form._SelectStackMixin ], {
+	// summary: A dropdown-based select stack.
+	
 });

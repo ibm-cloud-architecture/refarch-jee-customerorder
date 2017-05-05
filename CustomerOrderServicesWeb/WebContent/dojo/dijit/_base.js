@@ -1,27 +1,11 @@
-define([
-	"./main",
-	"./a11y",	// used to be in dijit/_base/manager
-	"./WidgetSet",	// used to be in dijit/_base/manager
-	"./_base/focus",
-	"./_base/manager",
-	"./_base/place",
-	"./_base/popup",
-	"./_base/scroll",
-	"./_base/sniff",
-	"./_base/typematic",
-	"./_base/wai",
-	"./_base/window"
-], function(dijit){
+dojo.provide("dijit._base");
 
-	// module:
-	//		dijit/_base
-
-	/*=====
-	return {
-		// summary:
-		//		Includes all the modules in dijit/_base
-	};
-	=====*/
-
-	return dijit._base;
-});
+dojo.require("dijit._base.focus");
+dojo.require("dijit._base.manager");
+dojo.require("dijit._base.place");
+dojo.require("dijit._base.popup");
+dojo.require("dijit._base.scroll");
+dojo.require("dijit._base.sniff");
+dojo.require("dijit._base.typematic");
+dojo.require("dijit._base.wai");
+dojo.require("dijit._base.window");

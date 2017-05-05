@@ -1,8 +1,11 @@
-define(["dojo/_base/lang", "../util/oo", "./_Base", "../manager/_registry"], 
-function(lang, oo, Base, registry){
+dojo.provide("dojox.drawing.stencil.Rect");
 
-var Rect = oo.declare(
-	Base,
+
+dojox.drawing.stencil.Rect = dojox.drawing.util.oo.declare(
+	// summary:
+	//		Creates a dojox.gfx rectangle based on data or points provided.
+	//
+	dojox.drawing.stencil._Base,
 	function(options){
 		// summary:
 		//		constructor
@@ -11,15 +14,12 @@ var Rect = oo.declare(
 		}
 	},
 	{
-		// summary:
-		//		Creates a dojox.gfx rectangle based on data or points provided.
-
 		type:"dojox.drawing.stencil.Rect",
 		anchorType: "group",
 		baseRender:true,
 		
 		dataToPoints: function(/*Object*/d){
-			// summary:
+			//summary:
 			//		Converts data to points.
 			d = d || this.data;
 			this.points = [
@@ -53,7 +53,7 @@ var Rect = oo.declare(
 			//		Creates a dojox.gfx.shape based on passed arguments.
 			//		Can be called many times by implementation to create
 			//		multiple shapes in one stencil.
-
+			//
 			//console.log("render rect", d)
 			//console.log("rect sty:", sty)
 			this.remove(this[shp]);
@@ -69,7 +69,7 @@ var Rect = oo.declare(
 			//		Renders the 'hit' object (the shape used for an expanded
 			//		hit area and for highlighting) and the'shape' (the actual
 			//		display object).
-
+			//
 			this.onBeforeRender(this);
 			this.renderHit && this._create("hit", this.data, this.style.currentHit);
 			this._create("shape", this.data, this.style.current);
@@ -77,10 +77,6 @@ var Rect = oo.declare(
 	}
 );
 
-lang.setObject("dojox.drawing.stencil.Rect", Rect);
-registry.register({
-	name:"dojox.drawing.stencil.Rect"
+dojox.drawing.register({
+	name:"dojox.drawing.stencil.Rect"	
 }, "stencil");
-
-return Rect;
-});

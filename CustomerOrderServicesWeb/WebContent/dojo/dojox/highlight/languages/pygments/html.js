@@ -1,6 +1,10 @@
-define(["../../_base", "./_html"], function(dh){
+dojo.provide("dojox.highlight.languages.pygments.html");
 
-	var dhl = dh.languages, tags = [],
+dojo.require("dojox.highlight._base");
+dojo.require("dojox.highlight.languages.pygments._html");
+
+(function(){
+	var dh = dojox.highlight, dhl = dh.languages, tags = [],
 		ht = dhl.pygments._html.tags;
 	
 	for(var key in ht){
@@ -41,7 +45,7 @@ define(["../../_base", "./_html"], function(dh){
 			},
 			{
 				className: "string",
-				begin: '"',
+				begin: '"', 
 				end: '"',
 				illegal: "\\n",
 				relevance: 0
@@ -90,7 +94,4 @@ define(["../../_base", "./_html"], function(dh){
 			}
 		]
 	};
-
-	return dhl.html;
-	
-});
+})();

@@ -1,7 +1,5 @@
-define(
 ({
-	name: "Name",
-	path: "Pfad",
-	size: "Größe (in Byte)"
+name: "Name",
+path: "Pfad",
+size: "Größe (in Byte)"
 })
-);

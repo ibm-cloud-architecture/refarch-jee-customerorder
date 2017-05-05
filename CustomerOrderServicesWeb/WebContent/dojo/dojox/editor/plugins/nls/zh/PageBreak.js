@@ -1,5 +1,4 @@
-define(
 ({
-	"pageBreak": "分页符"
+	"pageBreak": "换页符"
 })
-);
+

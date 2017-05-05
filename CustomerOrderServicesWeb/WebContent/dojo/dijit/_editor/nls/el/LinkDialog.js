@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Ιδιότητες σύνδεσης",
 	insertImageTitle: "Ιδιότητες εικόνας",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Παράθυρο σε πρώτο πλάνο",
 	newWindow: "Νέο παράθυρο"
 })
-);
+

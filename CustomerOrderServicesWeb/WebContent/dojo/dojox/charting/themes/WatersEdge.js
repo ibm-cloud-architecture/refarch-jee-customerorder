@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.WatersEdge = new SimpleTheme({
+dojo.provide("dojox.charting.themes.WatersEdge");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.WatersEdge=new dxc.Theme({
 		colors: [
 			"#437cc0",
 			"#6256a5",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#4b66b0"
 		]
 	});
-	return  themes.WatersEdge;
-});
+})();

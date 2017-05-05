@@ -1,33 +1,31 @@
-define(["dojo/_base/lang", "dojo/query", "dojo/NodeList-fx", "dojo/fx", "../style"],
-	function(lang, query, NodeListFx, coreFx, styleX){
+dojo.provide("dojox.fx.ext-dojo.NodeList-style");
+dojo.experimental("dojox.fx.ext-dojo.NodeList-style");
+// summary: 
+//		Core extensions to `dojo.NodeList` providing addtional fx to `dojo.NodeList-fx`
+// 		from `dojox.fx.style`
+//
+// description:
+//		A Package to extend dojo base NodeList with fx provided by the `dojox.fx` project.
+//		These are experimental animations, in an experimental 
 
-/*=====
-return {
-	// summary:
-	//		Core extensions to `dojo.NodeList` providing additional fx to `dojo.NodeList-fx`
-	//		from `dojox.fx.style`
-	// description:
-	//		A Package to extend dojo base NodeList with fx provided by the `dojox.fx` project.
-	//		These are experimental animations, in an experimental
-};
-=====*/
+dojo.require("dojo.NodeList-fx");
+dojo.require("dojox.fx.style");
 
-var NodeList = query.NodeList;
-
-lang.extend(NodeList, {
+dojo.extend(dojo.NodeList, {
 
 	addClassFx: function(cssClass, args){
-		// summary:
+		// 	summary:
 		//		Animate the effects of adding a class to all nodes in this list.
 		//		see `dojox.fx.addClass`
-		// tags:
-		//		FX, NodeList
-		// example:
+		//
+		//	tags: FX, NodeList
+		//
+		//	example:
 		//	|	// fade all elements with class "bar" to to 50% opacity
 		//	|	dojo.query(".bar").addClassFx("bar").play();
 
-		return coreFx.combine(this.map(function(n){ // dojo.Animation
-			return styleX.addClass(n, cssClass, args);
+		return dojo.fx.combine(this.map(function(n){ // dojo.Animation
+			return dojox.fx.addClass(n, cssClass, args);
 		}));
 	},
 	
@@ -35,13 +33,14 @@ lang.extend(NodeList, {
 		// summary:
 		//		Animate the effect of removing a class to all nodes in this list.
 		//		see `dojox.fx.removeClass`
-		// tags:
-		//		FX, NodeList
+		//
+		//	tags: FX, NodeList
+		//
 		// example:
 		//	| dojo.query(".box").removeClassFx("bar").play();
 
-		return coreFx.combine(this.map(function(n){ // dojo.Animation
-			return styleX.removeClass(n, cssClass, args);
+		return dojo.fx.combine(this.map(function(n){ // dojo.Animation
+			return dojox.fx.removeClass(n, cssClass, args);
 		}));
 	},
 	
@@ -49,15 +48,15 @@ lang.extend(NodeList, {
 		// summary:
 		//		Animate the effect of adding or removing a class to all nodes in this list.
 		//		see `dojox.fx.toggleClass`
-		// tags:
-		//		FX, NodeList
+		//
+		//	tags: FX, NodeList
+		//
 		// example:
 		//	| dojo.query(".box").toggleClass("bar").play();
 
-		return coreFx.combine(this.map(function(n){ // dojo.Animation
-			return styleX.toggleClass(n, cssClass, force, args);
+		return dojo.fx.combine(this.map(function(n){ // dojo.Animation
+			return dojox.fx.toggleClass(n, cssClass, force, args);
 		}));
 	}
-});
-return NodeList;
+
 });

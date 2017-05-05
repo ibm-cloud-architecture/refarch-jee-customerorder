@@ -1,23 +1,7 @@
-define([
-	"dojo/aspect",
-	"dojo/_base/declare",
-	"dojo/_base/Deferred",
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/fx",
-	"dojo/dom",
-	"dojo/dom-attr",
-	"dojo/dom-construct",
-	"dojo/dom-geometry",
-	"dojo/dom-style",
-	"dojo/topic",
-	"dojo/on",
-	"dojo/parser",
-	"dojo/query",
-	"dojo/fx/easing",
-	"dojo/NodeList-dom"
-], function(aspect, declare, Deferred, lang, array, fx, dom, domAttr, domConstruct, domGeometry, domStyle, topic,
-			on, parser, query){
+dojo.provide("dojox.widget.Rotator");
+dojo.require("dojo.parser");
+
+(function(d){
 
 	// build friendly strings
 	var _defaultTransition = "dojox.widget.rotator.swap", // please do NOT change
@@ -26,11 +10,11 @@ define([
 		_noneStr = "none",
 		_zIndex = "zIndex";
 
-	var Rotator = declare("dojox.widget.Rotator", null, {
-		// summary:
+	d.declare("dojox.widget.Rotator", null, {
+		//	summary:
 		//		A widget for rotating through child nodes using transitions.
 		//
-		// description:
+		//	description:
 		//		A small, fast, extensible, awesome rotator that cycles, with transitions,
 		//		through panes (child nodes) displaying only one at a time and ties into
 		//		controllers used to change state.
@@ -46,74 +30,69 @@ define([
 		//
 		//		Note: When the Rotator begins, it does not transition the first pane.
 		//
-		//		subscribed topics:
-		//
-		//			[id]/rotator/control - Controls the Rotator
+		//	subscribed topics:
+		//		[id]/rotator/control - Controls the Rotator
 		//			Parameters:
+		//				/*string*/ action        - The name of a method of the Rotator to run
+		//				/*anything?*/ args       - One or more arguments to pass to the action
 		//
-		//			- /*string*/ action        - The name of a method of the Rotator to run
-		//			- /*anything?*/ args       - One or more arguments to pass to the action
-		//
-		//		published topics:
-		//
+		//	published topics:
 		//		[id]/rotator/update - Notifies controllers that a pane or state has changed.
-		//		Parameters:
+		//			Parameters:
+		//				/*string*/ type          - the type of notification
+		//				/*dojox.widget.Rotator*/ rotator
+		//										 - the rotator instance
+		//				/*object?*/ params		 - params
 		//
-		//		- /*string*/ type          - the type of notification
-		//		- /*dojox.widget.Rotator*/ rotator - the rotator instance
-		//		- /*object?*/ params		 - params
+		//	declarative dojo/method events (per pane):
+		//		onBeforeIn  - Fired before the transition in starts.
+		//		onAfterIn   - Fired after the transition in ends.
+		//		onBeforeOut - Fired before the transition out starts.
+		//		onAfterOut  - Fired after the transition out ends.
 		//
-		//		declarative dojo/method events (per pane):
-		//
-		//		- onBeforeIn  - Fired before the transition in starts.
-		//		- onAfterIn   - Fired after the transition in ends.
-		//		- onBeforeOut - Fired before the transition out starts.
-		//		- onAfterOut  - Fired after the transition out ends.
-		//
-		// example:
+		//	example:
 		//	|	<div dojoType="dojox.widget.Rotator">
 		//	|		<div>Pane 1!</div>
 		//	|		<div>Pane 2!</div>
 		//	|	</div>
 		//
-		// example:
+		//	example:
 		//	|	<script type="text/javascript">
-		//	|		require("dojo/parser", "dojo/domReady!", "dojox/widget/Rotator", "dojox/widget/rotator/Fade"],
-		//	|           function(parser) { parser.parse(); });
+		//	|		dojo.require("dojox.widget.rotator.Fade");
 		//	|	</script>
-		//	|	<div dojoType="dojox/widget/Rotator" transition="dojox/widget/rotator/crossFade">
+		//	|	<div dojoType="dojox.widget.Rotator" transition="dojox.widget.rotator.crossFade">
 		//	|		<div>Pane 1!</div>
 		//	|		<div>Pane 2!</div>
 		//	|	</div>
 
-		// transition: string
+		//	transition: string
 		//		The name of a function that is passed two panes nodes and a duration,
 		//		then returns a dojo.Animation object. The default value is
 		//		"dojox.widget.rotator.swap".
 		transition: _defaultTransition,
 
-		// transitionParams: string
+		//	transitionParams: string
 		//		Parameters for the transition. The string is read in and eval'd as an
 		//		object.  If the duration is absent, the default value will be used.
 		transitionParams: "duration:" + _defaultTransitionDuration,
 
-		// panes: array
+		//	panes: array
 		//		Array of panes to be created in the Rotator. Each array element
-		//		will be passed as attributes to a html.create() call.
+		//		will be passed as attributes to a dojo.create() call.
 		panes: null,
 
 		constructor: function(/*Object*/params, /*DomNode|string*/node){
-			// summary:
+			//	summary:
 			//		Initializes the panes and events.
-			lang.mixin(this, params);
+			d.mixin(this, params);
 
 			var _t = this,
 				t = _t.transition,
 				tt = _t._transitions = {},
 				idm = _t._idMap = {},
 				tp = _t.transitionParams = eval("({ " + _t.transitionParams + " })"),
-				node = _t._domNode = dom.byId(node),
-				cb = _t._domNodeContentBox = domGeometry.getContentBox(node), // we are going to assume the rotator will not be changing size
+				node = _t._domNode = dojo.byId(node),
+				cb = _t._domNodeContentBox = d.contentBox(node), // we are going to assume the rotator will not be changing size
 
 				// default styles to apply to all the container node and rotator's panes
 				p = {
@@ -129,15 +108,15 @@ define([
 			_t.id = node.id || (new Date()).getTime();
 
 			// force the rotator DOM node to a relative position and attach the container node to it
-			if(domStyle.get(node, "position") == "static"){
-				domStyle.set(node, "position", "relative");
+			if(d.style(node, "position") == "static"){
+				d.style(node, "position", "relative");
 			}
 
 			// create our object for caching transition objects
-			tt[t] = lang.getObject(t);
+			tt[t] = d.getObject(t);
 			if(!tt[t]){
 				warn(t, _defaultTransition);
-				tt[_t.transition = _defaultTransition] = lang.getObject(_defaultTransition);
+				tt[_t.transition = _defaultTransition] = d.getObject(_defaultTransition);
 			}
 
 			// clean up the transition params
@@ -146,21 +125,21 @@ define([
 			}
 
 			// if there are any panes being passed in, add them to this node
-			array.forEach(_t.panes, function(p){
-				domConstruct.create("div", p, node);
+			d.forEach(_t.panes, function(p){
+				d.create("div", p, node);
 			});
 
 			// zero out our panes array to store the real pane instance
 			var pp = _t.panes = [];
 
 			// find and initialize the panes
-			query("> *", node).forEach(function(n, i){
-				var q = { node: n, idx: i, params: lang.mixin({}, tp, eval("({ " + (domAttr.get(n, "transitionParams") || "") + " })")) },
-					r = q.trans = domAttr.get(n, "transition") || _t.transition;
+			d.query(">", node).forEach(function(n, i){
+				var q = { node: n, idx: i, params: d.mixin({}, tp, eval("({ " + (d.attr(n, "transitionParams") || "") + " })")) },
+					r = q.trans = d.attr(n, "transition") || _t.transition;
 
 				// cache each pane's title, duration, and waitForEvent attributes
-				array.forEach(["id", "title", "duration", "waitForEvent"], function(a){
-					q[a] = domAttr.get(n, a);
+				d.forEach(["id", "title", "duration", "waitForEvent"], function(a){
+					q[a] = d.attr(n, a);
 				});
 
 				if(q.id){
@@ -168,7 +147,7 @@ define([
 				}
 
 				// cache the transition function
-				if(!tt[r] && !(tt[r] = lang.getObject(r))){
+				if(!tt[r] && !(tt[r] = d.getObject(r))){
 					warn(r, q.trans = _t.transition);
 				}
 
@@ -176,20 +155,20 @@ define([
 				p.display = _noneStr;
 
 				// find the selected pane and initialize styles
-				if(_t.idx == null || domAttr.get(n, "selected")){
+				if(_t.idx == null || d.attr(n, "selected")){
 					if(_t.idx != null){
-						domStyle.set(pp[_t.idx].node, _displayStr, _noneStr);
+						d.style(pp[_t.idx].node, _displayStr, _noneStr);
 					}
 					_t.idx = i;
 					p.display = "";
 				}
-				domStyle.set(n, p);
+				d.style(n, p);
 
 				// check for any declarative script blocks
-				query("> script[type^='dojo/method']", n).orphan().forEach(function(s){
-					var e = domAttr.get(s, "event");
+				d.query("> script[type^='dojo/method']", n).orphan().forEach(function(s){
+					var e = d.attr(s, "event");
 					if(e){
-						q[e] = parser._functionFromScript(s);
+						q[e] = d.parser._functionFromScript(s);
 					}
 				});
 
@@ -197,30 +176,30 @@ define([
 				pp.push(q);
 			});
 
-			_t._controlSub = topic.subscribe(_t.id + "/rotator/control", lang.hitch(_t, this.control));
+			_t._controlSub = d.subscribe(_t.id + "/rotator/control", _t, "control");
 		},
 
 		destroy: function(){
-			// summary:
+			//	summary:
 			//		Destroys the Rotator and its DOM node.
-			array.forEach([this._controlSub, this.wfe], function(wfe) { wfe.remove() });
-			domConstruct.destroy(this._domNode);
+			d.forEach([this._controlSub, this.wfe], d.unsubscribe);
+			d.destroy(this._domNode);
 		},
 
 		next: function(){
-			// summary:
+			//	summary:
 			//		Transitions the Rotator to the next pane.
 			return this.go(this.idx + 1);
 		},
 
 		prev: function(){
-			// summary:
+			//	summary:
 			//		Transitions the Rotator to the previous pane.
 			return this.go(this.idx - 1);
 		},
 
 		go: function(/*int|string?*/p){
-			// summary:
+			//	summary:
 			//		Transitions the Rotator to the specified pane index.
 			var _t = this,
 				i = _t.idx,
@@ -247,8 +226,8 @@ define([
 
 			// adjust the zIndexes so our animations look good... this must be done before
 			// the animation is created so the animation could override it if necessary
-			domStyle.set(current.node, _zIndex, 2);
-			domStyle.set(next.node, _zIndex, 1);
+			d.style(current.node, _zIndex, 2);
+			d.style(next.node, _zIndex, 1);
 
 			// info object passed to animations and onIn/Out events
 			var info = {
@@ -258,47 +237,47 @@ define([
 				},
 
 				// get the transition
-				anim = _t.anim = _t._transitions[next.trans](lang.mixin({
+				anim = _t.anim = _t._transitions[next.trans](d.mixin({
 					rotatorBox: _t._domNodeContentBox
 				}, info, next.params));
 
 			if(anim){
 				// create the deferred that we'll be returning
-				var def = new Deferred(),
+				var def = new d.Deferred(),
 					ev = next.waitForEvent,
 
-				h = aspect.after(anim, "onEnd", function(){
-					// reset the node styles
-					domStyle.set(current.node, {
-						display: _noneStr,
-						left: 0,
-						opacity: 1,
-						top: 0,
-						zIndex: 0
+					h = d.connect(anim, "onEnd", function(){
+						// reset the node styles
+						d.style(current.node, {
+							display: _noneStr,
+							left: 0,
+							opacity: 1,
+							top: 0,
+							zIndex: 0
+						});
+
+						d.disconnect(h);
+						_t.anim = null;
+						_t.idx = p;
+
+						// fire end events
+						if(current.onAfterOut){ current.onAfterOut(info); }
+						if(next.onAfterIn){ next.onAfterIn(info); }
+
+						_t.onUpdate("onAfterTransition");
+
+						if(!ev){
+							// if there is a previous waitForEvent, then we need to make
+							// sure it gets unsubscribed
+							_t._resetWaitForEvent();
+
+							// animation is all done, fire the deferred callback.
+							def.callback();
+						}
 					});
 
-					h.remove();
-					_t.anim = null;
-					_t.idx = p;
-
-					// fire end events
-					if(current.onAfterOut){ current.onAfterOut(info); }
-					if(next.onAfterIn){ next.onAfterIn(info); }
-
-					_t.onUpdate("onAfterTransition");
-
-					if(!ev){
-						// if there is a previous waitForEvent, then we need to make
-						// sure it gets unsubscribed
-						_t._resetWaitForEvent();
-
-						// animation is all done, fire the deferred callback.
-						def.callback();
-					}
-				}, true);
-
 				// if we're waiting for an event, subscribe to it so we know when to continue
-				_t.wfe = ev ? topic.subscribe(ev, function(){
+				_t.wfe = ev ? d.subscribe(ev, function(){
 					_t._resetWaitForEvent();
 					def.callback(true);
 				}) : null;
@@ -318,24 +297,24 @@ define([
 		},
 
 		onUpdate: function(/*string*/type, /*object?*/params){
-			// summary:
+			//	summary:
 			//		Send a notification to all controllers with the state of the rotator.
-			topic.publish(this.id + "/rotator/update", type, this, params || {});
+			d.publish(this.id + "/rotator/update", [type, this, params || {}]);
 		},
 
 		_resetWaitForEvent: function(){
-			// summary:
+			//	summary:
 			//		If there is a waitForEvent pending, kill it.
 			if(this.wfe){
-				this.wfe.remove();
-				delete this.wfe;
+				d.unsubscribe(this.wfe);
+				this.wfe = null;
 			}
 		},
 
 		control: function(/*string*/action){
-			// summary:
+			//	summary:
 			//		Dispatches an action, first to this engine, then to the Rotator.
-			var args = lang._toArray(arguments),
+			var args = d._toArray(arguments),
 				_t = this;
 			args.shift();
 
@@ -360,27 +339,26 @@ define([
 
 		resize: function(/*int*/width, /*int*/height){
 			var b = this._domNodeContentBox = { w: width, h: height };
-			domGeometry.setContentSize(this._domNode, b);
-			array.forEach(this.panes, function(p){ domGeometry.setContentSize(p.node, b); });
+			d.contentBox(this._domNode, b);
+			d.forEach(this.panes, function(p){ d.contentBox(p.node, b); });
 		},
 
 		onManualChange: function(){
-			// summary:
+			//	summary:
 			//		Stub function that can be overriden or connected to.
 		}
 	});
 
-	lang.setObject(_defaultTransition, function(/*Object*/args){
-		// summary:
+	d.setObject(_defaultTransition, function(/*Object*/args){
+		//	summary:
 		//		The default rotator transition which swaps two panes.
-		return new fx.Animation({ // dojo.Animation
+		return new d._Animation({ // dojo.Animation
 			play: function(){
-				domStyle.set(args.current.node, _displayStr, _noneStr);
-				domStyle.set(args.next.node, _displayStr, "");
+				d.style(args.current.node, _displayStr, _noneStr);
+				d.style(args.next.node, _displayStr, "");
 				this._fire("onEnd");
 			}
 		});
 	});
 
-	return Rotator;
-});
+})(dojo);

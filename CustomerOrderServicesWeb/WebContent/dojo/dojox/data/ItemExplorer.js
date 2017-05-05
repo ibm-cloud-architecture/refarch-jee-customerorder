@@ -5,7 +5,7 @@ dojo.require("dijit.Menu");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.Button");
-dojo.require("dijit.form.RadioButton");
+dojo.require("dijit.form.CheckBox");
 dojo.require("dijit.form.FilteringSelect");
 
 (function(){
@@ -24,7 +24,7 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 		dojo.mixin(this, options);
 		var self = this;
 		var initialRootValue = {};
-		var root = (this.rootModelNode = {value:initialRootValue,id:"root"});
+		var root = this.rootModelNode = {value:initialRootValue,id:"root"};
 
 		this._modelNodeIdMap = {};
 		this._modelNodePropMap = {};
@@ -229,9 +229,9 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 	},
 	_createEditDialog: function(){
 		this._editDialog = new dijit.Dialog({
-			title: "Edit Property",
-			execute: dojo.hitch(this, "_updateItem"),
-			preload: true
+			 title: "Edit Property",
+			 execute: dojo.hitch(this, "_updateItem"),
+			 preload: true
 		});
 		this._editDialog.placeAt(dojo.body());
 		this._editDialog.startup();
@@ -270,7 +270,7 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 		dojo.attr(labelVal, "innerHTML", "Value (JSON):")
 		pane.appendChild(labelVal);
 
-		// container for value fields
+		 // container for value fields
 		var valueDiv = dojo.doc.createElement("div");
 		dojo.addClass(valueDiv, "value");
 
@@ -618,6 +618,7 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 			}else{
 				showDialog();
 			}
+//
 		}
 	}
 });

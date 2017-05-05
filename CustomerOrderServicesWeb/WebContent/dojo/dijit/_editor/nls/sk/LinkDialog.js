@@ -1,14 +1,13 @@
-define(
 ({
-	createLinkTitle: "Vlastnosti prepojenia",
-	insertImageTitle: "Vlastnosti obrázka",
-	url: "Adresa URL:",
+	createLinkTitle: "Pripojiť vlastnosti",
+	insertImageTitle: "Vlastnosti obrázka ",
+	url: "URL:",
 	text: "Opis:",
 	target: "Cieľ:",
 	set: "Nastaviť",
-	currentWindow: "Aktuálne okno",
-	parentWindow: "Rodičovské okno",
-	topWindow: "Najvyššie okno",
-	newWindow: "Nové okno"
+	currentWindow: "Aktuálne okno ",
+	parentWindow: "Rodičovské okno ",
+	topWindow: "Najvrchnejšie okno ",
+	newWindow: "Nové okno "
 })
-);
+

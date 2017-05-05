@@ -7,13 +7,13 @@ dependencies = {
 			]
 		},
 		{
-			name: "main.js",
+			name: "_base.js",
 			customBase: true,
 			layerDependencies: [
 				"dojo.js"
 			],
 			dependencies: [
-				"dojo.main"
+				"dojo._base"
 			]
 		},
 		{

@@ -1,27 +1,23 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_editor/_Plugin",
-	"dijit/form/Button",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/i18n!dojox/editor/plugins/nls/PageBreak"
-], function(dojo, dijit, dojox, _Plugin) {
+dojo.provide("dojox.editor.plugins.PageBreak");
 
-var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
-	// summary:
+dojo.require("dijit._editor._Plugin");
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dojox.editor.plugins", "PageBreak");
+
+dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
+	//	summary:
 	//		This plugin provides a simple CSS page break plugin that
-	//		lets your insert browser print recognizable page breaks in
+	//		lets you insert browser pring recognizable page breaks in
 	//		the document.
 	//		This plugin registers the hotkey command: CTRL-SHIFT-ENTER
 
-	// Over-ride indicating that the command processing is done all by this plugin.
+	//	useDefaultCommand [protected]
+	//		Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 
 	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from
+	//		The CSS class name for the button node is formed from 
 	//		`iconClassPrefix` and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
@@ -34,7 +30,7 @@ var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 	_pbContent: "<hr style='page-break-after: always;' class='dijitEditorPageBreak'>",
 
 	_initButton: function(){
-		// summary:
+		//	summary:
 		//		Over-ride for creation of the resize button.
 		var ed = this.editor;
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "PageBreak");
@@ -50,7 +46,7 @@ var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 				//Register our hotkey to CTRL-SHIFT-ENTER.
 				ed.addKeyHandler(dojo.keys.ENTER, true, true, dojo.hitch(this, this._insertPageBreak));
 				if(dojo.isWebKit || dojo.isOpera){
-					// Webkit and Opera based browsers don't generate keypress events when ctrl and shift are
+					// Webkit and Opera based browsers don't generate keypress events when ctrl and shift are 
 					// held then enter is pressed.  Odd, that.
 					this.connect(this.editor, "onKeyDown", dojo.hitch(this, function(e){
 						if((e.keyCode === dojo.keys.ENTER) && e.ctrlKey && e.shiftKey){
@@ -60,12 +56,6 @@ var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 				}
 			})
 		);
-	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -80,7 +70,7 @@ var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 	_style: function(){
 		// summary:
 		//		Internal function for inserting dynamic css.  This was originally
-		//		in an editor.onLoadDeferred, but I ran into issues in Chrome with
+		//		in an editor.onLoadDeferred, but I ran into issues in Chrome with 
 		//		the tag being ignored.  Having it done at insert worked better.
 		// tags:
 		//		private
@@ -148,7 +138,7 @@ var PageBreak = dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 		//		private
 		var ed = this.editor;
 		var doc = ed.document;
-		var node = ed._sCall("getSelectedElement", []) || ed._sCall("getParentElement", []);
+		var node = ed._sCall("getSelectedElement", null) || ed._sCall("getParentElement", null);
 		while(node && node !== doc.body && node !== doc.html){
 			if(ed._sCall("isTag", [node, this._unbreakableNodes])){
 				return false;
@@ -164,10 +154,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "pagebreak"){
-		o.plugin = new PageBreak({});
+		o.plugin = new dojox.editor.plugins.PageBreak({});
 	}
-});
-
-return PageBreak;
-
 });

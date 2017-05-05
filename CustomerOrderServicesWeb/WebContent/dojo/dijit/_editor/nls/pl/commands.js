@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Pogrubienie',
 	'copy': 'Kopiuj',
@@ -45,7 +44,6 @@ define(
 	"newPage": "Nowa strona",
 	/* Error messages */
 	'systemShortcut': 'Działanie ${0} jest dostępne w tej przeglądarce wyłącznie przy użyciu skrótu klawiaturowego. Należy użyć klawiszy ${1}.',
-	'ctrlKey':'Ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'ctrlKey':'Ctrl+${0}'
 })
-);
+

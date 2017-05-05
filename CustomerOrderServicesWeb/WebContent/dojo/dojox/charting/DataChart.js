@@ -1,8 +1,9 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/connect",
-	 "dojo/_base/array", "./Chart2D", "./themes/PlotKit/blue", "dojo/dom"], 
-	 function(kernel, lang, declare, html, hub, arr, Chart, blue, dom){
-	// FIXME: This module drags in all Charting modules because of the Chart2D dependency...it is VERY heavy
-	kernel.experimental("dojox.charting.DataChart");
+dojo.provide("dojox.charting.DataChart");
+dojo.require("dojox.charting.Chart2D");
+dojo.require("dojox.charting.themes.PlotKit.blue");
+dojo.experimental("dojox.charting.DataChart");
+
+(function(){
 
 	// Defaults for axes
 	//	to be mixed in with xaxis/yaxis custom properties
@@ -39,12 +40,14 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		gap:2
 	};
 
-	return declare("dojox.charting.DataChart", Chart, {
-		// summary:
+	dojo.declare("dojox.charting.DataChart", [dojox.charting.Chart2D], {
+		//	summary:
+		//		DataChart
 		//		Extension to the 2D chart that connects to a data store in
 		//		a simple manner. Convenience methods have been added for
 		//		connecting store item labels to the chart labels.
-		// description:
+		//
+		//	description:
 		//		This code should be considered very experimental and the APIs subject
 		//		to change. This is currently an alpha version and will need some testing
 		//		and review.
@@ -63,7 +66,9 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		//		Currently, plot lines can only be set at initialization. Setting
 		//		a new store query will have no effect (although using setStore
 		//		may work but its untested).
-		// example:
+		//
+		//	example:
+		//
 		//	|	var chart = new dojox.charting.DataChart("myNode", {
 		//	|		displayRange:8,
 		//	|		store:dataStore,
@@ -71,96 +76,106 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		//	|		fieldName:"price"
 		//	|		type: dojox.charting.plot2d.Columns
 		//	|	});
-
-		// scroll: Boolean
+		//
+		//	properties:
+		//
+		//	scroll: Boolean
 		//		Whether live data updates and changes display, like columns moving
 		//		up and down, or whether it scrolls to the left as data is added
 		scroll:true,
-
-		// comparative: Boolean
+		//
+		//	comparative: Boolean
 		//		If false, all items are each their own series.
 		//		If true, the items are combined into one series
 		//		so that their charted properties can be compared.
 		comparative:false,
-
-		// query: String
-		//		Used for fetching items. Will vary depending upon store.
+		//
+		//		query: String
+		//			Used for fetching items. Will vary depending upon store.
 		query: "*",
-
-		// queryOptions: String
-		//		Option used for fetching items
+		//
+		//		queryOptions: String
+		//			Option used for fetching items
 		queryOptions: "",
-
+		//
 		/*=====
-			// start:Number
+			//	start:Number
 			//		first item to fetch from store
-			// count:Number
+			//	count:Number
 			//		Total amount of items to fetch from store
-			// sort:Object
-			//		Parameters to sort the fetched items from store
+			//	sort:Object
+			//		Paramaters to sort the fetched items from store
 		=====*/
-
-		// fieldName: String
-		//		The field in the store item that is getting charted
+		//
+		//		fieldName: String
+		//			The field in the store item that is getting charted
 		fieldName: "value",
-
-		// chartTheme: dojox.charting.themes.*
-		//		The theme to style the chart. Defaults to PlotKit.blue.
-		chartTheme: blue,
-
-		// displayRange: Number
-		//		The number of major ticks to show on the xaxis
+		//
+		//		chartTheme: dojox.charting.themes.*
+		//			The theme to style the chart. Defaults to PlotKit.blue.
+		chartTheme: dojox.charting.themes.PlotKit.blue,
+		//
+		//		displayRange: Number
+		//			The number of major ticks to show on the xaxis
 		displayRange:0,
-
-		// stretchToFit: Boolean
-		//		If true, chart is sized to data. If false, chart is a
-		//		fixed size. Note, is overridden by displayRange.
-		//		TODO: Stretch for the y-axis?
+		//
+		// 		stretchToFit: Boolean
+		//			If true, chart is sized to data. If false, chart is a
+		//			fixed size. Note, is overridden by displayRange.
+		//			TODO: Stretch for the y-axis?
 		stretchToFit:true,
-
-		// minWidth: Number
-		//		The the smallest the chart width can be
+		//
+		//		minWidth: Number
+		//			The the smallest the chart width can be
 		minWidth:200,
-
-		// minHeight: Number
-		//		The the smallest the chart height can be
+		//
+		//		minHeight: Number
+		//			The the smallest the chart height can be
 		minHeight:100,
-
-		// showing: Boolean
-		//		Whether the chart is showing (default) on
-		//		initialization or hidden.
+		//
+		//		showing: Boolean
+		//			Whether the chart is showing (default) on
+		//			initialization or hidden.
 		showing: true,
-
-		// label: String
-		//		The name field of the store item
-		//		DO NOT SET: Set from store.labelAttribute
+		//
+		//		label: String
+		//			The name field of the store item
+		//			DO NOT SET: Set from store.labelAttribute
 		label: "name",
 
 		constructor: function(node, kwArgs){
 			// summary:
 			//		Set up properties and initialize chart build.
-			// node: DomNode
-			//		The node to attach the chart to.
-			// kwArgs: Object
-			//		- xaxis: Object: optional parameters for xaxis (see above)
-			//		- yaxis: Object: optional parameters for yaxis (see above)
-			//		- store: Object: dojo.data store (currently nly supports Persevere)
-			//		- xaxis: Object: First query for store
-			//		- grid: Object: Options for the grid plot
-			//		- chartPlot: Object: Options for chart elements (lines, bars, etc)
+			//
+			//	arguments:
+			//		node: DomNode
+			//			The node to attach the chart to.
+			//		kwArgs:	Object
+			//			xaxis: Object
+			//				optional parameters for xaxis (see above)
+			//			yaxis: Object
+			//				optional parameters for yaxis (see above)
+			//			store: Object
+			//				dojo.data store (currently nly supports Persevere)
+			//			xaxis: Object
+			//				First query for store
+			//			grid: Object
+			//				Options for the grid plot
+			//			chartPlot: Object
+			//				Options for chart elements (lines, bars, etc)
 
-			this.domNode = dom.byId(node);
+			this.domNode = dojo.byId(node);
 
-			lang.mixin(this, kwArgs);
+			dojo.mixin(this, kwArgs);
 
-			this.xaxis = lang.mixin(lang.mixin({}, _xaxis), kwArgs.xaxis);
+			this.xaxis = dojo.mixin(dojo.mixin({}, _xaxis), kwArgs.xaxis);
 			if(this.xaxis.labelFunc == "seriesLabels"){
-				this.xaxis.labelFunc = lang.hitch(this, "seriesLabels");
+				this.xaxis.labelFunc = dojo.hitch(this, "seriesLabels");
 			}
 
-			this.yaxis = lang.mixin(lang.mixin({}, _yaxis), kwArgs.yaxis);
+			this.yaxis = dojo.mixin(dojo.mixin({}, _yaxis), kwArgs.yaxis);
 			if(this.yaxis.labelFunc == "seriesLabels"){
-				this.yaxis.labelFunc = lang.hitch(this, "seriesLabels");
+				this.yaxis.labelFunc = dojo.hitch(this, "seriesLabels");
 			}
 
 			// potential event's collector
@@ -190,18 +205,13 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			if(!this.stretchToFit){
 				this.xaxis.to = this.displayRange;
 			}
-			// we don't want axis on Pie
-			var cartesian = kwArgs.type && kwArgs.type != "Pie" && kwArgs.type.prototype.declaredClass != "dojox.charting.plot2d.Pie";
-			if(cartesian){
-				this.addAxis("x", this.xaxis);
-				this.addAxis("y", this.yaxis);
-			}
-			chartPlot.type = kwArgs.type || "Markers";
-			this.addPlot("default", lang.mixin(chartPlot, kwArgs.chartPlot));
-			if(cartesian){
-				this.addPlot("grid", lang.mixin(kwArgs.grid || {}, {type: "Grid", hMinorLines: true}));
-			}
-			
+			this.addAxis("x", this.xaxis);
+			this.addAxis("y", this.yaxis);
+			chartPlot.type = kwArgs.type || "Markers"
+			this.addPlot("default", dojo.mixin(chartPlot, kwArgs.chartPlot));
+
+			this.addPlot("grid", dojo.mixin(kwArgs.grid || {}, {type: "Grid", hMinorLines: true}));
+
 			if(this.showing){
 				this.render();
 			}
@@ -212,18 +222,18 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		},
 
 		destroy: function(){
-			arr.forEach(this._events, hub.disconnect);
+			dojo.forEach(this._events, dojo.disconnect);
 			this.inherited(arguments);
 		},
 
 		setStore: function(/*Object*/store, /* ? String*/query, /* ? String*/fieldName, /* ? Object */queryOptions){
-			// summary:
+			//	 summary:
 			//		Sets the chart store and query
 			//		then does the first fetch and
 			//		connects to subsequent changes.
-
+			//
 			// TODO: Not handling resetting store
-
+			//
 			this.firstRun = true;
 			this.store = store || this.store;
 			this.query = query || this.query;
@@ -231,10 +241,10 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			this.label = this.store.getLabelAttributes();
 			this.queryOptions = queryOptions || queryOptions;
 
-			arr.forEach(this._events, hub.disconnect);
+			dojo.forEach(this._events, dojo.disconnect);
 			this._events = [
-				hub.connect(this.store, "onSet", this, "onSet"),
-				hub.connect(this.store, "onError", this, "onError")
+				dojo.connect(this.store, "onSet", this, "onSet"),
+				dojo.connect(this.store, "onError", this, "onError")
 			];
 			this.fetch();
 		},
@@ -243,28 +253,28 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			// summary:
 			//		If chart is hidden, show it
 			if(!this.showing){
-				html.style(this.domNode, "display", "");
+				dojo.style(this.domNode, "display", "");
 				this.showing = true;
 				this.render();
 			}
 		},
 		hide: function(){
-			// summary:
+			// 	summary:
 			//		If chart is showing, hide it
 			//		Prevents rendering while hidden
 			if(this.showing){
-				html.style(this.domNode, "display", "none");
+				dojo.style(this.domNode, "display", "none");
 				this.showing = false;
 			}
 		},
 
 		onSet: function(/*storeObject*/item){
-			// summary:
+			//	summary:
 			//		Fired when a store item changes.
 			//		Collects the item calls and when
 			//		done (after 200ms), sends item
 			//		array to onData().
-
+			//
 			// FIXME: Using labels instead of IDs for item
 			//	identifiers here and in the chart series. This
 			//	is obviously short sighted, but currently used
@@ -279,7 +289,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 				if(!this.onSetItems[nm]){
 					this.onSetItems[nm] = item;
 				}
-				this.onSetInterval = setTimeout(lang.hitch(this, function(){
+				this.onSetInterval = setTimeout(dojo.hitch(this, function(){
 					clearTimeout(this.onSetInterval);
 					var items = [];
 					for(var nm in this.onSetItems){
@@ -322,19 +332,19 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			return value;
 		},
 		onData: function(/*Array*/items){
-			// summary:
+			//	summary:
 			//		Called after a completed fetch
 			//		or when store items change.
 			//		On first run, sets the chart data,
 			//		then updates chart and legends.
-
+			//
 			//console.log("Store:", store);console.log("items: (", items.length+")", items);console.log("Chart:", this);
 			if(!items || !items.length){ return; }
 
 			if(this.items && this.items.length != items.length){
-				arr.forEach(items, function(m){
+				dojo.forEach(items, function(m){
 					var id = this.getProperty(m, "id");
-					arr.forEach(this.items, function(m2, i){
+					dojo.forEach(this.items, function(m2, i){
 						if(this.getProperty(m2, "id") == id){
 							this.items[i] = m2;
 						}
@@ -356,15 +366,15 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 
 				this.seriesData[nm] = [];
 				this.seriesDataBk[nm] = [];
-				arr.forEach(items, function(m){
+				dojo.forEach(items, function(m, i){
 					var field = this.getProperty(m, this.fieldName);
 					this.seriesData[nm].push(field);
 				}, this);
 
 			}else{
 
-				// each item is a separate series.
-				arr.forEach(items, function(m, i){
+				// each item is a seperate series.
+				dojo.forEach(items, function(m, i){
 					var nm = this.store.getLabel(m);
 					if(!this.seriesData[nm]){
 						this.seriesData[nm] = [];
@@ -373,7 +383,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 
 					// the property in the item we are using
 					var field = this.getProperty(m, this.fieldName);
-					if(lang.isArray(field)){
+					if(dojo.isArray(field)){
 						// Data is an array, so it's a snapshot, and not
 						//	live, updating data
 						//
@@ -386,7 +396,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 							//
 							// create empty chart elements by starting an array
 							//	with zeros until we reach our relevant data
-							var ar = arr.map(new Array(i+1), function(){ return 0; });
+							var ar = dojo.map(new Array(i+1), function(){ return 0; });
 							ar.push(Number(field));
 							this.seriesData[nm] = ar;
 
@@ -446,12 +456,12 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			//
 			if(!this.store){ return; }
 			this.store.fetch({query:this.query, queryOptions:this.queryOptions, start:this.start, count:this.count, sort:this.sort,
-				onComplete:lang.hitch(this, function(data){
-					setTimeout(lang.hitch(this, function(){
+				onComplete:dojo.hitch(this, function(data){
+					setTimeout(dojo.hitch(this, function(){
 						this.onData(data)
 					}),0);
 				}),
-				onError:lang.hitch(this, "onError")
+				onError:dojo.hitch(this, "onError")
 			});
 		},
 
@@ -460,9 +470,9 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			//		Convenience method to convert a label array of strings
 			//		into an array of objects
 			//
-			if(!axis.labels || lang.isObject(axis.labels[0])){ return null; }
+			if(!axis.labels || dojo.isObject(axis.labels[0])){ return null; }
 
-			axis.labels = arr.map(axis.labels, function(ele, i){
+			axis.labels = dojo.map(axis.labels, function(ele, i){
 				return {value:i, text:ele};
 			});
 			return null; // null
@@ -494,14 +504,14 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		},
 
 		resizeChart: function(/*Object*/dim){
-			// summary:
+			//	summary:
 			//		Call this function to change the chart size.
 			//		Can be connected to a layout widget that calls
 			//		resize.
-
+			//
 			var w = Math.max(dim.w, this.minWidth);
 			var h = Math.max(dim.h, this.minHeight);
 			this.resize(w, h);
 		}
 	});
-});
+})();

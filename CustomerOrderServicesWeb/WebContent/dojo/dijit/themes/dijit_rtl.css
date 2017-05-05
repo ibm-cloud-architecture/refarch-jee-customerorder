@@ -1,9 +1,3 @@
-.dijitRtl .dijitOffScreen {
-	/* align on the right side rather than the left so no horizontal scroll bar shown */
-	left: auto !important;
-	right: -10000px !important;
-}
-
 .dijitRtl .dijitPlaceHolder {
 	left: auto;
 	right: 0;
@@ -17,22 +11,27 @@
 
 /* Button */
 
-.dj_iequirks .dijitComboButtonRtl button {
+.dj_iequirks .dijitComboButtonRtl BUTTON {
 	/* workaround bug where label invisible (themeTesterQuirk.html?dir=rtl) */
 	float:left;
-}
-.dj_ie .dijitTextBoxRtl .dijitInputContainer {
-	clear: right;
 }
 
 /* TextBox, ComboBox, Spinner */
 
-.dijitTextBoxRtl .dijitValidationContainer,
+.dijit_a11y .dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitComboBoxRtl .dijitArrowButtonContainer {
 	/* combobox and spinner: line between the input area and the drop down button */
 	border-right-width: 1px !important;
-	border-left-width: 0 !important;
+	border-right-style: solid !important;
+	border-left-width: 0px !important;
+	border-left-style: none !important;
+}
+.dijit_a11y .dijitTextBoxRtl .dijitValidationContainer,
+.dijit_a11y .dijitTextBoxRtl .dijitSpinnerButtonContainer,
+.dijit_a11y .dijitComboBoxRtl .dijitArrowButtonContainer {
+	border-right: 1px solid black !important;
+	border-left: 0px none black !important;
 }
 
 .dijitSpinnerRtl .dijitSpinnerButtonContainer .dijitArrowButton {
@@ -40,18 +39,10 @@
 	left: auto;
 }
 
-.dijitSelectRtl .dijitButtonText {
-	float: right;
-}
-
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
-.dijitValidationTextBoxRtl .dijitValidationContainer,
+.dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitArrowButtonContainer {
 	float: left;
-}
-
-div.dijitNumberTextBoxRtl {
-	text-align: right;
 }
 
 /* Calendar */
@@ -104,38 +95,16 @@ div.dijitNumberTextBoxRtl {
 }
 
 /* ContentPane*/
-
-.dijitRtl .dijitContentPaneLoading .dijitIconLoading,
-.dijitRtl .dijitContentPaneError .dijitIconError {
-	margin-right: 0;
-	margin-left: 9px;
+.dijitRtl .dijitContentPaneLoading, .dijitRtl .dijitContentPaneError {
+	background-position:right;
+	padding-right:25px;
 }
 
 /* TabContainer */
 
-.dijitTabControllerRtl .nowrapTabStrip {
-    text-align: right;  /* just in case ancestor has non-standard setting */
-}
 .dijitTabRtl .dijitTabCloseButton {
-	margin-left: 0;
+	margin-left: 0px;
 	margin-right: 1em;
-}
-.dj_ie6 .dijitTabRtl .tabLabel,
-.dj_ie6 .dijitTabContainerRight-tabs .dijitTabRtl,
-.dj_ie6 .dijitTabContainerLeft-tabs .dijitTabRtl,
-.dj_ie7 .dijitTabContainerRight-tabs .dijitTabRtl,
-.dj_ie7 .dijitTabContainerLeft-tabs .dijitTabRtl {
-	zoom: 1;
-}
-.dj_ie6 .dijitTabContainerRight-tabs .dijitTabRtl,
-.dj_ie7 .dijitTabContainerRight-tabs .dijitTabRtl {
-    left: 0;
-}
-
-.dj_ie6 .dijitTabContainerRightRtl .dijitTabContainerRight-tabs,
-.dj_ie6 .dijitTabContainerLeftRtl .dijitTabContainerLeft-tabs {
-    /* otherwise tab labels invisible */
-	width: 1%;
 }
 
 /* TimePicker */
@@ -153,25 +122,5 @@ div.dijitNumberTextBoxRtl {
 
 /* Select */
 .dijitSelectRtl .dijitButtonContents {
-	border-style: none none none solid;
 	text-align: right;
-}
-
-/* Tree */
-
-.dijitTreeRtl .dijitTreeContainer {
-	float: right;	/* for correct highlighting during horizontal scroll, see #16132 */
-}
-
-/* DnD
- * These rules should apply for containers that are dir=rtl (either set directly, or inherited)
- * but seems the best we can do is look for .dijitRtl on an ancestor node.
- */
-.dijitRtl .dojoDndHorizontal .dojoDndItemBefore {
-    border-width: 0 2px 0 0;
-    padding: 2px 0 2px 2px;
-}
-.dijitRtl .dojoDndHorizontal .dojoDndItemAfter {
-    border-width: 0 0 0 2px;
-    padding: 2px 2px 2px 0;
 }

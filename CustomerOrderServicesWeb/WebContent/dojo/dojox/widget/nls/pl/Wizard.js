@@ -1,7 +1,5 @@
-define(
 ({
-next: "Dalej",
-previous: "Wstecz",
+next: "Następna",
+previous: "Poprzednia",
 done: "Gotowe"
 })
-);

@@ -1,21 +1,10 @@
-define(["../_base/kernel", "../_base/lang"], function(dojo, lang){
+dojo.provide("dojo.cldr.monetary");
 
-// module:
-//		dojo/cldr/monetary
+dojo.cldr.monetary.getData = function(/*String*/code){
+// summary: A mapping of currency code to currency-specific formatting information. Returns a unique object with properties: places, round.
+// code: an [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
 
-var monetary = {
-	// summary:
-	//		TODOC
-};
-lang.setObject("dojo.cldr.monetary", monetary);
-
-monetary.getData = function(/*String*/ code){
-	// summary:
-	//		A mapping of currency code to currency-specific formatting information. Returns a unique object with properties: places, round.
-	// code:
-	//		an [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code
-
-	// from http://www.unicode.org/cldr/data/common/supplemental/supplementalData.xml:supplementalData/currencyData/fractions
+// from http://www.unicode.org/cldr/data/common/supplemental/supplementalData.xml:supplementalData/currencyData/fractions
 
 	var placesData = {
 		ADP:0,AFN:0,ALL:0,AMD:0,BHD:3,BIF:0,BYR:0,CLF:0,CLP:0,
@@ -27,7 +16,7 @@ monetary.getData = function(/*String*/ code){
 		XAF:0,XOF:0,XPF:0,YER:0,ZMK:0,ZWD:0
 	};
 
-	var roundingData = {};
+	var roundingData = {CHF:5};
 
 	var places = placesData[code], round = roundingData[code];
 	if(typeof places == "undefined"){ places = 2; }
@@ -35,6 +24,3 @@ monetary.getData = function(/*String*/ code){
 
 	return {places: places, round: round}; // Object
 };
-
-return monetary;
-});

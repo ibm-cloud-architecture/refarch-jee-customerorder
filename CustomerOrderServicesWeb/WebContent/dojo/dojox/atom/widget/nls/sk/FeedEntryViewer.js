@@ -1,13 +1,12 @@
-define(
 ({
-	displayOptions: "[voľby zobrazenia]",
+	displayOptions: "[zobraziť voľby]",
 	title: "Nadpis",
 	authors: "Autori",
 	contributors: "Prispievatelia",
 	id: "ID",
 	close: "[zatvoriť]",
-	updated: "Aktualizované",
-	summary: "Zhrnutie",
+	updated: "Aktualizovaný",
+	summary: "Súhrn",
 	content: "Obsah"
 })
-);
+

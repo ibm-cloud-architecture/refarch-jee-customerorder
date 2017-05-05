@@ -1,5 +1,6 @@
-define(["dojo", "../util/common"], 
-function(dojo, utilCommon){
+dojo.provide("dojox.drawing.manager.keys");
+
+(function(){
 	
 	// Ref: isEdit allows events to happen in Drawing, like TextBlocks
 	var isEdit = false;
@@ -9,43 +10,42 @@ function(dojo, utilCommon){
 	
 	var alphabet = "abcdefghijklmnopqrstuvwxyz";
 	
-	//dojox.drawing.manager.keys = 
-	var keys = {
+	dojox.drawing.manager.keys = {
 		// summary:
 		//		A singleton, master object that detects
 		//		keyboard keys and events
-		//		Connect to it like:
-		//	|	dojo.connect(this.keys, "onEnter", ....);
-
-		// arrowIncrement: Number
+		// 		Connect to it like:
+		//		dojo.connect(this.keys, "onEnter", ....);
+		//
+		// arrowIncrement:Number
 		//		The amount, in pixels, a selected Stencil will
 		//		move on an arrow key event
 		arrowIncrement:1,
-
-		// arrowShiftIncrement: Number
+		//
+		//	arrowShiftIncrement: Number
 		//		The amount, in pixels, a selected Stencil will
 		//		move on an arrow key + SHIFT event
 		arrowShiftIncrement:10,
-
+		//
 		// shift: [readonly] Boolean
 		//		Indicates whether the Shift key is currently pressed
 		shift:false,
-
+		//
 		// ctrl: [readonly] Boolean
 		//		Indicates whether the Control key is currently pressed
 		ctrl:false,
-
+		//
 		// alt: [readonly] Boolean
 		//		Indicates whether the Alt or Option key is currently pressed
 		alt:false,
-
+		//
 		// cmmd: [readonly] Boolean
 		//		Indicates whether the Apple Command key is currently pressed
 		cmmd:false, // apple key
-
+		//
 		// meta: [readonly] Boolean
 		//		Indicates whether any 'meta' key is currently pressed:
-		//		shift || ctrl || cmd || alt
+		//			shift || ctrl || cmmd || alt
 		meta:false, // any meta key
 		
 		onDelete: function(/* Event */evt){
@@ -82,19 +82,19 @@ function(dojo, utilCommon){
 			//		of events.
 			//		NOTE: Not really used in code, but should work.
 			//		See manager.mouse for similar usage
-
-			var _handle = utilCommon.uid("listener");
+			//
+			var _handle = dojox.drawing.util.uid("listener");
 			this.listeners.push({
 				handle:_handle,
 				scope: options.scope || window,
 				callback:options.callback,
 				keyCode:options.keyCode
-			});
+			});	
 		},
 		
 		_getLetter: function(evt){
 			if(!evt.meta && evt.keyCode>=65 && evt.keyCode<=90){
-				return alphabet.charAt(evt.keyCode-65);
+				return alphabet.charAt(evt.keyCode-65);	
 			}
 			return null;
 		},
@@ -106,7 +106,6 @@ function(dojo, utilCommon){
 			evt.shift = this.shift;
 			evt.alt = this.alt;
 			evt.cmmd = this.cmmd;
-			evt.ctrl = this.ctrl;
 			evt.letter = this._getLetter(evt);
 			return evt;
 		},
@@ -114,7 +113,7 @@ function(dojo, utilCommon){
 		editMode: function(_isedit){
 			// summary:
 			//		Relinquishes control of events to another portion
-			//		of Drawing; namely the TextBlock.
+			// 		of Drawing; namely the TextBlock.
 			isEdit = _isedit;
 		},
 		
@@ -134,17 +133,17 @@ function(dojo, utilCommon){
 			//		Scans the document for inputs
 			//		and calls this automatically. However you may need
 			//		to call this if you create inputs after the fact.
-
+			//
 			if(this._fieldCons){
 				dojo.forEach(this._fieldCons, dojo.disconnect, dojo);
 			}
 			this._fieldCons = [];
 			dojo.query("input").forEach(function(n){
 				var a = dojo.connect(n, "focus", this, function(evt){
-					this.enable(false);
+					this.enable(false);	
 				});
 				var b = dojo.connect(n, "blur", this, function(evt){
-					this.enable(true);
+					this.enable(true);	
 				});
 				this._fieldCons.push(a);
 				this._fieldCons.push(b);
@@ -155,7 +154,7 @@ function(dojo, utilCommon){
 		init: function(){
 			// summary:
 			//		Initialize the keys object
-
+			//
 			// a little extra time is needed in some browsers
 			setTimeout(dojo.hitch(this, "scanForFields"), 500);
 			
@@ -225,43 +224,41 @@ function(dojo, utilCommon){
 				}
 				
 				if(_stop && !isEdit){
-					dojo.stopEvent(evt);
+					dojo.stopEvent(evt);	
 				}
 			});
 			
 			dojo.connect(document, "keypress", this, function(evt){
 				if(!enabled){ return; }
-				var inc = this.shift ? this.arrowIncrement*this.arrowShiftIncrement : this.arrowIncrement,
-					altOrOption = evt.alt || this.cmmd;
+				var inc = this.shift ? this.arrowIncrement*this.arrowShiftIncrement : this.arrowIncrement;
 				
 				var x =0, y =0;
 				if(evt.keyCode==32 && !isEdit){ //space
 					dojo.stopEvent(evt);
 				}
-				if(evt.keyCode==37 && !altOrOption){ //left
+				if(evt.keyCode==37){ //left
 					x = -inc;
 				}
-				if(evt.keyCode==38 && !altOrOption){ //up
+				if(evt.keyCode==38){ //up
 					y = -inc;
 				}
-				if(evt.keyCode==39 && !altOrOption){ //right
+				if(evt.keyCode==39){ //right
 					x = inc;
 				}
-				if(evt.keyCode==40 && !altOrOption){ //down
+				if(evt.keyCode==40){ //down
 					y = inc;
 				}
 				if(x || y){
 					evt.x = x;
 					evt.y = y;
 					evt.shift = this.shift;
+					this.onArrow(evt);
 					if(!isEdit){
-						this.onArrow(evt);
-						dojo.stopEvent(evt);
+						dojo.stopEvent(evt);	
 					}
 				}
 			});
 		}
 	};
-	dojo.addOnLoad(keys, "init");
-	return keys;
-});
+	dojo.addOnLoad(dojox.drawing.manager.keys, "init");
+})();

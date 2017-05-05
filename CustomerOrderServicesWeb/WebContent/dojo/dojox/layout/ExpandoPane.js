@@ -1,46 +1,33 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/declare",
-	"dojo/_base/array", 
-	"dojo/_base/connect",
-	"dojo/_base/event",
-	"dojo/_base/fx",
-	"dojo/dom-style",
-	"dojo/dom-class",
-	"dojo/dom-geometry",
-	"dojo/text!./resources/ExpandoPane.html",
-	"dijit/layout/ContentPane",
-	"dijit/_TemplatedMixin",
-	"dijit/_Contained",
-	"dijit/_Container"
-], function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
-		template,ContentPane,TemplatedMixin,Contained,Container) {
-kernel.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
+dojo.provide("dojox.layout.ExpandoPane");
+dojo.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
 
-return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contained, Container],{
-	// summary:
-	//		An experimental collapsing-pane for dijit.layout.BorderContainer
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit._Templated");
+dojo.require("dijit._Contained");
+
+dojo.declare("dojox.layout.ExpandoPane",
+	[dijit.layout.ContentPane, dijit._Templated, dijit._Contained, dijit._Container],
+	{
+	// summary: An experimental collapsing-pane for dijit.layout.BorderContainer
+	//
 	// description:
 	//		Works just like a ContentPane inside of a borderContainer. Will expand/collapse on
 	//		command, and supports having Layout Children as direct descendants
+	//	
 
 	//maxHeight: "",
 	//maxWidth: "",
 	//splitter: false,
-	attributeMap: lang.delegate(ContentPane.prototype.attributeMap, {
-		title: { node: "titleNode", type: "innerHTML" }
-	}),
 	
-	templateString: template,
+	templateString: dojo.cache("dojox.layout","resources/ExpandoPane.html"),
 
 	// easeOut: String|Function
 	//		easing function used to hide pane
-	easeOut: "dojo._DefaultEasing", // FIXME: This won't work with globalless AMD
+	easeOut: "dojo._DefaultEasing",
 	
 	// easeIn: String|Function
 	//		easing function use to show pane
-	easeIn: "dojo._DefaultEasing", // FIXME: This won't work with globalless AMD
+	easeIn: "dojo._DefaultEasing",
 	
 	// duration: Integer
 	//		duration to run show/hide animations
@@ -48,7 +35,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 
 	// startExpanded: Boolean
 	//		Does this widget start in an open (true) or closed (false) state
-	startExpanded: true,
+	startExpanded: true, 
 
 	// previewOpacity: Float
 	//		A value from 0 .. 1 indicating the opacity to use on the container
@@ -60,11 +47,6 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	//		If false, a double-click will cause the preview to popup
 	previewOnDblClick: false,
 
-	// tabIndex: String
-	//		Order fields are traversed when user hits the tab key
-	tabIndex: "0",
-	_setTabIndexAttr: "iconNode",
-
 	baseClass: "dijitExpandoPane",
 
 	postCreate: function(){
@@ -73,22 +55,21 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 
 		this._isHorizontal = true;
 		
-		if(lang.isString(this.easeOut)){
-			this.easeOut = lang.getObject(this.easeOut);
+		if(dojo.isString(this.easeOut)){
+			this.easeOut = dojo.getObject(this.easeOut);
 		}
-		if(lang.isString(this.easeIn)){
-			this.easeIn = lang.getObject(this.easeIn);
+		if(dojo.isString(this.easeIn)){
+			this.easeIn = dojo.getObject(this.easeIn); 
 		}
 	
 		var thisClass = "", rtl = !this.isLeftToRight();
 		if(this.region){
 			switch(this.region){
-				case "trailing" :
+				case "trailing" : 
 				case "right" :
 					thisClass = rtl ? "Left" : "Right";
-					this._needsPosition = "left";
 					break;
-				case "leading" :
+				case "leading" : 
 				case "left" :
 					thisClass = rtl ? "Right" : "Left";
 					break;
@@ -96,25 +77,22 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 					thisClass = "Top";
 					break;
 				case "bottom" :
-					this._needsPosition = "top";
-					thisClass = "Bottom";
+					thisClass = "Bottom"; 
 					break;
 			}
-			domClass.add(this.domNode, "dojoxExpando" + thisClass);
-			domClass.add(this.iconNode, "dojoxExpandoIcon" + thisClass);
+			dojo.addClass(this.domNode, "dojoxExpando" + thisClass);
+			dojo.addClass(this.iconNode, "dojoxExpandoIcon" + thisClass);
 			this._isHorizontal = /top|bottom/.test(this.region);
 		}
-		domStyle.set(this.domNode, {
+		dojo.style(this.domNode, {
 			overflow: "hidden",
 			padding:0
 		});
 		
 		this.connect(this.domNode, "ondblclick", this.previewOnDblClick ? "preview" : "toggle");
 		
-		this.iconNode.setAttribute("aria-controls", this.id);
-		
 		if(this.previewOnDblClick){
-			this.connect(this.getParent(), "_layoutChildren", lang.hitch(this, function(){
+			this.connect(this.getParent(), "_layoutChildren", dojo.hitch(this, function(){
 				this._isonlypreview = false;
 			}));
 		}
@@ -124,19 +102,19 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	_startupSizes: function(){
 		
 		this._container = this.getParent();
-		this._closedSize = this._titleHeight = domGeom.getMarginBox(this.titleWrapper).h;
+		this._closedSize = this._titleHeight = dojo.marginBox(this.titleWrapper).h;
 		
 		if(this.splitter){
 			// find our splitter and tie into it's drag logic
 			var myid = this.id;
-			arrayUtil.forEach(dijit.registry.toArray(), function(w){
-				if(w && w.child && w.child.id == myid){
-					this.connect(w,"_stopDrag","_afterResize");
-				}
-			}, this);
+			dijit.registry.filter(function(w){
+				return w && w.child && w.child.id == myid;
+			}).forEach(dojo.hitch(this,function(w){
+				this.connect(w,"_stopDrag","_afterResize");
+			}));
 		}
 		
-		this._currentSize = domGeom.getContentBox(this.domNode);	// TODO: can compute this from passed in value to resize(), see _LayoutWidget for example
+		this._currentSize = dojo.contentBox(this.domNode);	// TODO: can compute this from passed in value to resize(), see _LayoutWidget for example
 		this._showSize = this._currentSize[(this._isHorizontal ? "h" : "w")];
 		this._setupAnims();
 
@@ -148,17 +126,16 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._hideAnim.gotoPercent(99,true);
 		}
 		
-		this.domNode.setAttribute("aria-expanded", this._showing);
 		this._hasSizes = true;
 	},
 	
 	_afterResize: function(e){
 		var tmp = this._currentSize;						// the old size
-		this._currentSize = domGeom.getMarginBox(this.domNode);	// the new size
-		var n = this._currentSize[(this._isHorizontal ? "h" : "w")];
+		this._currentSize = dojo.marginBox(this.domNode);	// the new size
+		var n = this._currentSize[(this._isHorizontal ? "h" : "w")] 
 		if(n > this._titleHeight){
-			if(!this._showing){
-				this._showing = !this._showing;
+			if(!this._showing){	
+				this._showing = !this._showing; 
 				this._showEnd();
 			}
 			this._showSize = n;
@@ -173,9 +150,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_setupAnims: function(){
-		// summary:
-		//		Create the show and hide animations
-		arrayUtil.forEach(this._animConnects, connectUtil.disconnect);
+		// summary: Create the show and hide animations
+		dojo.forEach(this._animConnects, dojo.disconnect);
 		
 		var _common = {
 				node:this.domNode,
@@ -183,53 +159,34 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			},
 			isHorizontal = this._isHorizontal,
 			showProps = {},
-			showSize = this._showSize,
-			hideSize = this._closedSize,
 			hideProps = {},
-			dimension = isHorizontal ? "height" : "width",
-			also = this._needsPosition
+			dimension = isHorizontal ? "height" : "width"
 		;
 
-		showProps[dimension] = {
-			end: showSize
+		showProps[dimension] = { 
+			end: this._showSize
 		};
-		hideProps[dimension] = {
-			end: hideSize
+		hideProps[dimension] = { 
+			end: this._closedSize
 		};
 		
-		if(also){
-			showProps[also] = {
-				end: function(n){
-					var c = parseInt(n.style[also], 10);
-					return c - showSize + hideSize; 
-				}
-			}
-			hideProps[also] = {
-				end: function(n){
-					var c = parseInt(n.style[also], 10);
-					return c + showSize - hideSize;
-				}
-			}
-		}
-		
-		this._showAnim = baseFx.animateProperty(lang.mixin(_common,{
+		this._showAnim = dojo.animateProperty(dojo.mixin(_common,{
 			easing:this.easeIn,
-			properties: showProps
+			properties: showProps 
 		}));
-		this._hideAnim = baseFx.animateProperty(lang.mixin(_common,{
+		this._hideAnim = dojo.animateProperty(dojo.mixin(_common,{
 			easing:this.easeOut,
 			properties: hideProps
 		}));
 
 		this._animConnects = [
-			connectUtil.connect(this._showAnim, "onEnd", this, "_showEnd"),
-			connectUtil.connect(this._hideAnim, "onEnd", this, "_hideEnd")
+			dojo.connect(this._showAnim, "onEnd", this, "_showEnd"),
+			dojo.connect(this._hideAnim, "onEnd", this, "_hideEnd")
 		];
 	},
 	
 	preview: function(){
-		// summary:
-		//		Expand this pane in preview mode (does not affect surrounding layout)
+		// summary: Expand this pane in preview mode (does not affect surrounding layout)
 
 		if(!this._showing){
 			this._isonlypreview = !this._isonlypreview;
@@ -238,8 +195,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 
 	toggle: function(){
-		// summary:
-		//		Toggle this pane's visibility
+		// summary: Toggle this pane's visibility
 		if(this._showing){
 			this._hideWrapper();
 			this._showAnim && this._showAnim.stop();
@@ -249,15 +205,13 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._showAnim.play();
 		}
 		this._showing = !this._showing;
-		this.domNode.setAttribute("aria-expanded", this._showing);
 	},
 	
 	_hideWrapper: function(){
-		// summary:
-		//		Set the Expando state to "closed"
-		domClass.add(this.domNode, "dojoxExpandoClosed");
+		// summary: Set the Expando state to "closed"
+		dojo.addClass(this.domNode, "dojoxExpandoClosed");
 		
-		domStyle.set(this.cwrapper,{
+		dojo.style(this.cwrapper,{
 			visibility: "hidden",
 			opacity: "0",
 			overflow: "hidden"
@@ -265,18 +219,17 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_showEnd: function(){
-		// summary:
-		//		Common animation onEnd code - "unclose"
-		domStyle.set(this.cwrapper, {
+		// summary: Common animation onEnd code - "unclose"
+		dojo.style(this.cwrapper, { 
 			opacity: 0,
-			visibility:"visible"
+			visibility:"visible" 
 		});
-		baseFx.anim(this.cwrapper, {
+		dojo.anim(this.cwrapper, {
 			opacity: this._isonlypreview ? this.previewOpacity : 1
 		}, 227);
-		domClass.remove(this.domNode, "dojoxExpandoClosed");
+		dojo.removeClass(this.domNode, "dojoxExpandoClosed");
 		if(!this._isonlypreview){
-			setTimeout(lang.hitch(this._container, "layout"), 15);
+			setTimeout(dojo.hitch(this._container, "layout"), 15);
 		}else{
 			this._previewShowing = true;
 			this.resize();
@@ -284,12 +237,11 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_hideEnd: function(){
-		// summary:
-		//		Callback for the hide animation - "close"
+		// summary: Callback for the hide animation - "close"
 
 		// every time we hide, reset the "only preview" state
 		if(!this._isonlypreview){
-			setTimeout(lang.hitch(this._container, "layout"), 25);
+			setTimeout(dojo.hitch(this._container, "layout"), 25);
 		}else{
 			this._previewShowing = false;
 		}
@@ -297,34 +249,33 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		
 	},
 	
-	resize: function(/*Object?*/newSize){
+	resize: function(/* Object? */newSize, /*Object?*/ currentSize){
 		// summary:
-		//		we aren't a layout widget, but need to act like one.
+		//		we aren't a layout widget, but need to act like one:
 		// newSize: Object
 		//		The size object to resize to
+		// currentSize: Object
+		//		The size of my domNode that has already been set (by BorderContainer)
 
 		if(!this._hasSizes){ this._startupSizes(newSize); }
 		
 		// compute size of container (ie, size left over after title bar)
-		var currentSize = domGeom.getMarginBox(this.domNode);
 		this._contentBox = {
 			w: newSize && "w" in newSize ? newSize.w : currentSize.w,
 			h: (newSize && "h" in newSize ? newSize.h : currentSize.h) - this._titleHeight
-		};
-		domStyle.set(this.containerNode, "height", this._contentBox.h + "px");
+		};	
+		dojo.style(this.containerNode, "height", this._contentBox.h + "px");
 
 		if(newSize){
-			domGeom.setMarginBox(this.domNode, newSize);
+			dojo.marginBox(this.domNode, newSize);
 		}
 
 		this._layoutChildren();
-		this._setupAnims();
 	},
 	
-	_trap: function(/*Event*/ e){
-		// summary:
-		//		Trap stray events
-		eventUtil.stop(e);
+	_trap: function(e){
+		// summary: Trap stray events
+		dojo.stopEvent(e);
 	}
-});
+
 });

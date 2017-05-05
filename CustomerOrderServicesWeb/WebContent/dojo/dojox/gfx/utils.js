@@ -1,41 +1,30 @@
-define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo/_base/array", "dojo/_base/window", "dojo/_base/json", 
-	"dojo/_base/Deferred", "dojo/_base/sniff", "require","dojo/_base/config"], 
-  function(kernel, lang, g, html, arr, win, jsonLib, Deferred, has, require, config){
-	var gu = g.utils = {};
+dojo.provide("dojox.gfx.utils");
 
-	lang.mixin(gu, {
+dojo.require("dojox.gfx");
+
+(function(){
+	var d = dojo, g = dojox.gfx, gu = g.utils;
+
+	dojo.mixin(gu, {
 		forEach: function(
-			/*dojox/gfx/shape.Surface|dojox/gfx/shape.Shape*/ object,
+			/* dojox.gfx.Surface || dojox.gfx.Shape */ object,
 			/*Function|String|Array*/ f, /*Object?*/ o
 		){
-			// summary:
-			//		Takes a shape or a surface and applies a function "f" to in the context of "o"
-			//		(or global, if missing). If "shape" was a surface or a group, it applies the same
-			//		function to all children recursively effectively visiting all shapes of the underlying scene graph.
-			// object:
-			//		The gfx container to iterate.
-			// f:
-			//		The function to apply.
-			// o:
-			//		The scope.
-			o = o || kernel.global;
+			o = o || d.global;
 			f.call(o, object);
 			if(object instanceof g.Surface || object instanceof g.Group){
-				arr.forEach(object.children, function(shape){
+				d.forEach(object.children, function(shape){
 					gu.forEach(shape, f, o);
 				});
 			}
 		},
 
-		serialize: function(object){
-			// summary:
-			//		Takes a shape or a surface and returns an object, which describes underlying shapes.
-			// object: dojox/gfx/shape.Surface|dojox/gfx/shape.Shape
-			//		The container to serialize.
-
+		serialize: function(
+			/* dojox.gfx.Surface || dojox.gfx.Shape */ object
+		){
 			var t = {}, v, isSurface = object instanceof g.Surface;
 			if(isSurface || object instanceof g.Group){
-				t.children = arr.map(object.children, gu.serialize);
+				t.children = d.map(object.children, gu.serialize);
 				if(isSurface){
 					return t.children;	// Array
 				}
@@ -61,28 +50,19 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 			return t;	// Object
 		},
 
-		toJson: function(object, prettyPrint){
-			// summary:
-			//		Works just like serialize() but returns a JSON string. If prettyPrint is true, the string is pretty-printed to make it more human-readable.
-			// object: dojox/gfx/shape.Surface|dojox/gfx/shape.Shape
-			//		The container to serialize.
-			// prettyPrint: Boolean?
-			//		Indicates whether the output string should be formatted.
-			// returns: String
-			
-			return jsonLib.toJson(gu.serialize(object), prettyPrint);	// String
+		toJson: function(
+			/* dojox.gfx.Surface || dojox.gfx.Shape */ object,
+			/* Boolean? */ prettyPrint
+		){
+			return d.toJson(gu.serialize(object), prettyPrint);	// String
 		},
 
-		deserialize: function(parent, object){
-			// summary:
-			//		Takes a surface or a shape and populates it with an object produced by serialize().
-			// parent: dojox/gfx/shape.Surface|dojox/gfx/shape.Shape
-			//		The destination container for the deserialized shapes.
-			// object: dojox/gfx/shape.Shape|Array
-			//		The shapes to deserialize.
-
+		deserialize: function(
+			/* dojox.gfx.Surface || dojox.gfx.Shape */ parent,
+			/* dojox.gfx.Shape || Array */ object
+		){
 			if(object instanceof Array){
-				return arr.map(object, lang.hitch(null, gu.deserialize, parent));	// Array
+				return d.map(object, d.hitch(null, gu.deserialize, parent));	// Array
 			}
 			var shape = ("shape" in object) ? parent.createShape(object.shape) : parent.createGroup();
 			if("transform" in object){
@@ -98,25 +78,20 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 				shape.setFont(object.font);
 			}
 			if("children" in object){
-				arr.forEach(object.children, lang.hitch(null, gu.deserialize, shape));
+				d.forEach(object.children, d.hitch(null, gu.deserialize, shape));
 			}
-			return shape;	// dojox/gfx/shape.Shape
+			return shape;	// dojox.gfx.Shape
 		},
 
-		fromJson: function(parent, json){
-			// summary:
-			//		Works just like deserialize() but takes a JSON representation of the object.
-			// parent: dojox/gfx/shape.Surface|dojox/gfx/shape.Shape
-			//		The destination container for the deserialized shapes.
-			// json: String
-			//		The shapes to deserialize.
-
-			return gu.deserialize(parent, jsonLib.fromJson(json));	// Array|dojox/gfx/shape.Shape
+		fromJson: function(
+			/* dojox.gfx.Surface || dojox.gfx.Shape */ parent,
+			/* String */ json){
+			return gu.deserialize(parent, d.fromJson(json));	// Array || dojox.gfx.Shape
 		},
 
-		toSvg: function(/*dojox/gfx/shape.Surface*/surface){
+		toSvg: function(/*GFX object*/surface){
 			// summary:
-			//		Function to serialize a GFX surface to SVG text.
+			//		Function to serialize a GFX surface to SVG text.  
 			// description:
 			//		Function to serialize a GFX surface to SVG text.  The value of this output
 			//		is that there are numerous serverside parser libraries that can render
@@ -130,9 +105,9 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 		
 			//Since the init and even surface creation can be async, we need to
 			//return a deferred that will be called when content has serialized.
-			var deferred = new Deferred();
+			var deferred = new dojo.Deferred();
 		
-			if(g.renderer === "svg"){
+			if(dojox.gfx.renderer === "svg"){
 				//If we're already in SVG mode, this is easy and quick.
 				try{
 					var svg = gu._cleanSvg(gu._innerXML(surface.rawNode));
@@ -146,7 +121,7 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 				if (!gu._initSvgSerializerDeferred) {
 					gu._initSvgSerializer();
 				}
-				var jsonForm = gu.toJson(surface);
+				var jsonForm = dojox.gfx.utils.toJson(surface);
 				var serializer = function(){
 					try{
 						var sDim = surface.getDimensions();
@@ -157,15 +132,15 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 						var node = gu._gfxSvgProxy.document.createElement("div");
 						gu._gfxSvgProxy.document.body.appendChild(node);
 						//Set the node scaling.
-						win.withDoc(gu._gfxSvgProxy.document, function() {
-							html.style(node, "width", width);
-							html.style(node, "height", height);
+						dojo.withDoc(gu._gfxSvgProxy.document, function() {
+							dojo.style(node, "width", width);
+							dojo.style(node, "height", height);
 						}, this);
 
 						//Create temp surface to render object to and render.
 						var ts = gu._gfxSvgProxy[dojox._scopeName].gfx.createSurface(node, width, height);
 
-						//It's apparently possible that a suface creation is async, so we need to use
+						//It's apparently possible that a suface creation is async, so we need to use 
 						//the whenLoaded function.  Probably not needed for SVG, but making it common
 						var draw = function(surface) {
 							try{
@@ -191,7 +166,7 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 				if(gu._initSvgSerializerDeferred.fired > 0){
 					serializer();
 				}else{
-					gu._initSvgSerializerDeferred.addCallback(serializer);
+					gu._initSvgSerializerDeferred.addCallback(serializer);		
 				}
 			}
 			return deferred; //dojo.Deferred that will be called when serialization finishes.
@@ -205,7 +180,7 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 
 		_svgSerializerInitialized: function() {
 			// summary:
-			//		Internal function to call when the serializer init completed.
+			//		Internal function to call when the serializer init completed.	
 			// tags:
 			//		private
 			gu._initSvgSerializerDeferred.callback(true);
@@ -218,9 +193,9 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 			// tags:
 			//		private
 			if(!gu._initSvgSerializerDeferred){
-				gu._initSvgSerializerDeferred = new Deferred();
-				var f = win.doc.createElement("iframe");
-				html.style(f, {
+				gu._initSvgSerializerDeferred = new dojo.Deferred();
+				var f = dojo.doc.createElement("iframe");
+				dojo.style(f, {
 					display: "none",
 					position: "absolute",
 					width: "1em",
@@ -228,17 +203,17 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 					top: "-10000px"
 				});
 				var intv;
-				if(has("ie")){
+				if(dojo.isIE){
 					f.onreadystatechange = function(){
 						if(f.contentWindow.document.readyState == "complete"){
 							f.onreadystatechange = function() {};
 							intv = setInterval(function() {
-								if(f.contentWindow[kernel.scopeMap["dojo"][1]._scopeName] &&
-								   f.contentWindow[kernel.scopeMap["dojox"][1]._scopeName].gfx &&
-								   f.contentWindow[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils){
+								if(f.contentWindow[dojo._scopeName] && 
+								   f.contentWindow[dojox._scopeName].gfx &&
+								   f.contentWindow[dojox._scopeName].gfx.utils){
 									clearInterval(intv);
-									f.contentWindow.parent[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils._gfxSvgProxy = f.contentWindow;
-									f.contentWindow.parent[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils._svgSerializerInitialized();
+									f.contentWindow.parent[dojox._scopeName].gfx.utils._gfxSvgProxy = f.contentWindow;
+									f.contentWindow.parent[dojox._scopeName].gfx.utils._svgSerializerInitialized();
 								}
 							}, 50);
 						}
@@ -247,20 +222,20 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 					f.onload = function(){
 						f.onload = function() {};
 						intv = setInterval(function() {
-							if(f.contentWindow[kernel.scopeMap["dojo"][1]._scopeName] &&
-							   f.contentWindow[kernel.scopeMap["dojox"][1]._scopeName].gfx &&
-							   f.contentWindow[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils){
+							if(f.contentWindow[dojo._scopeName] && 
+							   f.contentWindow[dojox._scopeName].gfx &&
+							   f.contentWindow[dojox._scopeName].gfx.utils){
 								clearInterval(intv);
-								f.contentWindow.parent[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils._gfxSvgProxy = f.contentWindow;
-								f.contentWindow.parent[kernel.scopeMap["dojox"][1]._scopeName].gfx.utils._svgSerializerInitialized();
+								f.contentWindow.parent[dojox._scopeName].gfx.utils._gfxSvgProxy = f.contentWindow;
+								f.contentWindow.parent[dojox._scopeName].gfx.utils._svgSerializerInitialized();
 							}
 						}, 50);
 					};
 				}
 				//We have to load the GFX SVG proxy frame.  Default is to use the one packaged in dojox.
-				var uri = (config["dojoxGfxSvgProxyFrameUrl"]||require.toUrl("dojox/gfx/resources/gfxSvgProxyFrame.html"));
-				f.setAttribute("src", uri.toString());
-				win.body().appendChild(f);
+				var uri = (dojo.config["dojoxGfxSvgProxyFrameUrl"]||dojo.moduleUrl("dojox", "gfx/resources/gfxSvgProxyFrame.html"));
+				f.setAttribute("src", uri);
+				dojo.body().appendChild(f);
 			}
 		},
 
@@ -292,31 +267,11 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 					svg = svg.substring(4, svg.length);
 					svg = "<svg xmlns=\"http://www.w3.org/2000/svg\"" + svg;
 				}
-				//Same for xmlns:xlink (missing in Chrome and Safari)
-				if(svg.indexOf("xmlns:xlink=\"http://www.w3.org/1999/xlink\"") == -1){
-					svg = svg.substring(4, svg.length);
-					svg = "<svg xmlns:xlink=\"http://www.w3.org/1999/xlink\"" + svg;
-				}
-				//and add namespace to href attribute if not done yet 
-				//(FF 5+ adds xlink:href but not the xmlns def)
-				if(svg.indexOf("xlink:href") === -1){
-					svg = svg.replace(/href\s*=/g, "xlink:href=");
-				}
-				// in IE, <image are serialized as <img>
-				svg = svg.replace(/<img\b([^>]*)>/gi,"<image $1 />");
-				//Do some other cleanup, like stripping out the
-				//dojoGfx attributes and quoting ids.
+				//Do some other cleanup, like stripping out the 
+				//dojoGfx attributes.
 				svg = svg.replace(/\bdojoGfx\w*\s*=\s*(['"])\w*\1/g, "");
-				svg = svg.replace(/\b__gfxObject__\s*=\s*(['"])\w*\1/g, "");
-				svg = svg.replace(/[=]([^"']+?)(\s|>)/g,'="$1"$2');
-				
-				// Undefined strokes (IE 8 seralization weirdness) should be removed to  
-				// allow default.  'undefined' is not a valid value. 
-				svg = svg.replace(/\bstroke-opacity\w*\s*=\s*(['"])undefined\1/g, ""); 				
 			}
 			return svg;  //Cleaned SVG text.
 		}
 	});
-
-	return gu;
-});
+})();

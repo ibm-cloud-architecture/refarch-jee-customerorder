@@ -1,10 +1,12 @@
+dojo.provide("dojox.gfx.gradutils");
+
+dojo.require("dojox.gfx.matrix");
+
 // Various generic utilities to deal with a linear gradient
 
-define(["./_base", "dojo/_base/lang", "./matrix", "dojo/_base/Color"], 
-  function(g, lang, m, Color){
-  
-	var gradutils = g.gradutils = {};
-
+(function(){
+	var d = dojo, m = dojox.gfx.matrix, C = d.Color;
+	
 	function findColor(o, c){
 		if(o <= 0){
 			return c[0].color;
@@ -19,7 +21,7 @@ define(["./_base", "dojo/_base/lang", "./matrix", "dojo/_base/Color"],
 			if(stop.offset >= o){
 				if(i){
 					var prev = c[i - 1];
-					return Color.blendColors(new Color(prev.color), new Color(stop.color),
+					return d.blendColors(new C(prev.color), new C(stop.color),
 						(o - prev.offset) / (stop.offset - prev.offset));
 				}
 				return stop.color;
@@ -28,12 +30,12 @@ define(["./_base", "dojo/_base/lang", "./matrix", "dojo/_base/Color"],
 		return c[len - 1].color;
 	}
 
-	gradutils.getColor = function(fill, pt){
+	dojox.gfx.gradutils.getColor = function(fill, pt){
 		// summary:
 		//		sample a color from a gradient using a point
-		// fill: Object
+		// fill: Object:
 		//		fill object
-		// pt: dojox/gfx.Point
+		// pt: dojox.gfx.Point:
 		//		point where to sample a color
 		var o;
 		if(fill){
@@ -45,30 +47,30 @@ define(["./_base", "dojo/_base/lang", "./matrix", "dojo/_base/Color"],
 						p = m.multiplyPoint(projection, pt),
 						pf1 = m.multiplyPoint(projection, fill.x1, fill.y1),
 						pf2 = m.multiplyPoint(projection, fill.x2, fill.y2),
-						scale = m.multiplyPoint(rotation, pf2.x - pf1.x, pf2.y - pf1.y).x;
-					o = m.multiplyPoint(rotation, p.x - pf1.x, p.y - pf1.y).x / scale;
+						scale = m.multiplyPoint(rotation, pf2.x - pf1.x, pf2.y - pf1.y).x,
+						o = m.multiplyPoint(rotation, p.x - pf1.x, p.y - pf1.y).x / scale;
 					break;
 				case "radial":
-					var dx = pt.x - fill.cx, dy = pt.y - fill.cy;
-					o = Math.sqrt(dx * dx + dy * dy) / fill.r;
+					var dx = pt.x - fill.cx, dy = pt.y - fill.cy,
+						o = Math.sqrt(dx * dx + dy * dy) / fill.r;
 					break;
 			}
-			return findColor(o, fill.colors);	// dojo/_base/Color
+			return findColor(o, fill.colors);	// dojo.Color
 		}
 		// simple color
-		return new Color(fill || [0, 0, 0, 0]);	// dojo/_base/Color
+		return new C(fill || [0, 0, 0, 0]);	// dojo.Color
 	};
 
-	gradutils.reverse = function(fill){
+	dojox.gfx.gradutils.reverse = function(fill){
 		// summary:
 		//		reverses a gradient
-		// fill: Object
+		// fill: Object:
 		//		fill object
 		if(fill){
 			switch(fill.type){
 				case "linear":
 				case "radial":
-					fill = lang.delegate(fill);
+					fill = dojo.delegate(fill);
 					if(fill.colors){
 						var c = fill.colors, l = c.length, i = 0, stop,
 							n = fill.colors = new Array(c.length);
@@ -86,6 +88,4 @@ define(["./_base", "dojo/_base/lang", "./matrix", "dojo/_base/Color"],
 		}
 		return fill;	// Object
 	};
-
-	return gradutils;
-});
+})();

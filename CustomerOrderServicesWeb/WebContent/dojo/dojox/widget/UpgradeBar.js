@@ -1,85 +1,70 @@
-define([
-	"dojo/_base/kernel", // dojo.eval
-	"dojo/_base/array", // array.forEach
-	"dojo/_base/connect", // connect
-	"dojo/_base/declare", // declare
-	"dojo/_base/fx", // baseFx.animateProperty
-	"dojo/_base/lang", // lang.mixin, lang.hitch
-	"dojo/_base/sniff", // has("ie")
-	"dojo/_base/window", // baseWin.body
-	"dojo/dom-attr", // domAttr.get
-	"dojo/dom-class", // domClass.addClass, domClass.removeClass
-	"dojo/dom-construct", // domConstruct.destroy
-	"dojo/dom-geometry", // domGeo.getContentBox
-	"dojo/dom-style", // style.get, style.set
-	"dojo/cookie", // cookie
-	"dojo/domReady", // domReady
-	"dojo/fx", // fx.combine
-	"dojo/window", // win.getBox
-	"dijit/_WidgetBase", // _WidgetBase
-	"dijit/_TemplatedMixin", // _TemplatedMixin
-	"dojo/text!./UpgradeBar/UpgradeBar.html"
-], function(dojo, array, connect, declare, baseFx, lang, has, baseWin,
-            domAttr, domClass, domConstruct, domGeo, style, cookie,
-            domReady, fx, win, _WidgetBase, _TemplatedMixin, template){
+dojo.provide("dojox.widget.UpgradeBar");
+
+dojo.require("dojo.window");
+dojo.require("dojo.fx");
+dojo.require("dojo.cookie");
+
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
 
 dojo.experimental("dojox.widget.UpgradeBar");
 
-var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixin], {
-	// summary:
-	//		Shows a bar at the top of the screen when the user is to
-	//		be notified that they should upgrade their browser or a
-	//		plugin.
-	// description:
-	//		You can insert custom validations to trigger the UpgradeBar
-	//		to display. An evaluation of 'true' shows the bar (as this
-	//		version *is* less than it should be). Multiple validations
-	//		may be checked, although only the first in the list will be
-	//		displayed.
-	//		Markup and programmatic are supported. Markup is a little
-	//		cleaner, since a majority of the parameters are the HTML
-	//		snippets to be displayed. In markup, the validate code should
-	//		be an expression that will evaluate to true or false. This
-	//		expression is wrapped in a try/catch, so if it blows up, it
-	//		is assumed to be true and trigger the bar.
-	//		In programmatic, a function should be used that returns true
-	//		or false. You would need to use your own try/catch in that.
-	// example:
-	//		See tests for examples.
 
-
-	// notifications: Array
-	//		An array of objects that hold the criteria for upgrades:
+dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
+	//	summary:
+	//				Shows a bar at the top of the screen when the user is to
+	//				be notified that they should upgrade their browser or a
+	//				plugin.
 	//
-	//		- message: String: The message to display in the bar. Can be HTML.
-	//		- validate: Function: The expression to evaluate to determine if the
-	//			bar should show or not. Should be a simple expression
-	//			if used in HTML:
+	//	description:
+	//				You can insert custom validations to trigger the UpgradeBar
+	//				to display. An evaluation of 'true' shows the bar (as this
+	//				version *is* less than it should be). Multiple validations
+	//				may be checked, although only the first in the list will be
+	//				displayed.
+	//				Markup and programmatic are supported. Markup is a little
+	//				cleaner, since a majority of the parameters are the HTML
+	//				snippets to be displayed. In markup, the validate code should
+	//				be an expression that will evaluate to true or false. This
+	//				expression is wrapped in a try/catch, so if it blows up, it
+	//				is assumed to be true and trigger the bar.
+	//				In programmtic, a function should be used that returns true
+	//				or false. You would need to use your own try/catch in that.
 	//
-	//	|	<div validate="!google.gears">
-	//	|	<div validate="has('ie')<8">
+	//	example:	See tests for examples.
+	//
+	//	notifications: Array
+	//		An array of objects that hold the criteria for upgrades.
+	//			message: String
+	//				The message to display in the bar. Can be HTML.
+	//			validate:Function
+	//				The expression to evaluate to determine if the
+	//				bar should show or not. Should be a simple expression
+	//				if used in HTML:
+	//				|	<div validate="!google.gears">
+	//				|	<div validate="dojo.isIE<8">
 	notifications:[],
-
-	// buttonCancel:String
+	//
+	//	buttonCancel:String
 	//		The HTML tip show when hovering over the close button.
 	buttonCancel:"Close for now",
-
-	// noRemindButton:String
+	//
+	//	noRemindButton:String
 	//		The text link shown that when clicked, permanently dismisses
 	//		the message (sets a cookie). If this string is blank, this
 	//		link is not displayed.
 	noRemindButton:"Don't Remind Me Again",
 
-	templateString: template,
+	templateString: dojo.cache("dojox.widget","UpgradeBar/UpgradeBar.html"),
 
 	constructor: function(props, node){
 
 		if(!props.notifications && node){
 			// From markup. Create the notifications Array from the
-			// srcRefNode children.
-			array.forEach(node.childNodes, function(n){
+			//	srcRefNode children.
+			dojo.forEach(node.childNodes, function(n){
 				if(n.nodeType==1){
-					var val = domAttr.get(n, "validate");
+					var val = dojo.attr(n, "validate");
 					this.notifications.push({
 						message:n.innerHTML,
 						validate:function(){
@@ -99,12 +84,12 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	},
 
 	checkNotifications: function(){
-		// summary:
-		//		Internal. Go through the notifications Array
-		//		and check for any that evaluate to true.
+		// 	summary:
+		//			Internal. Go through the notifications Array
+		//			and check for any that evaluate to true.
 		// tags:
 		//		private
-
+		//
 		if(!this.notifications.length){
 			// odd. why use the bar but not set any notifications?
 			return;
@@ -124,15 +109,15 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	postCreate: function(){
 		this.inherited(arguments);
 		if(this.domNode.parentNode){
-			style.set(this.domNode, "display", "none");
+			dojo.style(this.domNode, "display", "none");
 		}
-		lang.mixin(this.attributeMap, {
+		dojo.mixin(this.attributeMap, {
 			message:{ node:"messageNode", type:"innerHTML" }
 		});
 		if(!this.noRemindButton){
-			domConstruct.destroy(this.dontRemindButtonNode);
+			dojo.destroy(this.dontRemindButtonNode)
 		}
-		if(has("ie")==6){
+		if(dojo.isIE==6){
 			// IE6 is challenged when it comes to 100% width.
 			// It thinks the body has more padding and more
 			// margin than it really does. It would work to
@@ -141,33 +126,33 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 			//
 			var self = this;
 			var setWidth = function(){
-				var v = win.getBox();
-				style.set(self.domNode, "width", v.w+"px");
-			};
+				var v = dojo.window.getBox();
+				dojo.style(self.domNode, "width", v.w+"px");
+			}
 			this.connect(window, "resize", function(){
 				setWidth();
 			});
 
 			setWidth();
 		}
-		domReady(lang.hitch(this, "checkNotifications"));
+		dojo.addOnLoad(this, "checkNotifications");
 		//this.checkNotifications();
 	},
 
 	notify: function(msg){
-		// summary:
+		// 	summary:
 		//		Triggers the bar to display. An internal function,
-		//		but could be called externally for fun.
+		//		but could ne called externally for fun.
 		// tags:
 		//		protected
-
-		if(cookie("disableUpgradeReminders")){
+		//
+		if(dojo.cookie("disableUpgradeReminders")){
 			return;
 		}
 		if(!this.domNode.parentNode || !this.domNode.parentNode.innerHTML){
 			document.body.appendChild(this.domNode);
 		}
-		style.set(this.domNode, "display", "");
+		dojo.style(this.domNode, "display", "");
 		if(msg){
 			this.set("message", msg);
 		}
@@ -175,36 +160,36 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	},
 
 	show: function(){
-		// summary:
+		//	summary:
 		//		Internal. Shows the bar. Do not call directly.
 		//		Use notify();
 		// tags:
 		//		private
-
-		this._bodyMarginTop = style.get(baseWin.body(), "marginTop");
-		this._size = domGeo.getContentBox(this.domNode).h;
-		style.set(this.domNode, { display:"block", height:0, opacity:0 });
+		//
+		this._bodyMarginTop = dojo.style(dojo.body(), "marginTop");
+		this._size = dojo.contentBox(this.domNode).h;
+		dojo.style(this.domNode, { display:"block", height:0, opacity:0 });
 
 		if(!this._showAnim){
-			this._showAnim = fx.combine([
-				baseFx.animateProperty({ node:baseWin.body(), duration:500, properties:{ marginTop:this._bodyMarginTop+this._size } }),
-				baseFx.animateProperty({ node:this.domNode, duration:500, properties:{ height:this._size, opacity:1 } })
+			this._showAnim = dojo.fx.combine([
+				dojo.animateProperty({ node:dojo.body(), duration:500, properties:{ marginTop:this._bodyMarginTop+this._size } }),
+				dojo.animateProperty({ node:this.domNode, duration:500, properties:{ height:this._size, opacity:1 } })
 			]);
 		}
 		this._showAnim.play();
 	},
 
 	hide: function(){
-		// summary:
+		//	summary:
 		//		Hides the bar. May be called externally.
-
+		//
 		if(!this._hideAnim){
-			this._hideAnim = fx.combine([
-				baseFx.animateProperty({ node:baseWin.body(), duration:500, properties:{ marginTop:this._bodyMarginTop } }),
-				baseFx.animateProperty({ node:this.domNode, duration:500, properties:{ height:0, opacity:0 } })
+			this._hideAnim = dojo.fx.combine([
+				dojo.animateProperty({ node:dojo.body(), duration:500, properties:{ marginTop:this._bodyMarginTop } }),
+				dojo.animateProperty({ node:this.domNode, duration:500, properties:{ height:0, opacity:0 } })
 			]);
-			connect.connect(this._hideAnim, "onEnd", this, function(){
-				style.set(this.domNode, {display:"none", opacity:1});
+			dojo.connect(this._hideAnim, "onEnd", this, function(){
+				dojo.style(this.domNode, "display", "none");
 			});
 		}
 		this._hideAnim.play();
@@ -215,7 +200,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 		//		Called when user clicks the "do not remind" link.
 		// tags:
 		//		private
-		cookie("disableUpgradeReminders", true, { expires:3650 });
+		dojo.cookie("disableUpgradeReminders", true, { expires:3650 });
 		this.hide();
 	},
 
@@ -224,7 +209,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 		//		Called when user hovers over close icon
 		// tags:
 		//		private
-		domClass.add(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
+		dojo.addClass(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
 	},
 
 	_onCloseLeave: function(){
@@ -232,10 +217,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 		//		Called when user stops hovering over close icon
 		// tags:
 		//		private
-		domClass.remove(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
+		dojo.removeClass(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
 	}
-});
 
-
-return UpgradeBar;
 });

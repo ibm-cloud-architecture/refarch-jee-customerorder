@@ -1,31 +1,24 @@
-define([
-	"dojo/_base/declare", // declare
-	"dojo/dom-attr", // domAttr.set
-	"dojo/_base/kernel", // kernel.deprecated
-	"dojo/sniff", // has("ie")
-	"../_Widget",
-	"../_TemplatedMixin",
-	"./_FormMixin",
-	"../layout/_ContentPaneResizeMixin"
-], function(declare, domAttr, kernel, has, _Widget, _TemplatedMixin, _FormMixin, _ContentPaneResizeMixin){
+dojo.provide("dijit.form.Form");
 
-	// module:
-	//		dijit/form/Form
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+dojo.require("dijit.form._FormMixin");
 
-
-	return declare("dijit.form.Form", [_Widget, _TemplatedMixin, _FormMixin, _ContentPaneResizeMixin], {
+dojo.declare(
+	"dijit.form.Form",
+	[dijit._Widget, dijit._Templated, dijit.form._FormMixin],
+	{
 		// summary:
 		//		Widget corresponding to HTML form tag, for validation and serialization
 		//
 		// example:
-		//	|	<form data-dojo-type="dijit/form/Form" id="myForm">
+		//	|	<form dojoType="dijit.form.Form" id="myForm">
 		//	|		Name: <input type="text" name="name" />
 		//	|	</form>
-		//	|	// Example assumes you have required dijit/registry
 		//	|	myObj = {name: "John Doe"};
-		//	|	registry.byId('myForm').set('value', myObj);
+		//	|	dijit.byId('myForm').set('value', myObj);
 		//	|
-		//	|	myObj=registry.byId('myForm').get('value');
+		//	|	myObj=dijit.byId('myForm').get('value');
 
 		// HTML <FORM> attributes
 
@@ -57,16 +50,25 @@ define([
 		//		Target frame for the document to be opened in.
 		target: "",
 
-		templateString: "<form data-dojo-attach-point='containerNode' data-dojo-attach-event='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",
+		templateString: "<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",
+
+		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
+			action: "",
+			method: "",
+			encType: "",
+			"accept-charset": "",
+			accept: "",
+			target: ""
+		}),
 
 		postMixInProperties: function(){
 			// Setup name=foo string to be referenced from the template (but only if a name has been specified)
-			// Unfortunately we can't use _setNameAttr to set the name due to IE limitations, see #8660
+			// Unfortunately we can't use attributeMap to set the name due to IE limitations, see #8660
 			this.nameAttrSetting = this.name ? ("name='" + this.name + "'") : "";
 			this.inherited(arguments);
 		},
 
-		execute: function(/*Object*/ /*===== formContents =====*/){
+		execute: function(/*Object*/ formContents){
 			// summary:
 			//		Deprecated: use submit()
 			// tags:
@@ -81,11 +83,21 @@ define([
 		},
 
 		_setEncTypeAttr: function(/*String*/ value){
-			domAttr.set(this.domNode, "encType", value);
-			if(has("ie")){
-				this.domNode.encoding = value;
+			this.encType = value;
+			dojo.attr(this.domNode, "encType", value);
+			if(dojo.isIE){ this.domNode.encoding = value; }
+		},
+
+		postCreate: function(){
+			// IE tries to hide encType
+			// TODO: this code should be in parser, not here.
+			if(dojo.isIE && this.srcNodeRef && this.srcNodeRef.attributes){
+				var item = this.srcNodeRef.attributes.getNamedItem('encType');
+				if(item && !item.specified && (typeof item.value == "string")){
+					this.set('encType', item.value);
+				}
 			}
-			this._set("encType", value);
+			this.inherited(arguments);
 		},
 
 		reset: function(/*Event?*/ e){
@@ -97,11 +109,10 @@ define([
 			var faux = {
 				returnValue: true, // the IE way
 				preventDefault: function(){ // not IE
-					this.returnValue = false;
-				},
-				stopPropagation: function(){
-				},
-				currentTarget: e ? e.target : this.domNode,
+							this.returnValue = false;
+						},
+				stopPropagation: function(){}, 
+				currentTarget: e ? e.target : this.domNode, 
 				target: e ? e.target : this.domNode
 			};
 			// if return value is not exactly false, and haven't called preventDefault(), then reset
@@ -110,7 +121,7 @@ define([
 			}
 		},
 
-		onReset: function(/*Event?*/ /*===== e =====*/){
+		onReset: function(/*Event?*/ e){
 			// summary:
 			//		Callback when user resets the form. This method is intended
 			//		to be over-ridden. When the `reset` method is called
@@ -123,26 +134,24 @@ define([
 
 		_onReset: function(e){
 			this.reset(e);
-			e.stopPropagation();
-			e.preventDefault();
+			dojo.stopEvent(e);
 			return false;
 		},
 
 		_onSubmit: function(e){
-			var fp = this.constructor.prototype;
+			var fp = dijit.form.Form.prototype;
 			// TODO: remove this if statement beginning with 2.0
 			if(this.execute != fp.execute || this.onExecute != fp.onExecute){
-				kernel.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.", "", "2.0");
+				dojo.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.", "", "2.0");
 				this.onExecute();
 				this.execute(this.getValues());
 			}
 			if(this.onSubmit(e) === false){ // only exactly false stops submit
-				e.stopPropagation();
-				e.preventDefault();
+				dojo.stopEvent(e);
 			}
 		},
 
-		onSubmit: function(/*Event?*/ /*===== e =====*/){
+		onSubmit: function(/*Event?*/e){
 			// summary:
 			//		Callback when user submits the form.
 			// description:
@@ -164,5 +173,5 @@ define([
 				this.containerNode.submit();
 			}
 		}
-	});
-});
+	}
+);

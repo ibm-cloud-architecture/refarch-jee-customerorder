@@ -1,9 +1,6 @@
-<div role="alertdialog" tabIndex="-1">
-	<div class="dijitTooltipContainer" role="presentation">
-		<div data-dojo-attach-point="contentsNode" class="dijitTooltipContents dijitTooltipFocusNode">
-			<div data-dojo-attach-point="containerNode"></div>
-			${!actionBarTemplate}
-		</div>
+<div waiRole="presentation">
+	<div class="dijitTooltipContainer" waiRole="presentation">
+		<div class ="dijitTooltipContents dijitTooltipFocusNode" dojoAttachPoint="containerNode" tabindex="-1" waiRole="dialog"></div>
 	</div>
-	<div class="dijitTooltipConnector" role="presentation" data-dojo-attach-point="connectorNode"></div>
+	<div class="dijitTooltipConnector" waiRole="presentation"></div>
 </div>

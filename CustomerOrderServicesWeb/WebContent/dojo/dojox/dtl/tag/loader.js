@@ -1,18 +1,12 @@
-define([
-	"dojo/_base/lang",
-	"../_base",
-	"dojo/_base/array",
-	"dojo/_base/connect"
-], function(lang,dd,array,connect){
+dojo.provide("dojox.dtl.tag.loader");
 
-	var ddtl = lang.getObject("tag.loader", true, dd);
-	/*=====
-	 ddtl = {
-	 	// TODO: summary
-	 };
-	 =====*/
+dojo.require("dojox.dtl._base");
 
-	ddtl.BlockNode = lang.extend(function(name, nodelist){
+(function(){
+	var dd = dojox.dtl;
+	var ddtl = dd.tag.loader;
+
+	ddtl.BlockNode = dojo.extend(function(name, nodelist){
 		this.name = name;
 		this.nodelist = nodelist; // Can be overridden
 	},
@@ -53,14 +47,14 @@ define([
 
 			if(buffer.getParent){
 				var bufferParent = buffer.getParent();
-				var setParent = connect.connect(buffer, "onSetParent", function(node, up, root){
+				var setParent = dojo.connect(buffer, "onSetParent", function(node, up, root){
 					if(up && root){
 						buffer.setParent(bufferParent);
 					}
 				});
 			}
 			buffer = nodelist.render(context, buffer, this);
-			setParent && connect.disconnect(setParent);
+			setParent && dojo.disconnect(setParent);
 			context = context.pop();
 			return buffer;
 		},
@@ -73,7 +67,7 @@ define([
 		toString: function(){ return "dojox.dtl.tag.loader.BlockNode"; }
 	});
 
-	ddtl.ExtendsNode = lang.extend(function(getTemplate, nodelist, shared, parent, key){
+	ddtl.ExtendsNode = dojo.extend(function(getTemplate, nodelist, shared, parent, key){
 		this.getTemplate = getTemplate;
 		this.nodelist = nodelist;
 		this.shared = shared;
@@ -155,7 +149,7 @@ define([
 		toString: function(){ return "dojox.dtl.block.ExtendsNode"; }
 	});
 
-	ddtl.IncludeNode = lang.extend(function(path, constant, getTemplate, text, parsed){
+	ddtl.IncludeNode = dojo.extend(function(path, constant, getTemplate, text, parsed){
 		this._path = path;
 		this.constant = constant;
 		this.path = (constant) ? path : new dd._Filter(path);
@@ -237,7 +231,7 @@ define([
 		}
 	});
 
-	lang.mixin(ddtl, {
+	dojo.mixin(ddtl, {
 		block: function(parser, token){
 			var parts = token.contents.split();
 			var name = parts[1];
@@ -300,6 +294,4 @@ define([
 			return node;
 		}
 	});
-
-	return ddtl;
-});
+})();

@@ -1,5 +1,9 @@
-define(["dojo/_base/lang","../SimpleTheme", "./common"], function(lang, SimpleTheme, themes){
-	themes.Grasshopper = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Grasshopper");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Grasshopper=new dxc.Theme({
 		colors: [
 			"#208040",
 			"#40b657",
@@ -8,5 +12,4 @@ define(["dojo/_base/lang","../SimpleTheme", "./common"], function(lang, SimpleTh
 			"#64bd5f"
 		]
 	});
-	return themes.Grasshopper;
-});
+})();

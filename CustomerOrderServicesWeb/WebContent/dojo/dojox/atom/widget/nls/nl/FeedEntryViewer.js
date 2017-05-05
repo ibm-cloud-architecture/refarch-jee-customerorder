@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[weergaveopties]",
 	title: "Titel",
@@ -10,4 +9,3 @@ define(
 	summary: "Overzicht",
 	content: "Content"
 })
-);

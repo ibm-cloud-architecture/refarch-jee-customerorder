@@ -1,23 +1,22 @@
-define(
 ({
 	"findLabel": "Găsire:",
 	"findTooltip": "Introduceţi textul de găsit",
 	"replaceLabel": "Înlocuire cu:",
-	"replaceTooltip": "Introduceţi textul cu care să înlocuiţi",
+	"replaceTooltip": "Introduceţi textul cu care se înlocuieşte",
 	"findReplace": "Găsire şi înlocuire",
 	"matchCase": "Potrivire majuscule",
 	"matchCaseTooltip": "Potrivire majuscule",
 	"backwards": "Înapoi",
-	"backwardsTooltip": "Căutare înapoi pentru text",
-	"replaceAllButton": "Înlocuire tot",
+	"backwardsTooltip": "Căutaţi înapoi pentru text",
+	"replaceAllButton": "Înlocuire toate",
 	"replaceAllButtonTooltip": "Înlocuiţi tot textul",
 	"findButton": "Găsire",
-	"findButtonTooltip": "Găsiţi text",
+	"findButtonTooltip": "Găsiţi textul",
 	"replaceButton": "Înlocuire",
-	"replaceButtonTooltip": "Înlocuiţi text",
+	"replaceButtonTooltip": "Înlocuiţi textul",
 	"replaceDialogText": "Au fost înlocuite ${0} apariţii.",
 	"eofDialogText": "Ultima apariţie ${0}",
-	"eofDialogTextFind": "găsit",
-	"eofDialogTextReplace": "înlocuit"
+	"eofDialogTextFind": "găsită",
+	"eofDialogTextReplace": "înlocuită"
 })
-);
+

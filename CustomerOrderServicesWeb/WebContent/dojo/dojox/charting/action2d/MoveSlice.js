@@ -1,47 +1,54 @@
-define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotAction", "dojo/fx/easing", "dojox/gfx/matrix",
-	"dojox/gfx/fx", "dojox/lang/functional", "dojox/lang/functional/scan", "dojox/lang/functional/fold"],
-	function(hub, declare, array, PlotAction, dfe, m, gf, df){
+dojo.provide("dojox.charting.action2d.MoveSlice");
 
-	/*=====
-	var __MoveSliceCtorArgs = {
-			// summary:
-			//		Additional arguments for move slice actions.
-			// duration: Number?
-			//		The amount of time in milliseconds for an animation to last.  Default is 400.
-			// easing: dojo/fx/easing/*?
-			//		An easing object (see dojo.fx.easing) for use in an animation.  The
-			//		default is dojo.fx.easing.backOut.
-			// scale: Number?
-			//		The amount to scale the pie slice.  Default is 1.05.
-			// shift: Number?
-			//		The amount in pixels to shift the pie slice.  Default is 7.
-	};
-	=====*/
-	
+dojo.require("dojox.charting.action2d.Base");
+dojo.require("dojox.gfx.matrix");
+
+dojo.require("dojox.lang.functional");
+dojo.require("dojox.lang.functional.scan");
+dojo.require("dojox.lang.functional.fold");
+
+/*=====
+dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
+	//	summary:
+	//		Additional arguments for highlighting actions.
+
+	//	scale: Number?
+	//		The amount to scale the pie slice.  Default is 1.05.
+	scale: 1.05,
+
+	//	shift: Number?
+	//		The amount in pixels to shift the pie slice.  Default is 7.
+	shift: 7
+});
+=====*/
+(function(){
 	var DEFAULT_SCALE = 1.05,
-		DEFAULT_SHIFT = 7;	// px
+		DEFAULT_SHIFT = 7,	// px
+		m = dojox.gfx.matrix,
+		gf = dojox.gfx.fx,
+		df = dojox.lang.functional;
 
-	return declare("dojox.charting.action2d.MoveSlice", PlotAction, {
-		// summary:
+	dojo.declare("dojox.charting.action2d.MoveSlice", dojox.charting.action2d.Base, {
+		//	summary:
 		//		Create an action for a pie chart that moves and scales a pie slice.
 
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dfe.backOut,	// easing for the action
+			easing:   dojo.fx.easing.backOut,	// easing for the action
 			scale:    DEFAULT_SCALE,	// scale of magnification
 			shift:    DEFAULT_SHIFT		// shift of the slice
 		},
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, plot, kwArgs){
-			// summary:
+			//	summary:
 			//		Create the slice moving action and connect it to the plot.
-			// chart: dojox/charting/Chart
+			//	chart: dojox.charting.Chart2D
 			//		The chart this action belongs to.
-			// plot: String?
+			//	plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			// kwArgs: __MoveSliceCtorArgs?
+			//	kwArgs: dojox.charting.action2d.__MoveSliceCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.scale = typeof kwArgs.scale == "number" ? kwArgs.scale : DEFAULT_SCALE;
@@ -51,9 +58,9 @@ define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotA
 		},
 
 		process: function(o){
-			// summary:
+			//	summary:
 			//		Process the action on the given object.
-			// o: dojox/gfx/shape.Shape
+			//	o: dojox.gfx.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || o.element != "slice" || !(o.type in this.overOutEvents)){ return; }
 
@@ -61,15 +68,12 @@ define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotA
 				// calculate the running total of slice angles
 				var startAngle = m._degToRad(o.plot.opt.startAngle);
 				if(typeof o.run.data[0] == "number"){
-					this.angles = df.map(df.scanl(o.run.data, "+", 0),
+					this.angles = df.map(df.scanl(o.run.data, "+", startAngle),
 						"* 2 * Math.PI / this", df.foldl(o.run.data, "+", 0));
 				}else{
-					this.angles = df.map(df.scanl(o.run.data, "a + b.y", 0),
+					this.angles = df.map(df.scanl(o.run.data, "a + b.y", startAngle),
 						"* 2 * Math.PI / this", df.foldl(o.run.data, "a + b.y", 0));
 				}
-				this.angles = array.map(this.angles, function(item){
-					return item + startAngle;
-				});
 			}
 
 			var index = o.index, anim, startScale, endScale, startOffset, endOffset,
@@ -97,7 +101,7 @@ define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotA
 				endScale    = 1;
 			}
 
-			anim.action = gf.animateTransform({
+			anim.action = dojox.gfx.fx.animateTransform({
 				shape:    o.shape,
 				duration: this.duration,
 				easing:   this.easing,
@@ -110,7 +114,7 @@ define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotA
 			});
 
 			if(o.type == "onmouseout"){
-				hub.connect(anim.action, "onEnd", this, function(){
+				dojo.connect(anim.action, "onEnd", this, function(){
 					delete this.anim[index];
 				});
 			}
@@ -121,4 +125,4 @@ define(["dojo/_base/connect", "dojo/_base/declare", "dojo/_base/array", "./PlotA
 			delete this.angles;
 		}
 	});
-});
+})();

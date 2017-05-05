@@ -1,46 +1,21 @@
-define([
-	"./_base/kernel",	// kernel.global
-	"./_base/lang"
-], function(kernel, lang){
+dojo.provide("dojo.string");
 
-// module:
-//		dojo/string
-var ESCAPE_REGEXP = /[&<>'"\/]/g;
-var ESCAPE_MAP = {
-	'&': '&amp;',
-	'<': '&lt;',
-	'>': '&gt;',
-	'"': '&quot;',
-	"'": '&#x27;',
-	'/': '&#x2F;'
+/*=====
+dojo.string = { 
+	// summary: String utilities for Dojo
 };
-var string = {
-	// summary:
-	//		String utilities for Dojo
-};
-lang.setObject("dojo.string", string);
+=====*/
 
-string.escape = function(/*String*/str){
-	// summary:
-	//		Efficiently escape a string for insertion into HTML (innerHTML or attributes), replacing &, <, >, ", ', and / characters.
-	// str:
-	//		the string to escape
-	if(!str){ return ""; }
-	return str.replace(ESCAPE_REGEXP, function(c) {
-		return ESCAPE_MAP[c];
-	});
-};
-
-string.rep = function(/*String*/str, /*Integer*/num){
-	// summary:
+dojo.string.rep = function(/*String*/str, /*Integer*/num){
+	//	summary:
 	//		Efficiently replicate a string `n` times.
-	// str:
+	//	str:
 	//		the string to replicate
-	// num:
+	//	num:
 	//		number of times to replicate the string
-
+	
 	if(num <= 0 || !str){ return ""; }
-
+	
 	var buf = [];
 	for(;;){
 		if(num & 1){
@@ -52,54 +27,54 @@ string.rep = function(/*String*/str, /*Integer*/num){
 	return buf.join("");	// String
 };
 
-string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boolean?*/end){
-	// summary:
+dojo.string.pad = function(/*String*/text, /*Integer*/size, /*String?*/ch, /*Boolean?*/end){
+	//	summary:
 	//		Pad a string to guarantee that it is at least `size` length by
 	//		filling with the character `ch` at either the start or end of the
 	//		string. Pads at the start, by default.
-	// text:
+	//	text:
 	//		the string to pad
-	// size:
+	//	size:
 	//		length to provide padding
-	// ch:
+	//	ch:
 	//		character to pad, defaults to '0'
-	// end:
+	//	end:
 	//		adds padding at the end if true, otherwise pads at start
-	// example:
+	//	example:
 	//	|	// Fill the string to length 10 with "+" characters on the right.  Yields "Dojo++++++".
-	//	|	string.pad("Dojo", 10, "+", true);
+	//	|	dojo.string.pad("Dojo", 10, "+", true);
 
 	if(!ch){
 		ch = '0';
 	}
 	var out = String(text),
-		pad = string.rep(ch, Math.ceil((size - out.length) / ch.length));
+		pad = dojo.string.rep(ch, Math.ceil((size - out.length) / ch.length));
 	return end ? out + pad : pad + out;	// String
 };
 
-string.substitute = function(	/*String*/		template,
-									/*Object|Array*/map,
-									/*Function?*/	transform,
+dojo.string.substitute = function(	/*String*/		template, 
+									/*Object|Array*/map, 
+									/*Function?*/	transform, 
 									/*Object?*/		thisObject){
-	// summary:
+	//	summary:
 	//		Performs parameterized substitutions on a string. Throws an
 	//		exception if any parameter is unmatched.
-	// template:
+	//	template: 
 	//		a string with expressions in the form `${key}` to be replaced or
-	//		`${key:format}` which specifies a format function. keys are case-sensitive.
-	// map:
+	//		`${key:format}` which specifies a format function. keys are case-sensitive. 
+	//	map:
 	//		hash to search for substitutions
-	// transform:
+	//	transform: 
 	//		a function to process all parameters before substitution takes
 	//		place, e.g. mylib.encodeXML
-	// thisObject:
+	//	thisObject: 
 	//		where to look for optional format function; default to the global
 	//		namespace
-	// example:
+	//	example:
 	//		Substitutes two expressions in a string from an Array or Object
 	//	|	// returns "File 'foo.html' is not found in directory '/temp'."
 	//	|	// by providing substitution data in an Array
-	//	|	string.substitute(
+	//	|	dojo.string.substitute(
 	//	|		"File '${0}' is not found in directory '${1}'.",
 	//	|		["foo.html","/temp"]
 	//	|	);
@@ -107,14 +82,14 @@ string.substitute = function(	/*String*/		template,
 	//	|	// also returns "File 'foo.html' is not found in directory '/temp'."
 	//	|	// but provides substitution data in an Object structure.  Dotted
 	//	|	// notation may be used to traverse the structure.
-	//	|	string.substitute(
+	//	|	dojo.string.substitute(
 	//	|		"File '${name}' is not found in directory '${info.dir}'.",
 	//	|		{ name: "foo.html", info: { dir: "/temp" } }
 	//	|	);
-	// example:
+	//	example:
 	//		Use a transform function to modify the values:
 	//	|	// returns "file 'foo.html' is not found in directory '/temp'."
-	//	|	string.substitute(
+	//	|	dojo.string.substitute(
 	//	|		"${0} is not found in ${1}.",
 	//	|		["foo.html","/temp"],
 	//	|		function(str){
@@ -123,10 +98,10 @@ string.substitute = function(	/*String*/		template,
 	//	|			return prefix + " '" + str + "'";
 	//	|		}
 	//	|	);
-	// example:
+	//	example:
 	//		Use a formatter
 	//	|	// returns "thinger -- howdy"
-	//	|	string.substitute(
+	//	|	dojo.string.substitute(
 	//	|		"${0:postfix}", ["thinger"], null, {
 	//	|			postfix: function(value, key){
 	//	|				return value + " -- howdy";
@@ -134,22 +109,38 @@ string.substitute = function(	/*String*/		template,
 	//	|		}
 	//	|	);
 
-	thisObject = thisObject || kernel.global;
-	transform = transform ?
-		lang.hitch(thisObject, transform) : function(v){ return v; };
+	thisObject = thisObject || dojo.global;
+	transform = transform ? 
+		dojo.hitch(thisObject, transform) : function(v){ return v; };
 
 	return template.replace(/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g,
 		function(match, key, format){
-			var value = lang.getObject(key, false, map);
+			var value = dojo.getObject(key, false, map);
 			if(format){
-				value = lang.getObject(format, false, thisObject).call(thisObject, value, key);
+				value = dojo.getObject(format, false, thisObject).call(thisObject, value, key);
 			}
 			return transform(value, key).toString();
 		}); // String
 };
 
-string.trim = String.prototype.trim ?
-	lang.trim : // aliasing to the native function
+/*=====
+dojo.string.trim = function(str){
+	//	summary:
+	//		Trims whitespace from both sides of the string
+	//	str: String
+	//		String to be trimmed
+	//	returns: String
+	//		Returns the trimmed string
+	//	description:
+	//		This version of trim() was taken from [Steven Levithan's blog](http://blog.stevenlevithan.com/archives/faster-trim-javascript).
+	//		The short yet performant version of this function is dojo.trim(),
+	//		which is part of Dojo base.  Uses String.prototype.trim instead, if available.
+	return "";	// String
+}
+=====*/
+
+dojo.string.trim = String.prototype.trim ?
+	dojo.trim : // aliasing to the native function
 	function(str){
 		str = str.replace(/^\s+/, '');
 		for(var i = str.length - 1; i >= 0; i--){
@@ -160,22 +151,3 @@ string.trim = String.prototype.trim ?
 		}
 		return str;
 	};
-
-/*=====
- string.trim = function(str){
-	 // summary:
-	 //		Trims whitespace from both sides of the string
-	 // str: String
-	 //		String to be trimmed
-	 // returns: String
-	 //		Returns the trimmed string
-	 // description:
-	 //		This version of trim() was taken from [Steven Levithan's blog](http://blog.stevenlevithan.com/archives/faster-trim-javascript).
-	 //		The short yet performant version of this function is dojo/_base/lang.trim(),
-	 //		which is part of Dojo base.  Uses String.prototype.trim instead, if available.
-	 return "";	// String
- };
- =====*/
-
-	return string;
-});

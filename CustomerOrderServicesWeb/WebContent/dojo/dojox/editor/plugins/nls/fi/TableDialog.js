@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Lisää taulukko",
 	modifyTableTitle: "Muokkaa taulukkoa",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "Taulukon leveys:",
 	backgroundColor: "Taustaväri:",
 	borderColor: "Kehyksen väri:",
-	borderThickness: "Kehyksen paksuus:",
+	borderThickness: "Kehyksen paksuus",
 	percent: "prosenttia",
 	pixels: "kuvapistettä",
 	"default": "oletus",
@@ -19,15 +18,12 @@ define(
 	right: "oikea",
 	buttonSet: "Aseta", // translated elsewhere?
 	buttonInsert: "Lisää",
-	buttonCancel: "Peruuta",
+
 	selectTableLabel: "Valitse taulukko",
 	insertTableRowBeforeLabel: "Lisää rivi ennen",
 	insertTableRowAfterLabel: "Lisää rivi jälkeen",
 	insertTableColumnBeforeLabel: "Lisää sarake ennen",
 	insertTableColumnAfterLabel: "Lisää sarake jälkeen",
 	deleteTableRowLabel: "Poista rivi",
-	deleteTableColumnLabel: "Poista sarake",
-	colorTableCellTitle: "Taulukon solun taustaväri",
-	tableContextMenuTitle: "Taulukon pikavalikko"
+	deleteTableColumnLabel: "Poista sarake"
 })
-);

@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",
@@ -10,4 +9,3 @@ define(
 	summary: "Souhrn",
 	content: "Obsah"
 })
-);

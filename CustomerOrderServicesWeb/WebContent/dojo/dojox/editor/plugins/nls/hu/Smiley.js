@@ -1,4 +1,3 @@
-define(
 ({
 	smiley: "Hangulatjel beszúrása",
 	emoticonSmile: "mosoly",
@@ -6,8 +5,8 @@ define(
 	emoticonWink: "kacsintás",
 	emoticonGrin: "vigyor",
 	emoticonCool: "laza",
-	emoticonAngry: "mérges",
-	emoticonHalf: "fél",
+	emoticonAngry: "mérges",  
+	emoticonHalf: "fél", 
 	emoticonEyebrow: "szemöldök",
 	emoticonFrown: "rosszallás",
 	emoticonShy: "szégyenlős",
@@ -16,9 +15,8 @@ define(
 	emoticonTongue: "nyelv",
 	emoticonIdea: "ötlet",
 	emoticonYes: "igen",
-	emoticonNo: "nem",
+	emoticonNo: "nem",	
 	emoticonAngel: "angyal",
-	emoticonCrying: "sírás",
-	emoticonHappy: "boldog"
+	emoticonCrying: "sírás"
 })
-);
+

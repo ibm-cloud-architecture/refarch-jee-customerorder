@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Hivatkozás tulajdonságai",
 	insertImageTitle: "Kép tulajdonságai",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Legfelső szintű ablak",
 	newWindow: "Új ablak"
 })
-);
+

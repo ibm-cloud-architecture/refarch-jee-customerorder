@@ -1,46 +1,54 @@
-.nihilo .dijitSelectError .dijitButtonContents,
-.nihilo .dijitSelectHover .dijitArrowButton,
-.nihilo .dijitSelectActive .dijitArrowButton,
-.nihilo .dijitSelectOpened .dijitArrowButton,
-.nihilo .dijitSelectDisabled .dijitArrowButton,
-.nihilo .dijitSelectReadOnly .dijitArrowButton {
+.nihilo .dijitSelect .dijitButtonNode {
+	padding: 0px;
+}
+
+/* Make unselected "look" more like a text box and less like a button */
+.nihilo .dijitSelect .dijitButtonContents {
+	padding-top: 1px;
+    background:#fff url("../images/validationInputBg.png") repeat-x top left;
+    #background:#fff url('../images/validationInputBg.gif') repeat-x top left;
+}
+.nihilo .dijitSelectHover .dijitButtonContents,
+.nihilo .dijitSelectActive .dijitButtonContents,
+.nihilo .dijitSelectOpened .dijitButtonContents,
+.nihilo .dijitSelectDisabled .dijitButtonContents,
+.nihilo .dijitSelectReadOnly .dijitButtonContents{
 	background: transparent none;
+}
+.dj_ie .nihilo .dijitSelect .dijitButtonContents {
+	padding-top: 0px;
 }
 
 .nihilo .dijitSelect .dijitArrowButton {
-	background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
-	border-width: 0;
+	padding: 0px 2px;
 }
 
 /* Mirror DropDownButton */
-.nihilo .dijitSelectDisabled,
-.nihilo .dijitSelectDisabled TD {
-    border-color: #dedede !important;
+.nihilo .dijitSelectDisabled .dijitButtonNode {
+    border-color: #dedede;
     background:#fafafa url("../images/buttonDisabled.png") top repeat-x;
 }
-.dj_ie .nihilo .dijitSelectDisabled  TD * {
+.dj_ie .nihilo .dijitSelectDisabled  .dijitButtonNode * {
 	filter: gray() alpha(opacity=50);
 }
 
-.nihilo .dijitSelectHover,
-.nihilo .dijitSelectHover TD {
+.nihilo .dijitSelectHover .dijitButtonNode {
     color:#000;
     background:#fcfcfc url("../images/buttonHover.png") repeat-x top left;
 }
 
-.nihilo .dijitSelectActive,
-.nihilo .dijitSelectOpened,
-.nihilo .dijitSelectActive TD,
-.nihilo .dijitSelectOpened TD {
-    border-color:#dedede !important;
+.nihilo .dijitSelectActive .dijitButtonNode,
+.nihilo .dijitSelectOpened .dijitButtonNode {
+    border-color:#dedede;
     background: #f5f5f5 url("../images/buttonActive.png") top left repeat-x;
 }
 
 /* Make the menu look more combobox-like */
 .nihilo .dijitSelectMenu td {
-	padding: 0;
+	padding: 0em;
 }
 .nihilo .dijitSelectMenu .dijitMenuItemLabel,
 .nihilo .dijitSelectMenu .dijitMenuArrowCell {
 	padding: 0.1em 0.2em;
 }
+

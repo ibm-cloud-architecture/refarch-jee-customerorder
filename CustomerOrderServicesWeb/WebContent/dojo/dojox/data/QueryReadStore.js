@@ -1,24 +1,29 @@
-define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo, dojox) {
+dojo.provide("dojox.data.QueryReadStore");
 
-	return dojo.declare("dojox.data.QueryReadStore", null, {
-		// summary:
+dojo.require("dojo.string");
+dojo.require("dojo.data.util.sorter");
+
+dojo.declare("dojox.data.QueryReadStore",
+	null,
+	{
+		//	summary:
 		//		This class provides a store that is mainly intended to be used
 		//		for loading data dynamically from the server, used i.e. for
-		//		retrieving chunks of data from huge data stores on the server (by server-side filtering!).
+		//		retreiving chunks of data from huge data stores on the server (by server-side filtering!).
 		//		Upon calling the fetch() method of this store the data are requested from
 		//		the server if they are not yet loaded for paging (or cached).
 		//
 		//		For example used for a combobox which works on lots of data. It
-		//		can be used to retrieve the data partially upon entering the
+		//		can be used to retreive the data partially upon entering the
 		//		letters "ac" it returns only items like "action", "acting", etc.
 		//
-		//		note:
+		// note:
 		//		The field name "id" in a query is reserved for looking up data
 		//		by id. This is necessary as before the first fetch, the store
 		//		has no way of knowing which field the server will declare as
 		//		identifier.
 		//
-		// example:
+		//	example:
 		// |	// The parameter "query" contains the data that are sent to the server.
 		// |	var store = new dojox.data.QueryReadStore({url:'/search.php'});
 		// |	store.fetch({query:{name:'a'}, queryOptions:{ignoreCase:false}});
@@ -41,8 +46,9 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		// |		model="model2"
 		// |		structure="gridLayout"
 		// |		style="height:300px; width:800px;"></div>
-
-		// todo:
+	
+		//
+		//	todo:
 		//		- there is a bug in the paging, when i set start:2, count:5 after an initial fetch() and doClientPaging:true
 		//		  it returns 6 elemetns, though count=5, try it in QueryReadStore.html
 		//		- add optional caching
@@ -61,14 +67,14 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		// This will contain the items we have loaded from the server.
 		// The contents of this array is optimized to satisfy all read-api requirements
 		// and for using lesser storage, so the keys and their content need some explaination:
-		//		this._items[0].i - the item itself
+		// 		this._items[0].i - the item itself 
 		//		this._items[0].r - a reference to the store, so we can identify the item
-		//			securely. We set this reference right after receiving the item from the
+		//			securly. We set this reference right after receiving the item from the
 		//			server.
 		_items:[],
 		
 		// Store the last query that triggered xhr request to the server.
-		// So we can compare if the request changed and if we shall reload
+		// So we can compare if the request changed and if we shall reload 
 		// (this also depends on other factors, such as is caching used, etc).
 		_lastServerQuery:null,
 		
@@ -80,11 +86,11 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		// client-side-paging.
 		lastRequestHash:null,
 		
-		// doClientPaging: Boolean
+		// summary:
 		//		By default every request for paging is sent to the server.
 		doClientPaging:false,
 	
-		// doClientSorting: Boolean
+		// summary:
 		//		By default all the sorting is done serverside before the data is returned
 		//		which is the proper place to be doing it for really large datasets.
 		doClientSorting:false,
@@ -111,11 +117,12 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 				throw new Error(this._className+".getValue(): Invalid attribute, string expected!");
 			}
 			if(!this.hasAttribute(item, attribute)){
-				// read api says: return defaultValue "only if *item* does not have a value for *attribute*."
+				// read api says: return defaultValue "only if *item* does not have a value for *attribute*." 
 				// Is this the case here? The attribute doesn't exist, but a defaultValue, sounds reasonable.
 				if(defaultValue){
 					return defaultValue;
 				}
+				console.log(this._className+".getValue(): Item does not have the attribute '"+attribute+"'.");
 			}
 			return item.i[attribute];
 		},
@@ -139,8 +146,8 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 	
 		hasAttribute: function(/* item */ item,	/* attribute-name-string */ attribute){
-			// summary:
-			//		See dojo/data/api/Read.hasAttribute()
+			//	summary: 
+			//		See dojo.data.api.Read.hasAttribute()
 			return this.isItem(item) && typeof item.i[attribute]!="undefined";
 		},
 		
@@ -172,7 +179,7 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 			// >>> var store = new dojox.data.QueryReadStore({});
 			// >>> store.isItem({name:"me", label:"me too"});
 			// false
-
+			//
 			if(something){
 				return typeof something.r != "undefined" && something.r == this;
 			}
@@ -194,7 +201,7 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 	
 		fetch:function(/* Object? */ request){
-			// summary:
+			//	summary:
 			//		See dojo.data.util.simpleFetch.fetch() this is just a copy and I adjusted
 			//		only the paging, since it happens on the server if doClientPaging is
 			//		false, thx to http://trac.dojotoolkit.org/ticket/4761 reporting this.
@@ -265,13 +272,13 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 			return this._features;
 		},
 	
-		close: function(/*dojo/data/api/Request|Object?*/ request){
-			// I have no idea if this is really needed ...
+		close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
+			// I have no idea if this is really needed ... 
 		},
 	
 		getLabel: function(/* item */ item){
-			// summary:
-			//		See dojo/data/api/Read.getLabel()
+			//	summary:
+			//		See dojo.data.api.Read.getLabel()
 			if(this._labelAttr && this.isItem(item)){
 				return this.getValue(item, this._labelAttr); //String
 			}
@@ -279,8 +286,8 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 	
 		getLabelAttributes: function(/* item */ item){
-			// summary:
-			//		See dojo/data/api/Read.getLabelAttributes()
+			//	summary:
+			//		See dojo.data.api.Read.getLabelAttributes()
 			if(this._labelAttr){
 				return [this._labelAttr]; //array
 			}
@@ -298,9 +305,9 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 			// Store a ref to "this" in each item, so we can simply check if an item
 			// really origins form here (idea is from ItemFileReadStore, I just don't know
 			// how efficient the real storage use, garbage collection effort, etc. is).
-			dojo.forEach(data.items,function(e){
-				this._items.push({i:e, r:this});
-			},this);
+			dojo.forEach(data.items,function(e){ 
+				this._items.push({i:e, r:this}); 
+			},this); 
 			
 			var identifier = data.identifier;
 			this._itemsByIdentity = {};
@@ -327,20 +334,18 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 			// (does it really sanititze them) and store the data optimal. should we? for security reasons???
 			numRows = this._numRows = (numRows === -1) ? this._items.length : numRows;
 			fetchHandler(this._items, request, numRows);
-			this._numRows = numRows;
+			this._numRows = numRows;		
 		},
 		
 		_fetchItems: function(request, fetchHandler, errorHandler){
-			// summary:
-			//		The request contains the data as defined in the Read-API.
-			//		Additionally there is following keyword "serverQuery".
+			//	summary:
+			// 		The request contains the data as defined in the Read-API.
+			// 		Additionally there is following keyword "serverQuery".
 			//
-			//		####The *serverQuery* parameter, optional.
-			//
+			//	The *serverQuery* parameter, optional.
 			//		This parameter contains the data that will be sent to the server.
 			//		If this parameter is not given the parameter "query"'s
 			//		data are sent to the server. This is done for some reasons:
-			//
 			//		- to specify explicitly which data are sent to the server, they
 			//		  might also be a mix of what is contained in "query", "queryOptions"
 			//		  and the paging parameters "start" and "count" or may be even
@@ -350,16 +355,17 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 			//		  does it, it compares if the query has changed
 			//		- request.query is required by the Read-API
 			//
-			//		I.e. the following examples might be sent via GET:
-			//	|	  fetch({query:{name:"abc"}, queryOptions:{ignoreCase:true}})
+			// 		I.e. the following examples might be sent via GET:
+			//		  fetch({query:{name:"abc"}, queryOptions:{ignoreCase:true}})
 			//		  the URL will become:   /url.php?name=abc
 			//
-			//	|	  fetch({serverQuery:{q:"abc", c:true}, query:{name:"abc"}, queryOptions:{ignoreCase:true}})
+			//		  fetch({serverQuery:{q:"abc", c:true}, query:{name:"abc"}, queryOptions:{ignoreCase:true}})
 			//		  the URL will become:   /url.php?q=abc&c=true
-			//	|	  // The serverQuery-parameter has overruled the query-parameter
-			//	|	  // but the query parameter stays untouched, but is not sent to the server!
-			//	|	  // The serverQuery contains more data than the query, so they might differ!
-
+			//		  // The serverQuery-parameter has overruled the query-parameter
+			//		  // but the query parameter stays untouched, but is not sent to the server!
+			//		  // The serverQuery contains more data than the query, so they might differ!
+			//
+	
 			var serverQuery = request.serverQuery || request.query || {};
 			//Need to add start and count
 			if(!this.doClientPaging){
@@ -387,10 +393,7 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 				fetchHandler(this._items, request, this._numRows);
 			}else{
 				var xhrFunc = this.requestMethod.toLowerCase() == "post" ? dojo.xhrPost : dojo.xhrGet;
-				var xhrHandler = xhrFunc({url:this.url, handleAs:"json-comment-optional", content:serverQuery, failOk: true});
-				request.abort = function(){
-					xhrHandler.cancel();
-				};
+				var xhrHandler = xhrFunc({url:this.url, handleAs:"json-comment-optional", content:serverQuery});
 				xhrHandler.addCallback(dojo.hitch(this, function(data){
 					this._xhrFetchHandler(data, request, fetchHandler, errorHandler);
 				}));
@@ -406,20 +409,20 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 		
 		_filterResponse: function(data){
-			// summary:
+			//	summary:
 			//		If the data from servers needs to be processed before it can be processed by this
-			//		store, then this function should be re-implemented in subclass. This default
+			//		store, then this function should be re-implemented in subclass. This default 
 			//		implementation just return the data unchanged.
-			// data:
+			//	data:
 			//		The data received from server
 			return data;
 		},
 	
 		_assertIsItem: function(/* item */ item){
-			// summary:
+			//	summary:
 			//		It throws an error if item is not valid, so you can call it in every method that needs to
 			//		throw an error when item is invalid.
-			// item:
+			//	item: 
 			//		The item to test for being contained by the store.
 			if(!this.isItem(item)){
 				throw new Error(this._className+": Invalid item argument.");
@@ -427,18 +430,18 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 	
 		_assertIsAttribute: function(/* attribute-name-string */ attribute){
-			// summary:
+			//	summary:
 			//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-			// attribute:
+			//	attribute: 
 			//		The attribute to test for being contained by the store.
-			if(typeof attribute !== "string"){
+			if(typeof attribute !== "string"){ 
 				throw new Error(this._className+": Invalid attribute argument ('"+attribute+"').");
 			}
 		},
 	
 		fetchItemByIdentity: function(/* Object */ keywordArgs){
-			// summary:
-			//		See dojo/data/api/Identity.fetchItemByIdentity()
+			//	summary: 
+			//		See dojo.data.api.Identity.fetchItemByIdentity()
 	
 			// See if we have already loaded the item with that id
 			// In case there hasn't been a fetch yet, _itemsByIdentity is null
@@ -493,8 +496,8 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 		
 		getIdentity: function(/* item */ item){
-			// summary:
-			//		See dojo/data/api/Identity.getIdentity()
+			//	summary: 
+			//		See dojo.data.api.Identity.getIdentity()
 			var identifier = null;
 			if(this._identifier === Number){
 				identifier = item.n; // Number
@@ -505,10 +508,9 @@ define(["dojo", "dojox", "dojo/data/util/sorter", "dojo/string"], function(dojo,
 		},
 		
 		getIdentityAttributes: function(/* item */ item){
-			// summary:
-			//		See dojo/data/api/Identity.getIdentityAttributes()
+			//	summary:
+			//		See dojo.data.api.Identity.getIdentityAttributes()
 			return [this._identifier];
 		}
-	});
-
-});
+	}
+);

@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Lastnosti povezave",
 	insertImageTitle: "Lastnosti slike",
@@ -8,7 +7,7 @@ define(
 	set: "Nastavi",
 	currentWindow: "Trenutno okno",
 	parentWindow: "Nadrejeno okno",
-	topWindow: "Okno na vrhu",
+	topWindow: "Najvišje okno",
 	newWindow: "Novo okno"
 })
-);
+

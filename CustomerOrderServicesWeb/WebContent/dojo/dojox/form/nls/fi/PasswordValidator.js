@@ -1,6 +1,5 @@
-define(
 ({
         nomatchMessage: "Salasanat eivät täsmää.",
-	badPasswordMessage: "Salasana ei kelpaa."
+		badPasswordMessage: "Salasana ei kelpaa."
 })
-);
+

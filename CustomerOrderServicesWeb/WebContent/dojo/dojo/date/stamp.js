@@ -1,54 +1,47 @@
-define(["../_base/lang", "../_base/array"], function(lang, array){
-
-// module:
-//		dojo/date/stamp
-
-var stamp = {
-	// summary:
-	//		TODOC
-};
-lang.setObject("dojo.date.stamp", stamp);
+dojo.provide("dojo.date.stamp");
 
 // Methods to convert dates to or from a wire (string) format using well-known conventions
 
-stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTime){
-	// summary:
+dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/defaultTime){
+	//	summary:
 	//		Returns a Date object given a string formatted according to a subset of the ISO-8601 standard.
 	//
-	// description:
+	//	description:
 	//		Accepts a string formatted according to a profile of ISO8601 as defined by
 	//		[RFC3339](http://www.ietf.org/rfc/rfc3339.txt), except that partial input is allowed.
 	//		Can also process dates as specified [by the W3C](http://www.w3.org/TR/NOTE-datetime)
 	//		The following combinations are valid:
 	//
-	//		- dates only
-	//			- yyyy
-	//			- yyyy-MM
-	//			- yyyy-MM-dd
-	//		- times only, with an optional time zone appended
-	//			- THH:mm
-	//			- THH:mm:ss
-	//			- THH:mm:ss.SSS
-	//		- and "datetimes" which could be any combination of the above
+	//			* dates only
+	//			|	* yyyy
+	//			|	* yyyy-MM
+	//			|	* yyyy-MM-dd
+	// 			* times only, with an optional time zone appended
+	//			|	* THH:mm
+	//			|	* THH:mm:ss
+	//			|	* THH:mm:ss.SSS
+	// 			* and "datetimes" which could be any combination of the above
 	//
 	//		timezones may be specified as Z (for UTC) or +/- followed by a time expression HH:mm
 	//		Assumes the local time zone if not specified.  Does not validate.  Improperly formatted
 	//		input may return null.  Arguments which are out of bounds will be handled
-	//		by the Date constructor (e.g. January 32nd typically gets resolved to February 1st)
+	// 		by the Date constructor (e.g. January 32nd typically gets resolved to February 1st)
 	//		Only years between 100 and 9999 are supported.
-  	// formattedString:
+	//
+  	//	formattedString:
 	//		A string such as 2005-06-30T08:05:00-07:00 or 2005-06-30 or T08:05:00
-	// defaultTime:
+	//
+	//	defaultTime:
 	//		Used for defaults for fields omitted in the formattedString.
 	//		Uses 1970-01-01T00:00:00.0Z by default.
 
-	if(!stamp._isoRegExp){
-		stamp._isoRegExp =
+	if(!dojo.date.stamp._isoRegExp){
+		dojo.date.stamp._isoRegExp =
 //TODO: could be more restrictive and check for 00-59, etc.
 			/^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(.\d+)?)?((?:[+-](\d{2}):(\d{2}))|Z)?)?$/;
 	}
 
-	var match = stamp._isoRegExp.exec(formattedString),
+	var match = dojo.date.stamp._isoRegExp.exec(formattedString),
 		result = null;
 
 	if(match){
@@ -59,7 +52,7 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 		if(defaultTime){
 			// mix in defaultTime.  Relatively expensive, so use || operators for the fast path of defaultTime === 0
 			defaultTime = new Date(defaultTime);
-			array.forEach(array.map(["FullYear", "Month", "Date", "Hours", "Minutes", "Seconds", "Milliseconds"], function(prop){
+			dojo.forEach(dojo.map(["FullYear", "Month", "Date", "Hours", "Minutes", "Seconds", "Milliseconds"], function(prop){
 				return defaultTime["get" + prop]();
 			}), function(value, index){
 				match[index] = match[index] || value;
@@ -85,30 +78,33 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 	}
 
 	return result; // Date or null
-};
+}
 
 /*=====
-var __Options = {
-	// selector: String
-	//		"date" or "time" for partial formatting of the Date object.
-	//		Both date and time will be formatted by default.
-	// zulu: Boolean
-	//		if true, UTC/GMT is used for a timezone
-	// milliseconds: Boolean
-	//		if true, output milliseconds
-};
+	dojo.date.stamp.__Options = function(){
+		//	selector: String
+		//		"date" or "time" for partial formatting of the Date object.
+		//		Both date and time will be formatted by default.
+		//	zulu: Boolean
+		//		if true, UTC/GMT is used for a timezone
+		//	milliseconds: Boolean
+		//		if true, output milliseconds
+		this.selector = selector;
+		this.zulu = zulu;
+		this.milliseconds = milliseconds;
+	}
 =====*/
 
-stamp.toISOString = function(/*Date*/ dateObject, /*__Options?*/ options){
-	// summary:
+dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__Options?*/options){
+	//	summary:
 	//		Format a Date object as a string according a subset of the ISO-8601 standard
 	//
-	// description:
+	//	description:
 	//		When options.selector is omitted, output follows [RFC3339](http://www.ietf.org/rfc/rfc3339.txt)
 	//		The local time zone is included as an offset from GMT, except when selector=='time' (time without a date)
 	//		Does not check bounds.  Only years between 100 and 9999 are supported.
 	//
-	// dateObject:
+	//	dateObject:
 	//		A Date object
 
 	var _ = function(n){ return (n < 10) ? "0" + n : n; };
@@ -132,13 +128,10 @@ stamp.toISOString = function(/*Date*/ dateObject, /*__Options?*/ options){
 		}else if(options.selector != "time"){
 			var timezoneOffset = dateObject.getTimezoneOffset();
 			var absOffset = Math.abs(timezoneOffset);
-			time += (timezoneOffset > 0 ? "-" : "+") +
+			time += (timezoneOffset > 0 ? "-" : "+") + 
 				_(Math.floor(absOffset/60)) + ":" + _(absOffset%60);
 		}
 		formattedDate.push(time);
 	}
 	return formattedDate.join('T'); // String
-};
-
-return stamp;
-});
+}

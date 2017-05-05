@@ -1,8 +1,11 @@
-define(["dojo", "../util/oo"],//, "../defaults"], 
-function(dojo, oo){
+dojo.provide("dojox.drawing.manager.Undo");
 
-//dojox.drawing.manager.Undo = 
-return oo.declare(
+dojox.drawing.manager.Undo = dojox.drawing.util.oo.declare(
+	// summary
+	//	Handles the Undo in drawing.
+	//	NOTE: Only partially implemented!!! There is very
+	//		little actual undo functionality!
+	//
 	function(options){
 		this.keys = options.keys;
 		this.undostack = [];
@@ -10,13 +13,8 @@ return oo.declare(
 		dojo.connect(this.keys, "onKeyDown", this, "onKeyDown");
 	},
 	{
-		// summary:
-		//		Handles the Undo in drawing.
-		//		NOTE: Only partially implemented!!! There is very
-		//		little actual undo functionality!
-
 		onKeyDown: function(evt){
-			if(!evt.cmmd && !evt.ctrl){ return; }
+			if(!evt.cmmd){ return; }
 			
 			if(evt.keyCode==90 && !evt.shift){
 				this.undo();
@@ -28,7 +26,7 @@ return oo.declare(
 		add: function(stack){
 			//console.log("undo add", stack)
 			stack.args = dojo.mixin({}, stack.args);
-			this.undostack.push(stack);
+			this.undostack.push(stack);	
 		},
 		apply: function(scope, method, args){
 			dojo.hitch(scope, method)(args);
@@ -36,7 +34,7 @@ return oo.declare(
 		undo: function(){
 			
 			var o = this.undostack.pop();
-			console.log("undo!", o);
+			console.log("undo!", o);	
 			if(!o){ return; }
 			
 			o.before();
@@ -57,4 +55,3 @@ return oo.declare(
 		}
 	}
 );
-});

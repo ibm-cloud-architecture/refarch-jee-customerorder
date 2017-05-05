@@ -1,18 +1,14 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_editor/_Plugin",
-	"dijit/form/ToggleButton",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/i18n!dojox/editor/plugins/nls/Blockquote"
-], function(dojo, dijit, dojox, _Plugin) {
+dojo.provide("dojox.editor.plugins.Blockquote");
 
-var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
-	// summary:
-	//		This plugin provides Blockquote capability to the editor.
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dojox.editor.plugins", "Blockquote");
+
+dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
+	//	summary:
+	//		This plugin provides Blockquote cabability to the editor. 
 	//		window/tab
 
 	// iconClassPrefix: [const] String
@@ -41,12 +37,12 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 		this._initButton();
 		this.connect(this.editor, "onNormalizedDisplayChanged", "updateState");
 		// We need the custom undo code since we manipulate the dom
-		// outside of the browser natives and only customUndo really handles
+		// outside of the browser natives and only customUndo really handles 
 		// that.  It will incur a performance hit, but should hopefully be
-		// relatively small.
+		// relatively small.  
 		editor.customUndo = true;
 	},
-	
+
 	_toggleQuote: function(arg){
 		// summary:
 		//		Function to trigger previewing of the editor document
@@ -71,9 +67,9 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 						// No selection, just cursor point, we need to see if we're
 						// in an indentable block, or similar.
 						if(this._isRootInline(range.startContainer)){
-							// Text at the 'root' of the document, so we need to gather all of it.,
+							// Text at the 'root' of the document, so we need to gather all of it., 
 		
-							// First, we need to find the toplevel inline element that is rooted
+							// First, we need to find the toplevel inline element that is rooted 
 							// to the document 'editNode'
 							start = range.startContainer;
 							while(start && start.parentNode !== ed.editNode){
@@ -82,19 +78,19 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 							// Now we need to walk up its siblings and look for the first one in the rooting
 							// that isn't inline or text, as we want to grab all of that for indent.
 							while(start && start.previousSibling && (
-									this._isTextElement(start) ||
-									(start.nodeType === 1 &&
+									this._isTextElement(start) || 
+									(start.nodeType === 1 && 
 									 this._isInlineFormat(this._getTagName(start))
 								))){
 								start = start.previousSibling;
 							}
-							if(start && start.nodeType === 1 &&
+							if(start && start.nodeType === 1 && 
 							   !this._isInlineFormat(this._getTagName(start))){
 								// Adjust slightly, we're one node too far back in this case.
 								start = start.nextSibling;
 							}
 		
-							// Okay, we have a configured start, lets grab everything following it that's
+							// Okay, we have a configured start, lets grab everything following it that's 
 							// inline and make it part of the blockquote!
 							if(start){
 								bq = ed.document.createElement("blockquote");
@@ -103,10 +99,10 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 								end = bq.nextSibling;
 								while(end && (
 									this._isTextElement(end) ||
-									(end.nodeType === 1 &&
+									(end.nodeType === 1 && 
 										this._isInlineFormat(this._getTagName(end)))
 									)){
-									// Add it.
+									// Add it. 
 									bq.appendChild(end);
 									end = bq.nextSibling;
 								}
@@ -114,9 +110,9 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 						}else{
 							// Figure out what to do when not root inline....
 							var node = range.startContainer;
-							while ((this._isTextElement(node) ||
+							while ((this._isTextElement(node) || 
 									this._isInlineFormat(this._getTagName(node))
-									|| this._getTagName(node) === "li") &&
+									|| this._getTagName(node) === "li") && 
 								node !== ed.editNode && node !== ed.document.body){
 								node = node.parentNode;
 							}
@@ -127,8 +123,10 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 							}
 						}
 						if(bq){
-							ed._sCall("selectElementChildren", [bq]);
-							ed._sCall("collapse", [true]);
+							dojo.withGlobal(ed.window, 
+								"selectElementChildren", dijit._editor.selection, [bq]);
+							dojo.withGlobal(ed.window, 
+								"collapse", dijit._editor.selection, [true]);
 						}
 					}else{
 						var curNode;
@@ -146,12 +144,13 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 
 						// Try to find the end node.  We have to check the selection junk
 						curNode = start;
-						while(curNode.nextSibling && ed._sCall("inSelection", [curNode])){
+						while(curNode.nextSibling && dojo.withGlobal(ed.window, 
+							"inSelection", dijit._editor.selection, [curNode])){
 							curNode = curNode.nextSibling;
 						}
-						end = curNode;
+						end = curNode; 
 						if(end === ed.editNode || end === ed.document.body){
-							// Unable to determine real selection end, so just make it
+							// Unable to determine real selection end, so just make it 
 							// a single node indent of start + all following inline styles, if
 							// present, then just exit.
 							bq = ed.document.createElement("blockquote");
@@ -159,7 +158,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 							tag = this._getTagName(start);
 							if(this._isTextElement(start) || this._isInlineFormat(tag)){
 								// inline element or textnode
-								// Find and move all inline tags following the one we inserted also into the
+								// Find and move all inline tags following the one we inserted also into the 
 								// blockquote so we don't split up content funny.
 								var next = start;
 								while(next && (
@@ -185,7 +184,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 								tag = this._getTagName(curNode);
 								if(tag !== "br"){
 									if(!window.getSelection){
-										// IE sometimes inserts blank P tags, which we want to skip
+										// IE sometimes inserts blank P tags, which we want to skip 
 										// as they end up blockquoted, which messes up layout.
 										if(tag === "p" && this._isEmpty(curNode)){
 											curNode = curNode.nextSibling;
@@ -231,8 +230,10 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 							if(this._isEmpty(bq)){
 								bq.parentNode.removeChild(bq);
 							}else{
-								ed._sCall("selectElementChildren", [bq]);
-								ed._sCall("collapse", [true]);
+								dojo.withGlobal(ed.window, 
+									"selectElementChildren", dijit._editor.selection, [bq]);
+								dojo.withGlobal(ed.window, 
+									"collapse", dijit._editor.selection, [true]);
 							}
 							bq = null;
 						}
@@ -258,8 +259,10 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 							}
 							elem.parentNode.removeChild(elem);
 							if(lastChild){
-								ed._sCall("selectElementChildren", [lastChild]);
-								ed._sCall("collapse", [true]);
+								dojo.withGlobal(ed.window, 
+									"selectElementChildren", dijit._editor.selection, [lastChild]);
+								dojo.withGlobal(ed.window, 
+									"collapse", dijit._editor.selection, [true]);
 							}
 						}
 					}else{
@@ -271,7 +274,8 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 						}
 						var selectedNodes = [];
 						var cNode = start;
-						while(cNode && cNode.nextSibling && ed._sCall("inSelection", [cNode])){
+						while(cNode && cNode.nextSibling && dojo.withGlobal(ed.window, 
+							"inSelection", dijit._editor.selection, [cNode])){
 							if(cNode.parentNode && this._getTagName(cNode.parentNode) === "blockquote"){
 								cNode = cNode.parentNode;
 							}
@@ -306,15 +310,8 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 		// tags:
 		//		protected
 		var ed = this.editor;
-		var disabled = this.get("disabled");
-		
 		if(!ed || !ed.isLoaded){ return; }
 		if(this.button){
-			this.button.set("disabled", disabled);
-			if(disabled){
-				return;
-			}
-
 			// Some browsers (WebKit) doesn't actually get the tag info right.
 			// So ... lets check it manually.
 			var elem;
@@ -344,7 +341,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 
 	_findBlockQuotes: function(nodeList){
 		// summary:
-		//		function to find all the blocknode elements in a collection of
+		//		function to find a ll the blocknode elements in a collection of
 		//		nodes
 		// nodeList:
 		//		The list of nodes.
@@ -357,7 +354,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 				var node = nodeList[i];
 				if(node.nodeType === 1){
 					if(this._getTagName(node) === "blockquote"){
-						bnList.push(node);
+						bnList.push(node);   
 					}
 					if(node.childNodes && node.childNodes.length > 0){
 						bnList = bnList.concat(this._findBlockQuotes(node.childNodes));
@@ -442,7 +439,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 				if(n.nodeType === 1){
 					if(this._getTagName(n) === "p"){
 						if(!dojo.trim(n.innerHTML)){
-							continue;
+							continue;	
 						}
 					}
 					empty = false;
@@ -468,7 +465,7 @@ var Blockquote = dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 	_isInlineFormat: function(tag){
 		// summary:
 		//		Function to determine if the current tag is an inline
-		//		element that does formatting, as we don't want to
+		//		element that does formatting, as we don't want to 
 		//		break/indent around it, as it can screw up text.
 		// tag:
 		//		The tag to examine
@@ -504,10 +501,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "blockquote"){
-		o.plugin = new Blockquote({});
+		o.plugin = new dojox.editor.plugins.Blockquote({});
 	}
-});
-
-return Blockquote;
-
 });

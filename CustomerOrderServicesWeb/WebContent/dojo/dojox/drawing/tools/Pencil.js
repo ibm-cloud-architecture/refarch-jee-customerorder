@@ -1,20 +1,16 @@
-define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Path"],
-function(lang, oo, registry, StencilPath){
+dojo.provide("dojox.drawing.tools.Pencil");
 
-//dojox.drawing.tools.Pencil 
-var Pencil = oo.declare(
-	StencilPath,
+dojox.drawing.tools.Pencil = dojox.drawing.util.oo.declare(
+	// summary:
+	//		Class for a drawable, continous Path
+	//
+	dojox.drawing.stencil.Path,
 	function(){
-		// summary:
-		//		constructor
+		// summary: constructor
 		this._started = false;
 	},
 	{
-		// summary:
-		//		Class for a drawable, continuous Path
-
 		draws:true,
-
 		// minDist: Number
 		//		The distance the mouse must travel before rendering
 		//		a path segment. Lower number is a higher definition
@@ -76,14 +72,12 @@ var Pencil = oo.declare(
 	}
 );
 
-lang.setObject("dojox.drawing.tools.Pencil", Pencil);
-Pencil.setup = {
+dojox.drawing.tools.Pencil.setup = {
+	// summary: See Base ToolsSetup
+	//
 	name:"dojox.drawing.tools.Pencil",
 	tooltip:"Pencil Tool",
 	iconClass:"iconLine"
 };
 
-registry.register(Pencil.setup, "tool");
-
-return Pencil;
-});
+dojox.drawing.register(dojox.drawing.tools.Pencil.setup, "tool");

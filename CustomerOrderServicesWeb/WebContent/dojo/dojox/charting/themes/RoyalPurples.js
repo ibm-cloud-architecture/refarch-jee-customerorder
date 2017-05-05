@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.RoyalPurples = new SimpleTheme({
+dojo.provide("dojox.charting.themes.RoyalPurples");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.RoyalPurples=new dxc.Theme({
 		colors: [
 			"#473980",
 			"#685aa7",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#7267ae"
 		]
 	});
-	return themes.RoyalPurples;
-});
+})();

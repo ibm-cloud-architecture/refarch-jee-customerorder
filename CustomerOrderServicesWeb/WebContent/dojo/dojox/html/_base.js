@@ -1,30 +1,20 @@
-define([
-	"dojo/_base/declare",
-	"dojo/Deferred",
-	"dojo/dom-construct",
-	"dojo/html",
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/ready",
-	"dojo/_base/sniff",
-	"dojo/_base/url",
-	"dojo/_base/xhr",
-	"dojo/when",
-	"dojo/_base/window"
-], function(declare, Deferred, domConstruct, htmlUtil, kernel, lang, ready, has, _Url, xhrUtil, when, windowUtil){
-
 /*
-	Status: don't know where this will all live exactly
+	Status: dont know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
 	Some can be static method, others maybe methods of the ContentSetter (?)
-
+	
 	Gut the ContentPane, replace its _setContent with our own call to dojox.html.set()
-
+	
 
 */
-	var html = kernel.getObject("dojox.html", true);
 
-	if(has("ie")){
+dojo.provide("dojox.html._base");
+
+dojo.require("dojo.html"); 
+
+(function() {
+
+	if(dojo.isIE){
 		var alphaImageLoader = /(AlphaImageLoader\([^)]*?src=(['"]))(?![a-z]+:|\/)([^\r\n;}]+?)(\2[^)]*\)\s*[;}]?)/g;
 	}
 
@@ -38,33 +28,33 @@ define([
 	// @namespace dojo "http://dojotoolkit.org/dojo.css"; /* namespace URL should always be a absolute URI */
 	// @charset 'utf-8';
 	// @media print{ #menuRoot {display:none;} }
-
+		
 	// we adjust all paths that dont start on '/' or contains ':'
 	//(?![a-z]+:|\/)
 
 	var cssPaths = /(?:(?:@import\s*(['"])(?![a-z]+:|\/)([^\r\n;{]+?)\1)|url\(\s*(['"]?)(?![a-z]+:|\/)([^\r\n;]+?)\3\s*\))([a-z, \s]*[;}]?)/g;
 
-	var adjustCssPaths = html._adjustCssPaths = function(cssUrl, cssText){
-		// summary:
+	var adjustCssPaths = dojox.html._adjustCssPaths = function(cssUrl, cssText){
+		//	summary:
 		//		adjusts relative paths in cssText to be relative to cssUrl
 		//		a path is considered relative if it doesn't start with '/' and not contains ':'
-		// description:
+		//	description:
 		//		Say we fetch a HTML page from level1/page.html
 		//		It has some inline CSS:
-		//	|		@import "css/page.css" tv, screen;
-		//	|		...
-		//	|		background-image: url(images/aplhaimage.png);
+		//			@import "css/page.css" tv, screen;
+		//			...
+		//			background-image: url(images/aplhaimage.png);
 		//
 		//		as we fetched this HTML and therefore this CSS
 		//		from level1/page.html, these paths needs to be adjusted to:
-		//	|		@import 'level1/css/page.css' tv, screen;
-		//	|		...
-		//	|		background-image: url(level1/images/alphaimage.png);
-		//
+		//			@import 'level1/css/page.css' tv, screen;
+		//			...
+		//			background-image: url(level1/images/alphaimage.png);
+		//		
 		//		In IE it will also adjust relative paths in AlphaImageLoader()
-		//	|		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
+		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
 		//		will be adjusted to:
-		//	|		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='level1/images/alphaimage.png');
+		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='level1/images/alphaimage.png');
 		//
 		//		Please note that any relative paths in AlphaImageLoader in external css files wont work, as
 		//		the paths in AlphaImageLoader is MUST be declared relative to the HTML page,
@@ -80,15 +70,15 @@ define([
 		// like * > .myselector { filter:none; }
 		if(alphaImageLoader){
 			cssText = cssText.replace(alphaImageLoader, function(ignore, pre, delim, url, post){
-				return pre + (new _Url(cssUrl, './'+url).toString()) + post;
+				return pre + (new dojo._Url(cssUrl, './'+url).toString()) + post;
 			});
 		}
 
 		return cssText.replace(cssPaths, function(ignore, delimStr, strUrl, delimUrl, urlUrl, media){
 			if(strUrl){
-				return '@import "' + (new _Url(cssUrl, './'+strUrl).toString()) + '"' + media;
+				return '@import "' + (new dojo._Url(cssUrl, './'+strUrl).toString()) + '"' + media;
 			}else{
-				return 'url(' + (new _Url(cssUrl, './'+urlUrl).toString()) + ')' + media;
+				return 'url(' + (new dojo._Url(cssUrl, './'+urlUrl).toString()) + ')' + media;
 			}
 		});
 	};
@@ -98,34 +88,29 @@ define([
 	// <img style='filter:progid...AlphaImageLoader(src="noticeTheSrcHereRunsThroughHtmlSrc")' src="img">
 	var htmlAttrPaths = /(<[a-z][a-z0-9]*\s[^>]*)(?:(href|src)=(['"]?)([^>]*?)\3|style=(['"]?)([^>]*?)\5)([^>]*>)/gi;
 
-	var adjustHtmlPaths = html._adjustHtmlPaths = function(htmlUrl, cont){
+	var adjustHtmlPaths = dojox.html._adjustHtmlPaths = function(htmlUrl, cont){
 		var url = htmlUrl || "./";
 
 		return cont.replace(htmlAttrPaths,
 			function(tag, start, name, delim, relUrl, delim2, cssText, end){
 				return start + (name ?
-							(name + '=' + delim + (new _Url(url, relUrl).toString()) + delim)
+							(name + '=' + delim + (new dojo._Url(url, relUrl).toString()) + delim)
 						: ('style=' + delim2 + adjustCssPaths(url, cssText) + delim2)
 				) + end;
 			}
 		);
 	};
-
-	var snarfStyles = html._snarfStyles = function	(/*String*/cssUrl, /*String*/cont, /*Array*/styles){
+	
+	var snarfStyles = dojox.html._snarfStyles = function	(/*String*/cssUrl, /*String*/cont, /*Array*/styles){
 		/****************  cut out all <style> and <link rel="stylesheet" href=".."> **************/
 		// also return any attributes from this tag (might be a media attribute)
 		// if cssUrl is set it will adjust paths accordingly
 		styles.attributes = [];
 
-		cont = cont.replace(/<[!][-][-](.|\s)*?[-][-]>/g,
-			function(comment){
-				return comment.replace(/<(\/?)style\b/ig,"&lt;$1Style").replace(/<(\/?)link\b/ig,"&lt;$1Link").replace(/@import "/ig,"@ import \"");
-			}
-		);
 		return cont.replace(/(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi,
 			function(ignore, styleAttr, cssText, linkAttr, delim, href){
 				// trim attribute
-				var i, attr = (styleAttr||linkAttr||"").replace(/^\s*([\s\S]*?)\s*$/i, "$1");
+				var i, attr = (styleAttr||linkAttr||"").replace(/^\s*([\s\S]*?)\s*$/i, "$1"); 
 				if(cssText){
 					i = styles.push(cssUrl ? adjustCssPaths(cssUrl, cssText) : cssText);
 				}else{
@@ -141,22 +126,22 @@ define([
 					}
 					styles.attributes[i - 1] = atObj;
 				}
-				return "";
+				return ""; // squelsh the <style> or <link>
 			}
 		);
 	};
 
-	var snarfScripts = html._snarfScripts = function(cont, byRef){
-		// summary:
+	var snarfScripts = dojox.html._snarfScripts = function(cont, byRef){
+		// summary
 		//		strips out script tags from cont
-		// byRef:
-		//		byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
-		//		byRef will have {code: 'jscode'} when this scope leaves
+		// invoke with 
+		//	byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
+		//	byRef will have {code: 'jscode'} when this scope leaves
 		byRef.code = "";
 
 		//Update script tags nested in comments so that the script tag collector doesn't pick
 		//them up.
-		cont = cont.replace(/<[!][-][-](.|\s)*?[-][-]>/g,
+		cont = cont.replace(/<[!][-][-](.|\s){5,}?[-][-]>/g,
 			function(comment){
 				return comment.replace(/<(\/?)script\b/ig,"&lt;$1Script");
 			}
@@ -176,7 +161,7 @@ define([
 							return name.charAt(0)=="#" ? String.fromCharCode(name.substring(1)) : "&"+name+";";
 					}
 				});
-				xhrUtil.get({
+				dojo.xhrGet({
 					url: src,
 					sync: true,
 					load: function(code){
@@ -186,9 +171,9 @@ define([
 				});
 			}
 		}
-
+		
 		// match <script>, <script type="text/..., but not <script type="dojo(/method)...
-		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?>([\s\S]*?)<\/script>/gi,
+		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))(?:[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?)*>([\s\S]*?)<\/script>/gi,
 			function(ignore, delim, src, code){
 				if(src){
 					download(src);
@@ -198,31 +183,31 @@ define([
 				return "";
 			}
 		);
-	};
-
-	var evalInGlobal = html.evalInGlobal = function(code, appendNode){
+	}; 
+	
+	var evalInGlobal = dojox.html.evalInGlobal = function(code, appendNode){
 		// we do our own eval here as dojo.eval doesn't eval in global crossbrowser
 		// This work X browser but but it relies on a DOM
 		// plus it doesn't return anything, thats unrelevant here but not for dojo core
-		appendNode = appendNode || windowUtil.doc.body;
+		appendNode = appendNode || dojo.doc.body;
 		var n = appendNode.ownerDocument.createElement('script');
 		n.type = "text/javascript";
 		appendNode.appendChild(n);
 		n.text = code; // DOM 1 says this should work
 	};
 
-	html._ContentSetter = declare(/*===== "dojox.html._ContentSetter", =====*/ htmlUtil._ContentSetter, {
+	dojo.declare("dojox.html._ContentSetter", [dojo.html._ContentSetter], {
 		// adjustPaths: Boolean
 		//		Adjust relative paths in html string content to point to this page
 		//		Only useful if you grab content from a another folder than the current one
 		adjustPaths: false,
 		referencePath: ".",
-		renderStyles: false,
+		renderStyles: false, 
 
 		executeScripts: false,
 		scriptHasHooks: false,
 		scriptHookReplacement: null,
-
+		
 		_renderStyles: function(styles){
 			// insert css from content into document head
 			this._styleNodes = [];
@@ -247,30 +232,30 @@ define([
 					st.appendChild(doc.createTextNode(cssText));
 				}
 			}
-		},
+		}, 
 
 		empty: function() {
 			this.inherited("empty", arguments);
-
+			
 			// empty out the styles array from any previous use
 			this._styles = [];
-		},
-
+		}, 
+		
 		onBegin: function() {
-			// summary:
-			//		Called after instantiation, but before set();
-			//		It allows modification of any of the object properties - including the node and content
+			// summary
+			//		Called after instantiation, but before set(); 
+			//		It allows modification of any of the object properties - including the node and content 
 			//		provided - before the set operation actually takes place
-			//		This implementation extends that of dojo.html._ContentSetter
+			//		This implementation extends that of dojo.html._ContentSetter 
 			//		to add handling for adjustPaths, renderStyles on the html string content before it is set
 			this.inherited("onBegin", arguments);
-
-			var cont = this.content,
-				node = this.node;
-
+			
+			var cont = this.content, 
+				node = this.node; 
+				
 			var styles = this._styles;// init vars
 
-			if(lang.isString(cont)){
+			if(dojo.isString(cont)){
 				if(this.adjustPaths && this.referencePath){
 					cont = adjustHtmlPaths(this.referencePath, cont);
 				}
@@ -279,10 +264,10 @@ define([
 					cont = snarfStyles(this.referencePath, cont, styles);
 				}
 
-				// because of a bug in IE, script tags that is first in html hierarchy doesnt make it into the DOM
+				// because of a bug in IE, script tags that is first in html hierarchy doesnt make it into the DOM 
 				//	when content is innerHTML'ed, so we can't use dojo.query to retrieve scripts from DOM
 				if(this.executeScripts){
-					var _t = this;
+					var _t = this; 
 					var byRef = {
 						downloadRemote: true,
 						errBack:function(e){
@@ -295,23 +280,23 @@ define([
 			}
 			this.content = cont;
 		},
-
+		
 		onEnd: function() {
-			// summary:
+			// summary
 			//		Called after set(), when the new content has been pushed into the node
 			//		It provides an opportunity for post-processing before handing back the node to the caller
 			//		This implementation extends that of dojo.html._ContentSetter
-
-			var code = this._code,
+			
+			var code = this._code, 
 				styles = this._styles;
-
+				
 			// clear old stylenodes from the DOM
 			// these were added by the last set call
 			// (in other words, if you dont keep and reuse the ContentSetter for a particular node
 			// .. you'll have no practical way to do this)
 			if(this._styleNodes && this._styleNodes.length){
 				while(this._styleNodes.length){
-					domConstruct.destroy(this._styleNodes.pop());
+					dojo.destroy(this._styleNodes.pop());
 				}
 			}
 			// render new style nodes
@@ -319,22 +304,7 @@ define([
 				this._renderStyles(styles);
 			}
 
-			// Deferred to signal when this function is complete
-			var d = new Deferred();
-
-			// Setup function to call onEnd() in the superclass, for parsing, and resolve the above Deferred when
-			// parsing is complete.
-			var superClassOnEndMethod = this.getInherited(arguments),
-				args = arguments,
-				callSuperclass = lang.hitch(this, function(){
-					superClassOnEndMethod.apply(this, args);
-
-					// If parser ran (parseContent == true), wait for it to finish, otherwise call d.resolve() immediately
-					when(this.parseDeferred, function(){ d.resolve(); });
-				});
-
 			if(this.executeScripts && code){
-				// Evaluate any <script> blocks in the content
 				if(this.cleanContent){
 					// clean JS from html comments and other crap that browser
 					// parser takes care of in a normal page load
@@ -342,7 +312,7 @@ define([
 				}
 				if(this.scriptHasHooks){
 					// replace _container_ with this.scriptHookReplace()
-					// the scriptHookReplacement can be a string
+					// the scriptHookReplacement can be a string 
 					// or a function, which when invoked returns the string you want to substitute in
 					code = code.replace(/_container_(?!\s*=[^=])/g, this.scriptHookReplacement);
 				}
@@ -351,21 +321,9 @@ define([
 				}catch(e){
 					this._onError('Exec', 'Error eval script in '+this.id+', '+e.message, e);
 				}
-
-				// Finally, use ready() to wait for any require() calls from the <script> blocks to complete,
-				// then call onEnd() in the superclass, for parsing, and when that is done resolve the Deferred.
-				// For 2.0, remove the call to ready() (or this whole if() branch?) since the parser can do loading for us.
-				ready(callSuperclass);
-			}else{
-				// There were no <script>'s to execute, so immediately call onEnd() in the superclass, and
-				// when the parser finishes running, resolve the Deferred.
-				callSuperclass();
 			}
-
-			// Return a promise that resolves after the ready() call completes, and after the parser finishes running.
-			return d.promise;
+			this.inherited("onEnd", arguments);
 		},
-
 		tearDown: function() {
 			this.inherited(arguments);
 			delete this._styles;
@@ -373,49 +331,45 @@ define([
 			// references to the style nodes we added
 			if(this._styleNodes && this._styleNodes.length){
 				while(this._styleNodes.length){
-					domConstruct.destroy(this._styleNodes.pop());
+					dojo.destroy(this._styleNodes.pop());
 				}
 			}
-			delete this._styleNodes;
+			delete this._styleNodes; 
 			// reset the defaults from the prototype
-			// XXX: not sure if this is the correct intended behaviour, it was originally
-			// dojo.getObject(this.declaredClass).prototype which will not work with anonymous
-			// modules
-			lang.mixin(this, html._ContentSetter.prototype);
+			dojo.mixin(this, dojo.getObject(this.declaredClass).prototype);
 		}
-
+		
 	});
-
-	html.set = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont, /* Object? */ params){
+	
+	dojox.html.set = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont, /* Object? */ params){
 		// TODO: add all the other options
 			// summary:
 			//		inserts (replaces) the given content into the given node
-			// node:
+			//	node:
 			//		the parent element that will receive the content
-			// cont:
-			//		the content to be set on the parent element.
-			//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
-			// params:
+			//	cont:
+			//		the content to be set on the parent element. 
+			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+			//	params: 
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
-			// example:
+			//	example:
 			//		A safe string/node/nodelist content replacement/injection with hooks for extension
-			//		Example Usage:
-			//	|	dojo.html.set(node, "some string");
-			//	|	dojo.html.set(node, contentNode, {options});
-			//	|	dojo.html.set(node, myNode.childNodes, {options});
-
+			//		Example Usage: 
+			//		dojo.html.set(node, "some string"); 
+			//		dojo.html.set(node, contentNode, {options}); 
+			//		dojo.html.set(node, myNode.childNodes, {options}); 
+	 
 		if(!params){
 			// simple and fast
-			return htmlUtil._setNodeContent(node, cont, true);
-		}else{
+			return dojo.html._setNodeContent(node, cont, true);
+		}else{ 
 			// more options but slower
-			var op = new html._ContentSetter(lang.mixin(
-					params,
-					{ content: cont, node: node }
+			var op = new dojox.html._ContentSetter(dojo.mixin( 
+					params, 
+					{ content: cont, node: node } 
 			));
 			return op.set();
 		}
 	};
-
-	return html;
-});
+	
+})();

@@ -1,25 +1,22 @@
-define(["dojo/_base/lang", "./_base", "./regexp"], 
- function(lang, validate, xregexp){
+dojo.provide("dojox.validate.us");
+dojo.require("dojox.validate._base");
 
-var us = lang.getObject("us", true, validate);
-us.isState = function(value, flags){
-	// summary:
-	//		Validates US state and territory abbreviations.
-	// value: String
-	//		A two character string
-	// flags: Object?
-	//		- flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
-	//		- flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
 
-	var re = new RegExp("^" + xregexp.us.state(flags) + "$", "i");
+dojox.validate.us.isState = function(/*String*/value, /*Object?*/flags){
+	// summary: Validates US state and territory abbreviations.
+	//
+	// value: A two character string
+	// flags: An object
+	//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
+	//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
+
+	var re = new RegExp("^" + dojox.validate.regexp.us.state(flags) + "$", "i");
 	return re.test(value); // Boolean
-};
+}
 
-us.isPhoneNumber = function(/*String*/value){
-	// summary:
-	//		Validates 10 US digit phone number for several common formats
-	// value:
-	//		The telephone number string
+dojox.validate.us.isPhoneNumber = function(/*String*/value){
+	// summary: Validates 10 US digit phone number for several common formats
+	// value: The telephone number string
 
 	var flags = {
 		format: [
@@ -38,12 +35,11 @@ us.isPhoneNumber = function(/*String*/value){
 			"##########"
 		]
 	};
-	return validate.isNumberFormat(value, flags); // Boolean
-};
+	return dojox.validate.isNumberFormat(value, flags); // Boolean
+}
 
-us.isSocialSecurityNumber = function(/*String*/value){
-	// summary:
-	//		Validates social security number
+dojox.validate.us.isSocialSecurityNumber = function(/*String*/value){
+	// summary: Validates social security number
 	var flags = {
 		format: [
 			"###-##-####",
@@ -51,12 +47,11 @@ us.isSocialSecurityNumber = function(/*String*/value){
 			"#########"
 		]
 	};
-	return validate.isNumberFormat(value, flags); // Boolean
-};
+	return dojox.validate.isNumberFormat(value, flags); // Boolean
+}
 
-us.isZipCode = function(/*String*/value){
-	// summary:
-	//		Validates U.S. zip-code
+dojox.validate.us.isZipCode = function(/*String*/value){
+	// summary: Validates U.S. zip-code
 	var flags = {
 		format: [
 			"#####-####",
@@ -65,8 +60,5 @@ us.isZipCode = function(/*String*/value){
 			"#####"
 		]
 	};
-	return validate.isNumberFormat(value, flags); // Boolean
-};
-
-return us;
-});
+	return dojox.validate.isNumberFormat(value, flags); // Boolean
+}

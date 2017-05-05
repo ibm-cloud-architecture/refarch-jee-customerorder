@@ -1,5 +1,4 @@
-define(
 ({
-	"pageBreak": "Interruzione pagina"
+	"pageBreak": "Interruzione di pagina"
 })
-);
+

@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[görüntüleme seçenekleri]",
 	title: "Başlık",
@@ -10,4 +9,3 @@ define(
 	summary: "Özet",
 	content: "İçerik"
 })
-);

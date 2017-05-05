@@ -1,6 +1,5 @@
-define(
 ({
         nomatchMessage: "Les contrasenyes no coincideixen",
-	badPasswordMessage: "La contrasenya no és correcta"
+		badPasswordMessage: "La contrasenya no és correcta"
 })
-);
+

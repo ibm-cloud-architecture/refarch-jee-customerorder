@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Tabel invoegen",
 	modifyTableTitle: "Tabel wijzigen",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "Tabelbreedte:",
 	backgroundColor: "Achtergrondkleur:",
 	borderColor: "Randkleur",
-	borderThickness: "Randdikte:",
+	borderThickness: "Randdikte",
 	percent: "percent",
 	pixels: "pixels",
 	"default": "standaard",
@@ -19,15 +18,12 @@ define(
 	right: "rechts",
 	buttonSet: "Instellen", // translated elsewhere?
 	buttonInsert: "invoegen",
-	buttonCancel: "Annuleren",
+
 	selectTableLabel: "Tabel selecteren",
 	insertTableRowBeforeLabel: "Rij boven toevoegen",
 	insertTableRowAfterLabel: "Rij onder toevoegen",
 	insertTableColumnBeforeLabel: "Kolom voor toevoegen",
 	insertTableColumnAfterLabel: "Kolom achter toevoegen",
 	deleteTableRowLabel: "Rij wissen",
-	deleteTableColumnLabel: "Kolom wissen",
-	colorTableCellTitle: "Achtergrondkleur van tabelcel",
-	tableContextMenuTitle: "Contextmenu voor tabel"
+	deleteTableColumnLabel: "Kolom wissen"
 })
-);

@@ -1,12 +1,10 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/declare",
-	"dojo/_base/json",
-	"./Anchor",
-	"./_Plugin"
-], function(dojo){
-	dojo.declare("dojox.sketch.AnnotationTool", dojox.sketch._Plugin, {
+dojo.provide("dojox.sketch.Annotation");
+dojo.require("dojox.sketch.Anchor");
+dojo.require("dojox.sketch._Plugin");
+
+(function(){
+	var ta=dojox.sketch;
+	dojo.declare("dojox.sketch.AnnotationTool", ta._Plugin, {
 		onMouseDown: function(e){
 			this._omd=true;
 		},
@@ -14,7 +12,7 @@ define([
 			if(!this._omd){
 				return;
 			}
-			if(this._cshape){
+			if(this._cshape){ 
 				this._cshape.setShape(rect);
 			} else {
 				this._cshape=this.figure.surface.createRect(rect)
@@ -29,7 +27,7 @@ define([
 			}
 			this._omd=false;
 			var f=this.figure;
-			if(this._cshape){
+			if(this._cshape){ 
 				f.surface.remove(this._cshape);
 				delete this._cshape;
 			}
@@ -38,8 +36,8 @@ define([
 				//		gets drawn.
 				var limit=10;
 				if(Math.max(
-					limit,
-					Math.abs(f._absEnd.x-f._start.x),
+					limit, 
+					Math.abs(f._absEnd.x-f._start.x), 
 					Math.abs(f._absEnd.y-f._start.y)
 				)>limit){
 					this._create(f._start, f._end);
@@ -53,36 +51,36 @@ define([
 			var _=f.nextKey();
 			var a=new (this.annotation)(f, _);
 			a.transform={
-				dx:f._calCol(start.x/f.zoomFactor),
+				dx:f._calCol(start.x/f.zoomFactor), 
 				dy:f._calCol(start.y/f.zoomFactor)
 			};
-			a.end={
-				x:f._calCol(end.x/f.zoomFactor),
-				y:f._calCol(end.y/f.zoomFactor)
+			a.end={ 
+				x:f._calCol(end.x/f.zoomFactor), 
+				y:f._calCol(end.y/f.zoomFactor) 
 			};
 			if(a.control){
-				a.control={
+				a.control={ 
 					x:f._calCol((end.x/2)/f.zoomFactor),
-					y:f._calCol((end.y/2)/f.zoomFactor)
+					y:f._calCol((end.y/2)/f.zoomFactor) 
 				};
 			}
 			f.onBeforeCreateShape(a);
 			a.initialize();
 			f.select(a);
 			f.onCreateShape(a);
-			f.history.add(dojox.sketch.CommandTypes.Create,a);
+			f.history.add(ta.CommandTypes.Create,a);
 		}
 	});
 
-	dojox.sketch.Annotation=function(figure, id){
+	ta.Annotation=function(figure, id){
 		//	for editing stuff.
 		this.id=this._key=id;
 		this.figure=figure;
-		this.mode=dojox.sketch.Annotation.Modes.View;
+		this.mode=ta.Annotation.Modes.View;
 		this.shape=null;	// dojox.gfx.Group
 		this.boundingBox=null;	// rect for boundaries
 		this.hasAnchors=true;
-		this.anchors={};	//	dojox.sketch.Anchor
+		this.anchors={};	//	ta.Anchor
 		this._properties={
 			'stroke':{ color:"blue", width:2 },
 			'font': {family:"Arial", size:16, weight:"bold"},
@@ -90,18 +88,18 @@ define([
 			'label': ""
 		};
 
-		if(this.figure){
-			this.figure.add(this);
+		if(this.figure){ 
+			this.figure.add(this); 
 		}
 	};
 
-	var p=dojox.sketch.Annotation.prototype;
-	p.constructor=dojox.sketch.Annotation;
+	var p=ta.Annotation.prototype;
+	p.constructor=ta.Annotation;
 	p.type=function(){ return ''; };
-	p.getType=function(){ return dojox.sketch.Annotation; };
+	p.getType=function(){ return ta.Annotation; };
 	p.onRemove=function(noundo){
 		//this.figure._delete([this],noundo);
-		this.figure.history.add(dojox.sketch.CommandTypes.Delete, this, this.serialize());
+		this.figure.history.add(ta.CommandTypes.Delete, this, this.serialize());
 	};
 	p.property=function(name,/*?*/value){
 		var r;
@@ -119,12 +117,12 @@ define([
 	};
 	p.onPropertyChange=function(name,oldvalue){};
 	p.onCreate=function(){
-		this.figure.history.add(dojox.sketch.CommandTypes.Create,this);
+		this.figure.history.add(ta.CommandTypes.Create,this);
 	}
 	p.onDblClick=function(e){
 		var l=prompt('Set new text:',this.property('label'));
 		if(l!==false){
-			this.beginEdit(dojox.sketch.CommandTypes.Modify);
+			this.beginEdit(ta.CommandTypes.Modify);
 			this.property('label',l);
 			this.draw();
 			this.endEdit();
@@ -138,7 +136,7 @@ define([
 	p.getBBox=function(){ };
 	p.beginEdit=function(type){
 		if(!this._type){
-			this._type=type||dojox.sketch.CommandTypes.Move;
+			this._type=type||ta.CommandTypes.Move;
 			this._prevState=this.serialize();
 		}
 	};
@@ -156,10 +154,10 @@ define([
 		dx:function(p1, p2, dy){
 			var s=this.slope(p1,p2);
 			if(s==0){ return s; }
-			return dy/s;
+			return dy/s; 
 		},
-		dy:function(p1, p2, dx){
-			return this.slope(p1,p2)*dx;
+		dy:function(p1, p2, dx){ 
+			return this.slope(p1,p2)*dx; 
 		}
 	};
 	p.drawBBox=function(){
@@ -172,8 +170,8 @@ define([
 			this.boundingBox.getEventSource().setAttribute("id",this.id+"-boundingBox");
 			this.boundingBox.getEventSource().setAttribute("shape-rendering","crispEdges");
 			this.figure._add(this);
-		} else {
-			this.boundingBox.setShape(r);
+		} else { 
+			this.boundingBox.setShape(r); 
 		}
 	};
 	p.setBinding=function(pt){
@@ -195,7 +193,7 @@ define([
 		if(this.mode==m){ return; }
 		this.mode=m;
 		var method="disable";
-		if(m==dojox.sketch.Annotation.Modes.Edit){ method="enable"; }
+		if(m==ta.Annotation.Modes.Edit){ method="enable"; }
 		if(method=="enable"){
 			//	draw the bounding box
 			this.drawBBox();
@@ -206,8 +204,8 @@ define([
 				this.boundingBox=null;
 			}
 		}
-		for(var p in this.anchors){
-			this.anchors[p][method]();
+		for(var p in this.anchors){ 
+			this.anchors[p][method](); 
 		}
 	};
 	p.zoom=function(pct){
@@ -259,17 +257,15 @@ define([
 			this.transform.dy=parseFloat(pt[1],10);
 		}
 	};
-	dojox.sketch.Annotation.Modes={ View:0, Edit:1 };
-	dojox.sketch.Annotation.register=function(name,toolclass){
-		var cls=dojox.sketch[name+'Annotation'];
-		dojox.sketch.registerTool(name, function(p){
+	ta.Annotation.Modes={ View:0, Edit:1 };
+	ta.Annotation.register=function(name,toolclass){
+		var cls=ta[name+'Annotation'];
+		ta.registerTool(name, function(p){
 			dojo.mixin(p, {
 				shape: name,
 				annotation:cls
 			});
-			return new (toolclass || dojox.sketch.AnnotationTool)(p);
+			return new (toolclass || ta.AnnotationTool)(p);
 		});
 	};
-
-	return dojox.sketch.Annotation;
-});
+})();

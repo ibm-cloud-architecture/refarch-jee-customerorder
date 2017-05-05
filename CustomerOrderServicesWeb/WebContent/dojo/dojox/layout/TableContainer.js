@@ -1,11 +1,11 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/dom-class", "dojo/dom-construct", 
-		"dojo/_base/array", "dojo/dom-prop", "dojo/dom-style", "dijit/_WidgetBase", "dijit/layout/_LayoutWidget"],
-function(kernel, lang, declare, domClass, domConstruct, arrayUtil, domProp, domStyle, _WidgetBase, _LayoutWidget){
+dojo.experimental("dojox.layout.TableContainer");
+dojo.provide("dojox.layout.TableContainer");
+dojo.require("dijit.layout._LayoutWidget");
 
-kernel.experimental("dojox.layout.TableContainer");
-
-var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
-	// summary:
+dojo.declare("dojox.layout.TableContainer",
+	dijit.layout._LayoutWidget,
+	{
+	// summary: 
 	//		A container that lays out its child widgets in a table layout.
 	//
 	// description:
@@ -29,7 +29,7 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	
 	// labelWidth: Number|String
 	//		Defines the width of a label.  If the value is a number, it is
-	//		treated as a pixel value.  The other valid value is a percentage,
+	//		treated as a pixel value.  The other valid value is a percentage, 
 	//		e.g. "50%"
 	labelWidth: "100",
 
@@ -38,8 +38,8 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	showLabels: true,
 
 	// orientation: String
-	//		Either "horiz" or "vert" for label orientation.
-	orientation: "horiz",
+	//		Either "horiz" or "vert" for label orientation. 
+	orientation: "horiz", 
 	
 	// spacing: Number
 	//		The cell spacing to apply to the table.
@@ -48,7 +48,7 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	// customClass: String
 	//		A CSS class that will be applied to child elements.  For example, if
 	//		the class is "myClass", the table will have "myClass-table" applied to it,
-	//		each label TD will have "myClass-labelCell" applied, and each
+	//		each label TD will have "myClass-labelCell" applied, and each 
 	//		widget TD will have "myClass-valueCell" applied.
 	customClass: "",
 
@@ -56,13 +56,13 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 		this.inherited(arguments);
 		this._children = [];
 		
-		// If the orientation, customClass or cols attributes are changed,
+		// If the orientation, customClass or cols attributes are changed, 
 		// layout the widgets again.
-		this.connect(this, "set", function(name, value){
+		dojo.connect(this, "attr", dojo.hitch(this, function(name, value){
 			if(value && (name == "orientation" || name == "customClass" || name == "cols")) {
 				this.layout();
 			}
-		});
+		}))
 	},
 
 	startup: function() {
@@ -79,24 +79,24 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 		}
 		this._initialized = true;
 
-		domClass.add(this.domNode, "dijitTableLayout");
+		dojo.addClass(this.domNode, "dijitTableLayout");
 
 		// Call startup on all child widgets
-		arrayUtil.forEach(children, function(child){
+		dojo.forEach(children, function(child){
 			if(!child.started && !child._started) {
 				child.startup();
 			}
 		});
-		this.layout();
 		this.resize();
+		this.layout();
 	},
 
 	resize: function(){
-		// summary:
+		// summary: 
 		//		Resizes all children.  This widget itself
 		//		does not resize, as it takes up 100% of the
 		//		available width.
-		arrayUtil.forEach(this.getChildren(), function(child){
+		dojo.forEach(this.getChildren(), function(child){
 			if(typeof child.resize == "function") {
 				child.resize();
 			}
@@ -104,7 +104,7 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	},
 
 	layout: function(){
-		// summary:
+		// summary: 
 		//		Lays out the child widgets.
 		if(!this._initialized){
 			return;
@@ -118,20 +118,20 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 		function addCustomClass(node, type, count) {
 			if(_this.customClass != "") {
 				var clazz = _this.customClass+ "-" + (type || node.tagName.toLowerCase());
-				domClass.add(node, clazz);
+				dojo.addClass(node, clazz);
 
 				if(arguments.length > 2) {
-					domClass.add(node, clazz + "-" + count);
+					dojo.addClass(node, clazz + "-" + count);
 				}
 			}
 		}
 
 		// Find any new children that have been added since the last layout() call
-		arrayUtil.forEach(this._children, lang.hitch(this, function(child){
+		dojo.forEach(this._children, dojo.hitch(this, function(child){
 			childIds[child.id] = child;
 		}));
 
-		arrayUtil.forEach(children, lang.hitch(this, function(child, index){
+		dojo.forEach(children, dojo.hitch(this, function(child, index){
 			if(!childIds[child.id]) {
 				// Add pre-existing children to the start of the array
 				this._children.push(child);
@@ -139,69 +139,69 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 		}));
 
 		// Create the table.  It fills the width of it's container.
-		var table = domConstruct.create("table", {
+		var table = dojo.create("table", {
 			"width": "100%",
 			 "class": "tableContainer-table tableContainer-table-" + this.orientation,
 			 "cellspacing" : this.spacing
 			},
 			this.domNode);
 
-		var tbody = domConstruct.create("tbody");
+		var tbody = dojo.create("tbody");
 		table.appendChild(tbody);
 
 		addCustomClass(table, "table", this.orientation);
 
 		var width = Math.floor(100 / this.cols) + "%";
 
-		var labelRow = domConstruct.create("tr", {}, tbody);
+		var labelRow = dojo.create("tr", {}, tbody);
 		var childRow = (!this.showLabels || this.orientation == "horiz")
-						? labelRow : domConstruct.create("tr", {}, tbody);
+											? labelRow : dojo.create("tr", {}, tbody);
 		var maxCols = this.cols * (this.showLabels ? 2 : 1);
 		var numCols = 0;
 
 		// Iterate over the children, adding them to the table.
-		arrayUtil.forEach(this._children, lang.hitch(this, function(child, index){
+		dojo.forEach(this._children, dojo.hitch(this, function(child, index){
 			
 			var colspan = child.colspan || 1;
 			
 			if(colspan > 1) {
-				colspan = this.showLabels ?
+				colspan = this.showLabels ? 
 					Math.min(maxCols - 1, colspan * 2 -1): Math.min(maxCols, colspan);
 			}
 
 			// Create a new row if we need one
 			if(numCols + colspan - 1 + (this.showLabels ? 1 : 0)>= maxCols) {
 				numCols = 0;
-				labelRow = domConstruct.create("tr", {}, tbody);
-				childRow = this.orientation == "horiz" ? labelRow : domConstruct.create("tr", {}, tbody);
+				labelRow = dojo.create("tr", {}, tbody);
+				childRow = this.orientation == "horiz" ? labelRow : dojo.create("tr", {}, tbody);
 			}
 			var labelCell;
 			
 			// If labels should be visible, add them
 			if(this.showLabels) {
-				labelCell = domConstruct.create("td", {"class": "tableContainer-labelCell"}, labelRow);
+				labelCell = dojo.create("td", {"class": "tableContainer-labelCell"}, labelRow);
 
 				// If the widget should take up both the label and value,
 				// then just set the class on it.
 				if(child.spanLabel) {
-					domProp.set(labelCell, this.orientation == "vert" ? "rowspan" : "colspan", 2);
+					dojo.attr(labelCell, this.orientation == "vert" ? "rowspan" : "colspan", 2);
 				}
 				else {
 					// Add the custom label class to the label cell
 					addCustomClass(labelCell, "labelCell");
-					var labelProps = {"for": child.get("id")};
-					var label = domConstruct.create("label", labelProps, labelCell);
+					var labelProps = {"for": child.attr("id")};
+					var label = dojo.create("label", labelProps, labelCell);
 
 					if(Number(this.labelWidth) > -1 ||
 						String(this.labelWidth).indexOf("%") > -1) {
 							
 						// Set the width of the label cell with either a pixel or percentage value
-						domStyle.set(labelCell, "width",
-							String(this.labelWidth).indexOf("%") < 0
+						dojo.style(labelCell, "width", 
+							String(this.labelWidth).indexOf("%") < 0 
 								? this.labelWidth + "px" : this.labelWidth);
 					}
 
-					label.innerHTML = child.get("label") || child.get("title");
+					label.innerHTML = child.attr("label") || child.attr("title");
 				}
 			}
 			var childCell;
@@ -209,12 +209,12 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 			if(child.spanLabel && labelCell) {
 				childCell = labelCell;
 			} else {
-				 childCell = domConstruct.create("td", {
+				 childCell = dojo.create("td", {
 				 	"class" : "tableContainer-valueCell"
 				}, childRow);
 			}
 			if(colspan > 1) {
-				domProp.set(childCell, "colspan", colspan);
+				dojo.attr(childCell, "colspan", colspan);
 			}
 			
 			// Add the widget cell's custom class, if one exists.
@@ -229,7 +229,7 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 		}
 		// Refresh the layout of any child widgets, allowing them to resize
 		// to their new parent.
-		arrayUtil.forEach(children, function(child){
+		dojo.forEach(children, function(child){
 			if(typeof child.layout == "function") {
 				child.layout();
 			}
@@ -240,13 +240,13 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	
 	destroyDescendants: function(/*Boolean*/ preserveDom){
 		// summary:
-		//		Destroys all the widgets inside this.containerNode,
-		//		but not this widget itself
-		arrayUtil.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
+		//      Destroys all the widgets inside this.containerNode,
+		//      but not this widget itself
+		dojo.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
 	},
 	
 	_setSpacingAttr: function(value) {
-		// summary:
+		// summary: 
 		//		Sets the spacing attribute.
 		this.spacing = value;
 		if(this.table) {
@@ -255,10 +255,9 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	}
 });
 
-TableContainer.ChildWidgetProperties = {
-	// summary:
-	//		Properties to be set on children of TableContainer
-
+// Extend the default widget with both label and title elements, as
+// well as a "spanLabel" attribute.  If a widget
+dojo.extend(dijit._Widget, {
 	// label: String
 	//		The label to display for a given widget
 	label: "",
@@ -277,10 +276,4 @@ TableContainer.ChildWidgetProperties = {
 	// colspan: Number
 	//		The number of columns this widget should span.
 	colspan: 1
-};
-
-// Add to widget base for benefit of parser.   Remove for 2.0.   Also, hide from doc viewer.
-lang.extend(_WidgetBase, /*===== {} || =====*/ TableContainer.ChildWidgetProperties);
-
-return TableContainer;
 });

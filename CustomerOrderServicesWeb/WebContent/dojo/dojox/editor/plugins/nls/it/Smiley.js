@@ -1,4 +1,3 @@
-define(
 ({
 	smiley: "Inserisci emoticon",
 	emoticonSmile: "sorriso",
@@ -6,8 +5,8 @@ define(
 	emoticonWink: "occhiolino",
 	emoticonGrin: "ghigno",
 	emoticonCool: "figo",
-	emoticonAngry: "arrabbiato",
-	emoticonHalf: "metà",
+	emoticonAngry: "arrabbiato",  
+	emoticonHalf: "metà", 
 	emoticonEyebrow: "sopracciglia",
 	emoticonFrown: "triste",
 	emoticonShy: "timido",
@@ -15,10 +14,9 @@ define(
 	emoticonOops: "ops",
 	emoticonTongue: "linguaccia",
 	emoticonIdea: "idea",
-	emoticonYes: "sì",
-	emoticonNo: "no",
+	emoticonYes: "yes",
+	emoticonNo: "no",	
 	emoticonAngel: "angelo",
-	emoticonCrying: "in lacrime",
-	emoticonHappy: "felice"
+	emoticonCrying: "in lacrime"
 })
-);
+

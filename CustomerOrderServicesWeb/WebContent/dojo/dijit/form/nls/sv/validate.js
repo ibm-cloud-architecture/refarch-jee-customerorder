@@ -1,7 +1,5 @@
-define(
 ({
-	invalidMessage: "Angivet värde är inte giltigt.",
-	missingMessage: "Värdet krävs.",
-	rangeMessage: "Värdet ligger utanför intervallet."
+	invalidMessage: "Det angivna värdet är ogiltigt.",
+	missingMessage: "Värdet är obligatoriskt.",
+	rangeMessage: "Värdet är utanför intervallet."
 })
-);

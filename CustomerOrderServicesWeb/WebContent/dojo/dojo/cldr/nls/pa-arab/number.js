@@ -1,8 +1,5 @@
-define(
-//begin v1.x content
-{
-	"plusSign": "‎+",
-	"minusSign": "‎-"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'nativeZeroDigit':"0",
+	'nativeZeroDigit':"٠"
+})

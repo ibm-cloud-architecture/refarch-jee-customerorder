@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Inserir tabela",
 	modifyTableTitle: "Modificar tabela",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "Largura da tabela:",
 	backgroundColor: "Cor de segundo plano:",
 	borderColor: "Cor do contorno:",
-	borderThickness: "Espessura do contorno:",
+	borderThickness: "Espessura do contorno",
 	percent: "percentagem",
 	pixels: "píxeis",
 	"default": "predefinição",
@@ -19,15 +18,12 @@ define(
 	right: "direita",
 	buttonSet: "Definir", // translated elsewhere?
 	buttonInsert: "Inserir",
-	buttonCancel: "Cancelar",
+
 	selectTableLabel: "Seleccionar tabela",
 	insertTableRowBeforeLabel: "Adicionar linha antes",
 	insertTableRowAfterLabel: "Adicionar linha depois",
 	insertTableColumnBeforeLabel: "Adicionar coluna antes",
 	insertTableColumnAfterLabel: "Adicionar coluna depois",
 	deleteTableRowLabel: "Eliminar linha",
-	deleteTableColumnLabel: "Eliminar coluna",
-	colorTableCellTitle: "Cor de segundo plano da célula de tabela",
-	tableContextMenuTitle: "Menu contextual da tabela"
+	deleteTableColumnLabel: "Eliminar coluna"
 })
-);

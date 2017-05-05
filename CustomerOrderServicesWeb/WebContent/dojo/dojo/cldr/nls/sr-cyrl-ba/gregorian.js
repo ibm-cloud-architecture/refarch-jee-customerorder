@@ -1,83 +1,67 @@
-define(
-//begin v1.x content
-{
-	"days-standAlone-short": [
-		null,
-		null,
-		null,
-		"сри"
-	],
-	"timeFormat-full": "HH 'часова', mm 'минута', ss 'секунди' zzzz",
-	"timeFormat-medium": "HH:mm:ss",
-	"days-format-short": [
-		null,
-		null,
-		null,
-		"сри"
-	],
+({
+	"timeFormat-full": "HH 'часова', mm 'минута', ss 'секунди' zzzz", 
+	"timeFormat-medium": "HH:mm:ss", 
 	"months-standAlone-abbr": [
-		null,
-		null,
-		null,
-		null,
-		null,
-		"јуни",
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		"јуни", 
 		"јули"
-	],
+	], 
 	"days-standAlone-abbr": [
-		null,
-		null,
-		null,
+		undefined, 
+		undefined, 
+		undefined, 
 		"сри"
-	],
-	"dateFormat-medium": "y-MM-dd",
+	], 
+	"dateFormat-medium": "yyyy-MM-dd", 
 	"months-format-abbr": [
-		null,
-		null,
-		null,
-		null,
-		null,
-		"јуни",
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		"јуни", 
 		"јули"
-	],
+	], 
 	"days-format-abbr": [
-		null,
-		null,
-		null,
+		undefined, 
+		undefined, 
+		undefined, 
 		"сри"
-	],
-	"timeFormat-short": "HH:mm",
+	], 
+	"timeFormat-short": "HH:mm", 
 	"months-standAlone-wide": [
-		null,
-		null,
-		null,
-		null,
-		null,
-		"јуни",
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		"јуни", 
 		"јули"
-	],
-	"dateFormat-short": "yy-MM-dd",
+	], 
+	"dateFormat-short": "yy-MM-dd", 
 	"days-standAlone-wide": [
-		null,
-		null,
-		null,
+		undefined, 
+		undefined, 
+		undefined, 
 		"сриједа"
-	],
+	], 
 	"months-format-wide": [
-		null,
-		null,
-		null,
-		null,
-		null,
-		"јуни",
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		undefined, 
+		"јуни", 
 		"јули"
-	],
+	], 
 	"days-format-wide": [
-		null,
-		null,
-		null,
+		undefined, 
+		undefined, 
+		undefined, 
 		"сриједа"
 	]
-}
-//end v1.x content
-);
+})

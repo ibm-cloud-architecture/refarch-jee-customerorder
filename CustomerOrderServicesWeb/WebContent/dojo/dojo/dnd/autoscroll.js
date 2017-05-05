@@ -1,139 +1,99 @@
-define(["../_base/lang", "../sniff", "../_base/window", "../dom-geometry", "../dom-style", "../window"],
-	function(lang, has, win, domGeom, domStyle, winUtils){
+dojo.provide("dojo.dnd.autoscroll");
 
-// module:
-//		dojo/dnd/autoscroll
-
-var exports = {
+dojo.dnd.getViewport = function(){
 	// summary:
-	//		Used by dojo/dnd/Manager to scroll document or internal node when the user
-	//		drags near the edge of the viewport or a scrollable node
-};
-lang.setObject("dojo.dnd.autoscroll", exports);
+	//		Returns a viewport size (visible part of the window)
 
-exports.getViewport = winUtils.getBox;
+	// TODO: remove this when getViewport() moved to dojo core, see #7028
 
-exports.V_TRIGGER_AUTOSCROLL = 32;
-exports.H_TRIGGER_AUTOSCROLL = 32;
-
-exports.V_AUTOSCROLL_VALUE = 16;
-exports.H_AUTOSCROLL_VALUE = 16;
-
-// These are set by autoScrollStart().
-// Set to default values in case autoScrollStart() isn't called. (back-compat, remove for 2.0)
-var viewport,
-	doc = win.doc,
-	maxScrollTop = Infinity,
-	maxScrollLeft = Infinity;
-
-exports.autoScrollStart = function(d){
-	// summary:
-	//		Called at the start of a drag.
-	// d: Document
-	//		The document of the node being dragged.
-
-	doc = d;
-	viewport = winUtils.getBox(doc);
-
-	// Save height/width of document at start of drag, before it gets distorted by a user dragging an avatar past
-	// the document's edge
-	var html = win.body(doc).parentNode;
-	maxScrollTop = Math.max(html.scrollHeight - viewport.h, 0);
-	maxScrollLeft = Math.max(html.scrollWidth - viewport.w, 0);	// usually 0
+	// FIXME: need more docs!!
+	var d = dojo.doc, dd = d.documentElement, w = window, b = dojo.body();
+	if(dojo.isMozilla){
+		return {w: dd.clientWidth, h: w.innerHeight};	// Object
+	}else if(!dojo.isOpera && w.innerWidth){
+		return {w: w.innerWidth, h: w.innerHeight};		// Object
+	}else if (!dojo.isOpera && dd && dd.clientWidth){
+		return {w: dd.clientWidth, h: dd.clientHeight};	// Object
+	}else if (b.clientWidth){
+		return {w: b.clientWidth, h: b.clientHeight};	// Object
+	}
+	return null;	// Object
 };
 
-exports.autoScroll = function(e){
+dojo.dnd.V_TRIGGER_AUTOSCROLL = 32;
+dojo.dnd.H_TRIGGER_AUTOSCROLL = 32;
+
+dojo.dnd.V_AUTOSCROLL_VALUE = 16;
+dojo.dnd.H_AUTOSCROLL_VALUE = 16;
+
+dojo.dnd.autoScroll = function(e){
 	// summary:
-	//		a handler for mousemove and touchmove events, which scrolls the window, if
-	//		necessary
+	//		a handler for onmousemove event, which scrolls the window, if
+	//		necesary
 	// e: Event
-	//		mousemove/touchmove event
+	//		onmousemove event
 
 	// FIXME: needs more docs!
-	var v = viewport || winUtils.getBox(doc), // getBox() call for back-compat, in case autoScrollStart() wasn't called
-		html = win.body(doc).parentNode,
-		dx = 0, dy = 0;
-	if(e.clientX < exports.H_TRIGGER_AUTOSCROLL){
-		dx = -exports.H_AUTOSCROLL_VALUE;
-	}else if(e.clientX > v.w - exports.H_TRIGGER_AUTOSCROLL){
-		dx = Math.min(exports.H_AUTOSCROLL_VALUE, maxScrollLeft - html.scrollLeft);	// don't scroll past edge of doc
+	var v = dojo.dnd.getViewport(), dx = 0, dy = 0;
+	if(e.clientX < dojo.dnd.H_TRIGGER_AUTOSCROLL){
+		dx = -dojo.dnd.H_AUTOSCROLL_VALUE;
+	}else if(e.clientX > v.w - dojo.dnd.H_TRIGGER_AUTOSCROLL){
+		dx = dojo.dnd.H_AUTOSCROLL_VALUE;
 	}
-	if(e.clientY < exports.V_TRIGGER_AUTOSCROLL){
-		dy = -exports.V_AUTOSCROLL_VALUE;
-	}else if(e.clientY > v.h - exports.V_TRIGGER_AUTOSCROLL){
-		dy = Math.min(exports.V_AUTOSCROLL_VALUE, maxScrollTop - html.scrollTop);	// don't scroll past edge of doc
+	if(e.clientY < dojo.dnd.V_TRIGGER_AUTOSCROLL){
+		dy = -dojo.dnd.V_AUTOSCROLL_VALUE;
+	}else if(e.clientY > v.h - dojo.dnd.V_TRIGGER_AUTOSCROLL){
+		dy = dojo.dnd.V_AUTOSCROLL_VALUE;
 	}
 	window.scrollBy(dx, dy);
 };
 
-exports._validNodes = {"div": 1, "p": 1, "td": 1};
-exports._validOverflow = {"auto": 1, "scroll": 1};
+dojo.dnd._validNodes = {"div": 1, "p": 1, "td": 1};
+dojo.dnd._validOverflow = {"auto": 1, "scroll": 1};
 
-exports.autoScrollNodes = function(e){
+dojo.dnd.autoScrollNodes = function(e){
 	// summary:
-	//		a handler for mousemove and touchmove events, which scrolls the first available
-	//		Dom element, it falls back to exports.autoScroll()
+	//		a handler for onmousemove event, which scrolls the first avaialble
+	//		Dom element, it falls back to dojo.dnd.autoScroll()
 	// e: Event
-	//		mousemove/touchmove event
+	//		onmousemove event
 
 	// FIXME: needs more docs!
-
-	var b, t, w, h, rx, ry, dx = 0, dy = 0, oldLeft, oldTop;
-
 	for(var n = e.target; n;){
-		if(n.nodeType == 1 && (n.tagName.toLowerCase() in exports._validNodes)){
-			var s = domStyle.getComputedStyle(n),
-				overflow = (s.overflow.toLowerCase() in exports._validOverflow),
-				overflowX = (s.overflowX.toLowerCase() in exports._validOverflow),
-				overflowY = (s.overflowY.toLowerCase() in exports._validOverflow);
-			if(overflow || overflowX || overflowY){
-				b = domGeom.getContentBox(n, s);
-				t = domGeom.position(n, true);
-			}
-			// overflow-x
-			if(overflow || overflowX){
-				w = Math.min(exports.H_TRIGGER_AUTOSCROLL, b.w / 2);
-				rx = e.pageX - t.x;
-				if(has("webkit") || has("opera")){
-					// FIXME: this code should not be here, it should be taken into account
-					// either by the event fixing code, or the domGeom.position()
+		if(n.nodeType == 1 && (n.tagName.toLowerCase() in dojo.dnd._validNodes)){
+			var s = dojo.getComputedStyle(n);
+			if(s.overflow.toLowerCase() in dojo.dnd._validOverflow){
+				var b = dojo._getContentBox(n, s), t = dojo.position(n, true);
+				//console.log(b.l, b.t, t.x, t.y, n.scrollLeft, n.scrollTop);
+				var w = Math.min(dojo.dnd.H_TRIGGER_AUTOSCROLL, b.w / 2), 
+					h = Math.min(dojo.dnd.V_TRIGGER_AUTOSCROLL, b.h / 2),
+					rx = e.pageX - t.x, ry = e.pageY - t.y, dx = 0, dy = 0;
+				if(dojo.isWebKit || dojo.isOpera){
+					// FIXME: this code should not be here, it should be taken into account 
+					// either by the event fixing code, or the dojo.position()
 					// FIXME: this code doesn't work on Opera 9.5 Beta
-					rx += win.body().scrollLeft;
+					rx += dojo.body().scrollLeft, ry += dojo.body().scrollTop;
 				}
-				dx = 0;
 				if(rx > 0 && rx < b.w){
 					if(rx < w){
 						dx = -w;
 					}else if(rx > b.w - w){
 						dx = w;
 					}
-					oldLeft = n.scrollLeft;
-					n.scrollLeft = n.scrollLeft + dx;
 				}
-			}
-			// overflow-y
-			if(overflow || overflowY){
-				//console.log(b.l, b.t, t.x, t.y, n.scrollLeft, n.scrollTop);
-				h = Math.min(exports.V_TRIGGER_AUTOSCROLL, b.h / 2);
-				ry = e.pageY - t.y;
-				if(has("webkit") || has("opera")){
-					// FIXME: this code should not be here, it should be taken into account
-					// either by the event fixing code, or the domGeom.position()
-					// FIXME: this code doesn't work on Opera 9.5 Beta
-					ry += win.body().scrollTop;
-				}
-				dy = 0;
+				//console.log("ry =", ry, "b.h =", b.h, "h =", h);
 				if(ry > 0 && ry < b.h){
 					if(ry < h){
 						dy = -h;
 					}else if(ry > b.h - h){
 						dy = h;
 					}
-					oldTop = n.scrollTop;
-					n.scrollTop  = n.scrollTop  + dy;
 				}
+				var oldLeft = n.scrollLeft, oldTop = n.scrollTop;
+				n.scrollLeft = n.scrollLeft + dx;
+				n.scrollTop  = n.scrollTop  + dy;
+				if(oldLeft != n.scrollLeft || oldTop != n.scrollTop){ return; }
 			}
-			if(dx || dy){ return; }
 		}
 		try{
 			n = n.parentNode;
@@ -141,9 +101,5 @@ exports.autoScrollNodes = function(e){
 			n = null;
 		}
 	}
-	exports.autoScroll(e);
+	dojo.dnd.autoScroll(e);
 };
-
-return exports;
-
-});

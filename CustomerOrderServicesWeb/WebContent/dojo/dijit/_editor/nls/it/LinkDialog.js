@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Proprietà collegamento",
 	insertImageTitle: "Proprietà immagine",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Finestra superiore",
 	newWindow: "Nuova finestra"
 })
-);
+

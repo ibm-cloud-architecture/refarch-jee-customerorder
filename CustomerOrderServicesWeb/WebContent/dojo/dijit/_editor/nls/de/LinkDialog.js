@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Linkeigenschaften",
 	insertImageTitle: "Grafikeigenschaften",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Aktives Fenster",
 	newWindow: "Neues Fenster"
 })
-);
+

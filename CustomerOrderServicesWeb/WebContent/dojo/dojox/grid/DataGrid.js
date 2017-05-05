@@ -1,25 +1,16 @@
-define([
-	"../main",
-	"dojo/_base/array",
-	"dojo/_base/lang",
-	"dojo/_base/json",
-	"dojo/_base/sniff",
-	"dojo/_base/declare",
-	"./_Grid",
-	"./DataSelection",
-	"dojo/_base/html",
-	"dojo/has",
-	"dojo/has!dojo-bidi?./bidi/_BidiMixin"
-], function(dojox, array, lang, json, has, declare, _Grid, DataSelection, html){
+dojo.provide("dojox.grid.DataGrid");
+
+dojo.require("dojox.grid._Grid");
+dojo.require("dojox.grid.DataSelection");
 
 /*=====
-declare("dojox.grid.__DataCellDef", dojox.grid.__CellDef, {
+dojo.declare("dojox.grid.__DataCellDef", dojox.grid.__CellDef, {
 	constructor: function(){
-		// field: String?
+		//	field: String?
 		//		The attribute to read from the dojo.data item for the row.
-		// fields: String[]?
+		//  fields: String[]?
 		//		An array of fields to grab the values of and pass as an array to the grid
-		// get: Function?
+		//	get: Function?
 		//		function(rowIndex, item?){} rowIndex is of type Integer, item is of type
 		//		Object.  This function will be called when a cell requests data.  Returns
 		//		the unformatted data for the cell.
@@ -28,11 +19,11 @@ declare("dojox.grid.__DataCellDef", dojox.grid.__CellDef, {
 =====*/
 
 /*=====
-declare("dojox.grid.__DataViewDef", dojox.grid.__ViewDef, {
+dojo.declare("dojox.grid.__DataViewDef", dojox.grid.__ViewDef, {
 	constructor: function(){
-		// cells: dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]?
+		//	cells: dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]?
 		//		The structure of the cells within this grid.
-		// defaultCell: dojox.grid.__DataCellDef?
+		//	defaultCell: dojox.grid.__DataCellDef?
 		//		A cell definition with default values for all cells in this view.  If
 		//		a property is defined in a cell definition in the "cells" array and
 		//		this property, the cell definition's property will override this
@@ -41,7 +32,7 @@ declare("dojox.grid.__DataViewDef", dojox.grid.__ViewDef, {
 });
 =====*/
 
-var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
+dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	store: null,
 	query: null,
 	queryOptions: null,
@@ -57,7 +48,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 
 /*=====
 	// structure: dojox.grid.__DataViewDef|dojox.grid.__DataViewDef[]|dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]
-	//		View layout definition.
+	//		View layout defintion.
 	structure: '',
 =====*/
 
@@ -79,10 +70,6 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	_isLoaded: false,
 	_isLoading: false,
 	
-	// keepSelection: Boolean
-	//		Whether keep selection after sort, filter etc.
-	keepSelection: false,	
-	
 	postCreate: function(){
 		this._pages = [];
 		this._store_connects = [];
@@ -94,19 +81,13 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		this._setStore(this.store);
 		this.inherited(arguments);
 	},
-	
-	destroy: function(){
-		this.selection.destroy();
-		this.inherited(arguments);
-	},
 
 	createSelection: function(){
-		this.selection = new DataSelection(this);
+		this.selection = new dojox.grid.DataSelection(this);
 	},
 
 	get: function(inRowIndex, inItem){
-		// summary:
-		//		Default data getter.
+		// summary: Default data getter.
 		// description:
 		//		Provides data to display in a grid cell. Called in grid cell context.
 		//		So this.cell.index is the column index.
@@ -120,7 +101,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		}else if(inItem && this.fields){
 			var ret = [];
 			var s = this.grid.store;
-			array.forEach(this.fields, function(f){
+			dojo.forEach(this.fields, function(f){
 				ret = ret.concat(s.getValues(inItem, f));
 			});
 			return ret;
@@ -161,7 +142,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 	
 	_createItem: function(item, index){
-		var idty = this._hasIdentity ? this.store.getIdentity(item) : json.toJson(this.query) + ":idx:" + index + ":sort:" + json.toJson(this.getSortProps());
+		var idty = this._hasIdentity ? this.store.getIdentity(item) : dojo.toJson(this.query) + ":idx:" + index + ":sort:" + dojo.toJson(this.getSortProps());
 		var o = this._by_idty[idty] = { idty: idty, item: item };
 		return o;
 	},
@@ -189,7 +170,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 
 		if(idx >= 0){
 			// When a row is deleted, all rest rows are shifted down,
-			// and migrate from page to page. If some page is not
+			// and migrate from page to page. If some page is not 
 			// loaded yet empty rows can migrate to initialized pages
 			// without refreshing. It causes empty rows in some pages, see:
 			// http://bugs.dojotoolkit.org/ticket/6818
@@ -206,10 +187,6 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 				this.showMessage(this.noDataMessage);
 			}
 		}
-		if(this.selection.isSelected(idx)){
-			this.selection.deselect(idx);
-			this.selection.selected.splice(idx, 1);
-		}
 	},
 
 	_onRevert: function(){
@@ -217,18 +194,12 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 
 	setStore: function(store, query, queryOptions){
-		if(this._requestsPending(0)){
-			return;
-		}
 		this._setQuery(query, queryOptions);
 		this._setStore(store);
 		this._refresh(true);
 	},
 	
 	setQuery: function(query, queryOptions){
-		if(this._requestsPending(0)){
-			return;
-		}
 		this._setQuery(query, queryOptions);
 		this._refresh(true);
 	},
@@ -241,12 +212,14 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	
 	_setQuery: function(query, queryOptions){
 		this.query = query;
-		this.queryOptions = queryOptions || this.queryOptions;
+		this.queryOptions = queryOptions || this.queryOptions;		
 	},
 
 	_setStore: function(store){
-		if(this.store && this._store_connects){
-			array.forEach(this._store_connects, this.disconnect, this);
+		if(this.store&&this._store_connects){
+			dojo.forEach(this._store_connects,function(arr){
+				dojo.forEach(arr, dojo.disconnect);
+			});
 		}
 		this.store = store;
 
@@ -298,19 +271,22 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		if(!this.scroller){ return; }
 		if(items && items.length > 0){
 			//console.log(items);
-			array.forEach(items, function(item, idx){
+			dojo.forEach(items, function(item, idx){
 				this._addItem(item, req.start+idx, true);
 			}, this);
+			if(this._autoHeight){
+				this._skipRowRenormalize = true;
+			}
 			this.updateRows(req.start, items.length);
+			if(this._autoHeight){
+				this._skipRowRenormalize = false;
+			}			
 			if(req.isRender){
 				this.setScrollTop(0);
 				this.postrender();
 			}else if(this._lastScrollTop){
 				this.setScrollTop(this._lastScrollTop);
 			}
-			if(has("ie")){
-				html.setSelectable(this.domNode, this.selectable);
-			}	
 		}
 		delete this._lastScrollTop;
 		if(!this._isLoaded){
@@ -358,7 +334,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 					
 					// Load them if we need to
 					var waitCount = 0;
-					array.forEach(items, function(i){
+					dojo.forEach(items, function(i){
 						if(!store.isItemLoaded(i)){ waitCount++; }
 					});
 					if(waitCount === 0){
@@ -370,7 +346,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 								this._onFetchComplete(items, req);
 							}
 						};
-						array.forEach(items, function(i){
+						dojo.forEach(items, function(i){
 							if(!store.isItemLoaded(i)){
 								store.loadItem({item: i, onItem: onItem, scope: this});
 							}
@@ -384,9 +360,9 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 						sort: this.getSortProps(),
 						queryOptions: this.queryOptions,
 						isRender: isRender,
-						onBegin: lang.hitch(this, "_onFetchBegin"),
-						onComplete: lang.hitch(this, "_onFetchComplete"),
-						onError: lang.hitch(this, "_onFetchError")
+						onBegin: dojo.hitch(this, "_onFetchBegin"),
+						onComplete: dojo.hitch(this, "_onFetchComplete"),
+						onError: dojo.hitch(this, "_onFetchError")
 					});
 				}
 			}catch(e){
@@ -491,7 +467,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		if(count > 0){
 			this._requests++;
 			if(!this._requestsPending(row)){
-				setTimeout(lang.hitch(this, "_fetch", row, false), 1);
+				setTimeout(dojo.hitch(this, "_fetch", row, false), 1);
 				//this.requestRows(row, count);
 			}
 		}
@@ -508,7 +484,6 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 
 	sort: function(){
-		this.edit.apply();
 		this._lastScrollTop = this.scrollTop;
 		this._refresh();
 	},
@@ -537,8 +512,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 
 	styleRowState: function(inRow){
-		// summary:
-		//		Perform row styling
+		// summary: Perform row styling
 		if(this.store && this.store.getState){
 			var states=this.store.getState(inRow.index), c='';
 			for(var i=0, ss=["inflight", "error", "inserting"], s; s=ss[i]; i++){
@@ -578,7 +552,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	doApplyCellEdit: function(inValue, inRowIndex, inAttrName){
 		this.store.fetchItemByIdentity({
 			identity: this._by_idx[inRowIndex].idty,
-			onItem: lang.hitch(this, function(item){
+			onItem: dojo.hitch(this, function(item){
 				var oldValue = this.store.getValue(item, inAttrName);
 				if(typeof oldValue == 'number'){
 					inValue = isNaN(inValue) ? inValue : parseFloat(inValue);
@@ -620,15 +594,15 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 		//		Remove the selected rows from the grid.
 		if(this._canEdit){
 			this.edit.apply();
-			var fx = lang.hitch(this, function(items){
+			var fx = dojo.hitch(this, function(items){
 				if(items.length){
-					array.forEach(items, this.store.deleteItem, this.store);
+					dojo.forEach(items, this.store.deleteItem, this.store);
 					this.selection.clear();
-				}
+				}			
 			});
 			if(this.allItemsSelected){
 				this.store.fetch({
-							query: this.query,
+							query: this.query, 
 							queryOptions: this.queryOptions,
 							onComplete: fx});
 			}else{
@@ -638,13 +612,13 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	}
 });
 
-DataGrid.cell_markupFactory = function(cellFunc, node, cellDef){
-	var field = lang.trim(html.attr(node, "field")||"");
+dojox.grid.DataGrid.cell_markupFactory = function(cellFunc, node, cellDef){
+	var field = dojo.trim(dojo.attr(node, "field")||"");
 	if(field){
 		cellDef.field = field;
 	}
 	cellDef.field = cellDef.field||cellDef.name;
-	var fields = lang.trim(html.attr(node, "fields")||"");
+	var fields = dojo.trim(dojo.attr(node, "fields")||"");
 	if(fields){
 		cellDef.fields = fields.split(",");
 	}
@@ -653,11 +627,7 @@ DataGrid.cell_markupFactory = function(cellFunc, node, cellDef){
 	}
 };
 
-DataGrid.markupFactory = function(props, node, ctor, cellFunc){
-	return _Grid.markupFactory(props, node, ctor,
-					lang.partial(DataGrid.cell_markupFactory, cellFunc));
+dojox.grid.DataGrid.markupFactory = function(props, node, ctor, cellFunc){
+	return dojox.grid._Grid.markupFactory(props, node, ctor, 
+					dojo.partial(dojox.grid.DataGrid.cell_markupFactory, cellFunc));
 };
-
-return DataGrid;
-
-});

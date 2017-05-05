@@ -50,7 +50,7 @@ function help(){
 		+ "> java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar "
 		+ "org.mozilla.javascript.tools.shell.Main build.js [name=value...]\n\n"
 		+ "Here is an example of a typical release build:\n\n"
-		+ "> java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar "
+		+ "> java -classpath ../shrinksafe/js.jar:../shrinksafe/shrinksafe.jar " 
 		+ "org.mozilla.javascript.tools.shell.Main  build.js profile=base action=release\n\n"
 		+ "If you get a 'java.lang.OutOfMemoryError: Java heap space' error, try increasing the "
 		+ "memory Java can use for the command:\n\n"
@@ -258,9 +258,8 @@ function release(){
 
 //********* Start _copyToRelease *********
 function _copyToRelease(/*String*/prefixName, /*String*/prefixPath, /*Object*/kwArgs, /*Array?*/buildLayers){
-	// summary:
-	//		copies modules and supporting files from the prefix path to the release
-	//		directory. Also adds code guards to module resources.
+	//summary: copies modules and supporting files from the prefix path to the release
+	//directory. Also adds code guards to module resources.
 	var prefixSlashName = prefixName.replace(/\./g, "/");
 	var releasePath = kwArgs.releaseDir + "/"  + prefixSlashName;
 	var copyRegExps = {
@@ -285,14 +284,14 @@ function _copyToRelease(/*String*/prefixName, /*String*/prefixPath, /*Object*/kw
 		fileUtil.copyFile(releasePath + "/_base/query-sizzle.js", releasePath + "/_base/query.js");
 	}
 	
-	if(!copiedFiles){
-		logger.info(" ********** Not Copied: " + prefixPath );
+	if(!copiedFiles){ 
+		logger.info(" ********** Not Copied: " + prefixPath ); 
 	}
 	
 	//Make sure to copy over any "source" files for the layers be targeted by
 	//buildLayers. Otherwise dependencies will not be calculated correctly.
 	if(buildLayers){
-		for(i = 0; i < buildLayers.length; i++){
+		for(i = 0; i < buildLayers.length; i++){		
 			var relativeLayerPath = buildLayers[i].replace(/\.\.\//g, "");
 			
 			//See if relativeLayerPath has teh prefix slash name in it.
@@ -317,7 +316,7 @@ function _copyToRelease(/*String*/prefixName, /*String*/prefixPath, /*Object*/kw
 	}
 
 	//Put in code guards for each resource, to protect against redefinition of
-	//code in the layered build cases. Also inject base require calls if there is
+	//code in the layered build cases. Also inject base require calls if there is 
 	//a layer with the customBase attribute. Do this here before the layers are built.
 	if(copiedFiles){
 		var needBaseRequires = false;
@@ -339,15 +338,14 @@ function _copyToRelease(/*String*/prefixName, /*String*/prefixPath, /*Object*/kw
 
 //********* Start _optimizeReleaseDirs *********
 function _optimizeReleaseDirs(
-	/*String*/prefixName,
+	/*String*/prefixName, 
 	/*String*/prefixPath,
 	/*String*/copyrightText,
 	/*Object*/kwArgs,
 	/*RegExp*/layerIgnoreRegExp,
-	/*RegExp*/nlsIgnoreRegExp){
-	// summary:
-	//		runs intern strings, i18n bundle flattening and xdomain file generation
-	//		on the files in a release directory, if those options are enabled.
+	/*RegExp*/nlsIgnoreRegExp){	
+	//summary: runs intern strings, i18n bundle flattening and xdomain file generation
+	//on the files in a release directory, if those options are enabled.
 	var releasePath = kwArgs.releaseDir + "/"  + prefixName.replace(/\./g, "/");
 	var prefixes = kwArgs.profileProperties.dependencies.prefixes;
 
@@ -361,7 +359,7 @@ function _optimizeReleaseDirs(
 	buildUtil.processConditionalsForDir(releasePath, layerIgnoreRegExp, kwArgs);
 
 	//Flatten bundles inside the directory
-	i18nUtil.flattenDirBundles(prefixName, prefixPath, kwArgs, nlsIgnoreRegExp);
+	i18nUtil.flattenDirBundles(prefixName, prefixPath, kwArgs, nlsIgnoreRegExp);	
 	
 	if(kwArgs.loader == "xdomain"){
 		buildUtilXd.xdgen(prefixName, prefixPath, prefixes, layerIgnoreRegExp, kwArgs);

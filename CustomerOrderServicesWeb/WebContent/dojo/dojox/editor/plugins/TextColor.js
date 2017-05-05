@@ -1,27 +1,18 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_base/popup",
-	"dijit/_Widget",
-	"dijit/_TemplatedMixin",
-	"dijit/_WidgetsInTemplateMixin",
-	"dijit/_editor/_Plugin",
-	"dijit/TooltipDialog",
-	"dijit/form/Button",
-	"dijit/form/DropDownButton",
-	"dojox/widget/ColorPicker",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/i18n!dojox/editor/plugins/nls/TextColor"
-], function(dojo, dijit, dojox, popup, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, _Plugin) {
+dojo.provide("dojox.editor.plugins.TextColor");
+
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.TooltipDialog");
+dojo.require("dijit.form.Button");
+dojo.require("dojox.widget.ColorPicker");
+
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "TextColor");
 
 dojo.experimental("dojox.editor.plugins.TextColor");
 
-var TextColorDropDown = dojo.declare("dojox.editor.plugins._TextColorDropDown", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
+dojo.declare("dojox.editor.plugins._TextColorDropDown", [dijit._Widget, dijit._Templated], {
 	// summary:
-	//		A sample widget that uses/creates a dropdown with a dojox.widget.ColorPicker.  Also provides
+	//		A smple widget that uses/creates a dropdown with a dojox.widget.ColorPicker.  Also provides
 	//		passthroughs to the value of the color picker and convenient hook points.
 	// tags:
 	//		private
@@ -31,8 +22,8 @@ var TextColorDropDown = dojo.declare("dojox.editor.plugins._TextColorDropDown", 
 	templateString: "<div style='display: none; position: absolute; top: -10000; z-index: -10000'>" +
 		"<div dojoType='dijit.TooltipDialog' dojoAttachPoint='dialog' class='dojoxEditorColorPicker'>" +
 			"<div dojoType='dojox.widget.ColorPicker' dojoAttachPoint='_colorPicker'></div>" +
-			"<br>" +
-			"<center>" +
+			"<br>" + 
+			"<center>" + 
 				"<button dojoType='dijit.form.Button' type='button' dojoAttachPoint='_setButton'>${setButtonText}</button>" +
 				"&nbsp;" +
 				"<button dojoType='dijit.form.Button' type='button' dojoAttachPoint='_cancelButton'>${cancelButtonText}</button>" +
@@ -99,25 +90,25 @@ var TextColorDropDown = dojo.declare("dojox.editor.plugins._TextColorDropDown", 
 });
 
 
-var TextColor = dojo.declare("dojox.editor.plugins.TextColor", _Plugin, {
+dojo.declare("dojox.editor.plugins.TextColor", dijit._editor._Plugin, {
 	// summary:
 	//		This plugin provides dropdown color pickers for setting text color and background color
 	//		and makes use of the nicer-looking (though not entirely accessible), dojox.widget.ColorPicker.
 	//
 	// description:
 	//		The commands provided by this plugin are:
-	//
-	//		- foreColor - sets the text color
-	//		- hiliteColor - sets the background color
+	//		* foreColor - sets the text color
+	//		* hiliteColor - sets the background color
 	
 	// Override _Plugin.buttonClass to use DropDownButton (with ColorPalette) to control this plugin
 	buttonClass: dijit.form.DropDownButton,
 	
-	// False as we do not use the default editor command/click behavior.
+	// useDefaultCommand: Boolean
+	//		False as we do not use the default editor command/click behavior.
 	useDefaultCommand: false,
 
 	constructor: function(){
-		this._picker = new TextColorDropDown();
+		this._picker = new dojox.editor.plugins._TextColorDropDown();
 		dojo.body().appendChild(this._picker.domNode);
 		this._picker.startup();
 		this.dropDown = this._picker.dialog;
@@ -141,14 +132,8 @@ var TextColor = dojo.declare("dojox.editor.plugins.TextColor", _Plugin, {
 			return;
 		}
 		
-		var disabled = this.get("disabled");
-		
 		var value;
 		if(this.button){
-			this.button.set("disabled", disabled);
-			if(disabled){
-				return;
-			}
 			try{
 				value = _e.queryCommandValue(_c)|| "";
 			}catch(e){
@@ -165,7 +150,7 @@ var TextColor = dojo.declare("dojox.editor.plugins.TextColor", _Plugin, {
 		}
 
 		if(typeof value == "string"){
-			//if RGB value, convert to hex value
+			//if RGB value, convert to hex value	
 			if(value.indexOf("rgb")> -1){
 				value = dojo.colorFromRgb(value).toHex();
 			}
@@ -190,10 +175,7 @@ var TextColor = dojo.declare("dojox.editor.plugins.TextColor", _Plugin, {
 	}
 });
 
-// For monkey-patching
-TextColor._TextColorDropDown = TextColorDropDown;
-
-// Register this plugin.  Uses the same name as the dijit one, so you
+// Register this plugin.  Uses the same name as the dijit one, so you 
 // use one or the other, not both.
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 	if(o.plugin){
@@ -202,12 +184,8 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 	switch(o.args.name){
 		case "foreColor":
 		case "hiliteColor":
-			o.plugin = new TextColor({
+			o.plugin = new dojox.editor.plugins.TextColor({
 				command: o.args.name
 			});
 	}
-});
-
-return TextColor;
-
 });

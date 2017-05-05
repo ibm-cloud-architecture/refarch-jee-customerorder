@@ -1,9 +1,11 @@
-define(["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
-
+dojo.provide("dojox.data.RailsStore");
+dojo.require("dojox.data.JsonRestStore");
 // Contains code donated by Travis Tilley under CLA
-return dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {
+
+
+dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {
 	constructor: function(){
-		// summary:
+		//	summary:
 		//		RailsStore is a data store for interacting with RESTful Rails controllers
 	},
 	preamble: function(options){
@@ -162,6 +164,4 @@ return dojo.declare("dojox.data.RailsStore", dojox.data.JsonRestStore, {
 		// if we don't know the length, and it is partial result, we will guess that it is twice as big, that will work for most widgets
 		return {totalCount:deferred.fullLength || (deferred.request.count == count ? (deferred.request.start || 0) + count * 2 : count), items: items};
 	}
-});
-
 });

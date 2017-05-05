@@ -1,28 +1,35 @@
-define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct", "./_base/window", "require"],
-	function(config, lang, has, dom, domConstruct, baseWindow, require){
-	// module:
-	//		dojo/back
+dojo.provide("dojo.back");
 
-	var back = {
-		// summary:
-		//		Browser history management resources
-	};
-	has("extend-dojo") && lang.setObject("dojo.back", back);
+/*=====
+dojo.back = {
+	// summary: Browser history management resources
+}
+=====*/
+
+
+(function(){ 
+	var back = dojo.back;
 
 	// everyone deals with encoding the hash slightly differently
 
-	var getHash = back.getHash = function(){
+	function getHash(){ 
 		var h = window.location.hash;
 		if(h.charAt(0) == "#"){ h = h.substring(1); }
-		return has("mozilla") ? h : decodeURIComponent(h);
-	},
-
-	setHash = back.setHash = function(h){
+		return dojo.isMozilla ? h : decodeURIComponent(h); 
+	}
+	
+	function setHash(h){
 		if(!h){ h = ""; }
 		window.location.hash = encodeURIComponent(h);
 		historyCounter = history.length;
-	};
-
+	}
+	
+	// if we're in the test for these methods, expose them on dojo.back. ok'd with alex.
+	if(dojo.exists("tests.back-hash")){
+		back.getHash = getHash;
+		back.setHash = setHash;		
+	}
+	
 	var initialHref = (typeof(window) !== "undefined") ? window.location.href : "";
 	var initialHash = (typeof(window) !== "undefined") ? getHash() : "";
 	var initialState = null;
@@ -37,8 +44,7 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 	var historyCounter;
 
 	function handleBackButton(){
-		// summary:
-		//		private method. Do not call this directly.
+		//summary: private method. Do not call this directly.
 
 		//The "current" page is always at the top of the history stack.
 		var current = historyStack.pop();
@@ -62,8 +68,7 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 	back.goBack = handleBackButton;
 
 	function handleForwardButton(){
-		// summary:
-		//		private method. Do not call this directly.
+		//summary: private method. Do not call this directly.
 		var last = forwardStack.pop();
 		if(!last){ return; }
 		if(last.kwArgs["forward"]){
@@ -79,14 +84,12 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 	back.goForward = handleForwardButton;
 
 	function createState(url, args, hash){
-		// summary:
-		//		private method. Do not call this directly.
+		//summary: private method. Do not call this directly.
 		return {"url": url, "kwArgs": args, "urlHash": hash};	//Object
 	}
 
 	function getUrlQuery(url){
-		// summary:
-		//		private method. Do not call this directly.
+		//summary: private method. Do not call this directly.
 		var segments = url.split("?");
 		if(segments.length < 2){
 			return null; //null
@@ -95,24 +98,23 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 			return segments[1]; //String
 		}
 	}
-
+	
 	function loadIframeHistory(){
-		// summary:
-		//		private method. Do not call this directly.
-		var url = (config["dojoIframeHistoryUrl"] || require.toUrl("./resources/iframe_history.html")) + "?" + (new Date()).getTime();
+		//summary: private method. Do not call this directly.
+		var url = (dojo.config["dojoIframeHistoryUrl"] || dojo.moduleUrl("dojo", "resources/iframe_history.html")) + "?" + (new Date()).getTime();
 		moveForward = true;
-		if(historyIframe){
-			has("webkit") ? historyIframe.location = url : window.frames[historyIframe.name].location = url;
-		}else{
-			//console.warn("dojo/back: Not initialised. You need to call back.init() from a <script> block that lives inside the <body> tag.");
-		}
+        if(historyIframe){
+		    dojo.isWebKit ? historyIframe.location = url : window.frames[historyIframe.name].location = url;
+        }else{
+            //console.warn("dojo.back: Not initialised. You need to call dojo.back.init() from a <script> block that lives inside the <body> tag.");
+        }
 		return url; //String
 	}
 
 	function checkLocation(){
 		if(!changingUrl){
 			var hsl = historyStack.length;
-
+			
 			var hash = getHash();
 
 			if((hash === initialHash||window.location.href == initialHref)&&(hsl == 1)){
@@ -122,7 +124,7 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 				handleBackButton();
 				return;
 			}
-
+			
 			// first check to see if we could have gone forward. We always halt on
 			// a no-hash item.
 			if(forwardStack.length > 0){
@@ -131,45 +133,50 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 					return;
 				}
 			}
-
+	
 			// ok, that didn't work, try someplace back in the history stack
 			if((hsl >= 2)&&(historyStack[hsl-2])){
 				if(historyStack[hsl-2].urlHash === hash){
 					handleBackButton();
+					return;
 				}
 			}
+			
+			if(dojo.isSafari && dojo.isSafari < 3){
+				var hisLen = history.length;
+				if(hisLen > historyCounter) handleForwardButton();
+				else if(hisLen < historyCounter) handleBackButton();
+			  historyCounter = hisLen;
+			}
 		}
-	}
-
+	};
+	
 	back.init = function(){
-		// summary:
-		//		Initializes the undo stack. This must be called from a <script>
-		//		block that lives inside the `<body>` tag to prevent bugs on IE.
-		//
-		//		Only call this method before the page's DOM is finished loading. Otherwise
-		//		it will not work. Be careful with xdomain loading or djConfig.debugAtAllCosts scenarios,
-		//		in order for this method to work, dojo/back will need to be part of a build layer.
-
-		// prevent reinit
-		if(dom.byId("dj_history")){ return; } 
-
-		var src = config["dojoIframeHistoryUrl"] || require.toUrl("./resources/iframe_history.html");
-		if (config.afterOnLoad){
-			console.error("dojo/back::init() must be called before the DOM has loaded. "
-						+ "Include dojo/back in a build layer.");
-		}else{
+		//summary: Initializes the undo stack. This must be called from a <script> 
+		//         block that lives inside the <body> tag to prevent bugs on IE.
+		// description:
+		// 		Only call this method before the page's DOM is finished loading. Otherwise
+		// 		it will not work. Be careful with xdomain loading or djConfig.debugAtAllCosts scenarios,
+		// 		in order for this method to work, dojo.back will need to be part of a build layer.
+		if(dojo.byId("dj_history")){ return; } // prevent reinit
+		var src = dojo.config["dojoIframeHistoryUrl"] || dojo.moduleUrl("dojo", "resources/iframe_history.html");
+		if (dojo._postLoad) {
+			console.error("dojo.back.init() must be called before the DOM has loaded. "
+			            + "If using xdomain loading or djConfig.debugAtAllCosts, include dojo.back "
+			            + "in a build layer.");
+		} else {
 			document.write('<iframe style="border:0;width:1px;height:1px;position:absolute;visibility:hidden;bottom:0;right:0;" name="dj_history" id="dj_history" src="' + src + '"></iframe>');
 		}
 	};
 
 	back.setInitialState = function(/*Object*/args){
-		// summary:
+		//summary: 
 		//		Sets the state object and back callback for the very first page
 		//		that is loaded.
-		//
+		//description:
 		//		It is recommended that you call this method as part of an event
-		//		listener that is registered via dojo/ready.
-		// args: Object
+		//		listener that is registered via dojo.addOnLoad().
+		//args: Object
 		//		See the addToHistory() function for the list of valid args properties.
 		initialState = createState(initialHref, args, initialHash);
 	};
@@ -177,36 +184,34 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 	//FIXME: Make these doc comments not be awful. At least they're not wrong.
 	//FIXME: Would like to support arbitrary back/forward jumps. Have to rework iframeLoaded among other things.
 	//FIXME: is there a slight race condition in moz using change URL with the timer check and when
-	//		 the hash gets set? I think I have seen a back/forward call in quick succession, but not consistent.
+	//       the hash gets set? I think I have seen a back/forward call in quick succession, but not consistent.
 
-
+	
 	/*=====
-	var __backArgs = {
+	dojo.__backArgs = function(kwArgs){
 		// back: Function?
 		//		A function to be called when this state is reached via the user
 		//		clicking the back button.
-		// forward: Function?
+		//	forward: Function?
 		//		Upon return to this state from the "back, forward" combination
 		//		of navigation steps, this function will be called. Somewhat
-		//		analogous to the semantic of an "onRedo" event handler.
-		// changeUrl: Boolean|String?
+		//		analgous to the semantic of an "onRedo" event handler.
+		//	changeUrl: Boolean?|String?
 		//		Boolean indicating whether or not to create a unique hash for
 		//		this state. If a string is passed instead, it is used as the
 		//		hash.
-	};
+	}
 	=====*/
 
-	back.addToHistory = function(args){
-		// summary:
-		//		adds a state object (args) to the history list.
-		// args: __backArgs
-		//		The state object that will be added to the history list.
-		// description:
+	back.addToHistory = function(/*dojo.__backArgs*/ args){
+		//	summary: 
+		//		adds a state object (args) to the history list. 
+		//	description:
 		//		To support getting back button notifications, the object
 		//		argument should implement a function called either "back",
 		//		"backButton", or "handle". The string "back" will be passed as
 		//		the first and only argument to this callback.
-		//
+		//	
 		//		To support getting forward button notifications, the object
 		//		argument should implement a function called either "forward",
 		//		"forwardButton", or "handle". The string "forward" will be
@@ -218,22 +223,22 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 		//		not evaluate to false, that value will be used as the fragment identifier. For example,
 		//		if changeUrl: 'page1', then the URL will look like: http://some.domain.com/path#page1
 		//
-		//		There are problems with using dojo/back with semantically-named fragment identifiers
-		//		("hash values" on an URL). In most browsers it will be hard for dojo/back to know
+		//		There are problems with using dojo.back with semantically-named fragment identifiers
+		//		("hash values" on an URL). In most browsers it will be hard for dojo.back to know
 		//		distinguish a back from a forward event in those cases. For back/forward support to
 		//		work best, the fragment ID should always be a unique value (something using new Date().getTime()
 		//		for example). If you want to detect hash changes using semantic fragment IDs, then
-		//		consider using dojo/hash instead (in Dojo 1.4+).
+		//		consider using dojo.hash instead (in Dojo 1.4+).
 		//
-		// example:
-		//		|	back.addToHistory({
+	 	//	example:
+		//		|	dojo.back.addToHistory({
 		//		|		back: function(){ console.log('back pressed'); },
 		//		|		forward: function(){ console.log('forward pressed'); },
 		//		|		changeUrl: true
 		//		|	});
 
 		//	BROWSER NOTES:
-		//	Safari 1.2:
+		//  Safari 1.2: 
 		//	back button "works" fine, however it's not possible to actually
 		//	DETECT that you've moved backwards by inspecting window.location.
 		//	Unless there is some other means of locating.
@@ -247,10 +252,10 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 		//	previous hash value, but to the last full page load. This suggests
 		//	that the iframe is the correct way to capture the back button in
 		//	these cases.
-		//	Don't test this page using local disk for MSIE. MSIE will not create
-		//	a history list for iframe_history.html if served from a file: URL.
-		//	The XML served back from the XHR tests will also not be properly
-		//	created if served from local disk. Serve the test pages from a web
+		//	Don't test this page using local disk for MSIE. MSIE will not create 
+		//	a history list for iframe_history.html if served from a file: URL. 
+		//	The XML served back from the XHR tests will also not be properly 
+		//	created if served from local disk. Serve the test pages from a web 
 		//	server to test in that browser.
 		//	IE 6.0:
 		//	same behavior as IE 5.5 SP2
@@ -262,31 +267,31 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 		//If addToHistory is called, then that means we prune the
 		//forward stack -- the user went back, then wanted to
 		//start a new forward path.
-		forwardStack = [];
+		forwardStack = []; 
 
 		var hash = null;
 		var url = null;
 		if(!historyIframe){
-			if(config["useXDomain"] && !config["dojoIframeHistoryUrl"]){
-				console.warn("dojo/back: When using cross-domain Dojo builds,"
+			if(dojo.config["useXDomain"] && !dojo.config["dojoIframeHistoryUrl"]){
+				console.warn("dojo.back: When using cross-domain Dojo builds,"
 					+ " please save iframe_history.html to your domain and set djConfig.dojoIframeHistoryUrl"
 					+ " to the path on your domain to iframe_history.html");
 			}
 			historyIframe = window.frames["dj_history"];
 		}
 		if(!bookmarkAnchor){
-			bookmarkAnchor = domConstruct.create("a", {style: {display: "none"}}, baseWindow.body());
+			bookmarkAnchor = dojo.create("a", {style: {display: "none"}}, dojo.body());
 		}
 		if(args["changeUrl"]){
 			hash = ""+ ((args["changeUrl"]!==true) ? args["changeUrl"] : (new Date()).getTime());
-
+			
 			//If the current hash matches the new one, just replace the history object with
 			//this new one. It doesn't make sense to track different state objects for the same
 			//logical URL. This matches the browser behavior of only putting in one history
 			//item no matter how many times you click on the same #hash link, at least in Firefox
 			//and Safari, and there is no reliable way in those browsers to know if a #hash link
 			//has been clicked on multiple times. So making this the standard behavior in all browsers
-			//so that dojo/back's behavior is the same in all browsers.
+			//so that dojo.back's behavior is the same in all browsers.
 			if(historyStack.length == 0 && initialState.urlHash == hash){
 				initialState = createState(url, args, hash);
 				return;
@@ -296,13 +301,13 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 			}
 
 			changingUrl = true;
-			setTimeout(function(){
-					setHash(hash);
-					changingUrl = false;
+			setTimeout(function() { 
+					setHash(hash); 
+					changingUrl = false; 					
 				}, 1);
 			bookmarkAnchor.href = hash;
-
-			if(has("ie")){
+			
+			if(dojo.isIE){
 				url = loadIframeHistory();
 
 				var oldCB = args["back"]||args["backButton"]||args["handle"];
@@ -312,12 +317,12 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 				//we will need to pass the handle name to handle.
 				var tcb = function(handleName){
 					if(getHash() != ""){
-						setTimeout(function(){ setHash(hash); }, 1);
+						setTimeout(function() { setHash(hash); }, 1);
 					}
 					//Use apply to set "this" to args, and to try to avoid memory leaks.
 					oldCB.apply(this, [handleName]);
 				};
-
+		
 				//Set interceptor function in the right place.
 				if(args["back"]){
 					args.back = tcb;
@@ -326,9 +331,9 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 				}else if(args["handle"]){
 					args.handle = tcb;
 				}
-
+		
 				var oldFW = args["forward"]||args["forwardButton"]||args["handle"];
-
+		
 				//The function takes handleName as a parameter, in case the
 				//callback we are overriding was "handle". In that case,
 				//we will need to pass the handle name to handle.
@@ -351,12 +356,12 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 					args.handle = tfw;
 				}
 
-			}else if(!has("ie")){
+			}else if(!dojo.isIE){
 				// start the timer
 				if(!locationTimer){
 					locationTimer = setInterval(checkLocation, 200);
 				}
-
+				
 			}
 		}else{
 			url = loadIframeHistory();
@@ -366,10 +371,10 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 	};
 
 	back._iframeLoaded = function(evt, ifrLoc){
-		// summary:
+		//summary: 
 		//		private method. Do not call this directly.
 		var query = getUrlQuery(ifrLoc.href);
-		if(query == null){
+		if(query == null){ 
 			// alert("iframeLoaded");
 			// we hit the end of the history, so we should go back
 			if(historyStack.length == 1){
@@ -382,7 +387,7 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 			moveForward = false;
 			return;
 		}
-
+	
 		//Check the back stack first, since it is more likely.
 		//Note that only one step back or forward is supported.
 		if(historyStack.length >= 2 && query == getUrlQuery(historyStack[historyStack.length-2].url)){
@@ -391,7 +396,4 @@ define(["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct",
 			handleForwardButton();
 		}
 	};
-
-	return back;
-	
-});
+ })();

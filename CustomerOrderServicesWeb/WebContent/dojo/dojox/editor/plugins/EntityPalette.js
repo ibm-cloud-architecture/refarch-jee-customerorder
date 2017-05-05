@@ -1,24 +1,29 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_Widget",
-	"dijit/_TemplatedMixin",
-	"dijit/_PaletteMixin",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/i18n!dojox/editor/plugins/nls/latinEntities"
-], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _PaletteMixin) {
+dojo.provide("dojox.editor.plugins.EntityPalette");
+
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+dojo.require("dijit._PaletteMixin");
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dojox.editor.plugins", "latinEntities");
 
 dojo.experimental("dojox.editor.plugins.EntityPalette");
 
-var EntityPalette = dojo.declare("dojox.editor.plugins.EntityPalette", [_Widget, _TemplatedMixin, _PaletteMixin], {
+dojo.declare("dojox.editor.plugins.EntityPalette",
+	[dijit._Widget, dijit._Templated, dijit._PaletteMixin],
+	{
 	// summary:
 	//		A keyboard accessible HTML entity-picking widget (for inserting symbol characters)
 	// description:
 	//		Grid showing various entities, so the user can pick a certain entity.
 	//		Can be used standalone, or as a popup.
+	//
+	// example:
+	// |	<div dojoType="dojox.editor.plugins.EntityPalette"></div>
+	//
+	// example:
+	// |	var picker = new dojox.editor.plugins.EntityPalette({ },srcNode);
+	// |	picker.startup();
 
 	// templateString: [protected] String
 	//		The basic template used to render the palette.
@@ -64,11 +69,11 @@ var EntityPalette = dojo.declare("dojox.editor.plugins.EntityPalette", [_Widget,
 	//	  Whether the preview pane will be displayed, to show details about the selected entity.
 	showPreview: true,
 
-	// showCode: [public] Boolean
+	// showCode: [public] boolean
 	//		Show the character code for the entity.
 	showCode: false,
 
-	// showEntityName: [public] Boolean
+	// showentityName: [public] boolean
 	//		Show the entity name for the entity.
 	showEntityName: false,
 
@@ -84,8 +89,7 @@ var EntityPalette = dojo.declare("dojox.editor.plugins.EntityPalette", [_Widget,
 	cellClass: "dojoxEntityPaletteCell",
 
 	postMixInProperties: function(){
-		// summary:
-		//		Convert hash of entities into two-dimensional rows/columns table (array of arrays)
+		// Convert hash of entities into two-dimensional rows/columns table (array of arrays)
 		var choices = dojo.i18n.getLocalization("dojox.editor.plugins", "latinEntities");
 		var numChoices = 0;
 		var entityKey;
@@ -110,8 +114,7 @@ var EntityPalette = dojo.declare("dojox.editor.plugins.EntityPalette", [_Widget,
 	},
 
 	buildRendering: function(){
-		// summary:
-		//		Instantiate the template, which makes a skeleton table which we'll insert the entities
+		// Instantiate the template, which makes a skeleton table which we'll insert the entities
 		this.inherited(arguments);
 
 		var i18n = dojo.i18n.getLocalization("dojox.editor.plugins", "latinEntities");
@@ -188,7 +191,7 @@ var EntityPalette = dojo.declare("dojox.editor.plugins.EntityPalette", [_Widget,
 	}
 });
 
-EntityPalette.LatinEntity = dojo.declare("dojox.editor.plugins.LatinEntity",
+dojo.declare("dojox.editor.plugins.LatinEntity",
 	null,
 	{
 		// summary:
@@ -208,7 +211,8 @@ EntityPalette.LatinEntity = dojo.declare("dojox.editor.plugins.LatinEntity",
 
 		getValue: function(){
 			// summary:
-			//		Returns HTML representing the character, like &amp;
+			//   Returns HTML representing the character, like &amp;
+			//
 			return "&" + this._alias + ";";
 		},
 
@@ -216,8 +220,4 @@ EntityPalette.LatinEntity = dojo.declare("dojox.editor.plugins.LatinEntity",
 			// Deal with entities that have keys which are reserved words.
 			cell.innerHTML = this.getValue();
 		}
-});
-
-return EntityPalette;
-
 });

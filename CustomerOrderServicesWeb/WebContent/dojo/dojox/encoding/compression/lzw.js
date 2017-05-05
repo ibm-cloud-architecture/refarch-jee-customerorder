@@ -1,22 +1,19 @@
-define([
-	"dojo/_base/lang",	// dojo.extend
-	"../bits"
-], function(lang, bits) {
+dojo.provide("dojox.encoding.compression.lzw");
+dojo.require("dojox.encoding.bits");
 
-	var lzw = lang.getObject("dojox.encoding.compression.lzw", true);
-
+(function(){
 	var _bits = function(x){
 		var w = 1;
 		for(var v = 2; x >= v; v <<= 1, ++w);
 		return w;
 	};
 
-	lzw.Encoder = function(n){
+	dojox.encoding.compression.lzw.Encoder = function(n){
 		this.size = n;
 		this.init();
 	};
 
-	lang.extend(lzw.Encoder, {
+	dojo.extend(dojox.encoding.compression.lzw.Encoder, {
 		init: function(){
 			this.dict = {};
 			for(var i = 0; i < this.size; ++i){
@@ -52,12 +49,12 @@ define([
 		}
 	});
 
-	lzw.Decoder = function(n){
+	dojox.encoding.compression.lzw.Decoder = function(n){
 		this.size = n;
 		this.init();
 	};
 
-	lang.extend(lzw.Decoder, {
+	dojo.extend(dojox.encoding.compression.lzw.Decoder, {
 		init: function(){
 			this.codes = new Array(this.size);
 			for(var i = 0; i < this.size; ++i){
@@ -87,6 +84,4 @@ define([
 			return v;
 		}
 	});
-
-	return lzw;
-});
+})();

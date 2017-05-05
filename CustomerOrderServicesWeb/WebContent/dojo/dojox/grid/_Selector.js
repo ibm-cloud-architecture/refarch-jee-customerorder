@@ -1,18 +1,13 @@
-define([
-	"../main",
-	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/query",
-	"dojo/dom-class",
-	"./Selection",
-	"./_View",
-	"./_Builder",
-	"./util"
-], function(dojox, declare, lang, query, domClass, Selection, _View, _Builder, util){
-	
-	var _InputSelectorHeaderBuilder = dojox.grid._InputSelectorHeaderBuilder = lang.extend(function(view){
-		_Builder._HeaderBuilder.call(this, view);
-	},_Builder._HeaderBuilder.prototype,{
+dojo.provide("dojox.grid._Selector");
+
+dojo.require("dojox.grid.Selection");
+dojo.require("dojox.grid._View");
+dojo.require("dojox.grid._Builder");
+
+(function(){
+	dojox.grid._InputSelectorHeaderBuilder = dojo.extend(function(view){
+		dojox.grid._HeaderBuilder.call(this, view);
+	},dojox.grid._HeaderBuilder.prototype,{
 		generateHtml: function(){
 			var w = this.view.contentWidth || 0;
 			var selectedCount = this.view.grid.selection.getSelectedCount();
@@ -37,20 +32,20 @@ define([
 		}
 	});
 
-	var _SelectorContentBuilder = dojox.grid._SelectorContentBuilder = lang.extend(function(view){
-		_Builder._ContentBuilder.call(this, view);
-	},_Builder._ContentBuilder.prototype,{
+	dojox.grid._SelectorContentBuilder = dojo.extend(function(view){
+		dojox.grid._ContentBuilder.call(this, view);
+	},dojox.grid._ContentBuilder.prototype,{
 		generateHtml: function(inDataIndex, inRowIndex){
 			var w = this.view.contentWidth || 0;
-			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' +
-				'cellspacing="0" cellpadding="0" role="presentation"><tr>' +
+			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' + 
+				'cellspacing="0" cellpadding="0" role="presentation"><tr>' + 
 				'<td  style="text-align: center;" class="dojoxGridRowbarInner">' + this.getCellContent(inRowIndex) + '</td></tr></table>';
 		},
 		getCellContent: function(inRowIndex){
 			return '&nbsp;';
 		},
 		findTarget: function(){
-			var t = _Builder._ContentBuilder.prototype.findTarget.apply(this, arguments);
+			var t = dojox.grid._ContentBuilder.prototype.findTarget.apply(this, arguments);
 			return t;
 		},
 		domouseover: function(e){
@@ -80,9 +75,9 @@ define([
 		}
 	});
 
-	var _InputSelectorContentBuilder = dojox.grid._InputSelectorContentBuilder = lang.extend(function(view){
-		_SelectorContentBuilder.call(this, view);
-	},_SelectorContentBuilder.prototype,{
+	dojox.grid._InputSelectorContentBuilder = dojo.extend(function(view){
+		dojox.grid._SelectorContentBuilder.call(this, view);
+	},dojox.grid._SelectorContentBuilder.prototype,{
 		getCellContent: function(rowIndex){
 			var v = this.view;
 			var type = v.inputType == "checkbox" ? "CheckBox" : "Radio";
@@ -91,7 +86,7 @@ define([
 		}
 	});
 
-	var _Selector = declare("dojox.grid._Selector", _View, {
+	dojo.declare("dojox.grid._Selector", dojox.grid._View, {
 		inputType: '',
 		selectionMode: '',
 
@@ -101,7 +96,7 @@ define([
 		noscroll: true,
 		padBorderWidth: 2,
 
-		_contentBuilderClass: _SelectorContentBuilder,
+		_contentBuilderClass: dojox.grid._SelectorContentBuilder,
 
 		postCreate: function(){
 			this.inherited(arguments);
@@ -115,7 +110,7 @@ define([
 		buildRendering: function(){
 			this.inherited(arguments);
 			this.scrollboxNode.style.overflow = "hidden";
-		},
+		},	
 		getWidth: function(){
 			return this.viewWidth || this.defaultWidth;
 		},
@@ -153,24 +148,24 @@ define([
 			this.grid.updateRow(inIndex);
 		}
 	});
-	if(!_View.prototype._headerBuilderClass &&
-		!_View.prototype._contentBuilderClass){
-		_Selector.prototype.postCreate = function(){
+	if(!dojox.grid._View.prototype._headerBuilderClass &&
+		!dojox.grid._View.prototype._contentBuilderClass){
+		dojox.grid._Selector.prototype.postCreate = function(){
 			this.connect(this.scrollboxNode,"onscroll","doscroll");
-			util.funnelEvents(this.contentNode, this, "doContentEvent", [ 'mouseover', 'mouseout', 'click', 'dblclick', 'contextmenu', 'mousedown' ]);
-			util.funnelEvents(this.headerNode, this, "doHeaderEvent", [ 'dblclick', 'mouseover', 'mouseout', 'mousemove', 'mousedown', 'click', 'contextmenu' ]);
+			dojox.grid.util.funnelEvents(this.contentNode, this, "doContentEvent", [ 'mouseover', 'mouseout', 'click', 'dblclick', 'contextmenu', 'mousedown' ]);
+			dojox.grid.util.funnelEvents(this.headerNode, this, "doHeaderEvent", [ 'dblclick', 'mouseover', 'mouseout', 'mousemove', 'mousedown', 'click', 'contextmenu' ]);
 			if(this._contentBuilderClass){
 				this.content = new this._contentBuilderClass(this);
 			}else{
-				this.content = new _Builder._ContentBuilder(this);
+				this.content = new dojox.grid._ContentBuilder(this);
 			}
 			if(this._headerBuilderClass){
 				this.header = new this._headerBuilderClass(this);
 			}else{
-				this.header = new _Builder._HeaderBuilder(this);
+				this.header = new dojox.grid._HeaderBuilder(this);
 			}
 			//BiDi: in RTL case, style width='9000em' causes scrolling problem in head node
-			if(!this.grid.isLeftToRight()){
+			if(!dojo._isBodyLtr()){
 				this.headerNodeContainer.style.width = "";
 			}
 			this.connect(this.grid.selection, 'onSelected', 'onSelected');
@@ -178,11 +173,11 @@ define([
 		};
 	}
 
-	declare("dojox.grid._RadioSelector", _Selector, {
+	dojo.declare("dojox.grid._RadioSelector", dojox.grid._Selector, {
 		inputType: 'radio',
 		selectionMode: 'single',
 
-		_contentBuilderClass: _InputSelectorContentBuilder,
+		_contentBuilderClass: dojox.grid._InputSelectorContentBuilder,
 
 		buildRendering: function(){
 			this.inherited(arguments);
@@ -192,10 +187,10 @@ define([
 		renderHeader: function(){}
 	});
 
-	declare("dojox.grid._CheckBoxSelector", _Selector, {
+	dojo.declare("dojox.grid._CheckBoxSelector", dojox.grid._Selector, {
 		inputType: 'checkbox',
-		_headerBuilderClass: _InputSelectorHeaderBuilder,
-		_contentBuilderClass: _InputSelectorContentBuilder,
+		_headerBuilderClass: dojox.grid._InputSelectorHeaderBuilder,
+		_contentBuilderClass: dojox.grid._InputSelectorContentBuilder,
 		postCreate: function(){
 			this.inherited(arguments);
 			this.connect(this.grid, 'onSelectionChanged', 'onSelectionChanged');
@@ -206,19 +201,16 @@ define([
 			this._updateVisibility(this.grid.rowCount);
 		},
 		_updateVisibility: function(rowCount){
-			this.headerNode.style.visibility = rowCount ? "" : "hidden";
+			this.headerNode.style.visibility = rowCount ? "" : "hidden";		
 		},
 		onSelectionChanged: function(){
 			if(this._selectionChanging){ return; }
-			var inputDiv = query('.dojoxGridCheckSelector', this.headerNode)[0];
+			var inputDiv = dojo.query('.dojoxGridCheckSelector', this.headerNode)[0];
 			var g = this.grid;
 			var s = (g.rowCount && g.rowCount == g.selection.getSelectedCount());
 			g.allItemsSelected = s||false;
-			domClass.toggle(inputDiv, "dijitChecked", g.allItemsSelected);
-			domClass.toggle(inputDiv, "dijitCheckBoxChecked", g.allItemsSelected);
+			dojo.toggleClass(inputDiv, "dijitChecked", g.allItemsSelected);
+			dojo.toggleClass(inputDiv, "dijitCheckBoxChecked", g.allItemsSelected);
 		}
 	});
-	
-	return _Selector;
-
-});
+})();

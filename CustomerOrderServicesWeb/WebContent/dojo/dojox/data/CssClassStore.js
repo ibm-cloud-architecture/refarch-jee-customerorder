@@ -1,42 +1,39 @@
-define(["dojo/_base/declare","dojox/data/CssRuleStore"], 
-  function(declare, CssRuleStore) {
+dojo.provide("dojox.data.CssClassStore");
 
-return declare("dojox.data.CssClassStore", CssRuleStore, {
-	// summary:
+dojo.require("dojox.data.CssRuleStore");
+
+dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
+	//	summary:
 	//		Basic store to display CSS information.
-	// description:
+	//	description:
 	//		The CssClassStore allows users to get information about active Css classes in the page running the CssClassStore.
 	//		It can also filter out classes from specific stylesheets.  The attributes it exposes on classes are as follows:
-	//
-	//		- class:		The classname, including the '.'.
-	//		- classSans:	The classname without the '.'.
+	//			class:		The classname, including the '.'.
+	//			classSans:	The classname without the '.'.
 
-	// _labelAttribute:
-	//		text representation of the Item [label and identifier may need to stay due to method names]
-	_labelAttribute: 'class',
-	
+	_labelAttribute: 'class', // text representation of the Item [label and identifier may need to stay due to method names]
 	_idAttribute: 'class',
 	_cName: "dojox.data.CssClassStore",
 
 	getFeatures: function(){
-		// summary:
-		//		See dojo/data/api/Read.getFeatures()
-		return {
+		//	summary: 
+		//		See dojo.data.api.Read.getFeatures()
+		return { 
 			"dojo.data.api.Read" : true,
-			"dojo.data.api.Identity" : true
+			"dojo.data.api.Identity" : true 
 		};
 	},
 
 	getAttributes: function(item){
-		// summary:
-		//		See dojo/data/api/Read.getAttributes()
+		//	summary: 
+		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		return ['class', 'classSans'];
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		// summary:
-		//		See dojo/data/api/Read.getValue()
+		//	summary: 
+		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
 			return values[0];
@@ -45,8 +42,8 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	getValues: function(item, attribute){
-		// summary:
-		//		See dojo/data/api/Read.getValues()
+		//	summary: 
+		//		See dojo.data.api.Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		var value = [];
@@ -59,7 +56,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleRule: function(rule, styleSheet, href){
-		// summary:
+		//	summary:
 		//		Handles the creation of an item based on the passed rule.  In this store, this implies
 		//		parsing out all available class names.
 		var obj = {};
@@ -84,10 +81,10 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleReturn: function(){
-		// summary:
+		//	summary:
 		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
 		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
-		//		where the request originated.
+		//		where the request originated.  
 		var _inProgress = [];
 		
 		var items = {};
@@ -113,12 +110,12 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleFetchByIdentityReturn: function(request){
-		// summary:
+		//	summary:
 		//		Handles a fetchByIdentity request by finding the correct item.
 		var items = request._items;
-		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
+		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText 
 		// of a rule in full lowercase.
-		var item = items[request.identity];
+		var item = items[(dojo.isWebKit?request.identity.toLowerCase():request.identity)];
 		if(!this.isItem(item)){
 			item = null;
 		}
@@ -130,22 +127,22 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 
 	/* Identity API */
 	getIdentity: function(/* item */ item){
-		// summary:
-		//		See dojo/data/api/Identity.getIdentity()
+		//	summary: 
+		//		See dojo.data.api.Identity.getIdentity()
 		this._assertIsItem(item);
 		return this.getValue(item, this._idAttribute);
 	},
 
 	getIdentityAttributes: function(/* item */ item){
-		// summary:
-		//		See dojo/data/api/Identity.getIdentityAttributes()
+		 //	summary: 
+		 //		See dojo.data.api.Identity.getIdentityAttributes()
 		this._assertIsItem(item);
 		return [this._idAttribute];
 	},
 
 	fetchItemByIdentity: function(/* request */ request){
-		// summary:
-		//		See dojo/data/api/Identity.fetchItemByIdentity()
+		//	summary: 
+		//		See dojo.data.api.Identity.fetchItemByIdentity()
 		request = request || {};
 		if(!request.store){
 			request.store = this;
@@ -158,6 +155,4 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 		}
 		return request;
 	}
-});
-
 });

@@ -1,89 +1,66 @@
-define([
-	"dojo/_base/declare", // declare
-	"dojo/keys", // keys.DOWN_ARROW
-	"./_MenuBase",
-	"dojo/text!./templates/MenuBar.html"
-], function(declare, keys, _MenuBase, template){
+dojo.provide("dijit.MenuBar");
 
-	// module:
-	//		dijit/MenuBar
+dojo.require("dijit.Menu");
 
-	return declare("dijit.MenuBar", _MenuBase, {
-		// summary:
-		//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
+dojo.declare("dijit.MenuBar", dijit._MenuBase, {
+	// summary:
+	//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
 
-		templateString: template,
+	templateString: dojo.cache("dijit", "templates/MenuBar.html"),
 
-		baseClass: "dijitMenuBar",
+	baseClass: "dijitMenuBar",
 
-		// By default open popups for MenuBar instantly
-		popupDelay: 0,
+	// _isMenuBar: [protected] Boolean
+	//		This is a MenuBar widget, not a (vertical) Menu widget.
+	_isMenuBar: true,
 
-		// _isMenuBar: [protected] Boolean
-		//		This is a MenuBar widget, not a (vertical) Menu widget.
-		_isMenuBar: true,
+	postCreate: function(){
+		var k = dojo.keys, l = this.isLeftToRight();
+		this.connectKeyNavHandlers(
+			l ? [k.LEFT_ARROW] : [k.RIGHT_ARROW],
+			l ? [k.RIGHT_ARROW] : [k.LEFT_ARROW]
+		);
 
 		// parameter to dijit.popup.open() about where to put popup (relative to this.domNode)
-		_orient: ["below"],
+		this._orient = this.isLeftToRight() ? {BL: 'TL'} : {BR: 'TR'};
+	},
 
-		_moveToPopup: function(/*Event*/ evt){
-			// summary:
-			//		This handles the down arrow key, opening a submenu if one exists.
-			//		Unlike _MenuBase._moveToPopup(), will never move to the next item in the MenuBar.
-			// tags:
-			//		private
-
-			if(this.focusedChild && this.focusedChild.popup && !this.focusedChild.disabled){
-				this.onItemClick(this.focusedChild, evt);
-			}
-		},
-
-		focusChild: function(item){
-			// Overload focusChild so that whenever a new item is focused and the menu is active, open its submenu immediately.
-
-			this.inherited(arguments);
-			if(this.activated && item.popup && !item.disabled){
-				this._openItemPopup(item, true);
-			}
-		},
-
-		_onChildDeselect: function(item){
-			// override _MenuBase._onChildDeselect() to close submenu immediately
-
-			if(this.currentPopupItem == item){
-				this.currentPopupItem = null;
-				item._closePopup(); // this calls onClose
-			}
-
-			this.inherited(arguments);
-		},
-
-		// Arrow key navigation
-		_onLeftArrow: function(){
-			this.focusPrev();
-		},
-		_onRightArrow: function(){
-			this.focusNext();
-		},
-		_onDownArrow: function(/*Event*/ evt){
-			this._moveToPopup(evt);
-		},
-		_onUpArrow: function(){
-		},
-
-		onItemClick: function(/*dijit/_WidgetBase*/ item, /*Event*/ evt){
-			// summary:
-			//		Handle clicks on an item.   Also called by _moveToPopup() due to a down-arrow key on the item.
-			//		Cancels a dropdown if already open and click is either mouse or space/enter.
-			//		Don't close dropdown due to down arrow.
-			// tags:
-			//		private
-			if(item.popup && item.popup.isShowingNow && (!/^key/.test(evt.type) || evt.keyCode !== keys.DOWN_ARROW)){
-				item.focusNode.focus();
-				this._cleanUp(true);
-			}else{
-				this.inherited(arguments);
-			}
+	focusChild: function(item){
+		// overload focusChild so that whenever the focus is moved to a new item,
+		// check the previous focused whether it has its popup open, if so, after
+		// focusing the new item, open its submenu immediately
+		var prev_item = this.focusedChild,
+			showpopup = prev_item && prev_item.popup && prev_item.popup.isShowingNow;
+		this.inherited(arguments);
+		if(showpopup && item.popup && !item.disabled){
+			this._openPopup();		// TODO: on down arrow, _openPopup() is called here and in onItemClick()
 		}
-	});
+	},
+
+	_onKeyPress: function(/*Event*/ evt){
+		// summary:
+		//		Handle keyboard based menu navigation.
+		// tags:
+		//		protected
+
+		if(evt.ctrlKey || evt.altKey){ return; }
+
+		switch(evt.charOrCode){
+			case dojo.keys.DOWN_ARROW:
+				this._moveToPopup(evt);
+				dojo.stopEvent(evt);
+		}
+	},
+
+	onItemClick: function(/*dijit._Widget*/ item, /*Event*/ evt){
+		// summary:
+		//		Handle clicks on an item. Cancels a dropdown if already open.
+		// tags:
+		//		private
+		if(item.popup && item.popup.isShowingNow){
+			item.popup.onCancel();
+		}else{
+			this.inherited(arguments);
+		}
+	}
 });

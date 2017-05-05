@@ -1,47 +1,35 @@
-define([
-	"dojo/_base/declare", // declare
-	"dojo/dom-class", // domClass.toggle
-	"./MenuItem",
-	"dojo/text!./templates/CheckedMenuItem.html",
-	"./hccss"
-], function(declare, domClass, MenuItem, template){
+dojo.provide("dijit.CheckedMenuItem");
 
-	// module:
-	//		dijit/CheckedMenuItem
+dojo.require("dijit.MenuItem");
 
-	return declare("dijit.CheckedMenuItem", MenuItem, {
+dojo.declare("dijit.CheckedMenuItem",
+		dijit.MenuItem,
+		{
 		// summary:
 		//		A checkbox-like menu item for toggling on and off
 
-		// Use both base classes so we get styles like dijitMenuItemDisabled
-		baseClass: "dijitMenuItem dijitCheckedMenuItem",
-
-		templateString: template,
+		templateString: dojo.cache("dijit", "templates/CheckedMenuItem.html"),
 
 		// checked: Boolean
 		//		Our checked state
 		checked: false,
 		_setCheckedAttr: function(/*Boolean*/ checked){
-			this.domNode.setAttribute("aria-checked", checked ? "true" : "false");
-			this._set("checked", checked);	// triggers CSS update via _CssStateMixin
+			// summary:
+			//		Hook so attr('checked', bool) works.
+			//		Sets the class and state for the check box.
+			dojo.toggleClass(this.domNode, "dijitCheckedMenuItemChecked", checked);
+			dijit.setWaiState(this.domNode, "checked", checked);
+			this.checked = checked;
 		},
 
-		iconClass: "",	// override dijitNoIcon
-
-		role: "menuitemcheckbox",
-
-		// checkedChar: String
-		//		Character (or string) used in place of checkbox icon when display in high contrast mode
-		checkedChar: "&#10003;",
-
-		onChange: function(/*Boolean*/ /*===== checked =====*/){
+		onChange: function(/*Boolean*/ checked){
 			// summary:
 			//		User defined function to handle check/uncheck events
 			// tags:
 			//		callback
 		},
 
-		_onClick: function(evt){
+		_onClick: function(/*Event*/ e){
 			// summary:
 			//		Clicking this item just toggles its state
 			// tags:
@@ -50,7 +38,6 @@ define([
 				this.set("checked", !this.checked);
 				this.onChange(this.checked);
 			}
-			this.onClick(evt);
+			this.inherited(arguments);
 		}
 	});
-});

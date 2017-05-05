@@ -1,23 +1,14 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/connect",
-	"dojo/dom-style",
-	"dojo/dom-construct",
-	"../_base",
-	"../dom"
-], function(kernel,lang,connect,domStyle,domConstruct,dd,dddom){
+dojo.provide("dojox.dtl.contrib.dom");
 
-	var ddch = lang.getObject("contrib.dom", true, dd);
-/*=====
-	ddch = {
-		// TODO: summary
-	};
-=====*/
+dojo.require("dojox.dtl.dom");
+
+(function(){
+	var dd = dojox.dtl;
+	var ddch = dd.contrib.dom;
 
 	var simple = {render: function(){ return this.contents; }};
 
-	ddch.StyleNode = lang.extend(function(styles){
+	ddch.StyleNode = dojo.extend(function(styles){
 		this.contents = {};
 		this._current = {};
 		this._styles = styles;
@@ -25,7 +16,7 @@ define([
 			if(styles[key].indexOf("{{") != -1){
 				var node = new dd.Template(styles[key]);
 			}else{
-				var node = lang.delegate(simple);
+				var node = dojo.delegate(simple);
 				node.contents = styles[key];
 			}
 			this.contents[key] = node;
@@ -36,7 +27,7 @@ define([
 			for(var key in this.contents){
 				var value = this.contents[key].render(context);
 				if(this._current[key] != value){
-					domStyle.set(buffer.getParent(), key, this._current[key] = value);
+					dojo.style(buffer.getParent(), key, this._current[key] = value);
 				}
 			}
 			return buffer;
@@ -50,7 +41,7 @@ define([
 		}
 	});
 
-	ddch.BufferNode = lang.extend(function(nodelist, options){
+	ddch.BufferNode = dojo.extend(function(nodelist, options){
 		this.nodelist = nodelist;
 		this.options = options;
 	},
@@ -67,10 +58,10 @@ define([
 					}
 				}
 
-				this.onAddNode && connect.disconnect(this.onAddNode);
-				this.onRemoveNode && connect.disconnect(this.onRemoveNode);
-				this.onChangeAttribute && connect.disconnect(this.onChangeAttribute);
-				this.onChangeData && connect.disconnect(this.onChangeData);
+				this.onAddNode && dojo.disconnect(this.onAddNode);
+				this.onRemoveNode && dojo.disconnect(this.onRemoveNode);
+				this.onChangeAttribute && dojo.disconnect(this.onChangeAttribute);
+				this.onChangeData && dojo.disconnect(this.onChangeData);
 
 				this.swapped = this.parent.cloneNode(true);
 				this.parent.parentNode.replaceChild(this.swapped, this.parent);
@@ -79,26 +70,26 @@ define([
 		render: function(context, buffer){
 			this.parent = buffer.getParent();
 			if(this.options.node){
-				this.onAddNode = connect.connect(buffer, "onAddNode", lang.hitch(this, "_swap", "node"));
-				this.onRemoveNode = connect.connect(buffer, "onRemoveNode", lang.hitch(this, "_swap", "node"));
+				this.onAddNode = dojo.connect(buffer, "onAddNode", dojo.hitch(this, "_swap", "node"));
+				this.onRemoveNode = dojo.connect(buffer, "onRemoveNode", dojo.hitch(this, "_swap", "node"));
 			}
 			if(this.options.text){
-				this.onChangeData = connect.connect(buffer, "onChangeData", lang.hitch(this, "_swap", "node"));
+				this.onChangeData = dojo.connect(buffer, "onChangeData", dojo.hitch(this, "_swap", "node"));
 			}
 			if(this.options["class"]){
-				this.onChangeAttribute = connect.connect(buffer, "onChangeAttribute", lang.hitch(this, "_swap", "class"));
+				this.onChangeAttribute = dojo.connect(buffer, "onChangeAttribute", dojo.hitch(this, "_swap", "class"));
 			}
 
 			buffer = this.nodelist.render(context, buffer);
 
 			if(this.swapped){
 				this.swapped.parentNode.replaceChild(this.parent, this.swapped);
-				domConstruct.destroy(this.swapped);
+				dojo.destroy(this.swapped);
 			}else{
-				this.onAddNode && connect.disconnect(this.onAddNode);
-				this.onRemoveNode && connect.disconnect(this.onRemoveNode);
-				this.onChangeAttribute && connect.disconnect(this.onChangeAttribute);
-				this.onChangeData && connect.disconnect(this.onChangeData);
+				this.onAddNode && dojo.disconnect(this.onAddNode);
+				this.onRemoveNode && dojo.disconnect(this.onRemoveNode);
+				this.onChangeAttribute && dojo.disconnect(this.onChangeAttribute);
+				this.onChangeData && dojo.disconnect(this.onChangeData);
 			}
 
 			delete this.parent;
@@ -113,11 +104,11 @@ define([
 		}
 	});
 
-	lang.mixin(ddch, {
+	dojo.mixin(ddch, {
 		buffer: function(parser, token){
 			// summary:
 			//		Buffer large DOM manipulations during re-render.
-			// description:
+			//	description:
 			//		When using DomTemplate, wrap any content
 			//		that you expect to change often during
 			//		re-rendering. It will then remove its parent
@@ -133,15 +124,15 @@ define([
 			// example:
 			//		You can explicitly declare options:
 			//
-			//		- node: Watch node removal/addition
-			//		- class: Watch for a classname to be changed
-			//		- text: Watch for any text to be changed
+			//			* node: Watch node removal/addition
+			//			* class: Watch for a classname to be changed
+			//			* text: Watch for any text to be changed
 			//
-			//	|	{% buffer node class %}{% for item in items %}<li>{{ item }}</li>{% endfor %}{% endbuffer %}
+			//		|	{% buffer node class %}{% for item in items %}<li>{{ item }}</li>{% endfor %}{% endbuffer %}
 			var parts = token.contents.split().slice(1);
 			var options = {};
 			var found = false;
-			for(var i = parts.length; i--;){
+			for(var i=parts.length; i--;){
 				found = true;
 				options[parts[i]] = true;
 			}
@@ -153,7 +144,7 @@ define([
 			return new ddch.BufferNode(nodelist, options);
 		},
 		html: function(parser, token){
-			kernel.deprecated("{% html someVariable %}", "Use {{ someVariable|safe }} instead");
+			dojo.deprecated("{% html someVariable %}", "Use {{ someVariable|safe }} instead");
 			return parser.create_variable_node(token.contents.slice(5) + "|safe");
 		},
 		style_: function(parser, token){
@@ -163,7 +154,7 @@ define([
 			for(var i = 0, rule; rule = rules[i]; i++){
 				var parts = rule.split(/\s*:\s*/g);
 				var key = parts[0];
-				var value = lang.trim(parts[1]);
+				var value = dojo.trim(parts[1]);
 				if(value){
 					styles[key] = value;
 				}
@@ -175,6 +166,4 @@ define([
 	dd.register.tags("dojox.dtl.contrib", {
 		"dom": ["html", "attr:style", "buffer"]
 	});
-
-	return ddch;
-});
+})();

@@ -1,11 +1,16 @@
-define(["../util/oo", "../stencil/Path"], 
-function(oo, Path){
+dojo.provide("dojox.drawing.annotations.Arrow");
+dojo.require("dojox.drawing.stencil.Path");
 
-//dojox.drawing.annotations.Arrow =
-return oo.declare(
-
-	Path,
+dojox.drawing.annotations.Arrow = dojox.drawing.util.oo.declare(
+	// summary:
+	//	An annotation called internally to put an arrowhead
+	//	on ether end of a Line. Initiated in Arrow (and Vector)
+	//	with the optional params: arrowStart and arrowEnd. Both
+	//	default true for Axes.
+	//
+	dojox.drawing.stencil.Path,
 	function(/* dojox.__stencilArgs */options){
+		// arguments: See stencil._Base
 		this.stencil.connectMult([
 			[this.stencil, "select", this, "select"],
 			[this.stencil, "deselect", this, "deselect"],
@@ -25,12 +30,6 @@ return oo.declare(
 		
 	},
 	{
-		// summary:
-		//		An annotation called internally to put an arrowhead
-		//		on ether end of a Line. Initiated in Arrow (and Vector)
-		//		with the optional params: arrowStart and arrowEnd. Both
-		//		default true for Axes.
-
 		idx1:0,
 		idx2:1,
 		
@@ -40,8 +39,8 @@ return oo.declare(
 		
 		arrowHead: function(x1, y1, x2, y2, style){
 			// summary:
-			//		Creates data used to draw arrow head.
-
+			//	Creates data used to draw arrow head.
+			//
 			var obj = {
 				start:{
 					x:x1,
@@ -52,7 +51,7 @@ return oo.declare(
 			}
 			var angle = this.util.angle(obj);
 			
-			var lineLength = this.util.length(obj);
+			var lineLength = this.util.length(obj); 
 			var al = style.arrows.length;
 			var aw = style.arrows.width/2;
 			if(lineLength<al){
@@ -70,4 +69,3 @@ return oo.declare(
 		
 	}
 );
-});

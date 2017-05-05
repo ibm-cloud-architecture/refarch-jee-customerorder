@@ -1,32 +1,24 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/_base/fx",
-	"dojo/_base/array",
-	"dojo/dom-style",
-	"dojo/dom-construct",
-	"dijit/_Widget",
-	"dijit/_Templated",
-	"dijit/_Container",
-	"dijit/layout/ContentPane",
-	"../io/Connection",
-	"dojo/text!./templates/FeedEntryViewer.html",
-	"dojo/text!./templates/EntryHeader.html",
-	"dojo/i18n!./nls/FeedEntryViewer"
-], function (dojo, connect, declare, fx, arrayUtil, domStyle, domConstruct, _Widget, _Templated, _Container, ContentPane, Connection, template, headerTemplate, i18nViewer) {
+dojo.provide("dojox.atom.widget.FeedEntryViewer");
+
+dojo.require("dojo.fx");
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+dojo.require("dijit._Container");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.atom.io.Connection");
+dojo.requireLocalization("dojox.atom.widget", "FeedEntryViewer");
 
 dojo.experimental("dojox.atom.widget.FeedEntryViewer");
 
-
-var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Templated, _Container],{
-	// summary:
+dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Templated, dijit._Container],{
+	//	summary:
 	//		An ATOM feed entry editor for publishing updated ATOM entries, or viewing non-editable entries.
-
+	//	description:
+	//		An ATOM feed entry editor for publishing updated ATOM entries, or viewing non-editable entries.
 	entrySelectionTopic: "",	//The topic to listen on for entries to edit.
 
 	_validEntryFields: {},		//The entry fields that were present on the entry and are being displayed.
-								//This works in conjunction with what is selected to be displayed.
+								//This works in conjuntion with what is selected to be displayed.
 	displayEntrySections: "", //What current sections of the entries to display as a comma separated list.
 	_displayEntrySections: null,
 	
@@ -36,7 +28,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	_optionButtonDisplayed: true,
 
 	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
-	templateString: template,
+	templateString: dojo.cache("dojox.atom", "widget/templates/FeedEntryViewer.html"),
 	
 	_entry: null, //The entry that is being viewed/edited.
 	_feed: null, //The feed the entry came from.
@@ -47,7 +39,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		if(this.entrySelectionTopic !== ""){
 			this._subscriptions = [dojo.subscribe(this.entrySelectionTopic, this, "_handleEvent")];
 		}
-		var _nlsResources = i18nViewer;
+		var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
 		this.displayOptions.innerHTML = _nlsResources.displayOptions;
 		this.feedEntryCheckBoxLabelTitle.innerHTML = _nlsResources.title;
 		this.feedEntryCheckBoxLabelAuthors.innerHTML = _nlsResources.authors;
@@ -68,20 +60,21 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		this._setDisplaySectionsCheckboxes();
 
 		if(this.enableMenu){
-			domStyle.set(this.feedEntryViewerMenu, 'display', '');
+			dojo.style(this.feedEntryViewerMenu, 'display', '');
 			if(this.entryCheckBoxRow && this.entryCheckBoxRow2){
 				if(this.enableMenuFade){
-					fx.fadeOut({node: this.entryCheckBoxRow,duration: 250}).play();
-					fx.fadeOut({node: this.entryCheckBoxRow2,duration: 250}).play();
+					dojo.fadeOut({node: this.entryCheckBoxRow,duration: 250}).play();
+					dojo.fadeOut({node: this.entryCheckBoxRow2,duration: 250}).play();
 				}
 			}
 		}
 	},
 
 	clear: function(){
-		// summary:
+		//	summary:
 		//		Function to clear the state of the widget.
-
+		//	description:
+		//		Function to clear the state of the widget.
 		this.destroyDescendants();
 		this._entry=null;
 		this._feed=null;
@@ -89,23 +82,25 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 	
 	clearNodes: function(){
-		// summary:
+		//	summary:
+		//		Function to clear all the display nodes for the ATOM entry from the viewer.
+		//	description:
 		//		Function to clear all the display nodes for the ATOM entry from the viewer.
 
-		arrayUtil.forEach([
-			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow",
+		dojo.forEach([
+			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow", 
 			"entryIdRow", "entryUpdatedRow"
 			], function(node){
-				domStyle.set(this[node], "display", "none");
+				dojo.style(this[node], "display", "none");
 			}, this);
 
-		arrayUtil.forEach([
+		dojo.forEach([
 			"entryTitleNode", "entryTitleHeader", "entryAuthorHeader", "entryContributorHeader",
 			"entryContributorNode", "entrySummaryHeader", "entrySummaryNode", "entryContentHeader",
 			"entryContentNode", "entryIdNode", "entryIdHeader", "entryUpdatedHeader", "entryUpdatedNode"
 			], function(part){
 				while(this[part].firstChild){
-					domConstruct.destroy(this[part].firstChild);
+					dojo.destroy(this[part].firstChild);
 				}
 			}
 		,this);
@@ -113,9 +108,12 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	setEntry: function(/*object*/entry, /*object*/feed, /*boolean*/leaveMenuState){
-		// summary:
+		//	summary:
 		//		Function to set the current entry that is being edited.
-		// entry:
+		//	description:
+		//		Function to set the current entry that is being edited.
+		//
+		//	entry:
 		//		Instance of dojox.atom.io.model.Entry to display for reading/editing.
 		this.clear();
 		this._validEntryFields = {};
@@ -157,63 +155,65 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 			}
 
 			if(this.entryUpdatedHeader){
-				this.setUpdatedHeader(this.entryUpdatedHeader, entry);
+				this.setUpdatedHeader(this.entryUpdatedHeader, entry); 
 			}
 
 			if(this.entryUpdatedNode){
-				this.setUpdated(this.entryUpdatedNode, this._editMode, entry);
+				this.setUpdated(this.entryUpdatedNode, this._editMode, entry); 
 			}
 
 			if(this.entrySummaryHeader){
-				this.setSummaryHeader(this.entrySummaryHeader, entry);
+				this.setSummaryHeader(this.entrySummaryHeader, entry); 
 			}
 
 			if(this.entrySummaryNode){
-				this.setSummary(this.entrySummaryNode, this._editMode, entry);
+				this.setSummary(this.entrySummaryNode, this._editMode, entry); 
 			}
 
 			if(this.entryContentHeader){
-				this.setContentHeader(this.entryContentHeader, entry);
+				this.setContentHeader(this.entryContentHeader, entry); 
 			}
 
 			if(this.entryContentNode){
-				this.setContent(this.entryContentNode, this._editMode, entry);
+				this.setContent(this.entryContentNode, this._editMode, entry); 
 			}
 		}
 		this._displaySections();
 	},
 
-	setTitleHeader: function(/*DOMNode*/ titleHeaderNode, /*object*/entry){
-		// summary:
+	setTitleHeader: function(/*DOM node*/titleHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the title header node in the template to some value.
-		// description:
+		//	description:
 		//		Function to set the contents of the title header node in the template to some value.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// titleAnchorNode:
+		//
+		//	titleAchorNode:
 		//		The DOM node to attach the title data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
-
+		//
 		if(entry.title && entry.title.value && entry.title.value !== null){
-			var _nlsResources = i18nViewer;
-			var titleHeader = new EntryHeader({title: _nlsResources.title});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var titleHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.title});
 			titleHeaderNode.appendChild(titleHeader.domNode);
 		}
 	},
 
 	setTitle: function(titleAnchorNode, editMode, entry){
-		// summary:
+		//	summary:
 		//		Function to set the contents of the title node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the title node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// titleAnchorNode:
+		//
+		//	titleAchorNode:
 		//		The DOM node to attach the title data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.title && entry.title.value && entry.title.value !== null){
 			if(entry.title.type == "text"){
@@ -221,7 +221,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 				titleAnchorNode.appendChild(titleNode);
 			}else{
 				var titleViewNode = document.createElement("span");
-				var titleView = new ContentPane({refreshOnShow: true, executeScripts: false}, titleViewNode);
+				var titleView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false}, titleViewNode);
 				titleView.attr('content', entry.title.value);
 				titleAnchorNode.appendChild(titleView.domNode);
 			}
@@ -229,34 +229,36 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		}
 	},
 
-	setAuthorsHeader: function(/*DOMNode*/ authorHeaderNode, /*object*/entry){
-		// summary:
+	setAuthorsHeader: function(/*DOM node*/authorHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the title format for the authors section of the author row in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the title format for the authors section of the author row in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the author data is filled out from an entry.
-		// authorHeaderNode:
+		//
+		//	authorHeaderNode:
 		//		The DOM node to attach the author section header data to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.authors && entry.authors.length > 0){
-			var _nlsResources = i18nViewer;
-			var authorHeader = new EntryHeader({title: _nlsResources.authors});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var authorHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.authors});
 			authorHeaderNode.appendChild(authorHeader.domNode);
 		}
 	},
 
-	setAuthors: function(/*DOMNode*/ authorsAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setAuthors: function(/*DOM node*/authorsAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the author node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the author node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// authorsAnchorNode:
+		//
+		//	authorsAchorNode:
 		//		The DOM node to attach the author data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		authorsAnchorNode.innerHTML = "";
 		if(entry.authors && entry.authors.length > 0){
@@ -283,35 +285,37 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		}
 	},
 
-	setContributorsHeader: function(/*DOMNode*/ contributorsHeaderNode, /*object*/entry){
-		// summary:
+	setContributorsHeader: function(/*DOM node*/contributorsHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the contributor header node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the contributor header node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// contributorsHeaderNode:
+		//
+		//	contributorsHeaderNode:
 		//		The DOM node to attach the contributor title to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.contributors && entry.contributors.length > 0){
-			var _nlsResources = i18nViewer;
-			var contributorHeader = new EntryHeader({title: _nlsResources.contributors});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var contributorHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.contributors});
 			contributorsHeaderNode.appendChild(contributorHeader.domNode);
 		}
 	},
 
 
-	setContributors: function(/*DOMNode*/ contributorsAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setContributors: function(/*DOM node*/contributorsAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the contributor node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the contributor node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// contributorsAnchorNode:
+		//
+		//	contributorsAnchorNode:
 		//		The DOM node to attach the contributor data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.contributors && entry.contributors.length > 0){
 			for(var i in entry.contributors){
@@ -325,35 +329,37 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 				 
-	setIdHeader: function(/*DOMNode*/ idHeaderNode, /*object*/entry){
-		// summary:
+	setIdHeader: function(/*DOM node*/idHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the ID  node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the ID node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// idAnchorNode:
+		//
+		//	idAnchorNode:
 		//		The DOM node to attach the ID data to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.id && entry.id !== null){
-			var _nlsResources = i18nViewer;
-			var idHeader = new EntryHeader({title: _nlsResources.id});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var idHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.id});
 			idHeaderNode.appendChild(idHeader.domNode);
 		}
 	},
 
 
-	setId: function(/*DOMNode*/ idAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setId: function(/*DOM node*/idAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the ID  node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the ID node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// idAnchorNode:
+		//
+		//	idAnchorNode:
 		//		The DOM node to attach the ID data to.
-		// editMode:
+		// 	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.id && entry.id !== null){
 			var idNode = document.createTextNode(entry.id);
@@ -362,34 +368,36 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		}
 	},
 	
-	setUpdatedHeader: function(/*DOMNode*/ updatedHeaderNode, /*object*/entry){
-		// summary:
+	setUpdatedHeader: function(/*DOM node*/updatedHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the updated header node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the updated header node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// updatedHeaderNode:
+		//
+		//	updatedHeaderNode:
 		//		The DOM node to attach the updated header data to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.updated && entry.updated !== null){
-			var _nlsResources = i18nViewer;
-			var updatedHeader = new EntryHeader({title: _nlsResources.updated});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var updatedHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.updated});
 			updatedHeaderNode.appendChild(updatedHeader.domNode);
 		}
 	},
 
-	setUpdated: function(/*DOMNode*/ updatedAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setUpdated: function(/*DOM node*/updatedAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the updated  node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the updated node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// updatedAnchorNode:
+		//
+		//	updatedAnchorNode:
 		//		The DOM node to attach the udpated data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.updated && entry.updated !== null){
 			var updatedNode = document.createTextNode(entry.updated);
@@ -398,77 +406,81 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		}
 	},
 
-	setSummaryHeader: function(/*DOMNode*/ summaryHeaderNode, /*object*/entry){
-		// summary:
+	setSummaryHeader: function(/*DOM node*/summaryHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the summary  node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the summary node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// summaryHeaderNode:
+		//
+		//	summaryHeaderNode:
 		//		The DOM node to attach the summary title to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.summary && entry.summary.value && entry.summary.value !== null){
-			var _nlsResources = i18nViewer;
-			var summaryHeader = new EntryHeader({title: _nlsResources.summary});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var summaryHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.summary});
 			summaryHeaderNode.appendChild(summaryHeader.domNode);
 		}
 	},
 
 
-	setSummary: function(/*DOMNode*/ summaryAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setSummary: function(/*DOM node*/summaryAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the summary  node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the summary node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// summaryAnchorNode:
+		//
+		//	summaryAnchorNode:
 		//		The DOM node to attach the summary data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.summary && entry.summary.value && entry.summary.value !== null){
 			var summaryViewNode = document.createElement("span");
-			var summaryView = new ContentPane({refreshOnShow: true, executeScripts: false}, summaryViewNode);
+			var summaryView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false}, summaryViewNode);
 			summaryView.attr('content', entry.summary.value);
 			summaryAnchorNode.appendChild(summaryView.domNode);
 			this.setFieldValidity("summary", true);
 		}
 	},
 
-	setContentHeader: function(/*DOMNode*/ contentHeaderNode, /*object*/entry){
-		// summary:
+	setContentHeader: function(/*DOM node*/contentHeaderNode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the content node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the content node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// contentHeaderNode:
+		//
+		//	contentHeaderNode:
 		//		The DOM node to attach the content data to.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.content && entry.content.value && entry.content.value !== null){
-			var _nlsResources = i18nViewer;
-			var contentHeader = new EntryHeader({title: _nlsResources.content});
+			var _nlsResources = dojo.i18n.getLocalization("dojox.atom.widget", "FeedEntryViewer");
+			var contentHeader = new dojox.atom.widget.EntryHeader({title: _nlsResources.content});
 			contentHeaderNode.appendChild(contentHeader.domNode);
 		}
 	},
 
-	setContent: function(/*DOMNode*/ contentAnchorNode, /*boolean*/editMode, /*object*/entry){
-		// summary:
+	setContent: function(/*DOM node*/contentAnchorNode, /*boolean*/editMode, /*object*/entry){
+		//	summary:
 		//		Function to set the contents of the content node in the template to some value from the entry.
-		// description:
+		//	description:
 		//		Function to set the contents of the content node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		// contentAnchorNode:
+		//
+		//	contentAnchorNode:
 		//		The DOM node to attach the content data to.
-		// editMode:
+		//	editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
-		// entry:
+		//	entry:
 		//		The Feed Entry to work with.
 		if(entry.content && entry.content.value && entry.content.value !== null){
 			var contentViewNode = document.createElement("span");
-			var contentView = new ContentPane({refreshOnShow: true, executeScripts: false},contentViewNode);
+			var contentView = new dijit.layout.ContentPane({refreshOnShow: true, executeScripts: false},contentViewNode);
 			contentView.attr('content', entry.content.value);
 			contentAnchorNode.appendChild(contentView.domNode);
 			this.setFieldValidity("content", true);
@@ -477,51 +489,58 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 
 
 	_displaySections: function(){
-		// summary:
+		//	summary:
 		//		Internal function for determining which sections of the view to actually display.
-		// returns:
-		//		Nothing.
-		domStyle.set(this.entryTitleRow, 'display', 'none');
-		domStyle.set(this.entryAuthorRow, 'display', 'none');
-		domStyle.set(this.entryContributorRow, 'display', 'none');
-		domStyle.set(this.entrySummaryRow, 'display', 'none');
-		domStyle.set(this.entryContentRow, 'display', 'none');
-		domStyle.set(this.entryIdRow, 'display', 'none');
-		domStyle.set(this.entryUpdatedRow, 'display', 'none');
+		//	description:
+		//		Internal function for determining which sections of the view to actually display.
+		//
+		//	returns:
+		//		Nothing. 
+		dojo.style(this.entryTitleRow, 'display', 'none');
+		dojo.style(this.entryAuthorRow, 'display', 'none');
+		dojo.style(this.entryContributorRow, 'display', 'none');
+		dojo.style(this.entrySummaryRow, 'display', 'none');
+		dojo.style(this.entryContentRow, 'display', 'none');
+		dojo.style(this.entryIdRow, 'display', 'none');
+		dojo.style(this.entryUpdatedRow, 'display', 'none');
 
 		for(var i in this._displayEntrySections){
 			var section = this._displayEntrySections[i].toLowerCase();
 			if(section === "title" && this.isFieldValid("title")){
-				domStyle.set(this.entryTitleRow, 'display', '');
+				dojo.style(this.entryTitleRow, 'display', '');
 			}
 			if(section === "authors" && this.isFieldValid("authors")){
-				domStyle.set(this.entryAuthorRow, 'display', '');
+				dojo.style(this.entryAuthorRow, 'display', '');
 			}
 			if(section === "contributors" && this.isFieldValid("contributors")){
-				domStyle.set(this.entryContributorRow, 'display', '');
+				dojo.style(this.entryContributorRow, 'display', '');
 			}
 			if(section === "summary" && this.isFieldValid("summary")){
-				domStyle.set(this.entrySummaryRow, 'display', '');
+				dojo.style(this.entrySummaryRow, 'display', '');
 			}
 			if(section === "content" && this.isFieldValid("content")){
-				domStyle.set(this.entryContentRow, 'display', '');
+				dojo.style(this.entryContentRow, 'display', '');
 			}
 			if(section === "id" && this.isFieldValid("id")){
-				domStyle.set(this.entryIdRow, 'display', '');
+				dojo.style(this.entryIdRow, 'display', '');
 			}
 			if(section === "updated" && this.isFieldValid("updated")){
-				domStyle.set(this.entryUpdatedRow, 'display', '');
+				dojo.style(this.entryUpdatedRow, 'display', '');
 			}
 
 		}
 	},
 
 	setDisplaySections: function(/*array*/sectionsArray){
-		// summary:
+		//	summary:
 		//		Function for setting which sections of the entry should be displayed.
-		// sectionsArray:
+		//	description:
+		//		Function for setting which sections of the entry should be displayed.
+		//
+		//	sectionsArray:
 		//		Array of string names that indicate which sections to display.
-		// returns:
+		//
+		//	returns:
 		//		Nothing.
 		if(sectionsArray !== null){
 			this._displayEntrySections = sectionsArray;
@@ -532,14 +551,17 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	_setDisplaySectionsCheckboxes: function(){
-		// summary:
+		//	summary:
 		//		Internal function for setting which checkboxes on the display are selected.
-		// returns:
+		//	description:
+		//		Internal function for setting which checkboxes on the display are selected.
+		//
+		//	returns:
 		//		Nothing.
 		var items = ["title","authors","contributors","summary","content","id","updated"];
 		for(var i in items){
-			if(arrayUtil.indexOf(this._displayEntrySections, items[i]) == -1){
-				domStyle.set(this["feedEntryCell"+items[i]], 'display', 'none');
+			if(dojo.indexOf(this._displayEntrySections, items[i]) == -1){
+				dojo.style(this["feedEntryCell"+items[i]], 'display', 'none');
 			}else{
 				this["feedEntryCheckBox"+items[i].substring(0,1).toUpperCase()+items[i].substring(1)].checked=true;
 			}
@@ -547,8 +569,13 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	_readDisplaySections: function(){
-		// summary:
+		//	summary:
 		//		Internal function for reading what is currently checked for display and generating the display list from it.
+		//	description:
+		//		Internal function for reading what is currently checked for display and generating the display list from it.
+		//
+		//	returns:
+		//		Nothing.
 		var checkedList = [];
 
 		if(this.feedEntryCheckBoxTitle.checked){
@@ -576,13 +603,17 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	_toggleCheckbox: function(/*object*/checkBox){
-		// summary:
+		//	summary:
 		//		Internal function for determining of a particular entry is editable.
-		// description:
+		//	description:
 		//		Internal function for determining of a particular entry is editable.
 		//		This is used for determining if the delete action should be displayed or not.
-		// checkBox:
+		//
+		//	checkBox:
 		//		The checkbox object to toggle the selection on.
+		//
+		//	returns:
+		//		Nothing
 		if(checkBox.checked){
 			checkBox.checked=false;
 		}else{
@@ -593,50 +624,54 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	_toggleOptions: function(/*object*/checkBox){
-		// summary:
+		//	summary:
 		//		Internal function for determining of a particular entry is editable.
-		// description:
+		//	description:
 		//		Internal function for determining of a particular entry is editable.
 		//		This is used for determining if the delete action should be displayed or not.
-		// checkBox:
+		//
+		//	checkBox:
 		//		The checkbox object to toggle the selection on.
+		//
+		//	returns:
+		//		Nothing
 		if(this.enableMenu){
 			var fade = null;
 			var anim;
 			var anim2;
 			if(this._optionButtonDisplayed){
 				if(this.enableMenuFade){
-					anim = fx.fadeOut({node: this.entryCheckBoxDisplayOptions,duration: 250});
-					connect.connect(anim, "onEnd", this, function(){
-						domStyle.set(this.entryCheckBoxDisplayOptions, 'display', 'none');
-						domStyle.set(this.entryCheckBoxRow, 'display', '');
-						domStyle.set(this.entryCheckBoxRow2, 'display', '');
-						fx.fadeIn({node: this.entryCheckBoxRow, duration: 250}).play();
-						fx.fadeIn({node: this.entryCheckBoxRow2, duration: 250}).play();
+					anim = dojo.fadeOut({node: this.entryCheckBoxDisplayOptions,duration: 250});
+					dojo.connect(anim, "onEnd", this, function(){
+						dojo.style(this.entryCheckBoxDisplayOptions, 'display', 'none');
+						dojo.style(this.entryCheckBoxRow, 'display', '');
+						dojo.style(this.entryCheckBoxRow2, 'display', '');
+						dojo.fadeIn({node: this.entryCheckBoxRow, duration: 250}).play();
+						dojo.fadeIn({node: this.entryCheckBoxRow2, duration: 250}).play();
 					});
 					anim.play();
 				}else{
-					domStyle.set(this.entryCheckBoxDisplayOptions, 'display', 'none');
-					domStyle.set(this.entryCheckBoxRow, 'display', '');
-					domStyle.set(this.entryCheckBoxRow2, 'display', '');
+					dojo.style(this.entryCheckBoxDisplayOptions, 'display', 'none');
+					dojo.style(this.entryCheckBoxRow, 'display', '');
+					dojo.style(this.entryCheckBoxRow2, 'display', '');
 				}
 				this._optionButtonDisplayed=false;
 			}else{
 				if(this.enableMenuFade){
-					anim = fx.fadeOut({node: this.entryCheckBoxRow,duration: 250});
-					anim2 = fx.fadeOut({node: this.entryCheckBoxRow2,duration: 250});
-					connect.connect(anim, "onEnd", this, function(){
-						domStyle.set(this.entryCheckBoxRow, 'display', 'none');
-						domStyle.set(this.entryCheckBoxRow2, 'display', 'none');
-						domStyle.set(this.entryCheckBoxDisplayOptions, 'display', '');
-						fx.fadeIn({node: this.entryCheckBoxDisplayOptions, duration: 250}).play();
+					anim = dojo.fadeOut({node: this.entryCheckBoxRow,duration: 250});
+					anim2 = dojo.fadeOut({node: this.entryCheckBoxRow2,duration: 250});
+					dojo.connect(anim, "onEnd", this, function(){
+						dojo.style(this.entryCheckBoxRow, 'display', 'none');
+						dojo.style(this.entryCheckBoxRow2, 'display', 'none');
+						dojo.style(this.entryCheckBoxDisplayOptions, 'display', '');
+						dojo.fadeIn({node: this.entryCheckBoxDisplayOptions, duration: 250}).play();
 					});
 					anim.play();
 					anim2.play();
 				}else{
-					domStyle.set(this.entryCheckBoxRow, 'display', 'none');
-					domStyle.set(this.entryCheckBoxRow2, 'display', 'none');
-					domStyle.set(this.entryCheckBoxDisplayOptions, 'display', '');
+					dojo.style(this.entryCheckBoxRow, 'display', 'none');
+					dojo.style(this.entryCheckBoxRow2, 'display', 'none');
+					dojo.style(this.entryCheckBoxDisplayOptions, 'display', '');
 				}
 				this._optionButtonDisplayed=true;
 			}
@@ -644,11 +679,15 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	_handleEvent: function(/*object*/entrySelectionEvent){
-		// summary:
+		//	summary:
 		//		Internal function for listening to a topic that will handle entry notification.
-		// entrySelectionEvent:
+		//	description:
+		//		Internal function for listening to a topic that will handle entry notification.
+		//
+		//	entrySelectionEvent:
 		//		The topic message containing the entry that was selected for view.
-		// returns:
+		//
+		//	returns:
 		//		Nothing.
 		if(entrySelectionEvent.source != this){
 			if(entrySelectionEvent.action == "set" && entrySelectionEvent.entry){
@@ -660,17 +699,19 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 
 	setFieldValidity: function(/*string*/field, /*boolean*/isValid){
-		// summary:
+		//	summary:
 		//		Function to set whether a field in the view is valid and displayable.
-		// description:
+		//	description:
 		//		Function to set whether a field in the view is valid and displayable.
 		//		This is needed for over-riding of the set* functions and customization of how data is displayed in the attach point.
 		//		So if custom implementations use their own display logic, they can still enable the field.
-		// field:
+		//
+		//	field:
 		//		The field name to set the valid parameter on.  Such as 'content', 'id', etc.
-		// isValid:
+		//	isValid:
 		//		Flag denoting if the field is valid or not.
-		// returns:
+		//
+		//	returns:
 		//		Nothing.
 		if(field){
 			var lowerField = field.toLowerCase();
@@ -679,11 +720,15 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	},
 	
 	isFieldValid: function(/*string*/field){
-		// summary:
+		//	summary:
 		//		Function to return if a displayable field is valid or not
-		// field:
+		//	description:
+		//		Function to return if a displayable field is valid or not
+		//
+		//	field:
 		//		The field name to get the valid parameter of.  Such as 'content', 'id', etc.
-		// returns:
+		//
+		//	returns:
 		//		boolean denoting if the field is valid and set.
 		return this._validEntryFields[field.toLowerCase()];
 	},
@@ -698,15 +743,17 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 
 	destroy: function(){
 		this.clear();
-		arrayUtil.forEach(this._subscriptions, dojo.unsubscribe);
+		dojo.forEach(this._subscriptions, dojo.unsubscribe);
 	}
 });
 
-var EntryHeader = FeedEntryViewer.EntryHeader = declare("dojox.atom.widget.EntryHeader", [_Widget, _Templated, _Container],{
-	// summary:
+dojo.declare("dojox.atom.widget.EntryHeader",[dijit._Widget, dijit._Templated, dijit._Container],{
+	//	summary:
+	//		Widget representing a header in a FeedEntryViewer/Editor
+	//	description:
 	//		Widget representing a header in a FeedEntryViewer/Editor
 	title: "",
-	templateString: headerTemplate,
+	templateString: dojo.cache("dojox.atom", "widget/templates/EntryHeader.html"),
 
 	postCreate: function(){
 		this.setListHeader();
@@ -733,8 +780,4 @@ var EntryHeader = FeedEntryViewer.EntryHeader = declare("dojox.atom.widget.Entry
 	destroy: function(){
 		this.clear();
 	}
-});
-
-
-return FeedEntryViewer;
 });

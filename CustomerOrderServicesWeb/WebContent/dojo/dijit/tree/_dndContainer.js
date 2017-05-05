@@ -1,113 +1,103 @@
-define([
-	"dojo/aspect", // aspect.after
-	"dojo/_base/declare", // declare
-	"dojo/dom-class", // domClass.add domClass.remove domClass.replace
-	"dojo/_base/lang", // lang.mixin lang.hitch
-	"dojo/on",
-	"dojo/touch"
-], function(aspect, declare, domClass, lang, on, touch){
+dojo.provide("dijit.tree._dndContainer");
+dojo.require("dojo.dnd.common");
+dojo.require("dojo.dnd.Container");
 
-	// module:
-	//		dijit/tree/_dndContainer
-
-	/*=====
-	 var __Args = {
-	 // summary:
-	 //		A dict of parameters for Tree source configuration.
-	 // isSource: Boolean?
-	 //		Can be used as a DnD source. Defaults to true.
-	 // accept: String[]
-	 //		List of accepted types (text strings) for a target; defaults to
-	 //		["text", "treeNode"]
-	 // copyOnly: Boolean?
-	 //		Copy items, if true, use a state of Ctrl key otherwise,
-	 // dragThreshold: Number
-	 //		The move delay in pixels before detecting a drag; 0 by default
-	 // betweenThreshold: Integer
-	 //		Distance from upper/lower edge of node to allow drop to reorder nodes
-	 };
-	 =====*/
-
-	return declare("dijit.tree._dndContainer", null, {
+dojo.declare("dijit.tree._dndContainer",
+	null,
+	{
 
 		// summary:
-		//		This is a base class for `dijit/tree/_dndSelector`, and isn't meant to be used directly.
-		//		It's modeled after `dojo/dnd/Container`.
+		//		This is a base class for `dijit.tree._dndSelector`, and isn't meant to be used directly.
+		//		It's modeled after `dojo.dnd.Container`.
 		// tags:
 		//		protected
 
 		/*=====
-		 // current: TreeNode
-		 //		The currently hovered TreeNode.  Not set to anything for keyboard operation.  (TODO: change?)
-		 current: null,
-		 =====*/
+		// current: DomNode
+		//		The currently hovered TreeNode.rowNode (which is the DOM node
+		//		associated w/a given node in the tree, excluding it's descendants)
+		current: null,
+		=====*/
 
 		constructor: function(tree, params){
 			// summary:
 			//		A constructor of the Container
 			// tree: Node
 			//		Node or node's id to build the container on
-			// params: __Args
+			// params: dijit.tree.__SourceArgs
 			//		A dict of parameters, which gets mixed into the object
 			// tags:
 			//		private
 			this.tree = tree;
 			this.node = tree.domNode;	// TODO: rename; it's not a TreeNode but the whole Tree
-			lang.mixin(this, params);
+			dojo.mixin(this, params);
+
+			// class-specific variables
+			this.map = {};
+			this.current = null;	// current TreeNode's DOM node
 
 			// states
 			this.containerState = "";
-			domClass.add(this.node, "dojoDndContainer");
+			dojo.addClass(this.node, "dojoDndContainer");
 
 			// set up events
 			this.events = [
-				// Mouse (or touch) enter/leave on Tree itself
-				on(this.node, touch.enter, lang.hitch(this, "onOverEvent")),
-				on(this.node, touch.leave, lang.hitch(this, "onOutEvent")),
+				// container level events
+				dojo.connect(this.node, "onmouseenter", this, "onOverEvent"),
+				dojo.connect(this.node, "onmouseleave",	this, "onOutEvent"),
 
 				// switching between TreeNodes
-				aspect.after(this.tree, "_onNodeMouseEnter", lang.hitch(this, "onMouseOver"), true),
-				aspect.after(this.tree, "_onNodeMouseLeave", lang.hitch(this, "onMouseOut"), true),
+				dojo.connect(this.tree, "_onNodeMouseEnter", this, "onMouseOver"),
+				dojo.connect(this.tree, "_onNodeMouseLeave", this, "onMouseOut"),
 
 				// cancel text selection and text dragging
-				on(this.node, "dragstart, selectstart", function(evt){
-					evt.preventDefault();
-				})
+				dojo.connect(this.node, "ondragstart", dojo, "stopEvent"),
+				dojo.connect(this.node, "onselectstart", dojo, "stopEvent")
 			];
+		},
+
+		getItem: function(/*String*/ key){
+			// summary:
+			//		Returns the dojo.dnd.Item (representing a dragged node) by it's key (id).
+			//		Called by dojo.dnd.Source.checkAcceptance().
+			// tags:
+			//		protected
+
+			var node = this.selection[key],
+				ret = {
+					data: dijit.getEnclosingWidget(node),
+					type: ["treeNode"]
+				};
+
+			return ret;	// dojo.dnd.Item
 		},
 
 		destroy: function(){
 			// summary:
 			//		Prepares this object to be garbage-collected
 
-			var h;
-			while(h = this.events.pop()){
-				h.remove();
-			}
-
+			dojo.forEach(this.events, dojo.disconnect);
 			// this.clearItems();
 			this.node = this.parent = null;
 		},
 
 		// mouse events
-		onMouseOver: function(widget /*===== , evt =====*/){
+		onMouseOver: function(/*TreeNode*/ widget, /*Event*/ evt){
 			// summary:
 			//		Called when mouse is moved over a TreeNode
-			// widget: TreeNode
-			// evt: Event
 			// tags:
 			//		protected
-			this.current = widget;
+			this.current = widget.rowNode;
+			this.currentWidget = widget;
 		},
 
-		onMouseOut: function(/*===== widget, evt =====*/){
+		onMouseOut: function(/*TreeNode*/ widget, /*Event*/ evt){
 			// summary:
 			//		Called when mouse is moved away from a TreeNode
-			// widget: TreeNode
-			// evt: Event
 			// tags:
 			//		protected
 			this.current = null;
+			this.currentWidget = null;
 		},
 
 		_changeState: function(type, newState){
@@ -119,8 +109,9 @@ define([
 			//		new state
 			var prefix = "dojoDnd" + type;
 			var state = type.toLowerCase() + "State";
-			//domClass.replace(this.node, prefix + newState, prefix + this[state]);
-			domClass.replace(this.node, prefix + newState, prefix + this[state]);
+			//dojo.replaceClass(this.node, prefix + newState, prefix + this[state]);
+			dojo.removeClass(this.node, prefix + this[state]);
+			dojo.addClass(this.node, prefix + newState);
 			this[state] = newState;
 		},
 
@@ -131,7 +122,7 @@ define([
 			//		A node
 			// type: String
 			//		A variable suffix for a class name
-			domClass.add(node, "dojoDndItem" + type);
+			dojo.addClass(node, "dojoDndItem" + type);
 		},
 
 		_removeItemClass: function(node, type){
@@ -141,7 +132,7 @@ define([
 			//		A node
 			// type: String
 			//		A variable suffix for a class name
-			domClass.remove(node, "dojoDndItem" + type);
+			dojo.removeClass(node, "dojoDndItem" + type);
 		},
 
 		onOverEvent: function(){
@@ -159,5 +150,4 @@ define([
 			//		protected
 			this._changeState("Container", "");
 		}
-	});
 });

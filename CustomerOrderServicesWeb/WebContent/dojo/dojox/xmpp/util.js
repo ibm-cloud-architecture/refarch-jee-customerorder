@@ -7,75 +7,75 @@ dojox.xmpp.util.xmlEncode = function(str) {
 		str = str.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;").replace("'", "&apos;").replace('"', "&quot;");
 	}
 	return str;
-};
+}
 
 dojox.xmpp.util.encodeJid = function(jid) {
-	var buffer = new dojox.string.Builder();
-	for(var i =0; i < jid.length; i++) {
-		var ch = jid.charAt(i);
-		var rep = ch;
-		switch(ch){
-			case ' ' :
-				rep = "\\20";
-			break;
-			case '"' :
-				rep = "\\22";
-			break;
-			case '#' :
-				rep = "\\23";
-			break;
-			case '&' :
-				rep = "\\26";
-			break;
-			case "'" :
-				rep = "\\27";
-			break;
-			case '/' :
-				rep = "\\2f";
-			break;
-			case ':' :
-				rep = "\\3a";
-			break;
-			case '<' :
-				rep = "\\3c";
-			break;
-			case '>' :
-				rep = "\\3e";
-			break;
+		var buffer = new dojox.string.Builder();
+		for(var i =0; i < jid.length; i++) {
+			var ch = jid.charAt(i);
+			var rep = ch;
+			switch(ch){
+				case ' ' : 
+					rep = "\\20";
+				break;
+				case '"' :
+					rep = "\\22"; 
+				break;
+				case '#' :
+					rep = "\\23"; 
+				break;
+				case '&' :
+					rep = "\\26"; 
+				break;
+				case "'" :
+					rep = "\\27"; 
+				break;
+				case '/' :
+					rep = "\\2f"; 
+				break;
+				case ':' :
+					rep = "\\3a"; 
+				break;
+				case '<' :
+					rep = "\\3c"; 
+				break;
+				case '>' :
+					rep = "\\3e"; 
+				break;			
+			}
+			buffer.append(rep);
 		}
-		buffer.append(rep);
+		return buffer.toString();
 	}
-	return buffer.toString();
-};
 
 dojox.xmpp.util.decodeJid = function(jid) {
 	
 	jid = jid.replace(/\\([23][02367acef])/g, function(match) {
 			switch(match){
-				case "\\20" :
+				case "\\20" : 
 					return  ' ';
 				case "\\22"  :
-					return '"';
+					return '"'; 
 				case "\\23" :
-					return '#' ;
+					return '#' ; 
 				case "\\26" :
-					return  '&';
+					return  '&'; 
 				case "\\27" :
-					return   "'";
+					return   "'"; 
 				case "\\2f" :
-					return  '/';
+					return  '/'; 
 				case "\\3a" :
-					return ':' ;
+					return ':' ; 
 				case "\\3c" :
-					return  '<';
+					return  '<'; 
 				case "\\3e" :
-					return  '>';
+					return  '>'; 
 			}
 			return "ARG";
 	});
 	
 	return jid;
-};
+}
 
 
 dojox.xmpp.util.createElement = function(tag, attributes, terminal){
@@ -86,42 +86,41 @@ dojox.xmpp.util.createElement = function(tag, attributes, terminal){
 		elem.append(attr + '="');
 		elem.append(attributes[attr]);
 		elem.append('" ');
-	}
+	}	
 	
 	if (terminal){
-		elem.append("/>");
+		elem.append("/>");		
 	}else{
 		elem.append(">");
 	}
 
 	return elem.toString();
-};
+}
 
 dojox.xmpp.util.stripHtml = function(str){
-	// summary:
+	// summary
 	//		Strips all HTML, including attributes and brackets
 	//		| <div onmouse="doBadThing()">Click <b>Me</b></div>
 	//		| becomes: Click Me
 	var re=/<[^>]*?>/gi;
 	for (var i=0; i<arguments.length; i++) {}
 	return str.replace(re, "");
-};
+}
 
 dojox.xmpp.util.decodeHtmlEntities = function(str){
-	// summary:
-	//		decodes HTML entities to js characters so the string can be
-	//		fed to a textarea.value
+	// Summary: decodes HTML entities to js characters so the string can be 
+	// fed to a textarea.value
 	var ta = dojo.doc.createElement("textarea");
 	ta.innerHTML = str.replace(/</g,"&lt;").replace(/>/g,"&gt;");
 	return ta.value;
-};
+}
 
 dojox.xmpp.util.htmlToPlain = function(str){
 	str = dojox.xmpp.util.decodeHtmlEntities(str);
 	str = str.replace(/<br\s*[i\/]{0,1}>/gi,"\n");
 	str = dojox.xmpp.util.stripHtml(str);
 	return str;
-};
+}
 
 dojox.xmpp.util.Base64 = {};
 
@@ -134,7 +133,7 @@ dojox.xmpp.util.Base64.encode = function(input){
 		return b;
 	};
 	return dojox.encoding.base64.encode(s2b(input));
-};
+}
 
 
 dojox.xmpp.util.Base64.decode = function(input){
@@ -144,4 +143,4 @@ dojox.xmpp.util.Base64.decode = function(input){
 		return s.join("");
 	};
 	return b2s(dojox.encoding.base64.decode(input));
-};
+}

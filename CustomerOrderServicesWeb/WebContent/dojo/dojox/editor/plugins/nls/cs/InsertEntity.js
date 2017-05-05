@@ -1,5 +1,4 @@
-define(
 ({
 	insertEntity: "Vložit symbol"
 })
-);
+

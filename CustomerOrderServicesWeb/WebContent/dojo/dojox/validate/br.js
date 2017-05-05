@@ -1,13 +1,14 @@
-define(["dojo/_base/lang", "./_base"], function(lang, validate){
+dojo.provide("dojox.validate.br");
+dojo.require("dojox.validate._base");
 
-var br = lang.getObject("br", true, validate);
-br.isValidCnpj = function(/*String*/value){
-	// summary:
+dojox.validate.br.isValidCnpj = function(/*String*/value){
+	// summary: 
 	//		Validates a CNPJ/CGC number
+	//
 	// value: String
 	//		The CNPJ/CGC number in ##.###.###/####-##, ########/####-##,
 	//		############-## or ############## format
-	if(!lang.isString(value)){
+	if(!dojo.isString(value)){
 		if(!value){
 			return false;
 		}
@@ -24,8 +25,8 @@ br.isValidCnpj = function(/*String*/value){
 			"##############"
 		]
 	};
-	if(validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the
+	if(dojox.validate.isNumberFormat(value, flags)){
+		// Matched the initial test, so break this down into the 
 		// parts to be validated.
 		value = value.replace("/", "").replace(/\./g, "").replace("-", "");
 		var cgc = [];
@@ -37,7 +38,7 @@ br.isValidCnpj = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i;
+				tmp += "" + i; 
 			}
 			if(value === tmp){
 				return false;
@@ -57,7 +58,7 @@ br.isValidCnpj = function(/*String*/value){
 		for(i = 0; i < cgc.length; i++){
 			sum += cgc[i] * base[i];
 		}
-		var dv0 = calcDv(sum);
+		var dv0 = sum % 11;
 		if(dv0 == dv[0]){
 			// Still seems valid, keep going.
 			sum = 0;
@@ -66,7 +67,7 @@ br.isValidCnpj = function(/*String*/value){
 			for(i = 0; i < cgc.length; i++){
 				sum += cgc[i] * base[i];
 			}
-			var dv1 = calcDv(sum);
+			var dv1 = sum % 11;
 			if(dv1 === dv[1]){
 				// Whew, looks valid.
 				return true;
@@ -76,12 +77,11 @@ br.isValidCnpj = function(/*String*/value){
 	return false;
 };
 
-br.computeCnpjDv = function(/*String*/value){
-	// summary:
-	//		Generate the DV code (checksum part) for a Cnpj number
-	// value:
-	//		The CGC number in ##.###.###/#### or ############ format
-	if(!lang.isString(value)){
+dojox.validate.br.computeCnpjDv = function(/*String*/value){
+	// summary: Generate the DV code (checksum part) for a Cnpj number
+	//
+	// value: The CGC number in ##.###.###/#### or ############ format
+	if(!dojo.isString(value)){
 		if(!value){
 			return "";
 		}
@@ -97,8 +97,8 @@ br.computeCnpjDv = function(/*String*/value){
 			"############"
 		]
 	};
-	if(validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the
+	if(dojox.validate.isNumberFormat(value, flags)){
+		// Matched the initial test, so break this down into the 
 		// parts to compute the DV.
 		value = value.replace("/", "").replace(/\./g, "");
 		var cgc = [];
@@ -109,7 +109,7 @@ br.computeCnpjDv = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i;
+				tmp += "" + i; 
 			}
 			if(value === tmp){
 				return "";
@@ -124,27 +124,28 @@ br.computeCnpjDv = function(/*String*/value){
 		for(i = 0; i < cgc.length; i++){
 			sum += cgc[i] * base[i];
 		}
-		var dv0 = calcDv(sum);
+		var dv0 = sum % 11;
 		sum = 0;
 		base = [9,8,7,6,5,4,3,2,9,8,7,6,5].reverse();
 		cgc.push(dv0);
 		for(i = 0; i < cgc.length; i++){
 			sum += cgc[i] * base[i];
 		}
-		var dv1 = calcDv(sum);
+		var dv1 = sum % 11;
 		return ("" + dv0) + dv1;
 	}
 	return "";
 };
 
 
-br.isValidCpf = function(/*String*/value){
-	// summary:
+dojox.validate.br.isValidCpf = function(/*String*/value){
+	// summary: 
 	//		Validates a CPF number
+	//
 	// value: String
 	//		The CPF number in #########-## or ###########,
 	//		format
-	if(!lang.isString(value)){
+	if(!dojo.isString(value)){
 		if(!value){
 			return false;
 		}
@@ -160,8 +161,8 @@ br.isValidCpf = function(/*String*/value){
 			"###########"
 		]
 	};
-	if(validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the
+	if(dojox.validate.isNumberFormat(value, flags)){
+		// Matched the initial test, so break this down into the 
 		// parts to be validated.
 		value = value.replace("-", "").replace(/\./g, "");
 		var cpf = [];
@@ -173,7 +174,7 @@ br.isValidCpf = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i;
+				tmp += "" + i; 
 			}
 			if(value === tmp){
 				return false;
@@ -193,7 +194,7 @@ br.isValidCpf = function(/*String*/value){
 		for(i = 0; i < cpf.length; i++){
 			sum += cpf[i] * base[i];
 		}
-		var dv0 = calcDv(sum);
+		var dv0 = sum % 11;
 		if(dv0 == dv[0]){
 			// Still seems valid, keep going.
 			sum = 0;
@@ -202,7 +203,7 @@ br.isValidCpf = function(/*String*/value){
 			for(i = 0; i < cpf.length; i++){
 				sum += cpf[i] * base[i];
 			}
-			var dv1 = calcDv(sum);
+			var dv1 = sum % 11;
 			if(dv1 === dv[1]){
 				// Whew, looks valid.
 				return true;
@@ -212,12 +213,13 @@ br.isValidCpf = function(/*String*/value){
 	return false;
 };
 
-br.computeCpfDv = function(/*String*/value){
-	// summary:
+dojox.validate.br.computeCpfDv = function(/*String*/value){
+	// summary: 
 	//		Generate the DV code (checksum part) for a CPF number
+	//
 	// value: String
 	//		The CPF number in ######### format
-	if(!lang.isString(value)){
+	if(!dojo.isString(value)){
 		if(!value){
 			return "";
 		}
@@ -232,8 +234,8 @@ br.computeCpfDv = function(/*String*/value){
 			"#########"
 		]
 	};
-	if(validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the
+	if(dojox.validate.isNumberFormat(value, flags)){
+		// Matched the initial test, so break this down into the 
 		// parts to compute the DV.
 		value = value.replace(/\./g, "");
 		var cpf = [];
@@ -243,7 +245,7 @@ br.computeCpfDv = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i;
+				tmp += "" + i; 
 			}
 			if(value === tmp){
 				return "";
@@ -258,27 +260,16 @@ br.computeCpfDv = function(/*String*/value){
 		for(i = 0; i < cpf.length; i++){
 			sum += cpf[i] * base[i];
 		}
-		var dv0 = calcDv(sum);
+		var dv0 = sum % 11;
 		sum = 0;
 		base = [9,8,7,6,5,4,3,2,1,0].reverse();
 		cpf.push(dv0);
 		for(i = 0; i < cpf.length; i++){
 			sum += cpf[i] * base[i];
 		}
-		var dv1 = calcDv(sum);
+		var dv1 = sum % 11;
 		return ("" + dv0) + dv1;
 	}
 	return "";
 };
 
-var calcDv = function(/*Number*/sum) {
-	var dv = sum % 11;
-	//If dv is 10, it is represented as 0:
-	if (dv === 10) {
-		dv = 0;
-	}
-	return dv;
-};
-
-return br;
-});

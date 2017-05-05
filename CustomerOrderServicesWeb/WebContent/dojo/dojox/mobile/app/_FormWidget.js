@@ -3,18 +3,17 @@ dojo.experimental("dojox.mobile.app._FormWidget");
 
 dojo.require("dojo.window");
 
-dojo.require("dijit._WidgetBase");
-dojo.require("dijit.focus");	// dijit.focus()
+dojo.require("dijit._Widget");
 
-dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
+dojo.declare("dojox.mobile.app._FormWidget", dijit._Widget, {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as `<checkbox>` or `<button>`,
-	//		which can be children of a `<form>` node or a `dojox.mobile.app.Form` widget.
+	//		Base class for widgets corresponding to native HTML elements such as <checkbox> or <button>,
+	//		which can be children of a <form> node or a `dojox.mobile.app.Form` widget.
 	//
 	// description:
 	//		Represents a single HTML element.
 	//		All these widgets should have these attributes just like native HTML input elements.
-	//		You can set them during widget construction or afterwards, via `dijit._WidgetBase.attr`.
+	//		You can set them during widget construction or afterwards, via `dijit._Widget.attr`.
 	//
 	//		They also share some common methods.
 
@@ -23,15 +22,15 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	name: "",
 
 	// alt: String
-	//		Corresponds to the native HTML `<input>` element's attribute.
+	//		Corresponds to the native HTML <input> element's attribute.
 	alt: "",
 
 	// value: String
-	//		Corresponds to the native HTML `<input>` element's attribute.
+	//		Corresponds to the native HTML <input> element's attribute.
 	value: "",
 
 	// type: String
-	//		Corresponds to the native HTML `<input>` element's attribute.
+	//		Corresponds to the native HTML <input> element's attribute.
 	type: "text",
 
 	// disabled: Boolean
@@ -48,7 +47,7 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	scrollOnFocus: false,
 
 	// These mixins assume that the focus node is an INPUT, as many but not all _FormWidgets are.
-	attributeMap: dojo.delegate(dijit._WidgetBase.prototype.attributeMap, {
+	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
 		value: "focusNode",
 		id: "focusNode",
 		alt: "focusNode",
@@ -74,6 +73,13 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 		dojo.attr(this.focusNode, 'disabled', value);
 		if(this.valueNode){
 			dojo.attr(this.valueNode, 'disabled', value);
+		}
+
+		if(value){
+			// reset these, because after the domNode is disabled, we can no longer receive
+			// mouse related events, see #4200
+			this._hovering = false;
+			this._active = false;
 		}
 	},
 
@@ -216,10 +222,9 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 dojo.declare("dojox.mobile.app._FormValueWidget", dojox.mobile.app._FormWidget,
 {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as `<input>` or `<select>`
-	//		that have user changeable values.
+	//		Base class for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
 	// description:
-	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) `<input>` element,
+	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) <input> element,
 	//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 	//		works as expected.
 

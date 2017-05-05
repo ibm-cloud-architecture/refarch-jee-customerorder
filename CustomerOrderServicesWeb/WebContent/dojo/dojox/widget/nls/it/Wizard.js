@@ -1,7 +1,5 @@
-define(
 ({
 next: "Successivo",
-previous: "Indietro",
-done: "Fine"
+previous: "Precedente",
+done: "Eseguito"
 })
-);

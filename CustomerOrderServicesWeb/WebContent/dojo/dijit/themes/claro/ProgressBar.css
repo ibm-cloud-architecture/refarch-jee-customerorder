@@ -24,48 +24,30 @@
  *		.dijitProgressBarIndeterminate .dijitProgressBarTile 
  * 		sets animated gif for the progress bar in 'indeterminate' mode
  */
+ 
 .claro .dijitProgressBar {
-  margin: 2px 0 2px 0;
+	margin:2px 0px 2px 0px;
 }
 .claro .dijitProgressBarEmpty {
-  /* outer container and background of the bar that's not finished yet*/
-
-  background-color: #ffffff;
-  border-color: #759dc0;
+	/* outer container and background of the bar that's not finished yet*/
+	background:#fff url("images/progressBarEmpty.png") repeat-none left;
+	border-color: #769dc0;
 }
 .claro .dijitProgressBarTile {
-  /* inner container for finished portion when in 'tile' (image) mode */
-
-  background-color: #abd6ff;
-  background-image: url("images/progressBarFull.png");
-  background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
-  background-attachment: scroll;
+	/* inner container for finished portion when in 'tile' (image) mode */
+	background:#9dcfff url("images/progressBarFull.png") repeat-x top;	
 }
 .dj_ie6 .claro .dijitProgressBarTile {
-  background-image: none;
-}
+	background-image: none;
+} 
 .claro .dijitProgressBarFull {
-  border: 0px solid #759dc0;
-  border-right-width: 1px;
-  -webkit-transition-property: width;
-  -moz-transition-property: width;
-  transition-property: width;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  transition-duration: 0.25s;
+	border-right:1px solid #769dc0;
 }
 .claro .dijitProgressBarLabel {
-  /* Set to a color that contrasts with both the "Empty" and "Full" parts. */
-
-  color: #000000;
+	/* Set to a color that contrasts with both the "Empty" and "Full" parts. */
+	color:#293a4b;
 }
 .claro .dijitProgressBarIndeterminate .dijitProgressBarTile {
-  /* use an animated gif for the progress bar in 'indeterminate' mode;
-		background-color won't appear unless user has turned off background images */
-
-  background: #efefef url("images/progressBarAnim.gif") repeat-x top;
-}
+	/* use an animated gif for the progress bar in 'indeterminate' mode */
+	background:#cad2de url("images/progressBarAnim.gif") repeat-x top;
+} 

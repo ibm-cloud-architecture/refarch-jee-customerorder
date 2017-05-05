@@ -1,6 +1,5 @@
-define(
 ({
-		previousMessage: "Predchádzajúce možnosti",
-		nextMessage: "Viac možností"
+		previousMessage: "Predchádzajúce voľby",
+		nextMessage: "Ďalšie voľby"
 })
-);
+

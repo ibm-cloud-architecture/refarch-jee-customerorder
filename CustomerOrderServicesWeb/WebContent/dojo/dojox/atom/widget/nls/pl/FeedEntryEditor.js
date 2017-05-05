@@ -1,8 +1,6 @@
-define(
 ({
-	doNew: "[nowy]",
-	edit: "[edytuj]",
-	save: "[zapisz]",
-	cancel: "[anuluj]"
+	doNew: "[Nowy]",
+	edit: "[Edytuj]",
+	save: "[Zapisz]",
+	cancel: "[Anuluj]"
 })
-);

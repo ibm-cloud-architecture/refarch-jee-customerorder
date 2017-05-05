@@ -1,27 +1,26 @@
-define(
 ({
 	'bold': 'Aldin',
 	'copy': 'Copiere',
 	'cut': 'Tăiere',
 	'delete': 'Ştergere',
-	'indent': 'Micşorare indent',
+	'indent': 'Indentare',
 	'insertHorizontalRule': 'Linie delimitatoare',
 	'insertOrderedList': 'Listă numerotată',
 	'insertUnorderedList': 'Listă cu marcator',
 	'italic': 'Cursiv',
 	'justifyCenter': 'Aliniere centru',
-	'justifyFull': 'Aliniere stânga-dreapta',
+	'justifyFull': 'Justify',
 	'justifyLeft': 'Aliniere stânga',
 	'justifyRight': 'Aliniere dreapta',
-	'outdent': 'Mărire indent',
+	'outdent': 'Outdent',
 	'paste': 'Lipire',
-	'redo': 'Refacere acţiune',
+	'redo': 'Refacere',
 	'removeFormat': 'Înlăturare format',
 	'selectAll': 'Selectează tot',
-	'strikethrough': 'Tăiere text cu o linie',
+	'strikethrough': 'Tăiere',
 	'subscript': 'Scriere indice inferior',
 	'superscript': 'Scriere indice superior',
-	'underline': 'Subliniere',
+	'underline': 'Liniuţă de subliniere',
 	'undo': 'Anulare acţiune',
 	'unlink': 'Înlăturare legătură',
 	'createLink': 'Creare legătură',
@@ -44,8 +43,6 @@ define(
 	"print": "Tipărire",
 	"newPage": "Pagină nouă",
 	/* Error messages */
-	'systemShortcut': 'Acţiunea "${0}" este disponibilă în browser doar utilizând o comandă rapidă de la tastatură. Utilizaţi ${1}.',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'Acţiunea "${0}" este disponibilă în browser-ul dvs. doar utilizând o comandă rapidă de la tastatură. Utilizaţi ${1}.'
 })
-);
+

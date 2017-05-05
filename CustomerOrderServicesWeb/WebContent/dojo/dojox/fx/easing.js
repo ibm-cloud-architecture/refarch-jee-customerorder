@@ -1,13 +1,10 @@
-define(["dojo/_base/lang", "dojo/_base/kernel", "dojo/fx/easing"],
-  function(lang,kernel,easing){
-	kernel.deprecated("dojox.fx.easing","Upgraded to Core, use dojo.fx.easing instead","2.0");
-	var fxExt = lang.getObject("dojox.fx",true);
-	fxExt.easing = easing;
+dojo.provide("dojox.fx.easing");
+dojo.deprecated("dojox.fx.easing","Upgraded to Core, use dojo.fx.easing instead","2.0");
+dojo.require("dojo.fx.easing");
 /*=====
-	return {
+	dojox.fx.easing = {
 		// summary:
 		//		An Alias to `dojo.fx.easing`. Moved to Core in Dojo 1.2.
 	};
 =====*/
-	return easing;
-});
+dojox.fx.easing = dojo.fx.easing;

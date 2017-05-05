@@ -1,9 +1,25 @@
-define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
-// Note: This doesn't require dojox.rpc.Service, and if you want it you must require it
+dojo.provide("dojox.rpc.Rest"); 
+// Note: This doesn't require dojox.rpc.Service, and if you want it you must require it 
 // yourself, and you must load it prior to dojox.rpc.Rest.
 
-  dojo.getObject("rpc.Rest", true, dojox);
-
+// summary:
+// 		This provides a HTTP REST service with full range REST verbs include PUT,POST, and DELETE.
+// description:
+// 		A normal GET query is done by using the service directly:
+// 		| var restService = dojox.rpc.Rest("Project");
+// 		| restService("4");
+//		This will do a GET for the URL "/Project/4".
+//		| restService.put("4","new content");
+//		This will do a PUT to the URL "/Project/4" with the content of "new content".
+//		You can also use the SMD service to generate a REST service:
+// 		| var services = dojox.rpc.Service({services: {myRestService: {transport: "REST",...
+// 		| services.myRestService("parameters");
+//
+// 		The modifying methods can be called as sub-methods of the rest service method like:
+//  	| services.myRestService.put("parameters","data to put in resource");
+//  	| services.myRestService.post("parameters","data to post to the resource");
+//  	| services.myRestService['delete']("parameters");
+(function(){
 	if(dojox.rpc && dojox.rpc.transportRegistry){
 		// register it as an RPC service if the registry is available
 		dojox.rpc.transportRegistry.register(
@@ -18,12 +34,6 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 						function(id, args){
 							var request = svc._getRequest(method,[id]);
 							request.url= request.target + (request.data ? '?'+  request.data : '');
-							if(args && (args.start >= 0 || args.count >= 0)){
-								request.headers = request.headers || {};
-								request.headers.Range = "items=" + (args.start || '0') + '-' +
-									(("count" in args && args.count != Infinity) ?
-										(args.count + (args.start || 0) - 1) : '');
-							}
 							return request;
 						}
 					);
@@ -46,23 +56,7 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 	}
 	drr = dojox.rpc.Rest = function(/*String*/path, /*Boolean?*/isJson, /*Object?*/schema, /*Function?*/getRequest){
 		// summary:
-		//		This provides a HTTP REST service with full range REST verbs include PUT,POST, and DELETE.
-		// description:
-		//		A normal GET query is done by using the service directly:
-		//		| var restService = dojox.rpc.Rest("Project");
-		//		| restService("4");
-		//		This will do a GET for the URL "/Project/4".
-		//		| restService.put("4","new content");
-		//		This will do a PUT to the URL "/Project/4" with the content of "new content".
-		//		You can also use the SMD service to generate a REST service:
-		//		| var services = dojox.rpc.Service({services: {myRestService: {transport: "REST",...
-		//		| services.myRestService("parameters");
-		//
-		//		The modifying methods can be called as sub-methods of the rest service method like:
-		//		| services.myRestService.put("parameters","data to put in resource");
-		//		| services.myRestService.post("parameters","data to post to the resource");
-		//		| services.myRestService['delete']("parameters");
-
+		//		Creates a REST service using the provided path.
 		var service;
 		// it should be in the form /Table/
 		service = function(id, args){
@@ -72,8 +66,8 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 		service._schema = schema;
 		// cache:
 		//		This is an object that provides indexing service
-		//		This can be overriden to take advantage of more complex referencing/indexing
-		//		schemes
+		// 		This can be overriden to take advantage of more complex referencing/indexing
+		// 		schemes
 		service.cache = {
 			serialize: isJson ? ((dojox.json && dojox.json.ref) || dojo).toJson : function(result){
 				return result;
@@ -89,13 +83,13 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 				id += (id ? "&" : "?") + "sort("
 				for(var i = 0; i<args.sort.length; i++){
 					var sort = args.sort[i];
-					id += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute);
+					id += (i > 0 ? "," : "") + (sort.descending ? '-' : '+') + encodeURIComponent(sort.attribute); 
 				}
 				id += ")";
 			}
 			var request = {
 				url: path + (id == null ? "" : id),
-				handleAs: isJson ? 'json' : 'text',
+				handleAs: isJson ? 'json' : 'text', 
 				contentType: isJson ? 'application/json' : 'text/plain',
 				sync: dojox.rpc._sync,
 				headers: {
@@ -103,9 +97,7 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 				}
 			};
 			if(args && (args.start >= 0 || args.count >= 0)){
-				request.headers.Range = "items=" + (args.start || '0') + '-' +
-					(("count" in args && args.count != Infinity) ?
-						(args.count + (args.start || 0) - 1) : '');
+				request.headers.Range = "items=" + (args.start || '0') + '-' + ((args.count && args.count != Infinity && (args.count + (args.start || 0) - 1)) || '');
 			}
 			dojox.rpc._sync = false;
 			return request;
@@ -139,6 +131,4 @@ define("dojox/rpc/Rest", ["dojo", "dojox"], function(dojo, dojox) {
 		// this is called to actually do the get
 		return index(dojo.xhrGet(service._getRequest(id, args)), service, (args.start >= 0 || args.count >= 0), id);
 	};
-
-	return drr;
-});
+})();

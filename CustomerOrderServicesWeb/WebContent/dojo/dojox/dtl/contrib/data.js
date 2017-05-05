@@ -1,20 +1,13 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"../_base",
-	"dojo/_base/array"
-], function(kernel,lang,dd,array){
+dojo.provide("dojox.dtl.contrib.data");
+dojo.require("dojox.dtl._base");
 
-	var ddcd = lang.getObject("contrib.data", true, dd);
-/*=====
-	ddcd = {
-		// TODO: summary
-	};
-=====*/
+(function(){
+	var dd = dojox.dtl;
+	var ddcd = dd.contrib.data;
 
 	var first = true;
 
-	ddcd._BoundItem = lang.extend(function(item, store){
+	ddcd._BoundItem = dojo.extend(function(item, store){
 		this.item = item;
 		this.store = store;
 	},
@@ -37,7 +30,7 @@ define([
 					if(key.slice(-1) == "s"){
 						if(first){
 							first = false;
-							kernel.deprecated("You no longer need an extra s to call getValues, it can be figured out automatically");
+							dojo.deprecated("You no longer need an extra s to call getValues, it can be figured out automatically");
 						}
 						key = key.slice(0, -1);
 					}
@@ -50,12 +43,12 @@ define([
 				if(!values){
 					return;
 				}
-				if(!lang.isArray(values)){
+				if(!dojo.isArray(values)){
 					return new ddcd._BoundItem(values, store);
 				}
 
-				values = array.map(values, function(value){
-					if(lang.isObject(value) && store.isItem(value)){
+				values = dojo.map(values, function(value){
+					if(dojo.isObject(value) && store.isItem(value)){
 						return new ddcd._BoundItem(value, store);
 					}
 					return value;
@@ -67,7 +60,7 @@ define([
 	});
 	ddcd._BoundItem.prototype.get.safe = true;
 
-	ddcd.BindDataNode = lang.extend(function(items, query, store, alias){
+	ddcd.BindDataNode = dojo.extend(function(items, query, store, alias){
 		this.items = items && new dd._Filter(items);
 		this.query = query && new dd._Filter(query);
 		this.store = new dd._Filter(store);
@@ -119,18 +112,17 @@ define([
 		}
 	});
 
-	lang.mixin(ddcd, {
+	dojo.mixin(ddcd, {
 		_get: function(key){
 			if(this.length){
 				return (this[0] instanceof ddcd._BoundItem) ? this[0].get(key) : this[0][key];
 			}
 		},
 		bind_data: function(parser, token){
-			// summary:
-			//		Turns a list of data store items into DTL compatible items
+			// summary: Turns a list of data store items into DTL compatible items
 			// example:
-			//		`contextItems` and `contextStore` should be an item list
-			//		and a data store that get assigned to `newVariable`
+			//	`contextItems` and `contextStore` should be an item list
+			//	and a data store that get assigned to `newVariable`
 			//
 			//	|	{% bind_data contextItems to contextStore as newVariable %}
 			var parts = token.contents.split();
@@ -142,13 +134,12 @@ define([
 			return new ddcd.BindDataNode(parts[1], null, parts[3], parts[5]);
 		},
 		bind_query: function(parser, token){
-			// summary:
-			//		Queries a data store and makes the returned items DTL compatible
+			// summary: Queries a data store and makes the returned items DTL compatible
 			// example:
-			//		You can only use this with data stores that work in a synchronous
-			//		way (meaning that `onComplete` is fired during the `fetch` call).
-			//		A `sync` flag is sent to the fetch call so that stores that usually
-			//		work asynchronously make themselves syncrhonous if possible.
+			//	You can only use this with data stores that work in a synchronous
+			//	way (meaning that `onComplete` is fired during the `fetch` call).
+			//	A `sync` flag is sent to the fetch call so that stores that usually
+			//	work asynchronously make themselves syncrhonous if possible.
 			//	|	{% bind_query contextQuery to contextStore as newVariable %}
 			var parts = token.contents.split();
 
@@ -164,6 +155,4 @@ define([
 	dd.register.tags("dojox.dtl.contrib", {
 		"data": ["bind_data", "bind_query"]
 	});
-
-	return ddcd;
-});
+})();

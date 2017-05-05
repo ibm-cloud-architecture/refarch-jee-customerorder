@@ -8,12 +8,13 @@ dojo.mixin(dojox.mobile.app, {
 		// summary:
 		//		Listens for a flick event on a DOM node.  If the mouse/touch
 		//		moves more than 15 pixels in any given direction it is a flick.
-		//		The synthetic event fired specifies the direction as:
-		//
-		//		- ltr - Left to Right
-		//		- rtl - Right to Left
-		//		- ttb - Top To Bottom
-		//		- btt - Bottom To top
+		//		The synthetic event fired specifies the direction as
+		//		<ul>
+		//			<li><b>'ltr'</b> Left To Right</li>
+		//			<li><b>'rtl'</b> Right To Left</li>
+		//			<li><b>'ttb'</b> Top To Bottom</li>
+		//			<li><b>'btt'</b> Bottom To Top</li>
+		//		</ul>
 		// target: Node
 		//		The DOM node to connect to
 
@@ -88,9 +89,8 @@ dojox.mobile.app.isIPhone = (dojo.isSafari
 		navigator.userAgent.indexOf("iPod") > -1
 	));
 dojox.mobile.app.isWebOS = (navigator.userAgent.indexOf("webOS") > -1);
-dojox.mobile.app.isAndroid = (navigator.userAgent.toLowerCase().indexOf("android") > -1);
 
-if(dojox.mobile.app.isIPhone || dojox.mobile.app.isAndroid){
+if(dojox.mobile.app.isIPhone){
 	// We are touchable.
 	// Override the dojo._connect function to replace mouse events with touch events
 
@@ -108,12 +108,12 @@ dojo._oldConnect = dojo._connect;
 dojo._connect = function(obj, event, context, method, dontFix){
 	event = dojox.mobile.app.eventMap[event] || event;
 	if(event == "flick" || event == "onflick"){
-		if(dojo.global["Mojo"]){
+		if(window["Mojo"]){
 			event = Mojo.Event.flick;
-		} else{
+		}else{
 			return dojox.mobile.app.connectFlick(obj, context, method);
 		}
 	}
 
 	return dojo._oldConnect(obj, event, context, method, dontFix);
-};
+}

@@ -1,11 +1,9 @@
-define(
-//begin v1.x content
-{
-	"exponential": "×۱۰^",
-	"group": ".",
-	"$locale": "uz-arab-af",
-	"percentSign": "٪",
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	"exponential": "×۱۰^", 
+	"group": "٬", 
+	"decimal": "٫", 
+	"percentSign": "٪", 
+	"nativeZeroDigit": "۰", 
 	"minusSign": "−"
-}
-//end v1.x content
-);
+})

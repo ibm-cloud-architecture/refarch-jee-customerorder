@@ -1,9 +1,7 @@
-define([
-	"dojo/_base/declare",
-	"./_View"
-], function(declare, _View){
+dojo.provide("dojox.grid._RowSelector");
+dojo.require("dojox.grid._View");
 
-return declare('dojox.grid._RowSelector', _View, {
+dojo.declare('dojox.grid._RowSelector', dojox.grid._View, {
 	// summary:
 	//	Custom grid view. If used in a grid structure, provides a small selectable region for grid rows.
 	defaultWidth: "2em",
@@ -13,7 +11,7 @@ return declare('dojox.grid._RowSelector', _View, {
 		this.inherited('buildRendering', arguments);
 		this.scrollboxNode.style.overflow = "hidden";
 		this.headerNode.style.visibility = "hidden";
-	},
+	},	
 	getWidth: function(){
 		return this.viewWidth || this.defaultWidth;
 	},
@@ -30,7 +28,7 @@ return declare('dojox.grid._RowSelector', _View, {
 	},
 	adaptWidth: function(){
 		// Only calculate this here - rather than every call to buildRowContent
-		if(!("contentWidth" in this) && this.contentNode && this.contentNode.offsetWidth > 0){
+		if(!("contentWidth" in this) && this.contentNode){
 			this.contentWidth = this.contentNode.offsetWidth - this.padBorderWidth;
 		}
 	},
@@ -54,5 +52,4 @@ return declare('dojox.grid._RowSelector', _View, {
 			this.grid.onMouseOutRow(e);
 		}
 	}
-});
 });

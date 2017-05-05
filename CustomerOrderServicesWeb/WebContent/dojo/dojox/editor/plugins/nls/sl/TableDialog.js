@@ -1,11 +1,10 @@
-define(
 ({
 	insertTableTitle: "Vstavi tabelo",
 	modifyTableTitle: "Spremeni tabelo",
 	rows: "Vrstice:",
 	columns: "Stolpci:",
 	align: "Poravnaj:",
-	cellPadding: "Polnjenje celic:",
+	cellPadding: "Odmik celic:",
 	cellSpacing: "Razmik med celicami:",
 	tableWidth: "Širina tabele:",
 	backgroundColor: "Barva ozadja:",
@@ -19,15 +18,13 @@ define(
 	right: "desno",
 	buttonSet: "Nastavi", // translated elsewhere?
 	buttonInsert: "Vstavi",
-	buttonCancel: "Prekliči",
+
 	selectTableLabel: "Izberi tabelo",
 	insertTableRowBeforeLabel: "Dodaj vrstico pred",
 	insertTableRowAfterLabel: "Dodaj vrstico za",
 	insertTableColumnBeforeLabel: "Dodaj stolpec pred",
 	insertTableColumnAfterLabel: "Dodaj stolpec za",
 	deleteTableRowLabel: "Izbriši vrstico",
-	deleteTableColumnLabel: "Izbriši stolpec",
-	colorTableCellTitle: "Barva ozadja celice v tabeli",
-	tableContextMenuTitle: "Kontekstni meni tabele"
+	deleteTableColumnLabel: "Izbriši stolpec"
 })
-);
+

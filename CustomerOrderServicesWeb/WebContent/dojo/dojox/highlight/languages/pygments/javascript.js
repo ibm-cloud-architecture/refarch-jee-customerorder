@@ -1,6 +1,9 @@
-define(["../../_base"], function(dh){
+dojo.provide("dojox.highlight.languages.pygments.javascript");
 
-	var dhc = dh.constants;
+dojo.require("dojox.highlight._base");
+
+(function(){
+	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.javascript = {
 		defaultMode: {
 			lexems: ["\\b[a-zA-Z]+"],
@@ -17,8 +20,8 @@ define(["../../_base"], function(dh){
 				"name builtin": {
 					"Array": 1, "Boolean": 1, "Date": 1, "Error": 1, "Function": 1, "Math": 1,
 					"netscape": 1, "Number": 1, "Object": 1, "Packages": 1, "RegExp": 1,
-					"String": 1, "sun": 1, "decodeURI": 1, "decodeURIComponent": 1,
-					"encodeURI": 1, "encodeURIComponent": 1, "Error": 1, "eval": 1,
+					"String": 1, "sun": 1, "decodeURI": 1, "decodeURIComponent": 1, 
+					"encodeURI": 1, "encodeURIComponent": 1, "Error": 1, "eval": 1, 
 					"isFinite": 1, "isNaN": 1, "parseFloat": 1, "parseInt": 1, "document": 1,
 					"window": 1
 				},
@@ -27,7 +30,7 @@ define(["../../_base"], function(dh){
 				}
 			},
 			contains: [
-				"comment single", "comment multiline",
+				"comment single", "comment multiline", 
 				"number integer", "number oct", "number hex", "number float",
 				"string single", "string double", "string regex",
 				"operator",
@@ -80,7 +83,7 @@ define(["../../_base"], function(dh){
 			},
 			{
 				className: "string double",
-				begin: '"',
+				begin: '"', 
 				end: '"',
 				illegal: "\\n",
 				contains: ["string escape"],
@@ -142,6 +145,4 @@ define(["../../_base"], function(dh){
 			*/
 		]
 	};
-
-	return dh.languages.javascript;
-});
+})();

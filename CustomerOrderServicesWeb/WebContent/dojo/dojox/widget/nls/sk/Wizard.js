@@ -1,7 +1,6 @@
-define(
 ({
-next: "Nasledujúci",
-previous: "Predchádzajúci",
+next: "Ďalej",
+previous: "Späť",
 done: "Hotovo"
 })
-);
+

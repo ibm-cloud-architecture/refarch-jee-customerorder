@@ -1,12 +1,6 @@
-define([
-	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/_base/html",
-	"dojo/_base/event",
-	"dojo/_base/array",
-	"dojo/_base/connect",
-	"dojo/query"
-], function(declare, lang, html, event, array, connect, query) {
+dojo.provide("dojox.widget.rotator.Controller");
+
+(function(d){
 
 	var _dojoxRotator = "dojoxRotator",
 		_play = _dojoxRotator + "Play",
@@ -15,47 +9,51 @@ define([
 		_tab = _dojoxRotator + "Tab",
 		_selected = _dojoxRotator + "Selected";
 
-	return declare("dojox.widget.rotator.Controller", null, {
-		// summary:
+	d.declare("dojox.widget.rotator.Controller", null, {
+		//	summary:
 		//		A controller that manipulates a Rotator or AutoRotator.
-		// description:
+		//
+		//	description:
 		//		Displays a series of controls that send actions to a Rotator or
 		//		AutoRotator.  The Controller supports the following controls:
 		//
-		//		- Next pane
-		//		- Previous pane
-		//		- Play/Pause toggler
-		//		- Numbered tabs
-		//		- Titled tabs
-		//		- Information
+		//		* Next pane
+		//		* Previous pane
+		//		* Play/Pause toggler
+		//		* Numbered tabs
+		//		* Titled tabs
+		//		* Information
 		//
 		//		You may specify any of these controls in any order.  You may also
 		//		have multiple Controllers tied to a single Rotator instance.
 		//
 		//		The Controller's DOM node may also be styled for positioning or
 		//		other styled preferences.
-		// example:
+		//
+		//	example:
 		//	|	<div dojoType="dojox.widget.rotator.Controller"
 		//	|		rotator="myRotator"
 		//	|	></div>
-		// example:
+		//
+		//	example:
 		//	|	<div dojoType="dojox.widget.rotator.Controller"
 		//	|		rotator="myRotator"
 		//	|		controls="prev,#,next"
 		//	|		class="myCtrl"
 		//	|	></div>
-		// example:
+		//
+		//	example:
 		//	|	<div dojoType="dojox.widget.rotator.Controller"
 		//	|		rotator="myRotator"
 		//	|		controls="titles"
 		//	|		class="myCtrl"
 		//	|	></div>s
 
-		// rotator: dojox.widget.Rotator
+		//	rotator: dojox.widget.Rotator
 		//		An instance of a Rotator widget.
 		rotator: null,
 
-		// commands: string
+		//	commands: string
 		//		A comma-separated list of commands. Valid commands are:
 		//		  prev			An icon button to go to the previous pane.
 		//		  next			An icon button to go to the next pane.
@@ -66,10 +64,10 @@ define([
 		commands: "prev,play/pause,info,next",
 
 		constructor: function(/*Object*/params, /*DomNode|string*/node){
-			// summary:
+			//	summary:
 			//		Initializes the pager and connect to the rotator.
 
-			lang.mixin(this, params);
+			d.mixin(this, params);
 
 			// check if we have a valid rotator
 			var r = this.rotator;
@@ -79,16 +77,16 @@ define([
 					node.removeChild(node.firstChild);
 				}
 
-				var ul = this._domNode = html.create("ul", null, node),
+				var ul = this._domNode = d.create("ul", null, node),
 					icon = " " + _dojoxRotator + "Icon",
 
 					// helper function for creating a button
 					cb = function(/*string*/label, /*string*/css, /*array*/action){
-						html.create("li", {
+						d.create("li", {
 							className: css,
 							innerHTML: '<a href="#"><span>' + label + '</span></a>',
 							onclick: function(/*event*/e){
-								event.stop(e);
+								d.stopEvent(e);
 								if(r){
 									r.control.apply(r, action);
 								}
@@ -97,7 +95,7 @@ define([
 					};
 
 				// build out the commands
-				array.forEach(this.commands.split(','), function(b, i){
+				d.forEach(this.commands.split(','), function(b, i){
 					switch(b){
 						case "prev":
 							cb("Prev", _dojoxRotator + "Prev" + icon, ["prev"]);
@@ -107,7 +105,7 @@ define([
 							cb("Pause", _pause + icon, ["pause"]);
 							break;
 						case "info":
-							this._info = html.create("li", {
+							this._info = d.create("li", {
 								className: _dojoxRotator + "Info",
 								innerHTML: this._buildInfo(r)
 							}, ul);
@@ -129,40 +127,40 @@ define([
 				}, this);
 
 				// add the first/last classes for styling
-				query("li:first-child", ul).addClass(_dojoxRotator + "First");
-				query("li:last-child", ul).addClass(_dojoxRotator + "Last");
+				d.query("li:first-child", ul).addClass(_dojoxRotator + "First");
+				d.query("li:last-child", ul).addClass(_dojoxRotator + "Last");
 
 				// set the initial state of the play/pause toggle button
 				this._togglePlay();
 
-				this._con = connect.connect(r, "onUpdate", this, "_onUpdate");
+				this._con = d.connect(r, "onUpdate", this, "_onUpdate");
 			}
 		},
 
 		destroy: function(){
-			// summary:
+			//	summary:
 			//		Disconnect from the rotator.
-			connect.disconnect(this._con);
-			html.destroy(this._domNode);
+			d.disconnect(this._con);
+			d.destroy(this._domNode);
 		},
 
 		_togglePlay: function(/*boolean*/playing){
-			// summary:
+			//	summary:
 			//		Toggles the play/pause button, if it exists.
 
 			var p = this.rotator.playing;
-			query('.'+_play, this._domNode).style("display", p ? "none" : "");
-			query('.'+_pause, this._domNode).style("display", p ? "" : "none");
+			d.query('.'+_play, this._domNode).style("display", p ? "none" : "");
+			d.query('.'+_pause, this._domNode).style("display", p ? "" : "none");
 		},
 
 		_buildInfo: function(/*dojox.widget.Rotator*/r){
-			// summary:
+			//	summary:
 			//		Return a string containing the current pane number and the total number of panes.
 			return '<span>' + (r.idx+1) + ' / ' + r.panes.length + '</span>'; /*string*/
 		},
 
 		_onUpdate: function(/*string*/type){
-			// summary:
+			//	summary:
 			//		Updates various pager controls when the rotator updates.
 
 			var r = this.rotator; // no need to test if this is null since _onUpdate is only fired by the rotator
@@ -180,14 +178,15 @@ define([
 					// helper function for selecting the current tab
 					var s = function(/*NodeList*/n){
 						if(r.idx < n.length){
-							html.addClass(n[r.idx], _selected);
+							d.addClass(n[r.idx], _selected);
 						}
 					};
 
-					s(query('.' + _number, this._domNode).removeClass(_selected));
-					s(query('.' + _tab, this._domNode).removeClass(_selected));
+					s(d.query('.' + _number, this._domNode).removeClass(_selected));
+					s(d.query('.' + _tab, this._domNode).removeClass(_selected));
 					break;
 			}
 		}
 	});
-});
+
+})(dojo);

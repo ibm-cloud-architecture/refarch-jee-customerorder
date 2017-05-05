@@ -1,18 +1,20 @@
-define(["dojox/gfx3d/matrix", "dojo/_base/declare", "dojo/_base/Color", "dojo/_base/kernel", "dojo/has", "./Base"],
-	function(matrix3d, declare, Color, kernel, has, Base) {
+dojo.provide("dojox.charting.plot3d.Cylinders");
+
+dojo.require("dojox.charting.plot3d.Base");
+
+(function(){
 
 	// reduce function borrowed from dojox.fun
 	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-		// summary:
-		//		repeatedly applies a binary function to an array from left
-		//		to right; returns the final value.
-		a = typeof a == "string" ? a.split("") : a; o = o || kernel.global;
+		// summary: repeatedly applies a binary function to an array from left 
+		//	to right; returns the final value.
+		a = typeof a == "string" ? a.split("") : a; o = o || dojo.global;
 		var z = a[0];
 		for(var i = 1; i < a.length; z = f.call(o, z, a[i++]));
 		return z;	// Object
 	};
 
-	return declare("dojox.charting.plot3d.Cylinders", Base, {
+	dojo.declare("dojox.charting.plot3d.Cylinders", dojox.charting.plot3d.Base, {
 		constructor: function(width, height, kwArgs){
 			this.depth = "auto";
 			this.gap   = 0;
@@ -24,7 +26,7 @@ define(["dojox/gfx3d/matrix", "dojo/_base/declare", "dojo/_base/Color", "dojo/_b
 				if("gap"   in kwArgs){ this.gap   = kwArgs.gap; }
 				if("material" in kwArgs){
 					var m = kwArgs.material;
-					if(typeof m == "string" || m instanceof Color){
+					if(typeof m == "string" || m instanceof dojo.Color){
 						this.material.color = m;
 					}else{
 						this.material = m;
@@ -51,17 +53,14 @@ define(["dojox/gfx3d/matrix", "dojo/_base/declare", "dojo/_base/Color", "dojo/_b
 			for(var i = 0; i < this.data.length; ++i, org += step){
 				creator
 					.createCylinder({
-						center: {x: org + step / 2, y: 0, z: 0},
-						radius: step / 2 - this.gap,
+						center: {x: org + step / 2, y: 0, z: 0}, 
+						radius: step / 2 - this.gap, 
 						height: this.data[i] * scale
 					})
-					.setTransform(matrix3d.rotateXg(-90))
+					.setTransform(dojox.gfx3d.matrix.rotateXg(-90))
 					.setFill(this.material).setStroke(this.outline);
-			}
-			if(has("dojo-bidi")){
-				this._checkOrientation(chart);
 			}
 		}
 	});
-});
+})();
 

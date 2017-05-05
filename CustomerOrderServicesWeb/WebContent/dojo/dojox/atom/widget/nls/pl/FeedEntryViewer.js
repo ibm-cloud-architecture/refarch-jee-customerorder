@@ -1,13 +1,11 @@
-define(
 ({
-	displayOptions: "[opcje wyświetlania]",
+	displayOptions: "[Opcje wyświetlania]",
 	title: "Tytuł",
 	authors: "Autorzy",
 	contributors: "Kontrybutorzy",
-	id: "ID",
-	close: "[zamknij]",
+	id: "Identyfikator",
+	close: "[Zamknij]",
 	updated: "Zaktualizowano",
 	summary: "Podsumowanie",
 	content: "Treść"
 })
-);

@@ -1,8 +1,6 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/fx",
-	"dojo/dom-style"
-], function(lang, fx, domStyle) {
+dojo.provide("dojox.widget.rotator.Wipe");
+
+(function(d){
 
 	// Constants used to identify which clip edge is being wiped. The values are
 	// the index of the clip array that is changed during the animation.
@@ -31,27 +29,27 @@ define([
 	}
 
 	function _setClip(/*DomNode*/n, /*int*/type, /*int*/w, /*int*/h, /*number*/x){
-		// summary:
+		//	summary:
 		//		Sets the clip region of the node. If a type is passed in then we
 		//		return a rect(), otherwise return "auto".
-		domStyle.set(n, "clip", type == null ? "auto" : "rect(" + _clipArray(type, w, h, x).join("px,") + "px)");
+		d.style(n, "clip", type == null ? "auto" : "rect(" + _clipArray(type, w, h, x).join("px,") + "px)");
 	}
 
 	function _wipe(/*int*/type, /*Object*/args){
-		// summary:
-		//		Handles the preparation of the dom node and creates the Animation object.
+		//	summary:
+		//		Handles the preparation of the dom node and creates the dojo.Animation object.
 		var node = args.next.node,
 			w = args.rotatorBox.w,
 			h = args.rotatorBox.h;
 
-		domStyle.set(node, {
+		d.style(node, {
 			display: "",
-			zIndex: (domStyle.get(args.current.node, "zIndex") || 1) + 1
+			zIndex: (d.style(args.current.node, "zIndex") || 1) + 1
 		});
 
 		_setClip(node, type, w, h);
 
-		return new fx.Animation(lang.mixin({
+		return new d.Animation(d.mixin({ /*dojo.Animation*/
 			node: node,
 			curve: [0, type % 2 ? w : h],
 			onAnimate: function(x){
@@ -60,34 +58,30 @@ define([
 		}, args));
 	}
 
-	var exports = {
+	d.mixin(dojox.widget.rotator, {
 		wipeDown: function(/*Object*/args){
-			// summary:
+			//	summary:
 			//		Returns a dojo.Animation that wipes in the next rotator pane from the top.
 			return _wipe(DOWN, args); /*dojo.Animation*/
 		},
 
 		wipeRight: function(/*Object*/args){
-			// summary:
+			//	summary:
 			//		Returns a dojo.Animation that wipes in the next rotator pane from the right.
 			return _wipe(RIGHT, args); /*dojo.Animation*/
 		},
 
 		wipeUp: function(/*Object*/args){
-			// summary:
+			//	summary:
 			//		Returns a dojo.Animation that wipes in the next rotator pane from the bottom.
 			return _wipe(UP, args); /*dojo.Animation*/
 		},
 
 		wipeLeft: function(/*Object*/args){
-			// summary:
+			//	summary:
 			//		Returns a dojo.Animation that wipes in the next rotator pane from the left.
 			return _wipe(LEFT, args); /*dojo.Animation*/
 		}
-	};
+	});
 
-	// back-compat, remove for 2.0
-	lang.mixin(lang.getObject("dojox.widget.rotator"), exports);
-
-	return exports;
-});
+})(dojo);

@@ -1,19 +1,18 @@
-define(
 ({
 	'bold': 'Negreta',
 	'copy': 'Copia',
 	'cut': 'Retalla',
 	'delete': 'Suprimeix',
 	'indent': 'Sagnat',
-	'insertHorizontalRule': 'Regla horitzontal',
+	'insertHorizontalRule': 'Regle horitzontal',
 	'insertOrderedList': 'Llista numerada',
 	'insertUnorderedList': 'Llista de vinyetes',
 	'italic': 'Cursiva',
-	'justifyCenter': 'Alineació centrada',
+	'justifyCenter': 'Centra',
 	'justifyFull': 'Justifica',
-	'justifyLeft': 'Alineació a l\'esquerra',
-	'justifyRight': 'Alineació a la dreta',
-	'outdent': 'Sagnat a l\'esquerra',
+	'justifyLeft': 'Alinea a la esquerra',
+	'justifyRight': 'Alinea a la dreta',
+	'outdent': 'Sagna a l\'esquerra',
 	'paste': 'Enganxa',
 	'redo': 'Refés',
 	'removeFormat': 'Elimina el format',
@@ -36,7 +35,7 @@ define(
 	'hiliteColor': 'Color de fons',
 	'plainFormatBlock': 'Estil de paràgraf',
 	'formatBlock': 'Estil de paràgraf',
-	'fontSize': 'Mida del tipus de lletra',
+	'fontSize': 'Cos de la lletra',
 	'fontName': 'Nom del tipus de lletra',
 	'tabIndent': 'Sagnat',
 	"fullScreen": "Commuta pantalla completa",
@@ -45,7 +44,6 @@ define(
 	"newPage": "Pàgina nova",
 	/* Error messages */
 	'systemShortcut': 'L\'acció "${0}" és l\'única disponible al navegador utilitzant una drecera del teclat. Utilitzeu ${1}.',
-	'ctrlKey':'control+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'ctrlKey':'control+${0}'
 })
-);
+

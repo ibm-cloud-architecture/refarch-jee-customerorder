@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Negrita',
 	'copy': 'Copiar',
@@ -45,7 +44,6 @@ define(
 	"newPage": "Nueva página",
 	/* Error messages */
 	'systemShortcut': 'La acción "${0}" sólo está disponible en su navegador mediante un atajo de teclado. Utilice ${1}.',
-	'ctrlKey':'control+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'ctrlKey':'control+${0}'
 })
-);
+

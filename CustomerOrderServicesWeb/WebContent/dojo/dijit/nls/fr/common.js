@@ -1,8 +1,6 @@
-define(
 ({
 	buttonOk: "OK",
 	buttonCancel: "Annuler",
-	buttonSave: "Enregistrer",
+	buttonSave: "Sauvegarder",
 	itemClose: "Fermer"
 })
-);

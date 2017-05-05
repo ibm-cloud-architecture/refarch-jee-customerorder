@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Infoga tabell",
 	modifyTableTitle: "Ändra tabell",
@@ -10,8 +9,8 @@ define(
 	tableWidth: "Tabellbredd:",
 	backgroundColor: "Bakgrundsfärg:",
 	borderColor: "Ramfärg:",
-	borderThickness: "Kantlinjetjocklek:",
-	percent: "procent",
+	borderThickness: "Ramtjocklek",
+	percent: "%",
 	pixels: "bildpunkter",
 	"default": "standard",
 	left: "vänsterjustera",
@@ -19,15 +18,12 @@ define(
 	right: "högerjustera",
 	buttonSet: "Ange", // translated elsewhere?
 	buttonInsert: "Infoga",
-	buttonCancel: "Avbryt",
+
 	selectTableLabel: "Välj tabell",
 	insertTableRowBeforeLabel: "Lägg till rad före",
 	insertTableRowAfterLabel: "Lägg till rad efter",
 	insertTableColumnBeforeLabel: "Lägg till kolumn före",
 	insertTableColumnAfterLabel: "Lägg till kolumn efter",
 	deleteTableRowLabel: "Ta bort rad",
-	deleteTableColumnLabel: "Ta bort kolumn",
-	colorTableCellTitle: "Bakgrundsfärg för tabellcell",
-	tableContextMenuTitle: "Kontextmeny för tabell"
+	deleteTableColumnLabel: "Ta bort kolumn"
 })
-);

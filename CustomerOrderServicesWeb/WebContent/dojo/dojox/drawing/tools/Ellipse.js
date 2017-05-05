@@ -1,19 +1,18 @@
-define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Ellipse"],
-function(lang, oo, registry, StencilEllipse){
+dojo.provide("dojox.drawing.tools.Ellipse");
 
-//dojox.drawing.tools.Ellipse = 
-var Ellipse = oo.declare(
-	StencilEllipse,
+dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
+	// summary:
+	//		A drawable Ellipse.
+	//
+	dojox.drawing.stencil.Ellipse,
 	function(){
-		// summary:
-		//		constructor
+		// summary: constructor
 	},
 	{
-		// summary:
-		//		A drawable Ellipse.
-
 		draws:true,
 		onDrag: function(/*EventObject*/obj){
+			// summary: See stencil._Base.onDrag
+			//
 			var s = obj.start, e = obj;
 			var	x = s.x < e.x ? s.x : e.x,
 				y = s.y < e.y ? s.y : e.y,
@@ -38,6 +37,8 @@ var Ellipse = oo.declare(
 		},
 		
 		onUp: function(/*EventObject*/obj){
+			// summary: See stencil._Base.onUp
+			//
 			if(this.created || !this._downOnCanvas){ return; }
 			this._downOnCanvas = false;
 			//Default shape on single click
@@ -67,14 +68,12 @@ var Ellipse = oo.declare(
 	}
 );
 
-lang.setObject("dojox.drawing.tools.Ellipse", Ellipse);
-Ellipse.setup = {
+dojox.drawing.tools.Ellipse.setup = {
+	// summary: See stencil._Base ToolsSetup
+	//	
 	name:"dojox.drawing.tools.Ellipse",
 	tooltip:"Ellipse Tool",
 	iconClass:"iconEllipse"
 };
 
-registry.register(Ellipse.setup, "tool");
-
-return Ellipse;
-});
+dojox.drawing.register(dojox.drawing.tools.Ellipse.setup, "tool");

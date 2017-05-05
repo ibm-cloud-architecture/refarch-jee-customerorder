@@ -4,7 +4,7 @@
  ****/
 
 .nihilo .dijitProgressBar {
-	margin:2px 0 2px 0;
+	margin:2px 0px 2px 0px;
 }
 
 .nihilo .dijitProgressBarEmpty{
@@ -19,8 +19,7 @@
 }
 
 .nihilo .dijitProgressBarFull {
-	border: 0px solid #f8d582;
-	border-right-width: 1px;
+	border-right:1px solid #f8d582;
 }
 
 .nihilo .dijitProgressBarLabel {

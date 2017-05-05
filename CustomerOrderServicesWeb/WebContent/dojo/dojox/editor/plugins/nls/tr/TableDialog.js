@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Tablo Ekle",
 	modifyTableTitle: "Tabloyu Değiştir",
@@ -9,8 +8,8 @@ define(
 	cellSpacing: "Hücre Aralığı:",
 	tableWidth: "Tablo Genişliği",
 	backgroundColor: "Arka Plan Rengi:",
-	borderColor: "Kenarlık Rengi:",
-	borderThickness: "Kenarlık Kalınlığı:",
+	borderColor: "Kenarlık Rengi: ",
+	borderThickness: "Kenarlık Kalınlığı",
 	percent: "yüzde",
 	pixels: "piksel",
 	"default": "varsayılan",
@@ -19,15 +18,12 @@ define(
 	right: "sağ",
 	buttonSet: "Ayarla", // translated elsewhere?
 	buttonInsert: "Ekle",
-	buttonCancel: "İptal",
+
 	selectTableLabel: "Tablo Seç",
 	insertTableRowBeforeLabel: "Satırı Önüne Ekle",
 	insertTableRowAfterLabel: "Satırı Arkasına Ekle",
 	insertTableColumnBeforeLabel: "Sütunu Önüne Ekle",
 	insertTableColumnAfterLabel: "Sütunu Arkasına Ekle",
 	deleteTableRowLabel: "Satırı Sil",
-	deleteTableColumnLabel: "Sütunu Sil",
-	colorTableCellTitle: "Arka Plan Rengi Tablo Hücresi",
-	tableContextMenuTitle: "Tablo Bağlam Menüsü"
+	deleteTableColumnLabel: "Sütunu Sil"
 })
-);

@@ -1,8 +1,20 @@
-define(["dojo/_base/lang", "../../util/oo", "../_Plugin", "../../manager/_registry"],
-function(lang, oo, Plugin, registry){
+dojo.provide("dojox.drawing.plugins.tools.Pan");
+dojo.require("dojox.drawing.plugins._Plugin");
 
-var Pan = oo.declare(
-	Plugin,
+dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
+	// summary:
+	//		A plugin that allows for a scrolling canvas. An action
+	//		tool is added to the toolbar that allows for panning. Holding
+	//		the space bar is a shortcut to that action. The canvas will
+	//		only pan and scroll if there are objects out of the viewable
+	//		area.
+	// example:
+	//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawingNode" class="drawingToolbar vertical">
+	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
+	//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
+	//		|	</div>
+	//
+	dojox.drawing.plugins._Plugin,
 	function(options){
 		this.domNode = options.node;
 		var _scrollTimeout;
@@ -23,25 +35,13 @@ var Pan = oo.declare(
 				return;
 			}
 			_scrollTimeout && clearTimeout(_scrollTimeout);
-			_scrollTimeout = setTimeout(lang.hitch(this, "checkBounds"), 200);
+			_scrollTimeout = setTimeout(dojo.hitch(this, "checkBounds"), 200);
 		});
 		this._mouseHandle = this.mouse.register(this);
 		// This HAS to be called after setting initial objects or things get screwy.
 		//this.checkBounds();
 		
 	},{
-		// summary:
-		//		A plugin that allows for a scrolling canvas. An action
-		//		tool is added to the toolbar that allows for panning. Holding
-		//		the space bar is a shortcut to that action. The canvas will
-		//		only pan and scroll if there are objects out of the viewable
-		//		area.
-		// example:
-		//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawingNode" class="drawingToolbar vertical">
-		//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
-		//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
-		//		|	</div>
-
 		selected:false,
 		keyScroll:false,
 		type:"dojox.drawing.plugins.tools.Pan",
@@ -73,13 +73,13 @@ var Pan = oo.declare(
 		
 		onArrow: function(evt){
 			if(this._timer){ clearInterval(this._timer); }
-			this._timer = setInterval(lang.hitch(this,function(evt){
+			this._timer = setInterval(dojo.hitch(this,function(evt){
 				this.canvas.domNode.parentNode.scrollLeft += evt.x*10;
 				this.canvas.domNode.parentNode.scrollTop += evt.y*10;
 			},evt), this.interval);
 		},
 		
-		onSetPan: function(/*Boolean|Event*/ bool){
+		onSetPan: function(/*Boolean | Event*/ bool){
 			if(bool === true || bool === false){
 				this.selected = !bool;
 			}
@@ -128,10 +128,10 @@ var Pan = oo.declare(
 			
 			// summary:
 			//		Scans all items on the canvas and checks if they are out of
-			//		bounds. If so, a scroll bar (in Canvas) is shown. If the position
-			//		is left or top, the canvas is scrolled all items are relocated
-			//		the distance of the scroll. Ideally, it should look as if the
-			//		items do not move.
+			// 		bounds. If so, a scroll bar (in Canvas) is shown. If the position
+			// 		is left or top, the canvas is scrolled all items are relocated
+			// 		the distance of the scroll. Ideally, it should look as if the
+			// 		items do not move.
 			
 			// logging stuff here so it can be turned on and off. This method is
 			// very high maintenance.
@@ -150,7 +150,7 @@ var Pan = oo.declare(
 				mx = this.stencils.group ? this.stencils.group.getTransform() : {dx:0, dy:0},
 				sc = this.mouse.scrollOffset(),
 				// scY, scX: the scrollbar creates the need for extra dimension
-				scY = sc.left ? 10 : 0,
+				scY = sc.left ? 10 : 0, 
 				scX = sc.top ? 10 : 0,
 				// ch, cw: the current size of the canvas
 				ch = this.canvas.height,
@@ -184,7 +184,7 @@ var Pan = oo.declare(
 			b *= z;
 			var xscroll = 0, yscroll = 0;
 			log("Bottom test", "b:", b, "z:", z, "ch:", ch, "pch:", pch, "top:", sc.top, "sy:", sy, "mx.dy:", mx.dy);
-			if(b > pch || sc.top ){
+			if(b > pch || sc.top ){ 
 				log("*bottom scroll*");
 				// item off bottom
 				ch = Math.max(b, pch + sc.top);
@@ -232,15 +232,11 @@ var Pan = oo.declare(
 	}
 );
 
-Pan.setup = {
+dojox.drawing.plugins.tools.Pan.setup = {
 	name:"dojox.drawing.plugins.tools.Pan",
 	tooltip:"Pan Tool",
 	iconClass:"iconPan",
 	button:false
 };
 
-lang.setObject("dojox.drawing.plugins.tools.Pan", Pan);
-registry.register(Pan.setup, "plugin");
-return Pan;
-
-});
+dojox.drawing.register(dojox.drawing.plugins.tools.Pan.setup, "plugin");

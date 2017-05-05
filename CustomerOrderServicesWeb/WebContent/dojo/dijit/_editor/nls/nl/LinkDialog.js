@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Linkeigenschappen",
 	insertImageTitle: "Afbeeldingseigenschappen",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Bovenste venster",
 	newWindow: "Nieuw venster"
 })
-);
+

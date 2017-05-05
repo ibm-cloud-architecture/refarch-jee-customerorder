@@ -1,7 +1,5 @@
-define(
 ({
-	name: "Nome",
-	path: "Percorso",
-	size: "Dimensione (in byte)"
+name: "Nome",
+path: "Percorso",
+size: "Dimensione (in byte)"
 })
-);

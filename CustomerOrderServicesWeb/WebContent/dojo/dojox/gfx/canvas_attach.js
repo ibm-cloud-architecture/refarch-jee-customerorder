@@ -1,11 +1,8 @@
-define(["dojo/_base/lang", "dojo/_base/kernel","dojox/gfx/canvas"], function(lang,kernel,canvas){
-	lang.getObject("dojox.gfx.canvas_attach", true);
-	kernel.experimental("dojox.gfx.canvas_attach");
+dojo.require("dojox.gfx.canvas");
 
-	// not implemented
-	canvas.attachSurface = canvas.attachNode = function(){
-		return null;	// for now
-	};
+dojo.experimental("dojox.gfx.canvas_attach");
 
-	return canvas;
-});
+// not implemented
+dojox.gfx.attachNode = function(){
+	return null;	// for now
+};

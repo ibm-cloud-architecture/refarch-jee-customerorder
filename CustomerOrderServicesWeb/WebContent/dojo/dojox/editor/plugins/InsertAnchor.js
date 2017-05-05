@@ -1,34 +1,26 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_editor/_Plugin",
-	"dijit/_base/manager",	// TODO: change to dijit/registry, and change dijit.byId to registry.byId
-	"dijit/_editor/range",
-	"dijit/_Templated",
-	"dijit/TooltipDialog",
-	"dijit/form/ValidationTextBox",
-	"dijit/form/Select",
-	"dijit/form/Button",
-	"dijit/form/DropDownButton",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/string",
-	"dojo/NodeList-dom",
-	"dojox/editor/plugins/ToolbarLineBreak",
-	"dojo/i18n!dojox/editor/plugins/nls/InsertAnchor",
-	"dojo/i18n!dijit/nls/common"
-], function(dojo, dijit, dojox, _Plugin ) {
+dojo.provide("dojox.editor.plugins.InsertAnchor");
 
-var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.TooltipDialog");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.ValidationTextBox");
+dojo.require("dijit.form.Select");
+dojo.require("dijit._editor.range");
+dojo.require("dojo.i18n");
+dojo.require("dojo.string");
+dojo.requireLocalization("dijit", "common");
+dojo.requireLocalization("dojox.editor.plugins", "InsertAnchor");
+
+dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 	// summary:
 	//		This plugin provides the basis for an insert anchor dialog for the
 	//		dijit.Editor
 	//
 	// description:
 	//		The command provided by this plugin is:
-	//
-	//		- insertAnchor
+	//		* insertAnchor
 
 	// htmlTemplate: [protected] String
 	//		String used for templating the HTML to insert at the desired point.
@@ -41,7 +33,7 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 	// linkDialogTemplate: [private] String
 	//		Template for contents of TooltipDialog to pick URL
 	_template: [
-		"<table role='presentation'><tr><td>",
+		"<table><tr><td>",
 		"<label for='${id}_anchorInput'>${anchor}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
@@ -59,8 +51,7 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 	].join(""),
 
 	_initButton: function(){
-		// summary:
-		//		Override _Plugin._initButton() to initialize DropDownButton and TooltipDialog.
+		// Override _Plugin._initButton() to initialize DropDownButton and TooltipDialog.
 		var _this = this;
 		var messages = dojo.i18n.getLocalization("dojox.editor.plugins", "InsertAnchor", this.lang);
 
@@ -112,12 +103,6 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 		this.editor.contentDomPostFilters.push(dojo.hitch(this, this._postDomFilter));
 		this._setup();
 	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
-	},
 
 	setEditor: function(editor){
 		// summary:
@@ -130,7 +115,7 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 
 	_checkInput: function(){
 		// summary:
-		//		Function to check the input to the dialog is valid
+		//		Function to check the input to the dialog is valid 
 		//		and enable/disable set button
 		// tags:
 		//		private
@@ -174,7 +159,7 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 		var modurl = dojo.moduleUrl(dojox._scopeName, "editor/plugins/resources").toString();
 		if(!(modurl.match(/^https?:\/\//i)) &&
 			!(modurl.match(/^file:\/\//i))){
-			// We have to root it to the page location on webkit for some nutball reason.
+			// We have to root it to the page location on webkit for some nutball reason. 
 			// Probably has to do with how iframe was loaded.
 			var bUrl;
 			if(modurl.charAt(0) === "/"){
@@ -231,7 +216,7 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 				fullUrl = fullUrl.substring(0,index);
 			}
 
-			// Now we need to trim if necessary.  If it ends in /, then we don't
+			// Now we need to trim if necessary.  If it ends in /, then we don't 
 			// have a filename to trim off so we can return.
 			index = fullUrl.lastIndexOf("/");
 			if (index > 0 && index < fullUrl.length) {
@@ -247,8 +232,8 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 		// summary:
 		//		Function to check the values in args and 'fix' them up as needed.
 		// args: Object
-		//		Content being set.
-		// tags:
+		//		Content being set.		
+		// tags: 
 		//		protected
 		if(args){
 			if(args.anchorInput){
@@ -284,7 +269,8 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== "a")){
 				// Stll nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = this.editor._sCall("getSelectedElement", ["a"]);
+				a = dojo.withGlobal(this.editor.window,
+					"getSelectedElement", dijit._editor.selection, ["a"]);
 			}
 			if(a && (a.nodeName && a.nodeName.toLowerCase() === "a")){
 				// Okay, we do have a match.  IE, for some reason, sometimes pastes before
@@ -294,13 +280,14 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 				if(this.editor.queryCommandEnabled("unlink")){
 					// Select all the link childent, then unlink.  The following insert will
 					// then replace the selected text.
-					this.editor._sCall("selectElementChildren", [a]);
+					dojo.withGlobal(this.editor.window,
+						"selectElementChildren", dijit._editor.selection, [a]);
 					this.editor.execCommand("unlink");
 				}
 			}
 		}
 		// make sure values are properly escaped, etc.
-		args = this._checkValues(args);
+		args = this._checkValues(args); 
 		this.editor.execCommand('inserthtml',
 			dojo.string.substitute(this.htmlTemplate, args));
 	},
@@ -322,9 +309,9 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 		if(a && a.tagName.toLowerCase() === "a" && dojo.attr(a, "name")){
 			anchor = dojo.attr(a, "name");
 			text = a.textContent || a.innerText;
-			this.editor._sCall("selectElement", [a, true]);
+			dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
 		}else{
-			text = this.editor._sCall("getSelectedText");
+			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
 		}
 		return {anchorInput: anchor || '', textInput: text || ''}; //Object;
 	},
@@ -349,10 +336,12 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== "a")){
 				// Stll nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = this.editor._sCall("getSelectedElement", ["a"]);
+				a = dojo.withGlobal(this.editor.window,
+					"getSelectedElement", dijit._editor.selection, ["a"]);
 			}
 		}else{
-			a = this.editor._sCall("getAncestorElement", ["a"]);
+			a = dojo.withGlobal(this.editor.window,
+				"getAncestorElement", dijit._editor.selection, ["a"]);
 		}
 		this.dropDown.reset();
 		this._setButton.set("disabled", true);
@@ -373,15 +362,14 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
 			if(tg === "a" && dojo.attr(t, "name")){
 				this.editor.onDisplayChanged();
-				this.editor._sCall("selectElement", [t]);
+				dojo.withGlobal(this.editor.window,
+					 "selectElement",
+					 dijit._editor.selection, [t]);
 				setTimeout(dojo.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
 					this.button.set("disabled", false);
 					this.button.openDropDown();
-					if(this.button.dropDown.focus){
-						this.button.dropDown.focus();
-					}
 				}), 10);
 			}
 		}
@@ -389,28 +377,43 @@ var InsertAnchor = dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 
 	_preDomFilter: function(node){
 		// summary:
-		//		A filter to identify the 'a' tags and if they're anchors,
+		//		A filter to identify the 'a' tags and if they're anchors, 
 		//		apply the right style to them.
 		// node:
 		//		The node to search from.
 		// tags:
 		//		private
-
-		dojo.query("a[name]:not([href])", this.editor.editNode).addClass("dijitEditorPluginInsertAnchorStyle");
+		var ed = this.editor;
+		dojo.withGlobal(ed.window, function(){
+			dojo.query("a", ed.editNode).forEach(function(a){
+				if(dojo.attr(a, "name") && !dojo.attr(a, "href")){
+					if(!dojo.hasClass(a,"dijitEditorPluginInsertAnchorStyle")){
+						dojo.addClass(a, "dijitEditorPluginInsertAnchorStyle");
+					}
+				}
+			});
+		});
 	},
 
 	_postDomFilter: function(node){
 		// summary:
-		//		A filter to identify the 'a' tags and if they're anchors,
+		//		A filter to identify the 'a' tags and if they're anchors, 
 		//		remove the class style that shows up in the editor from
 		//		them.
 		// node:
 		//		The node to search from.
 		// tags:
 		//		private
-		if(node){	// avoid error when Editor.get("value") called before editor's iframe initialized
-			dojo.query("a[name]:not([href])", node).removeClass("dijitEditorPluginInsertAnchorStyle");
-		}
+		var ed = this.editor;
+		dojo.withGlobal(ed.window, function(){
+			dojo.query("a", node).forEach(function(a){
+				if(dojo.attr(a, "name") && !dojo.attr(a, "href")){
+					if(dojo.hasClass(a,"dijitEditorPluginInsertAnchorStyle")){
+						dojo.removeClass(a, "dijitEditorPluginInsertAnchorStyle");
+					}
+				}
+			});
+		});
 		return node;
 	}
 });
@@ -422,10 +425,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	var name = o.args.name;
 	if(name) { name = name.toLowerCase(); }
 	if(name === "insertanchor"){
-		o.plugin = new InsertAnchor();
+		o.plugin = new dojox.editor.plugins.InsertAnchor();
 	}
-});
-
-return InsertAnchor;
-
 });

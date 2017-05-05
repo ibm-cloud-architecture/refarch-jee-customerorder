@@ -1,18 +1,11 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/connect",
-	"../_base"
-], function(lang,array,connect,dd){
+dojo.provide("dojox.dtl.tag.misc");
+dojo.require("dojox.dtl._base");
 
-	var ddtm = lang.getObject("tag.misc", true, dd);
-	/*=====
-	 ddtm = {
-	 	// TODO: summary
-	 };
-	 =====*/
+(function(){
+	var dd = dojox.dtl;
+	var ddtm = dd.tag.misc;
 
-	ddtm.DebugNode = lang.extend(function(text){
+	ddtm.DebugNode = dojo.extend(function(text){
 		this.text = text;
 	},
 	{
@@ -36,7 +29,7 @@ define([
 		toString: function(){ return "ddtm.DebugNode"; }
 	});
 
-	ddtm.FilterNode = lang.extend(function(varnode, nodelist){
+	ddtm.FilterNode = dojo.extend(function(varnode, nodelist){
 		this._varnode = varnode;
 		this._nodelist = nodelist;
 	},
@@ -57,9 +50,9 @@ define([
 		}
 	});
 
-	ddtm.FirstOfNode = lang.extend(function(vars, text){
+	ddtm.FirstOfNode = dojo.extend(function(vars, text){
 		this._vars = vars;
-		this.vars = array.map(vars, function(item){
+		this.vars = dojo.map(vars, function(item){
 			return new dojox.dtl._Filter(item);
 		});
 		this.contents = text;
@@ -86,7 +79,7 @@ define([
 		}
 	});
 
-	ddtm.SpacelessNode = lang.extend(function(nodelist, text){
+	ddtm.SpacelessNode = dojo.extend(function(nodelist, text){
 		this.nodelist = nodelist;
 		this.contents = text;
 	},
@@ -95,12 +88,12 @@ define([
 			if(buffer.getParent){
 				// Unfortunately, we have to branch here
 				var watch = [
-					connect.connect(buffer, "onAddNodeComplete", this, "_watch"),
-					connect.connect(buffer, "onSetParent", this, "_watchParent")
+					dojo.connect(buffer, "onAddNodeComplete", this, "_watch"),
+					dojo.connect(buffer, "onSetParent", this, "_watchParent")
 				];
 				buffer = this.nodelist.render(context, buffer);
-				connect.disconnect(watch[0]);
-				connect.disconnect(watch[1]);
+				dojo.disconnect(watch[0]);
+				dojo.disconnect(watch[1]);
 			}else{
 				var value = this.nodelist.dummyRender(context);
 				this.contents.set(value.replace(/>\s+</g, '><'));
@@ -149,7 +142,7 @@ define([
 		}
 	});
 
-	ddtm.TemplateTagNode = lang.extend(function(tag, text){
+	ddtm.TemplateTagNode = dojo.extend(function(tag, text){
 		this.tag = tag;
 		this.contents = text;
 	},
@@ -176,7 +169,7 @@ define([
 		}
 	});
 
-	ddtm.WidthRatioNode = lang.extend(function(current, max, width, text){
+	ddtm.WidthRatioNode = dojo.extend(function(current, max, width, text){
 		this.current = new dd._Filter(current);
 		this.max = new dd._Filter(max);
 		this.width = width;
@@ -201,7 +194,7 @@ define([
 		}
 	});
 
-	ddtm.WithNode = lang.extend(function(target, alias, nodelist){
+	ddtm.WithNode = dojo.extend(function(target, alias, nodelist){
 		this.target = new dd._Filter(target);
 		this.alias = alias;
 		this.nodelist = nodelist;
@@ -223,21 +216,18 @@ define([
 		}
 	});
 
-	lang.mixin(ddtm, {
+	dojo.mixin(ddtm, {
 		comment: function(parser, token){
-			// summary:
-			//		Ignore everything between {% comment %} and {% endcomment %}
+			// summary: Ignore everything between {% comment %} and {% endcomment %}
 			parser.skip_past("endcomment");
 			return dd._noOpNode;
 		},
 		debug: function(parser, token){
-			// summary:
-			//		Output the current context, maybe add more stuff later.
+			// summary: Output the current context, maybe add more stuff later.
 			return new ddtm.DebugNode(parser.create_text_node());
 		},
 		filter: function(parser, token){
-			// summary:
-			//		Filter the contents of the blog through variable filters.
+			// summary: Filter the contents of the blog through variable filters.
 			var rest = token.contents.split(null, 1)[1];
 			var varnode = parser.create_variable_node("var|" + rest);
 			var nodelist = parser.parse(["endfilter"]);
@@ -293,6 +283,4 @@ define([
 			return new ddtm.WithNode(parts[1], parts[3], nodelist);
 		}
 	});
-
-	return ddtm;
-});
+})();

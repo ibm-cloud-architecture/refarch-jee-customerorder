@@ -1,3 +1,3 @@
-define(["../main", "./_Selector"], function(dojox){
-	return dojox.grid._RadioSelector;
-});
+dojo.provide("dojox.grid._RadioSelector");
+
+dojo.require("dojox.grid._Selector");

@@ -1,24 +1,19 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_Widget",
-	"dijit/_TemplatedMixin",
-	"dijit/_editor/_Plugin",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojox/layout/ResizeHandle"
-], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _Plugin) {
+dojo.provide("dojox.editor.plugins.StatusBar");
+
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.Toolbar");
+dojo.require("dojox.layout.ResizeHandle");
 
 dojo.experimental("dojox.editor.plugins.StatusBar");
 
-var _StatusBar = dojo.declare("dojox.editor.plugins._StatusBar", [_Widget, _TemplatedMixin],{
+
+dojo.declare("dojox.editor.plugins._StatusBar", [dijit._Widget, dijit._Templated],{
 	// templateString: String
 	//		Template for the widget.  Currently using table to get the alignment behavior and
 	//		bordering I wanted.  Would prefer not to use table, though.
 	templateString: '<div class="dojoxEditorStatusBar">' +
 		'<table><tbody><tr>'+
-		'<td class="dojoxEditorStatusBarText" tabindex="-1" aria-role="presentation" aria-live="aggressive"><span dojoAttachPoint="barContent">&nbsp;</span></td>' +
+		'<td class="dojoxEditorStatusBarText" tabindex="-1" aria-role="presentation" aria-live="aggressive"><span dojoAttachPoint="barContent">&nbsp;</span></td>' + 
 		'<td><span dojoAttachPoint="handle"></span></td>' +
 		'</tr></tbody><table>'+
 	'</div>',
@@ -51,9 +46,9 @@ var _StatusBar = dojo.declare("dojox.editor.plugins._StatusBar", [_Widget, _Temp
 	}
 });
 
-var StatusBar = dojo.declare("dojox.editor.plugins.StatusBar", _Plugin, {
+dojo.declare("dojox.editor.plugins.StatusBar",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides StatusBar capability to the editor.
+	//		This plugin provides StatusBar cabability to the editor.
 	//		Basically a footer bar where status can be published.  It also
 	//		puts a resize handle on the status bar, allowing you to resize the
 	//		editor via mouse.
@@ -74,7 +69,7 @@ var StatusBar = dojo.declare("dojox.editor.plugins.StatusBar", _Plugin, {
 		// editor: Object
 		//		The editor to configure for this plugin to use.
 		this.editor = editor;
-		this.statusBar = new _StatusBar();
+		this.statusBar = new dojox.editor.plugins._StatusBar();
 		if(this.resizer){
 			this.resizeHandle = new dojox.layout.ResizeHandle({targetId: this.editor, activeResize: true}, this.statusBar.handle);
 			this.resizeHandle.startup();
@@ -166,19 +161,12 @@ var StatusBar = dojo.declare("dojox.editor.plugins.StatusBar", _Plugin, {
 	}
 });
 
-// For monkey patching
-StatusBar._StatusBar = _StatusBar;
-
 // Register this plugin.
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "statusbar"){
 		var resizer = ("resizer" in o.args)?o.args.resizer:true;
-		o.plugin = new StatusBar({resizer: resizer});
+		o.plugin = new dojox.editor.plugins.StatusBar({resizer: resizer});
 	}
-});
-
-return StatusBar;
-
 });

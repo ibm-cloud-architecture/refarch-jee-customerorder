@@ -1,4 +1,5 @@
-define("dojox/rpc/ProxiedPath", ["dojo", "dojox", "dojox/rpc/Service"], function(dojo, dojox) {
+dojo.provide("dojox.rpc.ProxiedPath");
+dojo.require("dojox.rpc.Service");
 
 dojox.rpc.envelopeRegistry.register(
 	"PROXIED-PATH",function(str){return str == "PROXIED-PATH"},{
@@ -24,5 +25,3 @@ dojox.rpc.envelopeRegistry.register(
 		}
 	}
 );
-
-});

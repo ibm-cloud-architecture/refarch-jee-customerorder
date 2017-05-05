@@ -1,4 +1,3 @@
-define(
 ({
 	"nodeActions": "${nodeName} műveletek",
 	"selectContents": "Tartalom kiválasztása",
@@ -8,4 +7,4 @@ define(
 	"moveStart": "Kurzor mozgatása az elejére",
 	"moveEnd": "Kurzor mozgatása a végére"
 })
-);
+

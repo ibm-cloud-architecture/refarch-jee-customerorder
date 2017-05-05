@@ -1,19 +1,20 @@
-define(
 ({
 	fontSize: "Tamaño",
 	fontName: "Font",
 	formatBlock: "Formato",
+
 	serif: "serif",
 	"sans-serif": "sans-serif",
 	monospace: "espacio sencillo",
 	cursive: "cursiva",
 	fantasy: "fantasía",
-	noFormat: "Ninguno",
+
 	p: "Párrafo",
 	h1: "Cabecera",
 	h2: "Subcabecera",
 	h3: "Sub-subcabecera",
 	pre: "Preformateado",
+
 	1: "xx-pequeño",
 	2: "x-pequeño",
 	3: "pequeño",
@@ -22,4 +23,3 @@ define(
 	6: "x-grande",
 	7: "xx-grande"
 })
-);

@@ -1,6 +1,4 @@
-// AMD-ID "dojox/math/curves"
-define(["dojo", "dojox"], function(dojo, dojox) {
-dojo.getObject("math.curves", true, dojox);
+dojo.provide("dojox.math.curves");
 
 dojo.mixin(dojox.math.curves, {
 	Line:function (start, end) {
@@ -21,7 +19,7 @@ dojo.mixin(dojox.math.curves, {
 			return retVal;
 		};
 		return this;
-	},
+	}, 
 	Bezier:function(pnts) {
 		this.getValue = function (step) {
 			if (step >= 1) {
@@ -49,7 +47,7 @@ dojo.mixin(dojox.math.curves, {
 		};
 		this.p = pnts;
 		return this;
-	},
+	}, 
 	CatmullRom:function (pnts, c) {
 		this.getValue = function (step) {
 			var percent = step * (this.p.length - 1);
@@ -88,7 +86,7 @@ dojo.mixin(dojox.math.curves, {
 		}
 		this.p = pnts;
 		return this;
-	},
+	}, 
 	Arc:function (start, end, ccw){
 		function translate(a,b){
 			var c=new Array(a.length);
@@ -110,7 +108,7 @@ dojo.mixin(dojox.math.curves, {
 			theta += 90;
 		}
 		dojox.math.curves.CenteredArc.call(this, center, rad, theta, theta + (ccw ? -180 : 180));
-	},
+	}, 
 	CenteredArc:function (center, radius, start, end) {
 		this.center = center;
 		this.radius = radius;
@@ -124,11 +122,11 @@ dojo.mixin(dojox.math.curves, {
 			return retVal;
 		};
 		return this;
-	},
+	}, 
 	Circle:function(center, radius){
 		dojox.math.curves.CenteredArc.call(this, center, radius, 0, 360);
 		return this;
-	},
+	}, 
 	Path:function () {
 		var curves = [];
 		var weights = [];
@@ -188,7 +186,4 @@ dojo.mixin(dojox.math.curves, {
 		}
 		return this;
 	}
-});
-
-return dojox.math.curves;
 });

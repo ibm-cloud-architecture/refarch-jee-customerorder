@@ -1,135 +1,131 @@
-define([
-	"dojo/_base/declare",
-	"dojo/_base/array",
-	"dojo/_base/lang",
-	"dojo/_base/html",
-	"dojo/_base/event",
-	"dojo/keys",
-	"../_Plugin",
-	"../../EnhancedGrid"
-], function(declare, array, lang, html, evt, keys, _Plugin, EnhancedGrid){
+dojo.provide("dojox.grid.enhanced.plugins.Menu");
 
-var Menu = declare("dojox.grid.enhanced.plugins.Menu", _Plugin, {
-	// summary:
+dojo.declare("dojox.grid.enhanced.plugins.Menu", null, {
+	//	summary:
 	//		 Provides context menu support, including header menu, row menu, cell menu and selected region menu
 	// example:
-	// |	<div dojoType="dojox.grid.EnhancedGrid"
-	// |		plugins="{menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
-	// |						   selectedRegionMenu:"selectedRegionMenuId"}}" ...>
-	// |	</div>
-	
-	// name: String
-	//		Plugin name
-	name: "menus",
+	// 		 <div dojoType="dojox.grid.EnhancedGrid" 
+	//			  plugins="{menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId", 
+	//							   selectedRegionMenu:"selectedRegionMenuId"}}" ...>
+	//		</div>
 
-	// types: [const] String[]
-	//		menu types
-	types: ['headerMenu', 'rowMenu', 'cellMenu', 'selectedRegionMenu'],
+	constructor: function(inGrid){
+		inGrid.mixin(inGrid, this);
+	},
 	
-	constructor: function(){
-		var g = this.grid;
-		g.showMenu = lang.hitch(g, this.showMenu);
-		g._setRowMenuAttr = lang.hitch(this, '_setRowMenuAttr');
-		g._setCellMenuAttr = lang.hitch(this, '_setCellMenuAttr');
-		g._setSelectedRegionMenuAttr = lang.hitch(this, '_setSelectedRegionMenuAttr');
+	_initMenus: function(){
+		//summary:
+		//		Initilize all the required menus
+		var wrapper = this.menuContainer;
+		!this.headerMenu && (this.headerMenu = this._getMenuWidget(this.menus['headerMenu']));		
+		!this.rowMenu && (this.rowMenu = this._getMenuWidget(this.menus['rowMenu']));
+		!this.cellMenu && (this.cellMenu = this._getMenuWidget(this.menus['cellMenu']));
+		!this.selectedRegionMenu && (this.selectedRegionMenu = this._getMenuWidget(this.menus['selectedRegionMenu']));
+		this.headerMenu && this.set('headerMenu', this.headerMenu) && this.setupHeaderMenu();
+		this.rowMenu && this.set('rowMenu', this.rowMenu);
+		this.cellMenu && this.set('cellMenu', this.cellMenu);
+		this.isDndSelectEnable && this.selectedRegionMenu && dojo.connect(this.select, 'setDrugCoverDivs', dojo.hitch(this, this._bindDnDSelectEvent));
 	},
-	onStartUp: function(){
-		var type, option = this.option;
-		for(type in option){
-			if(array.indexOf(this.types, type) >= 0 && option[type]){
-				this._initMenu(type, option[type]);
-			}
-		}
-	},
-	_initMenu: function(/*String*/ menuType, /*String|dijit/Menu*/ menu){
-		var g = this.grid;
-		if(!g[menuType]){//in case already created in _Grid.postCreate()
-			var m = this._getMenuWidget(menu);
-			if(!m){return;}
-			g.set(menuType, m);
-			if(menuType != "headerMenu"){
-				m._scheduleOpen = function(){return;};
-			}else{
-				g.setupHeaderMenu();
-			}
-		}
-	},
-	_getMenuWidget: function(/*String|Widget(dijit.Menu)*/menu){
-		// summary:
+	
+	_getMenuWidget: function(menuId){
+		//summary:
 		//		Fetch the required menu widget(should already been created)
-		return (menu instanceof dijit.Menu) ? menu : dijit.byId(menu);
+		//menuId: String
+		//		Id of the target menu widget
+		//return: Widget
+		//		Target menu widget
+		if(!menuId){
+			return;
+		}
+		var menu = dijit.byId(menuId);
+		if(!menu){
+			throw new Error("Menu '" + menuId +"' not existed");	
+		}
+		return menu;
 	},
-	_setRowMenuAttr: function(/*Widget(dijit.Menu)*/menu){
-		// summary:
+
+	_bindDnDSelectEvent: function(){
+		//summary:
+		//		Hook callback to DnD, so othat appropriate menu will be shown on selected regions	
+		dojo.forEach(this.select.coverDIVs, dojo.hitch(this, function(cover){
+			//this.selectedRegionMenu.unBindDomNode(this.domNode);
+			this.selectedRegionMenu.bindDomNode(cover);
+			dojo.connect(cover, "contextmenu", dojo.hitch(this, function(e){
+				dojo.mixin(e, this.select.getSelectedRegionInfo());
+				this.onSelectedRegionContextMenu(e);
+			}));
+		}));
+	},
+	
+	_setRowMenuAttr: function(menu){
+		//summary:
 		//		Set row menu widget
-		this._setMenuAttr(menu, 'rowMenu');
+		//menu: Widget - dijit.Menu
+		//		Row menu widget
+		this._setRowCellMenuAttr(menu, 'rowMenu');
 	},
-	_setCellMenuAttr: function(/*Widget(dijit.Menu)*/menu){
-		// summary:
+	
+	_setCellMenuAttr: function(menu){
+		//summary:
 		//		Set cell menu widget
-		this._setMenuAttr(menu, 'cellMenu');
+		//menu: Widget - dijit.Menu
+		//		Cell menu widget		
+		this._setRowCellMenuAttr(menu, 'cellMenu');
 	},
-	_setSelectedRegionMenuAttr: function(/*Widget(dijit.Menu)*/menu){
-		// summary:
-		//		Set row menu widget
-		this._setMenuAttr(menu, 'selectedRegionMenu');
+	
+	_setRowCellMenuAttr: function(menu, menuType){
+		//summary:
+		//		Bind menus to Grid
+		//menu: Widget - dijit.Menu
+		//		Menu widget	
+		//menuType: String
+		//		Menu type
+		if(!menu){ return; }
+		if(this[menuType]){
+			this[menuType].unBindDomNode(this.domNode);
+		}
+		this[menuType] = menu;
+		this[menuType].bindDomNode(this.domNode);
 	},
-	_setMenuAttr: function(/*Widget(dijit.Menu)*/menu, /*String*/menuType){
-		// summary:
-		//		Bind menus to Grid.
-		var g = this.grid, n = g.domNode;
-		if(!menu || !(menu instanceof dijit.Menu)){
-			console.warn(menuType, " of Grid ", g.id, " is not existed!");
+
+	// TODO: this code is not accessible.  Shift-F10 won't open a menu.  (I think
+	// this function never even gets called.)
+	showRowCellMenu: function(e){
+		//summary:
+		//		Show row or cell menus
+		//e: Event
+		//		Fired from dojox.grid.enhanced._Events.onRowContextMenu
+		var inRowSelectorView = e.sourceView.declaredClass == 'dojox.grid._RowSelector';
+		// !e.cell means the cell is in the rowbar.
+		// this.selection.isSelected(e.rowIndex) should remove?
+		//if(this.rowMenu && (!e.cell || this.selection.isSelected(e.rowIndex)) && (!this.focus.cell || this.focus.cell != e.cell)){
+		if(this.rowMenu && (!e.cell || this.selection.isSelected(e.rowIndex))){
+			this.rowMenu._openMyself({
+				target: e.target,
+				coords: "pageX" in e ? {
+					x: e.pageX,
+					y: e.pageY
+				} : null
+			});
+			dojo.stopEvent(e);
 			return;
 		}
-		if(g[menuType]){
-			g[menuType].unBindDomNode(n);
+		if(inRowSelectorView || e.cell && e.cell.isRowSelector){
+			dojo.stopEvent(e);
+			return;	
 		}
-		g[menuType] = menu;
-		g[menuType].bindDomNode(n);
-	},
-	showMenu: function(/*Event*/e){
-		// summary:
-		//		Show appropriate context menu
-		//		Fired from dojox.grid.enhanced._Events.onRowContextMenu, 'this' scope - Grid
-
-		// TODO: test Shift-F10
-
-		var inSelectedRegion = (e.cellNode && html.hasClass(e.cellNode, 'dojoxGridRowSelected') ||
-			e.rowNode && (html.hasClass(e.rowNode, 'dojoxGridRowSelected') || html.hasClass(e.rowNode, 'dojoxGridRowbarSelected')));
-		
-		if(inSelectedRegion && this.selectedRegionMenu){
-			this.onSelectedRegionContextMenu(e);
-			return;
+		if(this.isDndSelectEnable) {
+			this.select.cellClick(e.cellIndex, e.rowIndex);
+			this.focus.setFocusCell(e.cell, e.rowIndex);
 		}
-		
-		var info = {target: e.target, coords: e.keyCode !== keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY } : null};
-		if(this.rowMenu && (!this.cellMenu || this.selection.isSelected(e.rowIndex) || e.rowNode && html.hasClass(e.rowNode, 'dojoxGridRowbar'))){
-			this.rowMenu._openMyself(info);
-			evt.stop(e);
-			return;
-		}
-
 		if(this.cellMenu){
-			this.cellMenu._openMyself(info);
+			this.cellMenu._openMyself({
+				target: e.target,
+				coords: "pageX" in e ? {
+					x: e.pageX,
+					y: e.pageY
+				} : null
+			});
 		}
-		evt.stop(e);
-	},
-	destroy: function(){
-		// summary:
-		//		Destroy all resources.
-		//		_Grid.destroy() will unbind headerMenu
-		var g = this.grid;
-		if(g.headerMenu){g.headerMenu.unBindDomNode(g.viewsHeaderNode);}
-		if(g.rowMenu){g.rowMenu.unBindDomNode(g.domNode);}
-		if(g.cellMenu){g.cellMenu.unBindDomNode(g.domNode);}
-		if(g.selectedRegionMenu){g.selectedRegionMenu.destroy();}
-		this.inherited(arguments);
 	}
-});
-
-EnhancedGrid.registerPlugin(Menu/*name:'menus'*/);
-
-return Menu;
-
 });

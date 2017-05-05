@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Sett inn tabell",
 	modifyTableTitle: "Endre tabell",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "Tabellbredde:",
 	backgroundColor: "Bakgrunnsfarge:",
 	borderColor: "Kantlinjefarge:",
-	borderThickness: "Kantlinjetykkelse:",
+	borderThickness: "Kanttykkelse",
 	percent: "prosent",
 	pixels: "piksler",
 	"default": "standard",
@@ -19,15 +18,12 @@ define(
 	right: "høyre",
 	buttonSet: "Definer", // translated elsewhere?
 	buttonInsert: "Sett inn",
-	buttonCancel: "Avbryt",
+
 	selectTableLabel: "Velg tabell",
 	insertTableRowBeforeLabel: "Legg til rad foran",
 	insertTableRowAfterLabel: "Legg til rad etter",
 	insertTableColumnBeforeLabel: "Legg til kolonne foran",
 	insertTableColumnAfterLabel: "Legg til kolonne etter",
 	deleteTableRowLabel: "Slett rad",
-	deleteTableColumnLabel: "Slett kolonne",
-	colorTableCellTitle: "Tabellcelle for bakgrunnsfarge",
-	tableContextMenuTitle: "Tabellhurtigmeny"
+	deleteTableColumnLabel: "Slett kolonne"
 })
-);

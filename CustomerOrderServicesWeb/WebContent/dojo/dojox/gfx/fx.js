@@ -1,99 +1,103 @@
-define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_base/array", "dojo/_base/fx", "dojo/_base/connect", "dojo/sniff"], 
-  function(lang, g, m, Color, arr, fx, Hub, has){
-	var fxg = g.fx = {};
+dojo.provide("dojox.gfx.fx");
+
+dojo.require("dojox.gfx.matrix");
+
+(function(){
+	var d = dojo, g = dojox.gfx, m = g.matrix;
 
 	// Generic interpolators. Should they be moved to dojox.fx?
 
-	function InterpolNumber(start, end){
+	var InterpolNumber = function(start, end){
 		this.start = start, this.end = end;
-	}
-	InterpolNumber.prototype.getValue = function(r){
-		return (this.end - this.start) * r + this.start;
 	};
+	d.extend(InterpolNumber, {
+		getValue: function(r){
+			return (this.end - this.start) * r + this.start;
+		}
+	});
 
-	function InterpolUnit(start, end, units){
+	var InterpolUnit = function(start, end, units){
 		this.start = start, this.end = end;
 		this.units = units;
-	}
-	InterpolUnit.prototype.getValue = function(r){
-		return (this.end - this.start) * r + this.start + this.units;
 	};
+	d.extend(InterpolUnit, {
+		getValue: function(r){
+			return (this.end - this.start) * r + this.start + this.units;
+		}
+	});
 
-	function InterpolColor(start, end){
+	var InterpolColor = function(start, end){
 		this.start = start, this.end = end;
-		this.temp = new Color();
-	}
-	InterpolColor.prototype.getValue = function(r){
-		return Color.blendColors(this.start, this.end, r, this.temp);
+		this.temp = new dojo.Color();
 	};
+	d.extend(InterpolColor, {
+		getValue: function(r){
+			return d.blendColors(this.start, this.end, r, this.temp);
+		}
+	});
 
-	function InterpolValues(values){
+	var InterpolValues = function(values){
 		this.values = values;
 		this.length = values.length;
-	}
-	InterpolValues.prototype.getValue = function(r){
-		return this.values[Math.min(Math.floor(r * this.length), this.length - 1)];
 	};
+	d.extend(InterpolValues, {
+		getValue: function(r){
+			return this.values[Math.min(Math.floor(r * this.length), this.length - 1)];
+		}
+	});
 
-	function InterpolObject(values, def){
+	var InterpolObject = function(values, def){
 		this.values = values;
 		this.def = def ? def : {};
-	}
-	InterpolObject.prototype.getValue = function(r){
-		var ret = lang.clone(this.def);
-		for(var i in this.values){
-			ret[i] = this.values[i].getValue(r);
-		}
-		return ret;
 	};
+	d.extend(InterpolObject, {
+		getValue: function(r){
+			var ret = dojo.clone(this.def);
+			for(var i in this.values){
+				ret[i] = this.values[i].getValue(r);
+			}
+			return ret;
+		}
+	});
 
-	function InterpolTransform(stack, original){
+	var InterpolTransform = function(stack, original){
 		this.stack = stack;
 		this.original = original;
-	}
-	InterpolTransform.prototype.getValue = function(r){
-		var ret = [];
-		arr.forEach(this.stack, function(t){
-			if(t instanceof m.Matrix2D){
-				ret.push(t);
-				return;
-			}
-			if(t.name == "original" && this.original){
-				ret.push(this.original);
-				return;
-			}
- 			// Adding support for custom matrices
- 			if(t.name == "matrix"){
- 				if((t.start instanceof m.Matrix2D) && (t.end instanceof m.Matrix2D)){
- 					var transfMatrix = new m.Matrix2D();
- 					for(var p in t.start) {
- 						transfMatrix[p] = (t.end[p] - t.start[p])*r + t.start[p];
- 					}
- 					ret.push(transfMatrix);
- 				}
- 				return;
- 			}
-			if(!(t.name in m)){ return; }
-			var f = m[t.name];
-			if(typeof f != "function"){
-				// constant
-				ret.push(f);
-				return;
-			}
-			var val = arr.map(t.start, function(v, i){
-							return (t.end[i] - v) * r + v;
-						}),
-				matrix = f.apply(m, val);
-			if(matrix instanceof m.Matrix2D){
-				ret.push(matrix);
-			}
-		}, this);
-		return ret;
 	};
+	d.extend(InterpolTransform, {
+		getValue: function(r){
+			var ret = [];
+			dojo.forEach(this.stack, function(t){
+				if(t instanceof m.Matrix2D){
+					ret.push(t);
+					return;
+				}
+				if(t.name == "original" && this.original){
+					ret.push(this.original);
+					return;
+				}
+				if(!(t.name in m)){ return; }
+				var f = m[t.name];
+				if(typeof f != "function"){
+					// constant
+					ret.push(f);
+					return;
+				}
+				var val = dojo.map(t.start, function(v, i){
+								return (t.end[i] - v) * r + v;
+							}),
+					matrix = f.apply(m, val);
+				if(matrix instanceof m.Matrix2D){
+					ret.push(matrix);
+				}
+			}, this);
+			return ret;
+		}
+	});
 
-	var transparent = new Color(0, 0, 0, 0);
+	var transparent = new d.Color(0, 0, 0, 0);
 
-	function getColorInterpol(prop, obj, name, def){
+	var getColorInterpol = function(prop, obj, name, def){
 		if(prop.values){
 			return new InterpolValues(prop.values);
 		}
@@ -112,9 +116,9 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 			end = value;
 		}
 		return new InterpolColor(start, end);
-	}
+	};
 
-	function getNumberInterpol(prop, obj, name, def){
+	var getNumberInterpol = function(prop, obj, name, def){
 		if(prop.values){
 			return new InterpolValues(prop.values);
 		}
@@ -133,24 +137,22 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 			end = value;
 		}
 		return new InterpolNumber(start, end);
-	}
+	};
 
-	fxg.animateStroke = function(/*Object*/ args){
+	g.fx.animateStroke = function(/*Object*/ args){
 		// summary:
-		//		Returns an animation which will change stroke properties over time.
-		// args:
-		//		an object defining the animation setting.
+		//	Returns an animation which will change stroke properties over time
 		// example:
-		//	|	fxg.animateStroke{{
+		//	|	dojox.gfx.fx.animateStroke{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		color: {start: "red", end: "green"},
 		//	|		width: {end: 15},
 		//	|		join:  {values: ["miter", "bevel", "round"]}
 		//	|	}).play();
-		if(!args.easing){ args.easing = fx._defaultEasing; }
-		var anim = new fx.Animation(args), shape = args.shape, stroke;
-		Hub.connect(anim, "beforeBegin", anim, function(){
+		if(!args.easing){ args.easing = d._defaultEasing; }
+		var anim = new d.Animation(args), shape = args.shape, stroke;
+		d.connect(anim, "beforeBegin", anim, function(){
 			stroke = shape.getStroke();
 			var prop = args.color, values = {}, value, start, end;
 			if(prop){
@@ -182,50 +184,46 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 			}
 			this.curve = new InterpolObject(values, stroke);
 		});
-		Hub.connect(anim, "onAnimate", shape, "setStroke");
+		d.connect(anim, "onAnimate", shape, "setStroke");
 		return anim; // dojo.Animation
 	};
 
-	fxg.animateFill = function(/*Object*/ args){
+	g.fx.animateFill = function(/*Object*/ args){
 		// summary:
-		//		Returns an animation which will change fill color over time.
-		//		Only solid fill color is supported at the moment
-		// args:
-		//		an object defining the animation setting.
+		//	Returns an animation which will change fill color over time.
+		//	Only solid fill color is supported at the moment
 		// example:
-		//	|	gfx.animateFill{{
+		//	|	dojox.gfx.fx.animateFill{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		color: {start: "red", end: "green"}
 		//	|	}).play();
-		if(!args.easing){ args.easing = fx._defaultEasing; }
-		var anim = new fx.Animation(args), shape = args.shape, fill;
-		Hub.connect(anim, "beforeBegin", anim, function(){
+		if(!args.easing){ args.easing = d._defaultEasing; }
+		var anim = new d.Animation(args), shape = args.shape, fill;
+		d.connect(anim, "beforeBegin", anim, function(){
 			fill = shape.getFill();
 			var prop = args.color, values = {};
 			if(prop){
 				this.curve = getColorInterpol(prop, fill, "", transparent);
 			}
 		});
-		Hub.connect(anim, "onAnimate", shape, "setFill");
+		d.connect(anim, "onAnimate", shape, "setFill");
 		return anim; // dojo.Animation
 	};
 
-	fxg.animateFont = function(/*Object*/ args){
+	g.fx.animateFont = function(/*Object*/ args){
 		// summary:
-		//		Returns an animation which will change font properties over time.
-		// args:
-		//		an object defining the animation setting.
+		//	Returns an animation which will change font properties over time
 		// example:
-		//	|	gfx.animateFont{{
+		//	|	dojox.gfx.fx.animateFont{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		variant: {values: ["normal", "small-caps"]},
 		//	|		size:  {end: 10, units: "pt"}
 		//	|	}).play();
-		if(!args.easing){ args.easing = fx._defaultEasing; }
-		var anim = new fx.Animation(args), shape = args.shape, font;
-		Hub.connect(anim, "beforeBegin", anim, function(){
+		if(!args.easing){ args.easing = d._defaultEasing; }
+		var anim = new d.Animation(args), shape = args.shape, font;
+		d.connect(anim, "beforeBegin", anim, function(){
 			font = shape.getFont();
 			var prop = args.style, values = {}, value, start, end;
 			if(prop && prop.values){
@@ -251,17 +249,15 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 			}
 			this.curve = new InterpolObject(values, font);
 		});
-		Hub.connect(anim, "onAnimate", shape, "setFont");
+		d.connect(anim, "onAnimate", shape, "setFont");
 		return anim; // dojo.Animation
 	};
 
-	fxg.animateTransform = function(/*Object*/ args){
+	g.fx.animateTransform = function(/*Object*/ args){
 		// summary:
-		//		Returns an animation which will change transformation over time.
-		// args:
-		//		an object defining the animation setting.
+		//	Returns an animation which will change transformation over time
 		// example:
-		//	|	gfx.animateTransform{{
+		//	|	dojox.gfx.fx.animateTransform{{
 		//	|		shape: shape,
 		//	|		duration: 500,
 		//	|		transform: [
@@ -269,54 +265,13 @@ define(["dojo/_base/lang", "./_base", "./matrix", "dojo/_base/Color", "dojo/_bas
 		//	|			{name: "original"}
 		//	|		]
 		//	|	}).play();
-		if(!args.easing){ args.easing = fx._defaultEasing; }
-		var anim = new fx.Animation(args), shape = args.shape, original;
-		Hub.connect(anim, "beforeBegin", anim, function(){
+		if(!args.easing){ args.easing = d._defaultEasing; }
+		var anim = new d.Animation(args), shape = args.shape, original;
+		d.connect(anim, "beforeBegin", anim, function(){
 			original = shape.getTransform();
 			this.curve = new InterpolTransform(args.transform, original);
 		});
-		Hub.connect(anim, "onAnimate", shape, "setTransform");
-		if(g.renderer === "svg" && has("ie") >= 10){
-			// fix http://bugs.dojotoolkit.org/ticket/16879
-			var handlers = [
-					Hub.connect(anim, "onBegin", anim, function(){
-						var parent = shape.getParent();
-						while(parent && parent.getParent){
-							parent = parent.getParent();
-						}
-						if(parent){
-							shape.__svgContainer = parent.rawNode.parentNode;
-						}
-					}),
-					Hub.connect(anim, "onAnimate", anim, function(){
-						try{
-							if(shape.__svgContainer){
-								var ov = shape.__svgContainer.style.visibility;
-								shape.__svgContainer.style.visibility = "visible";
-								var pokeNode = shape.__svgContainer.offsetHeight;
-								shape.__svgContainer.style.visibility = ov;
-							}
-						}catch(e){}
-					}),
-					Hub.connect(anim, "onEnd", anim, function(){
-						arr.forEach(handlers, Hub.disconnect);
-						if(shape.__svgContainer){
-							var ov = shape.__svgContainer.style.visibility;
-							var sn = shape.__svgContainer;
-							shape.__svgContainer.style.visibility = "visible";
-							setTimeout(function(){
-								try{
-									sn.style.visibility = ov;
-									sn = null;
-								}catch(e){}
-							},100);
-						}
-						delete shape.__svgContainer;
-					})
-				];
-		}
+		d.connect(anim, "onAnimate", shape, "setTransform");
 		return anim; // dojo.Animation
 	};
-	
-	return fxg;
-});
+})();

@@ -1,7 +1,4 @@
-define(
-//begin v1.x content
-{
-	"$locale": "pa-arab-pk"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	"nativeZeroDigit": "٠"
+})

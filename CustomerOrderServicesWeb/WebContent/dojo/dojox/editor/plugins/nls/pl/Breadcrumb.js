@@ -1,6 +1,5 @@
-define(
 ({
-	"nodeActions": "${nodeName}Czynności",
+	"nodeActions": "${nodeName} - działania",
 	"selectContents": "Zaznacz treść",
 	"selectElement": "Zaznacz element",
 	"deleteElement": "Usuń element",
@@ -8,4 +7,4 @@ define(
 	"moveStart": "Przenieś kursor na początek",
 	"moveEnd": "Przenieś kursor na koniec"
 })
-);
+

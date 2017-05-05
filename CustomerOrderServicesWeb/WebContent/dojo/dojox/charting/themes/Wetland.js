@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Wetland = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Wetland");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Wetland=new dxc.Theme({
 		colors: [
 			"#bfbc64",
 			"#737130",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#8d3c42"
 		]
 	});
-	return themes.Wetland;
-});
+})();

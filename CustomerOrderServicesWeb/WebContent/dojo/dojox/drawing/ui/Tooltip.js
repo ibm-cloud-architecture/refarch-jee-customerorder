@@ -1,22 +1,26 @@
-define(["dojo", "../util/oo", "../plugins/_Plugin", "../manager/_registry"], 
-function(dojo, oo, Plugin, registry){
+dojo.provide("dojox.drawing.ui.Tooltip");
+dojo.require("dojox.drawing.plugins._Plugin");
+
+
+(function(){
 	
+	//	summary:
+	//		Used for UI tooltips. Buttons in the toolbar.
+	// 		This file is not complete.
+	//
 	var master = null;
-	var MasterC = oo.declare(
-		Plugin,
+	var MasterC = dojox.drawing.util.oo.declare(
+		
+		dojox.drawing.plugins._Plugin,
 		function(options){
 			this.createDom();
 		},
 		{
-			// summary:
-			//		Used for UI tooltips. Buttons in the toolbar.
-			//		This file is not complete.
-
 			show: function(button, text){
 				this.domNode.innerHTML = text;
 				
 				var dx = 30;
-				var px = button.data.x + button.data.width;
+				var px = button.data.x + button.data.width; 
 				var py = button.data.y + button.data.height;
 				var x =  px + this.mouse.origin.x + dx;
 				var y = py + this.mouse.origin.y + dx;
@@ -76,9 +80,9 @@ function(dojo, oo, Plugin, registry){
 		}
 	);
 	
-	var Tooltip =  oo.declare(
+	dojox.drawing.ui.Tooltip =  dojox.drawing.util.oo.declare(
 		
-		Plugin,
+		dojox.drawing.plugins._Plugin,
 		function(options){
 			if(!master){
 				master = new MasterC(options);
@@ -104,9 +108,8 @@ function(dojo, oo, Plugin, registry){
 			}
 		}
 	);
-	dojo.setObject('dojox.drawing.ui.Tooltip', Tooltip);
-	registry.register({
-		name:"dojox.drawing.ui.Tooltip"
+	
+	dojox.drawing.register({
+		name:"dojox.drawing.ui.Tooltip"	
 	}, "stencil");
-	return Tooltip;
-});
+})();

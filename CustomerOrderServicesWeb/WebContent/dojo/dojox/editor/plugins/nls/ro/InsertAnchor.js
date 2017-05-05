@@ -1,4 +1,3 @@
-define(
 ({
 	insertAnchor: "Inserare ancoră",
 	title: "Proprietăţi ancoră",
@@ -7,4 +6,4 @@ define(
 	set: "Setare",
 	cancel: "Anulare"
 })
-);
+

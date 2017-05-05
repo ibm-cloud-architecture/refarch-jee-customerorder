@@ -13,14 +13,11 @@ Credits
 		Preview, Save, ToolbarLineBreak, InsertEntity, 
 		NormalizeIndentOutdent, Breadcrumb, FindReplace, 
 		CollapsibleToolbar, Blockquote, PasteFromWord, InsertAnchor,
-		TextColor, NormalizeStyle, StatusBar, SafePaste)
+		TextColor, NormalizeStyle, StatusBar)
 	Dustin Machi 	 - Technical Assistance
 	David Schwartz and Gu Yi He (IBM) - Contributed enhancements to the
 		look and feel of FindReplace, as well as behavioral
 		improvements.
-	Eldon (IBM, CCLA) - LocalImage, AutoUrlLink, TablePluginsColorCell -
-		dojox.widget.ColorPicker, ResizeTableColumn, AutoSave, SpellCheck
-
 -------------------------------------------------------------------------------
 Project description
 
@@ -139,33 +136,6 @@ dojox.editor.plugins.StatusBar:
 	Status: Experimental (unsupported).
 	A plugin that adds a status bar and an optional resize handle to the footer of the editor.
 
-dojox.editor.plugins.LocalImage
-	Status: Beta
-	A plugin that adds local image upload and edit capability to the editor.
-
-dojox.editor.plugins.AutoUrlLink
-	Status: Experimental (Unsupported)
-	A plugin that adds auto url link creation capability as a headless plugin to the editor
-
-dojox.editor.plugins.ResizeColumnPlugin
-	Status: Experimental (Unsupported)
-	A plugin that adds column resize to the editor table plugins.
-
-dojox.editor.plugins.AutoSave
-	Status: Experimental (Unsupported)
-	A plugin that provides 'auto-save' capablity, eg, post back to some url at an interval.
-
-dojox.editor.plugins.SpellCheck
-	Status: Experimental (Unsupported)
-	A plugin that provides server-side spell-check support.
-
-	
-dojox.editor.plugins.SafePaste
-	Status: Beta (Supported)
-	A plugin that provides a safer paste function to the editor.  It strips out script tags, 
-	tries to fix up odd input from Word, Wordpad, etc.  Very similar to PasteFromWord except that
-	it takes complete control of paste in dijit.Editor instead of being an alternate paste icon.
-	
 -------------------------------------------------------------------------------
 Dependencies:
 
@@ -181,32 +151,25 @@ Documentation
 The plugins directory contains extensions which work with dijit.Editor.
 
 See also:
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/TablePlugins.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PrettyPrint.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PageBreak.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ShowBlockNodes.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Preview.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Save.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ToolbarLineBreak.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/InsertEntity.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/NormalizeIndentOutdent.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Breadcrumb.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/FindReplace.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/CollapsibleToolbar.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/Blockquote.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/PasteFromWord.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/InsertAnchor.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/TextColor.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/NormalizeStyle.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/StatusBar.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/LocalImage.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/AutoUrlLink.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/ResizeTableColumn.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/AutoSave.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/SpellCheck.html
-	http://dojotoolkit.org/reference-guide/dojox/editor/plugins/SafePaste.html
-.html
-	
+	http://docs.dojocampus.org/dojox/editor/plugins/TablePlugins
+	http://docs.dojocampus.org/dojox/editor/plugins/PrettyPrint
+	http://docs.dojocampus.org/dojox/editor/plugins/PageBreak
+	http://docs.dojocampus.org/dojox/editor/plugins/ShowBlockNodes
+	http://docs.dojocampus.org/dojox/editor/plugins/Preview
+	http://docs.dojocampus.org/dojox/editor/plugins/Save
+	http://docs.dojocampus.org/dojox/editor/plugins/ToolbarLineBreak
+	http://docs.dojocampus.org/dojox/editor/plugins/InsertEntity
+	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeIndentOutdent
+	http://docs.dojocampus.org/dojox/editor/plugins/Breadcrumb
+        http://docs.dojocampus.org/dojox/editor/plugins/FindReplace
+        http://docs.dojocampus.org/dojox/editor/plugins/CollapsibleToolbar
+	http://docs.dojocampus.org/dojox/editor/plugins/Blockquote
+	http://docs.dojocampus.org/dojox/editor/plugins/PasteFromWord
+	http://docs.dojocampus.org/dojox/editor/plugins/InsertAnchor       
+	http://docs.dojocampus.org/dojox/editor/plugins/TextColor
+	http://docs.dojocampus.org/dojox/editor/plugins/NormalizeStyle
+	http://docs.dojocampus.org/dojox/editor/plugins/StatusBar 
+
 -------------------------------------------------------------------------------
 Plugin Installation instructions
 
@@ -291,9 +254,9 @@ For the PasteFromWord plugin:
 	<link href="[path]dojox/editor/plugins/resources/css/PasteFromWord.css" type="text/css" rel="stylesheet" />
 
 For the InsertAnchor plugin:
-	dojo.require("dojox.editor.plugins.InsertAnchor");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/InsertAnchor.css" type="text/css" rel="stylesheet" />
+        dojo.require("dojox.editor.plugins.InsertAnchor");
+        and CSS:
+        <link href="[path]dojox/editor/plugins/resources/css/InsertAnchor.css" type="text/css" rel="stylesheet" />
 
 For the TextColor plugin:
 	dojo.require("dojox.editor.plugins.TextColor");
@@ -306,40 +269,10 @@ For the NormalizeStyle plugin:
 	No CSS required.
 
 For the StatusBar plugin:
-	dojo.require("dojox.editor.plugins.StatusBar");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/StatusBar.css" type="text/css" rel="stylesheet" />
+        dojo.require("dojox.editor.plugins.StatusBar");
+        and CSS:
+        <link href="[path]dojox/editor/plugins/resources/css/StatusBar.css" type="text/css" rel="stylesheet" />
 
-For the LocalImage plugin:
-	dojo.require("dojox.editor.plugins.LocalImage");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/LocalImage.css" type="text/css" rel="stylesheet" />
-
-For the AutoUrlLink plugin:
-	dojo.require("dojox.editor.plugins.AutoUrlLink");
-	and CSS:
-	No CSS required.
-
-For the ResizeTableColumn plugin:
-	dojo.require("dojox.editor.plugins.ResizeTableColumn");
-	and CSS:
-	No CSS required in addition to the table plugins css.
-
-For the AutoSave plugin:
-	dojo.require("dojox.editor.plugins.AutoSave");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/AutoSave.css" type="text/css" rel="stylesheet" />
-        
-For the SpellCheck plugin:
-	dojo.require("dojox.editor.plugins.SpellCheck");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/SpellCheck.css" type="text/css" rel="stylesheet" />
-
-For the SafePaste plugin:
-	dojo.require("dojox.editor.plugins.SafePaste");
-	and CSS:
-	<link href="[path]dojox/editor/plugins/resources/css/SafePaste.css" type="text/css" rel="stylesheet" />
-	
 See tests for examples:
 	dojox/editor/tests/editorTablePlugs.html
 	dojox/editor/tests/editorUploadPlug.html
@@ -360,10 +293,4 @@ See tests for examples:
 	dojox/editor/tests/editorTextColor.html
 	dojox/editor/tests/editorNormalizeStyle.html
 	dojox/editor/tests/editorStatusBar.html
-	dojox/editor/tests/editorLocalImage.html
-	dojox/editor/tests/editorAutoUrlLink.html
-	dojox/editor/tests/editorResizeTableColumn.html
-	dojox/editor/tests/editorAutoSave.html
-	dojox/editor/tests/editorSpellCheck.html
-	dojox/editor/tests/editorSafePaste.html
 	dojox/editor/tests/testPluginsAll.html

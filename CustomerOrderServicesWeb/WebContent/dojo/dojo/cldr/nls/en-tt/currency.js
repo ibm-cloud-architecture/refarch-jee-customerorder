@@ -1,7 +1,5 @@
-define(
-//begin v1.x content
-{
-	"TTD_symbol": "$"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers/currencies
+({
+	USD_symbol:"US$"
+})
+                 

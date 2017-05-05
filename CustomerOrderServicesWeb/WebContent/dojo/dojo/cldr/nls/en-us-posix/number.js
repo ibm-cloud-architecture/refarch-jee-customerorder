@@ -1,12 +1,9 @@
-define(
-//begin v1.x content
-{
-	"decimalFormat": "#0.######",
-	"infinity": "INF",
-	"scientificFormat": "0.000000E+000",
-	"perMille": "0/00",
-	"percentFormat": "#0%",
-	"currencyFormat": "¤ #0.00"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'perMille':"0/00",
+	'infinity':"INF",
+	'decimalFormat':"#0.######",
+	'scientificFormat':"0.000000E+000",
+	'percentFormat':"#0%",
+	'currencyFormat':"¤ #0.00"
+})

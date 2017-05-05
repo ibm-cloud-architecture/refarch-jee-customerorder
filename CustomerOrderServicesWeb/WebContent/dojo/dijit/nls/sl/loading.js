@@ -1,6 +1,5 @@
-define(
 ({
-	loadingState: "Nalaganje ...",
+	loadingState: "Nalaganje...",
 	errorState: "Oprostite, prišlo je do napake."
 })
-);
+

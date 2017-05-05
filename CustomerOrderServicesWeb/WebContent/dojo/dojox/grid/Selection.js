@@ -1,11 +1,6 @@
-define([
-	"dojo/_base/declare",
-	"dojo/_base/array",
-	"dojo/_base/lang",
-	"dojo/dom-attr"
-], function(declare, array, lang, domAttr){
+dojo.provide('dojox.grid.Selection');
 
-return declare("dojox.grid.Selection", null, {
+dojo.declare("dojox.grid.Selection", null, {
 	// summary:
 	//		Manages row selection for grid. Owned by grid and used internally
 	//		for selection. Override to implement custom selection.
@@ -22,7 +17,6 @@ return declare("dojox.grid.Selection", null, {
 	selected: null,
 	updating: 0,
 	selectedIndex: -1,
-	rangeStartIndex: -1,
 
 	setMode: function(mode){
 		if(this.selected.length){
@@ -129,8 +123,8 @@ return declare("dojox.grid.Selection", null, {
 
 	addToSelection: function(inIndex){
 		if(this.mode == 'none'){ return; }
-		if(lang.isArray(inIndex)){
-			array.forEach(inIndex, this.addToSelection, this);
+		if(dojo.isArray(inIndex)){
+			dojo.forEach(inIndex, this.addToSelection, this);
 			return;
 		}
 		inIndex = Number(inIndex);
@@ -141,7 +135,7 @@ return declare("dojox.grid.Selection", null, {
 				this.selectedIndex = inIndex;
 				var rowNode = this.grid.getRowNode(inIndex);
 				if(rowNode){
-					domAttr.set(rowNode, "aria-selected", "true");
+					dojo.attr(rowNode,"aria-selected","true");
 				}
 				this._beginUpdate();
 				this.selected[inIndex] = true;
@@ -155,8 +149,8 @@ return declare("dojox.grid.Selection", null, {
 
 	deselect: function(inIndex){
 		if(this.mode == 'none'){ return; }
-		if(lang.isArray(inIndex)){
-			array.forEach(inIndex, this.deselect, this);
+		if(dojo.isArray(inIndex)){
+			dojo.forEach(inIndex, this.deselect, this);
 			return;
 		}
 		inIndex = Number(inIndex);
@@ -169,7 +163,7 @@ return declare("dojox.grid.Selection", null, {
 			}
 			var rowNode = this.grid.getRowNode(inIndex);
 			if(rowNode){
-				domAttr.set(rowNode, "aria-selected", "false");
+				dojo.attr(rowNode,"aria-selected","false");
 			}
 			this._beginUpdate();
 			delete this.selected[inIndex];
@@ -185,8 +179,8 @@ return declare("dojox.grid.Selection", null, {
 	},
 
 	toggleSelect: function(inIndex){
-		if(lang.isArray(inIndex)){
-			array.forEach(inIndex, this.toggleSelect, this);
+		if(dojo.isArray(inIndex)){
+			dojo.forEach(inIndex, this.toggleSelect, this);
 			return;
 		}
 		this.setSelected(inIndex, !this.selected[inIndex]);
@@ -204,11 +198,11 @@ return declare("dojox.grid.Selection", null, {
 	},
 
 	selectRange: function(inFrom, inTo){
-		this._range(inFrom, inTo, lang.hitch(this, "addToSelection"));
+		this._range(inFrom, inTo, dojo.hitch(this, "addToSelection"));
 	},
 
 	deselectRange: function(inFrom, inTo){
-		this._range(inFrom, inTo, lang.hitch(this, "deselect"));
+		this._range(inFrom, inTo, dojo.hitch(this, "deselect"));
 	},
 
 	insert: function(inIndex){
@@ -239,14 +233,12 @@ return declare("dojox.grid.Selection", null, {
 		if(this.mode != 'extended'){
 			this.select(inIndex);
 		}else{
-			if(!inShiftKey || this.rangeStartIndex < 0){
-				this.rangeStartIndex = inIndex;
-			}
+			var lastSelected = this.selectedIndex;
 			if(!inCtrlKey){
 				this.deselectAll(inIndex);
 			}
 			if(inShiftKey){
-				this.selectRange(this.rangeStartIndex, inIndex);
+				this.selectRange(lastSelected, inIndex);
 			}else if(inCtrlKey){
 				this.toggleSelect(inIndex);
 			}else{
@@ -265,5 +257,4 @@ return declare("dojox.grid.Selection", null, {
 		this.deselectAll();
 		this._endUpdate();
 	}
-});
 });

@@ -1,4 +1,3 @@
-define(
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -101,6 +100,7 @@ define(
 	yacute:"帶揚音符的拉丁文小寫字母 y",
 	thorn:"拉丁文小寫字母 thorn",
 	yuml:"帶分音符的拉丁文小寫字母 y",
+
 // Greek Characters and Symbols
 	fnof:"帶短畫的拉丁文小寫 f\n函數\n弗洛林幣",
 	Alpha:"希臘文大寫字母 Α",
@@ -254,4 +254,4 @@ define(
 	rsaquo:"右尖單角引號",
 	euro:"歐元符號"
 })
-);
+

@@ -21,6 +21,10 @@ public class CustomerServicesApp extends Application {
 		classes.add(ProductResource.class);
 		
 		classes.add(org.codehaus.jackson.jaxrs.JacksonJsonProvider.class);
+		
+		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JObjectProvider.class);
+		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JArrayProvider.class);
+		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JJAXBProvider.class);
 
 		return classes;
 

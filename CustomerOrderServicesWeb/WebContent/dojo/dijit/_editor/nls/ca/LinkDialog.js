@@ -1,9 +1,8 @@
-define(
 ({
 	createLinkTitle: "Propietats de l\'enllaç",
 	insertImageTitle: "Propietats de la imatge",
 	url: "URL:",
-	text: "Descripció:",
+	text: "Descipció:",
 	target: "Destinació:",
 	set: "Defineix",
 	currentWindow: "Finestra actual",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Finestra superior",
 	newWindow: "Finestra nova"
 })
-);
+

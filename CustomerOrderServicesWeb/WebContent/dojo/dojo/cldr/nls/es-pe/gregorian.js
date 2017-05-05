@@ -1,8 +1,6 @@
-define(
-//begin v1.x content
-{
-	"timeFormat-full": "HH'H'mm''ss'' zzzz",
-	"dateFormat-short": "d/MM/yy"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/calendars/calendar-gregorian
+({
+	'dateFormat-short': "d/MM/yy",
+	'timeFormat-full': "HH'H'mm''ss'' zzzz"
+})
+                        

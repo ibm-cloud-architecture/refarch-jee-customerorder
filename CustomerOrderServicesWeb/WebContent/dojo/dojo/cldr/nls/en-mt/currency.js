@@ -1,8 +1,5 @@
-define(
-//begin v1.x content
-{
-	"GBP_symbol": "GB£",
-	"USD_symbol": "US$"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers/currencies
+({
+	GBP_symbol:"GB£"
+})
+                 

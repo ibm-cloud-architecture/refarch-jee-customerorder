@@ -1,9 +1,4 @@
-define(
-//begin v1.x content
-{
-	"$locale": "zh-hant-hk",
-	"decimalFormat-short": "000T",
-	"nan": "非數值"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'currencyFormat':"¤#,##0.00;(¤#,##0.00)"
+})

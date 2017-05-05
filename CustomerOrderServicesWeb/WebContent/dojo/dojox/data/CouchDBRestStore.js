@@ -1,14 +1,15 @@
-define(["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
+dojo.provide("dojox.data.CouchDBRestStore");
+dojo.require("dojox.data.JsonRestStore");
 
-var CouchDBRestStore = dojo.declare("dojox.data.CouchDBRestStore",
+// A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
+// and deviations from standard HTTP Rest.
+// NOTE: CouchDB is not designed to be run on a public facing network. There is no access control
+// on database documents, and you should NOT rely on client side control to implement security.
+
+
+dojo.declare("dojox.data.CouchDBRestStore",
 	dojox.data.JsonRestStore,
 	{
-	// summary:
-	//		A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
-	//		and deviations from standard HTTP Rest.
-	//		NOTE: CouchDB is not designed to be run on a public facing network. There is no access control
-	//	 	on database documents, and you should NOT rely on client side control to implement security.
-
 		save: function(kwArgs){
 			var actions = this.inherited(arguments); // do the default save and then update for version numbers
 			var prefix = this.service.servicePath;
@@ -27,10 +28,10 @@ var CouchDBRestStore = dojo.declare("dojox.data.CouchDBRestStore",
 		},
 		fetch: function(args){
 			// summary:
-			//		This only differs from JsonRestStore in that it, will put the query string the query part of the URL and it handles start and count
+			// 		This only differs from JsonRestStore in that it, will put the query string the query part of the URL and it handles start and count
 			args.query = args.query || '_all_docs?';
 			if(args.start){
-				args.query = (args.query ? (args.query + '&') : '') + 'skip=' + args.start;
+				args.query = (args.query ? (args.query + '&') : '') + 'startkey=' + args.start;
 				delete args.start;
 			}
 			if(args.count){
@@ -61,7 +62,7 @@ var CouchDBRestStore = dojo.declare("dojox.data.CouchDBRestStore",
 );
 
 // create a set of stores
-CouchDBRestStore.getStores = function(couchServerUrl){
+dojox.data.CouchDBRestStore.getStores = function(couchServerUrl){
 	var dfd = dojo.xhrGet({
 		url: couchServerUrl+"_all_dbs",
 		handleAs: "json",
@@ -76,7 +77,3 @@ CouchDBRestStore.getStores = function(couchServerUrl){
 	});
 	return stores;
 };
-
-return CouchDBRestStore;
-
-});

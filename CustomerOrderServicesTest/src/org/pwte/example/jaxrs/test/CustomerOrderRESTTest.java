@@ -1,8 +1,10 @@
 package org.pwte.example.jaxrs.test;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -10,7 +12,6 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.apache.wink.client.ApacheHttpClientConfig;
 import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.ClientResponse;
 import org.apache.wink.client.Resource;
@@ -27,8 +28,8 @@ public class CustomerOrderRESTTest extends TestCase {
 	private String urlPrefix; 
 	private String urlTestPrefix;
 	
-	private ClientConfig config = new ApacheHttpClientConfig();
-	private ClientConfig config2 = new ApacheHttpClientConfig();
+	private ClientConfig clientConfig = new ClientConfig();
+	private ClientConfig clientConfig2 = new ClientConfig();
 		
 	public void setUp() throws Exception 
 	{
@@ -42,20 +43,39 @@ public class CustomerOrderRESTTest extends TestCase {
 			urlTestPrefix = "http://localhost:9080/CustomerOrderServicesTest/";
 		}
 		
+		javax.ws.rs.core.Application app = new javax.ws.rs.core.Application() {
+	        public Set<Class<?>> getClasses() {
+	            Set<Class<?>> classes = new HashSet<Class<?>>();
+	    		classes.add(org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider.class);
+	    		
+	    		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JObjectProvider.class);
+	    		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JArrayProvider.class);
+	    		classes.add(com.ibm.websphere.jaxrs.providers.json4j.JSON4JJAXBProvider.class);
+	    		
+	            return classes;
+	        }
+	    };
+	    
+	    clientConfig.applications(app);
+	    clientConfig2.applications(app);
+	    
+		clientConfig.setLoadWinkApplications(false);
+		clientConfig2.setLoadWinkApplications(false);
+		
 		BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
 		basicAuth.setUserName("rbarcia");
 		basicAuth.setPassword("bl0wfish");
-		config.handlers(basicAuth);
+		clientConfig.handlers(basicAuth);
 		
 		BasicAuthSecurityHandler basicAuth2 = new BasicAuthSecurityHandler();
 		basicAuth2.setUserName("kbrown");
 		basicAuth2.setPassword("bl0wfish");
-		config2.handlers(basicAuth2);
+		clientConfig2.handlers(basicAuth2);
 	}
 	
 	public void testLoadCustomer()
 	{
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 		
 		Resource resource = client.resource(urlPrefix + "jaxrs/Customer");
 		ClientResponse resourceResponse = resource.accept("application/json").get();
@@ -84,7 +104,7 @@ public class CustomerOrderRESTTest extends TestCase {
 		Resource resourceTest = clientTest.resource(urlTestPrefix+"sampleJSON/newAddress1.json");
 		JSONObject newAddress1 = resourceTest.accept("application/json").get(JSONObject.class);
 		
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 
 		Resource customerAddress = client.resource(urlPrefix + "jaxrs/Customer/Address");
 		ClientResponse clientResponse = customerAddress.contentType(MediaType.APPLICATION_JSON).put(newAddress1.serialize());
@@ -112,7 +132,7 @@ public class CustomerOrderRESTTest extends TestCase {
 	
 	public void testOrderProcess() throws IOException
 	{
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 		RestClient clientTest = new RestClient();
 		
 		Resource liTest = clientTest.resource(urlTestPrefix+"sampleJSON/LineItem1.json");
@@ -220,7 +240,7 @@ public class CustomerOrderRESTTest extends TestCase {
 	
 	public void testOrderHistory() throws IOException
 	{
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 		Resource orderHistoryTest = client.resource(urlPrefix + "jaxrs/Customer/Orders");
 		ClientResponse clientResponse = orderHistoryTest.accept("application/json").get();
 		JSONArray orderHistory = clientResponse.getEntity(JSONArray.class);
@@ -243,7 +263,7 @@ public class CustomerOrderRESTTest extends TestCase {
 	public void testFormMetaData ()
 	{
 		//Residential User
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 		Resource info = client.resource(urlPrefix + "jaxrs/Customer/TypeForm");
 		ClientResponse clientResponse = info.accept("application/json").get();
 		JSONObject formData = clientResponse.getEntity(JSONObject.class);
@@ -272,7 +292,7 @@ public class CustomerOrderRESTTest extends TestCase {
 		
 		
 		//Business User
-		RestClient client2 = new RestClient(config2);
+		RestClient client2 = new RestClient(clientConfig2);
 		Resource info2 = client2.resource(urlPrefix + "jaxrs/Customer/TypeForm");
 		ClientResponse clientResponse2 = info2.accept("application/json").get();
 		formData = clientResponse2.getEntity(JSONObject.class);
@@ -308,7 +328,7 @@ public class CustomerOrderRESTTest extends TestCase {
 	public void testUpdateInfo() throws IOException
 	{
 		//Residential User
-		RestClient client = new RestClient(config);
+		RestClient client = new RestClient(clientConfig);
 		long householdSize = 3;
 		JSONObject data = new JSONObject();
 		data.put("type", "RESIDENTIAL");
@@ -324,7 +344,7 @@ public class CustomerOrderRESTTest extends TestCase {
 		assertEquals(204, clientResponse.getStatusCode());
 		
 		//Business User
-		RestClient client2 = new RestClient(config2);
+		RestClient client2 = new RestClient(clientConfig2);
 		String desc = "High Tech Partner";
 		data = new JSONObject();
 		data.put("type", "BUSINESS");

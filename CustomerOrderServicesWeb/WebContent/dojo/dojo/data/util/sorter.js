@@ -1,21 +1,14 @@
-define(["../../_base/lang"], function(lang){
-	// module:
-	//		dojo/data/util/sorter
-	// summary:
-	//		TODOC
+dojo.provide("dojo.data.util.sorter");
 
-var sorter = {};
-lang.setObject("dojo.data.util.sorter", sorter);
-
-sorter.basicComparator = function(	/*anything*/ a,
+dojo.data.util.sorter.basicComparator = function(	/*anything*/ a, 
 													/*anything*/ b){
-	// summary:
-	//		Basic comparison function that compares if an item is greater or less than another item
-	// description:
+	//	summary:  
+	//		Basic comparision function that compares if an item is greater or less than another item
+	//	description:  
 	//		returns 1 if a > b, -1 if a < b, 0 if equal.
 	//		'null' values (null, undefined) are treated as larger values so that they're pushed to the end of the list.
 	//		And compared to each other, null is equivalent to undefined.
-
+	
 	//null is a problematic compare, so if null, we set to undefined.
 	//Makes the check logic simple, compact, and consistent
 	//And (null == undefined) === true, so the check later against null
@@ -28,31 +21,33 @@ sorter.basicComparator = function(	/*anything*/ a,
 		b = undefined;
 	}
 	if(a == b){
-		r = 0;
+		r = 0; 
 	}else if(a > b || a == null){
-		r = 1;
+		r = 1; 
 	}
 	return r; //int {-1,0,1}
 };
 
-sorter.createSortFunction = function(	/* attributes[] */sortSpec, /*dojo/data/api/Read*/ store){
-	// summary:
+dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortSpec,
+														/*dojo.data.core.Read*/ store){
+	//	summary:  
 	//		Helper function to generate the sorting function based off the list of sort attributes.
-	// description:
+	//	description:  
 	//		The sort function creation will look for a property on the store called 'comparatorMap'.  If it exists
 	//		it will look in the mapping for comparisons function for the attributes.  If one is found, it will
 	//		use it instead of the basic comparator, which is typically used for strings, ints, booleans, and dates.
 	//		Returns the sorting function for this particular list of attributes and sorting directions.
-	// sortSpec:
+	//
+	//	sortSpec: array
 	//		A JS object that array that defines out what attribute names to sort on and whether it should be descenting or asending.
 	//		The objects should be formatted as follows:
-	// |	{
-	// |		attribute: "attributeName-string" || attribute,
-	// |		descending: true|false;   // Default is false.
-	// |	}
-	// store:
+	//		{
+	//			attribute: "attributeName-string" || attribute,
+	//			descending: true|false;   // Default is false.
+	//		}
+	//	store: object
 	//		The datastore object to look up item values from.
-
+	//
 	var sortFunctions=[];
 
 	function createSortFunction(attr, dir, comp, s){
@@ -66,7 +61,7 @@ sorter.createSortFunction = function(	/* attributes[] */sortSpec, /*dojo/data/ap
 	}
 	var sortAttribute;
 	var map = store.comparatorMap;
-	var bc = sorter.basicComparator;
+	var bc = dojo.data.util.sorter.basicComparator;
 	for(var i = 0; i < sortSpec.length; i++){
 		sortAttribute = sortSpec[i];
 		var attr = sortAttribute.attribute;
@@ -79,7 +74,7 @@ sorter.createSortFunction = function(	/* attributes[] */sortSpec, /*dojo/data/ap
 				}
 				comp = map[attr] || bc;
 			}
-			sortFunctions.push(createSortFunction(attr,
+			sortFunctions.push(createSortFunction(attr, 
 				dir, comp, store));
 		}
 	}
@@ -91,9 +86,6 @@ sorter.createSortFunction = function(	/* attributes[] */sortSpec, /*dojo/data/ap
 				return ret;//int
 			}
 		}
-		return 0; //int
+		return 0; //int  
 	}; // Function
 };
-
-return sorter;
-});

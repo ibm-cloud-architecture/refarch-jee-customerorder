@@ -1,17 +1,12 @@
-define([
-	"dojo/_base/declare", // declare
-	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/kernel", // kernel.experimental
-	"dojo/_base/lang", // lang.hitch
-	"dojo/on",
-	"../_Plugin",
-	"../../form/ToggleButton"
-], function(declare, domStyle, kernel, lang, on, _Plugin, ToggleButton){
+dojo.provide("dijit._editor.plugins.ToggleDir");
+dojo.experimental("dijit._editor.plugins.ToggleDir");
 
-	// module:
-	//		dijit/_editor/plugins/ToggleDir
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.ToggleButton");
 
-	var ToggleDir = declare("dijit._editor.plugins.ToggleDir", _Plugin, {
+dojo.declare("dijit._editor.plugins.ToggleDir",
+	dijit._editor._Plugin,
+	{
 		// summary:
 		//		This plugin is used to toggle direction of the edited document,
 		//		independent of what direction the whole page is.
@@ -23,41 +18,47 @@ define([
 		command: "toggleDir",
 
 		// Override _Plugin.buttonClass to use a ToggleButton for this plugin rather than a vanilla Button
-		buttonClass: ToggleButton,
+		buttonClass: dijit.form.ToggleButton,
 
 		_initButton: function(){
+			// Override _Plugin._initButton() to setup handler for button click events.
 			this.inherited(arguments);
-
-			var button = this.button,
-				editorLtr = this.editor.isLeftToRight();
-
-			this.own(this.button.on("change", lang.hitch(this, function(checked){
-				this.editor.set("textDir", editorLtr ^ checked ? "ltr" : "rtl");
-			})));
-
-			// Button should be checked if the editor's textDir is opposite of the editor's dir.
-			// Note that the arrow in the icon points in opposite directions depending on the editor's dir.
-			var editorDir = editorLtr ? "ltr" : "rtl";
-			function setButtonChecked(textDir){
-				button.set("checked", textDir && textDir !== editorDir, false);
-			}
-			setButtonChecked(this.editor.get("textDir"));
-			this.editor.watch("textDir", function(name, oval, nval){
-				setButtonChecked(nval);
-			});
+			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+				var editDoc = this.editor.editorObject.contentWindow.document.documentElement;
+				//IE direction has to toggle on the body, not document itself.
+				//If you toggle just the document, things get very strange in the
+				//view.  But, the nice thing is this works for all supported browsers.
+				editDoc = editDoc.getElementsByTagName("body")[0];
+				var isLtr = dojo.getComputedStyle(editDoc).direction == "ltr";
+				this.button.set("checked", !isLtr);
+				this.connect(this.button, "onChange", "_setRtl");
+			}));
 		},
 
 		updateState: function(){
+			// Override _Plugin.updateState() to do nothing, since we don't need to react to changes in the
+			// editor like arrow keys etc.
+		},
+
+		_setRtl: function(rtl){
 			// summary:
-			//		Over-ride for button state control for disabled to work.
-			this.button.set("disabled", this.get("disabled"));
+			//		Handler for button click events, to switch the text direction of the editor
+			var dir = "ltr";
+			if(rtl){
+				dir = "rtl";
+			}
+			var editDoc = this.editor.editorObject.contentWindow.document.documentElement;
+			editDoc = editDoc.getElementsByTagName("body")[0];
+			editDoc.dir/*html node*/ = dir;
 		}
-	});
+	}
+);
 
-	// Register this plugin.
-	_Plugin.registry["toggleDir"] = function(){
-		return new ToggleDir({command: "toggleDir"});
-	};
-
-	return ToggleDir;
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+	case "toggleDir":
+		o.plugin = new dijit._editor.plugins.ToggleDir({command: o.args.name});
+	}
 });

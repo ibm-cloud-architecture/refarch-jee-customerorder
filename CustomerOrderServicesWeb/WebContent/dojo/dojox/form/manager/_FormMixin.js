@@ -1,15 +1,12 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/kernel",
-	"dojo/_base/event",
-	"dojo/window",
-	"./_Mixin",
-	"dojo/_base/declare"
-], function(lang, dojo, event, windowUtils, _Mixin, declare){
-	var fm = lang.getObject("dojox.form.manager", true),
+dojo.provide("dojox.form.manager._FormMixin");
+
+dojo.require("dojox.form.manager._Mixin");
+
+(function(){
+	var fm = dojox.form.manager,
 		aa = fm.actionAdapter;
 
-	return declare("dojox.form.manager._FormMixin", null, {
+	dojo.declare("dojox.form.manager._FormMixin", null, {
 		// summary:
 		//		Form manager's mixin for form-specific functionality.
 		// description:
@@ -39,7 +36,7 @@ define([
 		// form-specific functionality
 
 		_onReset: function(evt){
-			// NOTE: this function is taken from dijit.form.Form, it works only
+			// NOTE: this function is taken from dijit.formForm, it works only
 			// for form-based managers.
 
 			// create fake event so we can know if preventDefault() is called
@@ -54,12 +51,12 @@ define([
 			if(!(this.onReset(faux) === false) && faux.returnValue){
 				this.reset();
 			}
-			event.stop(evt);
+			dojo.stopEvent(evt);
 			return false;
 		},
 
 		onReset: function(){
-			// summary:
+			//	summary:
 			//		Callback when user resets the form. This method is intended
 			//		to be over-ridden. When the `reset` method is called
 			//		programmatically, the return value from `onReset` is used
@@ -86,12 +83,12 @@ define([
 			// for form-based managers.
 
 			if(this.onSubmit(evt) === false){ // only exactly false stops submit
-				event.stop(evt);
+				dojo.stopEvent(evt);
 			}
 		},
 
 		onSubmit: function(){
-			// summary:
+			//	summary:
 			//		Callback when user submits the form. This method is
 			//		intended to be over-ridden, but by default it checks and
 			//		returns the validity of form elements. When the `submit`
@@ -118,7 +115,7 @@ define([
 			for(var name in this.formWidgets){
 				var stop = false;
 				aa(function(_, widget){
-					if(!widget.get("disabled") && widget.isValid && !widget.isValid()){
+					if(!widget.attr("disabled") && widget.isValid && !widget.isValid()){
 						stop = true;
 					}
 				}).call(this, null, this.formWidgets[name].widget);
@@ -127,34 +124,6 @@ define([
 				}
 			}
 			return true;
-		},
-		validate: function(){
-			// summary:
-			//		validate() returns if the form is valid - same as isValid - 
-			//		but provides a few additional (ui-specific) features: it 
-			//		will highlight any sub-widgets that are not valid it will 
-			//		call focus() on the first invalid sub-widget
-			var isValid = true,
-				formWidgets = this.formWidgets,
-				didFocus = false, name;
-
-			for(name in formWidgets){
-				aa(function(_, widget){
-					// Need to set this so that "required" widgets get their
-					// state set.
-					widget._hasBeenBlurred = true;
-					var valid = widget.disabled || !widget.validate || widget.validate();
-					if(!valid && !didFocus){
-						// Set focus of the first non-valid widget
-						windowUtils.scrollIntoView(widget.containerNode || widget.domNode);
-						widget.focus();
-						didFocus = true;
-					}
-					isValid = isValid && valid;
-				}).call(this, null, formWidgets[name].widget);
-			}
-
-			return isValid;
 		}
 	});
-});
+})();

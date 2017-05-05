@@ -1,13 +1,12 @@
-define(
 ({
-	displayOptions: "[แสดงอ็อพชัน]",
-	title: "หัวเรื่อง",
+	displayOptions: "[อ็อพชันการแสดงผล]",
+	title: "ชื่อเรื่อง",
 	authors: "ผู้เขียน",
-	contributors: "ผู้ร่วมให้ข้อมูล",
+	contributors: "ผู้อนุเคราะห์",
 	id: "ID",
 	close: "[ปิด]",
 	updated: "อัพเดต",
-	summary: "ยอดรวม",
+	summary: "สรุป",
 	content: "เนื้อหา"
 })
-);
+

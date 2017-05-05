@@ -1,34 +1,30 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_editor/_Plugin",
-	"dijit/form/Button",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojo/i18n!dojox/editor/plugins/nls/Save"
-], function(dojo, dijit, dojox, _Plugin) {
+dojo.provide("dojox.editor.plugins.Save");
 
-var Save = dojo.declare("dojox.editor.plugins.Save", _Plugin, {
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dojox.editor.plugins", "Save");
+
+dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides Save capability to the editor.  When
-	//		clicked, the document in the editor frame will be posted to the URL
+	//		This plugin provides Save cabability to the editor.  When 
+	//		clicked, the document in the editor frame will be osted to the URL
 	//		provided, or none, if none provided.  Users who desire a different save
-	//		function can extend this plugin (via dojo.extend) and over-ride the
+	//		function can extend this plugin (via dojo.extend) and over-ride the 
 	//		save method	while save is in process, the save button is disabled.
 
 	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from `iconClassPrefix`
+	//		The CSS class name for the button node is formed from `iconClassPrefix` 
 	//		and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
-	// url: [public] String
-	//		The URL to POST the content back to.  Used by the save function.
+	// url [public]	String
+	//		The URL to POST the content back to.  Used by the save function. 
 	url: "",
 
-	// logResults: [public] boolean
-	//		Boolean flag to indicate that the default action for save and
+	// logErrors [public] boolean
+	//		Boolean flag to indicate that the default action for save and 
 	//		error handlers is to just log to console.  Default is true.
 	logResults: true,
 
@@ -43,12 +39,6 @@ var Save = dojo.declare("dojox.editor.plugins.Save", _Plugin, {
 			tabIndex: "-1",
 			onClick: dojo.hitch(this, "_save")
 		});
-	},
-	
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -100,7 +90,7 @@ var Save = dojo.declare("dojox.editor.plugins.Save", _Plugin, {
 
 	onSuccess: function(resp, ioargs){
 		// summary:
-		//		User over-ridable save success function for editor content.
+		//		User over-ridable save success function for editor content.  
 		//		Be sure to call this.inherited(arguments) if over-riding this method.
 		// resp:
 		//		The response from the server, if any, in text format.
@@ -114,7 +104,7 @@ var Save = dojo.declare("dojox.editor.plugins.Save", _Plugin, {
 
 	onError: function(error, ioargs){
 		// summary:
-		//		User over-ridable save success function for editor content.
+		//		User over-ridable save success function for editor content.  
 		//		Be sure to call this.inherited(arguments) if over-riding this method.
 		// resp:
 		//		The response from the server, if any, in text format.
@@ -132,13 +122,9 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "save"){
-		o.plugin = new Save({
+		o.plugin = new dojox.editor.plugins.Save({
 			url: ("url" in o.args)?o.args.url:"",
 			logResults: ("logResults" in o.args)?o.args.logResults:true
 		});
 	}
-});
-
-return Save;
-
 });

@@ -1,27 +1,23 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/kernel", "dojo/_base/json", "dojo/_base/xhr"],
-  function(declare, lang, kernel, jsonUtil, xhr) {
+dojo.provide("dojox.data.FileStore");
 
-return declare("dojox.data.FileStore", null, {
+dojo.declare("dojox.data.FileStore", null, {
 	constructor: function(/*Object*/args){
-		// summary:
+		//	summary:
 		//		A simple store that provides a datastore interface to a filesystem.
-		// description:
+		//	description:
 		//		A simple store that provides a datastore interface to a filesystem.  It takes a few parameters
 		//		for initialization:
-		//
-		//		- url:	The URL of the service which provides the file store serverside implementation.
-		//		- label:	The attribute of the file to use as the human-readable text.  Default is 'name'.
-		//
+		//			url:	The URL of the service which provides the file store serverside implementation.
+		//			label:	The attribute of the file to use as the huma-readable text.  Default is 'name'.
 		//		The purpose of this store is to represent a file as a datastore item.  The
 		//		datastore item by default has the following attributes that can be examined on it.
-		//
-		//		- directory:	Boolean indicating if the file item represents a directory.
-		//		- name:	The filename with no path informatiom.
-		//		- path:	The file complete file path including name, relative to the location the
-		//			file service scans from
-		//		- size:	The size of the file, in bytes.
-		//		- parentDir:	The parent directory path.
-		//		- children:	Any child files contained by a directory file item.
+		//			directory:	Boolean indicating if the file item represents a directory.
+		//			name:	The filename with no path informatiom.
+		//			path:	The file complete file path including name, relative to the location the
+		//					file service scans from
+		//			size:	The size of the file, in bytes.
+		//			parentDir:	The parent directory path.
+		//			children:	Any child files contained by a directory file item.
 		//
 		//		Note that the store's server call pattern is RESTlike.
 		//
@@ -36,10 +32,10 @@ return declare("dojox.data.FileStore", null, {
 			this.url = args.url;
 		}
 		if(args && args.options){
-			if(lang.isArray(args.options)){
+			if(dojo.isArray(args.options)){
 				this.options = args.options;
 			}else{
-				if(lang.isString(args.options)){
+				if(dojo.isString(args.options)){
 					this.options = args.options.split(",");
 				}
 			}
@@ -61,18 +57,18 @@ return declare("dojox.data.FileStore", null, {
 	_storeRef: "_S",
 
 	// label: [public] string
-	//		Default attribute to use to represent the item as a user-readable
+	//		Default attribute to use to represent the item as a user-readable 
 	//		string.  Public, so users can change it.
 	label: "name",
 
 	// _identifier: [private] string
-	//		Default attribute to use to represent the item's identifier.
-	//		Path should always be unique in the store instance.
-	_identifier: "path",
+	//		Default attribute to use to represent the item's identifier.  
+	//		Path should always be unique in the store instance.		
+	_identifier: "path",	
 
 	// _attributes: [private] string
 	//		Internal variable of attributes all file items should have.
-	_attributes: ["children", "directory", "name", "path", "modified", "size", "parentDir"],
+	_attributes: ["children", "directory", "name", "path", "modified", "size", "parentDir"], //
 	
 	// pathSeparator: [public] string
 	//		The path separator to use when chaining requests for children
@@ -80,7 +76,7 @@ return declare("dojox.data.FileStore", null, {
 	pathSeparator: "/",
 
 	// options: [public] array
-	//		Array of options to always send when doing requests.
+	//		Array of options to always send when doing requests.  
 	//		Back end service controls this, like 'dirsOnly', 'showHiddenFiles', 'expandChildren', etc.
 	options: [],
 
@@ -94,10 +90,10 @@ return declare("dojox.data.FileStore", null, {
 
 	_assertIsItem: function(/* item */ item){
 		// summary:
-		//		This function tests whether the item passed in is indeed an item in the store.
-		// item:
+		//      This function tests whether the item passed in is indeed an item in the store.
+		// item: 
 		//		The item to test for being contained by the store.
-		if(!this.isItem(item)){
+		if(!this.isItem(item)){ 
 			throw new Error("dojox.data.FileStore: a function was passed an item argument that was not an item");
 		}
 	},
@@ -105,9 +101,9 @@ return declare("dojox.data.FileStore", null, {
 	_assertIsAttribute: function(/* attribute-name-string */ attribute){
 		// summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		// attribute:
+		// attribute: 
 		//		The attribute to test for being contained by the store.
-		if(typeof attribute !== "string"){
+		if(typeof attribute !== "string"){ 
 			throw new Error("dojox.data.FileStore: a function was passed an attribute argument that was not an attribute name string");
 		}
 	},
@@ -115,16 +111,16 @@ return declare("dojox.data.FileStore", null, {
 	pathAsQueryParam: false, //Function to switch between REST style URL lookups and passing the path to specific items as a query param: 'path'.
 
 	getFeatures: function(){
-		// summary:
-		//		See dojo/data/api/Read.getFeatures()
+		// summary: 
+		//      See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true, 'dojo.data.api.Identity':true
 		};
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		// summary:
-		//		See dojo/data/api/Read.getValue()
+		// summary: 
+		//      See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
 			return values[0];
@@ -133,53 +129,53 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	getAttributes: function(item){
-		// summary:
-		//		See dojo/data/api/Read.getAttributes()
-		return this._attributes;
+		// summary: 
+		//      See dojo.data.api.Read.getAttributes()
+		return this._attributes; 
 	},
 
 	hasAttribute: function(item, attribute){
-		// summary:
-		//		See dojo/data/api/Read.hasAttribute()
+		// summary: 
+		//      See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		return (attribute in item);
 	},
 	
 	getIdentity: function(/* item */ item){
-		// summary:
-		//		See dojo/data/api/Identity.getIdentity()
-		return this.getValue(item, this._identifier);
+		// summary: 
+		//		See dojo.data.api.Identity.getIdentity()
+		return this.getValue(item, this._identifier); 
 	},
 	
 	getIdentityAttributes: function(item){
-		// summary:
-		//		See dojo/data/api/Read.getLabelAttributes()
+		// summary: 
+		//      See dojo.data.api.Read.getLabelAttributes()
 		return [this._identifier];
 	},
 
 
 	isItemLoaded: function(item){
-		// summary:
-		//		See dojo/data/api/Read.isItemLoaded()
-		var loaded = this.isItem(item);
-		if(loaded && typeof item._loaded == "boolean" && !item._loaded){
-			loaded = false;
-		}
-		return loaded;
+		 //	summary: 
+		 //      See dojo.data.api.Read.isItemLoaded()
+		 var loaded = this.isItem(item);
+		 if(loaded && typeof item._loaded == "boolean" && !item._loaded){
+		 	loaded = false; 
+		 }
+		 return loaded;
 	},
 
 	loadItem: function(keywordArgs){
-		// summary:
-		//		See dojo/data/api/Read.loadItem()
+		// summary: 
+		//      See dojo.data.api.Read.loadItem()
 		var item = keywordArgs.item;
 		var self = this;
-		var scope = keywordArgs.scope || kernel.global;
+		var scope = keywordArgs.scope || dojo.global;
 
 		var content = {};
 
 		if(this.options.length > 0){
-			content.options = jsonUtil.toJson(this.options);
+			content.options = dojo.toJson(this.options);
 		}
 
 		if(this.pathAsQueryParam){
@@ -193,7 +189,7 @@ return declare("dojox.data.FileStore", null, {
 			failOk: this.failOk
 		};
 
-		var deferred = xhr.get(xhrData);
+		var deferred = dojo.xhrGet(xhrData);
 		deferred.addErrback(function(error){
 				if(keywordArgs.onError){
 					keywordArgs.onError.call(scope, error);
@@ -203,7 +199,7 @@ return declare("dojox.data.FileStore", null, {
 		deferred.addCallback(function(data){
 			delete item.parentPath;
 			delete item._loaded;
-			lang.mixin(item, data);
+			dojo.mixin(item, data);
 			self._processItem(item);
 			if(keywordArgs.onItem){
 				keywordArgs.onItem.call(scope, item);
@@ -212,20 +208,20 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	getLabel: function(item){
-		// summary:
-		//		See dojo/data/api/Read.getLabel()
+		// summary: 
+		//      See dojo.data.api.Read.getLabel()
 		return this.getValue(item,this.label);
 	},
 	
 	getLabelAttributes: function(item){
-		// summary:
-		//		See dojo/data/api/Read.getLabelAttributes()
+		// summary: 
+		//      See dojo.data.api.Read.getLabelAttributes()
 		return [this.label];
 	},
 	
 	containsValue: function(item, attribute, value){
-		// summary:
-		//		See dojo/data/api/Read.containsValue()
+		// summary: 
+		//      See dojo.data.api.Read.containsValue()
 		var values = this.getValues(item,attribute);
 		for(var i = 0; i < values.length; i++){
 			if(values[i] == value){
@@ -236,23 +232,23 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	getValues: function(item, attribute){
-		// summary:
-		//		See dojo/data/api/Read.getValue()
+		// summary: 
+		//      See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		
 		var value = item[attribute];
-		if(typeof value !== "undefined" && !lang.isArray(value)){
+		if(typeof value !== "undefined" && !dojo.isArray(value)){
 			value = [value];
-		}else if(typeof value === "undefined"){
+		}else if(typeof value === "undefined"){	
 			value = [];
 		}
 		return value;
 	},
 
 	isItem: function(item){
-		// summary:
-		//		See dojo/data/api/Read.isItem()
+		// summary: 
+		//      See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] === this){
 			return true;
 		}
@@ -260,8 +256,8 @@ return declare("dojox.data.FileStore", null, {
 	},
 	
 	close: function(request){
-		// summary:
-		//		See dojo/data/api/Read.close()
+		// summary: 
+		//      See dojo.data.api.Read.close()
 	},
 
 	fetch: function(request){
@@ -275,20 +271,20 @@ return declare("dojox.data.FileStore", null, {
 			request.store = this;
 		}
 		var self = this;
-		var scope = request.scope || kernel.global;
+		var scope = request.scope || dojo.global;
 
 		//Generate what will be sent over.
 		var reqParams = {};
 		if(request.query){
-			reqParams.query = jsonUtil.toJson(request.query);
+			reqParams.query = dojo.toJson(request.query);
 		}
 
 		if(request.sort){
-			reqParams.sort = jsonUtil.toJson(request.sort);
+			reqParams.sort = dojo.toJson(request.sort);
 		}
 
 		if(request.queryOptions){
-			reqParams.queryOptions = jsonUtil.toJson(request.queryOptions);
+			reqParams.queryOptions = dojo.toJson(request.queryOptions);
 		}
 
 		if(typeof request.start == "number"){
@@ -299,7 +295,7 @@ return declare("dojox.data.FileStore", null, {
 		}
 
 		if(this.options.length > 0){
-			reqParams.options = jsonUtil.toJson(this.options);
+			reqParams.options = dojo.toJson(this.options);
 		}
 
 		var getArgs = {
@@ -311,7 +307,7 @@ return declare("dojox.data.FileStore", null, {
 		};
 
 
-		var deferred = xhr.get(getArgs);
+		var deferred = dojo.xhrGet(getArgs);
 
 		deferred.addCallback(function(data){self._processResult(data, request);});
 		deferred.addErrback(function(error){
@@ -322,16 +318,16 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	fetchItemByIdentity: function(keywordArgs){
-		// summary:
-		//		See dojo/data/api/Read.loadItem()
+		// summary: 
+		//      See dojo.data.api.Read.loadItem()
 		var path = keywordArgs.identity;
 		var self = this;
-		var scope = keywordArgs.scope || kernel.global;
+		var scope = keywordArgs.scope || dojo.global;
 
 		var content = {};
 
 		if(this.options.length > 0){
-			content.options = jsonUtil.toJson(this.options);
+			content.options = dojo.toJson(this.options);
 		}
 
 		if(this.pathAsQueryParam){
@@ -345,7 +341,7 @@ return declare("dojox.data.FileStore", null, {
 			failOk: this.failOk
 		};
 
-		var deferred = xhr.get(xhrData);
+		var deferred = dojo.xhrGet(xhrData);
 		deferred.addErrback(function(error){
 				if(keywordArgs.onError){
 					keywordArgs.onError.call(scope, error);
@@ -361,62 +357,62 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	_processResult: function(data, request){
-		var scope = request.scope || kernel.global;
-		try{
-			//If the data contains a path separator, set ours
-			if(data.pathSeparator){
-				this.pathSeparator = data.pathSeparator;
-			}
-			//Invoke the onBegin handler, if any, to return the
-			//size of the dataset as indicated by the service.
-			if(request.onBegin){
-				request.onBegin.call(scope, data.total, request);
-			}
-			//Now process all the returned items thro
-			var items = this._processItemArray(data.items);
-			if(request.onItem){
+		 var scope = request.scope || dojo.global;
+		 try{
+			 //If the data contains a path separator, set ours
+			 if(data.pathSeparator){
+				 this.pathSeparator = data.pathSeparator;
+			 }
+			 //Invoke the onBegin handler, if any, to return the
+			 //size of the dataset as indicated by the service.
+			 if(request.onBegin){
+				 request.onBegin.call(scope, data.total, request);
+			 }
+			 //Now process all the returned items thro
+			 var items = this._processItemArray(data.items);
+			 if(request.onItem){
 				var i;
 				for(i = 0; i < items.length; i++){
 					request.onItem.call(scope, items[i], request);
 				}
 				items = null;
-			}
-			if(request.onComplete){
-				request.onComplete.call(scope, items, request);
-			}
-		}catch (e){
-			if(request.onError){
-				request.onError.call(scope, e, request);
-			}else{
-				console.log(e);
-			}
-		}
+			 }
+			 if(request.onComplete){
+				 request.onComplete.call(scope, items, request);
+			 }
+		 }catch (e){
+			 if(request.onError){
+				 request.onError.call(scope, e, request);
+			 }else{
+				 console.log(e);
+			 }
+		 }
 	},
 	
 	_processItemArray: function(itemArray){
-		// summary:
-		//		Internal function for processing an array of items for return.
-		var i;
-		for(i = 0; i < itemArray.length; i++){
-			this._processItem(itemArray[i]);
-		}
-		return itemArray;
+		 //	summary:
+		 //		Internal function for processing an array of items for return.
+		 var i;
+		 for(i = 0; i < itemArray.length; i++){
+		 	this._processItem(itemArray[i]);
+		 }
+		 return itemArray;
 	},
 	
 	_processItem: function(item){
-		// summary:
+		//	summary:
 		//		Internal function for processing an item returned from the store.
 		//		It sets up the store ref as well as sets up the attributes necessary
 		//		to invoke a lazy load on a child, if there are any.
 		if(!item){return null;}
 		item[this._storeRef] = this;
 		if(item.children && item.directory){
-			if(lang.isArray(item.children)){
+			if(dojo.isArray(item.children)){
 				var children = item.children;
 				var i;
 				for(i = 0; i < children.length; i++ ){
 					var name = children[i];
-					if(lang.isObject(name)){
+					if(dojo.isObject(name)){
 						children[i] = this._processItem(name);
 					}else{
 						children[i] = {name: name, _loaded: false, parentPath: item.path};
@@ -430,4 +426,4 @@ return declare("dojox.data.FileStore", null, {
 		return item;
 	}
 });
-});
+

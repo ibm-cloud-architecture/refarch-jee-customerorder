@@ -1,11 +1,15 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
+dojo.provide("dojox.charting.themes.Renkoo");
 
-	// created by Tom Trenka
+dojo.require("dojox.gfx.gradutils");
+dojo.require("dojox.charting.Theme");
 
-	var g = Theme.generateGradient,
+// created by Tom Trenka
+
+(function(){
+	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 150};
 	
-	themes.Renkoo = new Theme({
+	themes.Renkoo = new dc.Theme({
 		chart: {
 			fill:      "#123666",
 			pageStyle: {backgroundColor: "#123666", backgroundImage: "none", color: "#95afdb"}
@@ -22,7 +26,7 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 				color:     "#95afdb",
 				position:  "center",
 				font:      "normal normal normal 7pt Lucida Grande, Helvetica, Arial, sans-serif",	// labels on axis
-				fontColor: "#95afdb"	// color of labels
+				fontColor: "#95afdb"								// color of labels
 			}
 		},
 		series: {
@@ -39,17 +43,17 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 		},
 		seriesThemes: [
 			{fill: g(defaultFill, "#e7e391", "#f8f7de")},
-			{fill: g(defaultFill, "#ffb6b6", "#ffe8e8")},
-			{fill: g(defaultFill, "#bcda7d", "#eef7da")},
-			{fill: g(defaultFill, "#d5d5d5", "#f4f4f4")},
-			{fill: g(defaultFill, "#c1e3fd", "#e4f3ff")}
+			{fill: g(defaultFill, "#ffb6b6", "#ffe8e8")},	
+			{fill: g(defaultFill, "#bcda7d", "#eef7da")},	
+			{fill: g(defaultFill, "#d5d5d5", "#f4f4f4")},	
+			{fill: g(defaultFill, "#c1e3fd", "#e4f3ff")}	
 		],
 		markerThemes: [
-			{fill: "#fcfcf3", stroke: {color: "#e7e391"}},
-			{fill: "#fff1f1", stroke: {color: "#ffb6b6"}},
+			{fill: "#fcfcf3", stroke: {color: "#e7e391"}},	
+			{fill: "#fff1f1", stroke: {color: "#ffb6b6"}},	
 			{fill: "#fafdf4", stroke: {color: "#bcda7d"}},
-			{fill: "#fbfbfb", stroke: {color: "#d5d5d5"}},
-			{fill: "#f3faff", stroke: {color: "#c1e3fd"}}
+			{fill: "#fbfbfb", stroke: {color: "#d5d5d5"}},	
+			{fill: "#f3faff", stroke: {color: "#c1e3fd"}}	
 		]
 	});
 	
@@ -74,10 +78,8 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 	themes.Renkoo.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
+			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-	
-	return themes.Renkoo;
-});
+})();

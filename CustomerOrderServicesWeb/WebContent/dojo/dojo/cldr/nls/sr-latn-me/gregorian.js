@@ -1,7 +1,5 @@
-define(
-//begin v1.x content
-{
-	"dateFormat-long": "d.MM.y."
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/calendars/calendar-gregorian
+({
+	'dateFormat-long': "d.MM.yyyy."
+})
+                        

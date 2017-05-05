@@ -1,33 +1,30 @@
-define(
 ({
 	insertTableTitle: "Vložiť tabuľku",
 	modifyTableTitle: "Upraviť tabuľku",
 	rows: "Riadky:",
 	columns: "Stĺpce:",
-	align: "Zarovnanie:",
-	cellPadding: "Výplň buniek:",
-	cellSpacing: "Rozstup buniek:",
+	align: "Zarovnať:",
+	cellPadding: "Odsadenie obsahu buniek:",
+	cellSpacing: "Rozstupy buniek:",
 	tableWidth: "Šírka tabuľky:",
 	backgroundColor: "Farba pozadia:",
-	borderColor: "Farba rámika:",
-	borderThickness: "Hrúbka rámika:",
-	percent: "percent",
-	pixels: "pixlov",
-	"default": "predvolené",
+	borderColor: "Farba rámčeka:",
+	borderThickness: "Hrúbka rámčeka",
+	percent: "percentá",
+	pixels: "pixely",
+	"default": "štandardne",
 	left: "vľavo",
-	center: "stred",
+	center: "na stred",
 	right: "vpravo",
 	buttonSet: "Nastaviť", // translated elsewhere?
 	buttonInsert: "Vložiť",
-	buttonCancel: "Zrušiť",
+
 	selectTableLabel: "Vybrať tabuľku",
 	insertTableRowBeforeLabel: "Pridať riadok pred",
 	insertTableRowAfterLabel: "Pridať riadok za",
 	insertTableColumnBeforeLabel: "Pridať stĺpec pred",
 	insertTableColumnAfterLabel: "Pridať stĺpec za",
 	deleteTableRowLabel: "Vymazať riadok",
-	deleteTableColumnLabel: "Vymazať stĺpec",
-	colorTableCellTitle: "Farba pozadia bunky tabuľky",
-	tableContextMenuTitle: "Kontextová ponuka tabuľky"
+	deleteTableColumnLabel: "Vymazať stĺpec"
 })
-);
+

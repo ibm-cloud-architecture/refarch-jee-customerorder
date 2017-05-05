@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[表示オプション]",
 	title: "タイトル",
@@ -10,4 +9,3 @@ define(
 	summary: "要約",
 	content: "内容"
 })
-);

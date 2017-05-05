@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[επιλογές παρουσίασης]",
 	title: "Τίτλος",
@@ -10,4 +9,3 @@ define(
 	summary: "Περίληψη",
 	content: "Περιεχόμενο"
 })
-);

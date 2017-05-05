@@ -1,3 +1,3 @@
-define(["../main", "./_Selector"], function(dojox){
-	return dojox.grid._CheckBoxSelector;
-});
+dojo.provide("dojox.grid._CheckBoxSelector");
+
+dojo.require("dojox.grid._Selector");

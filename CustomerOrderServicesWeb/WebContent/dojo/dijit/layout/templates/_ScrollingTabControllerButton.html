@@ -1,4 +1,8 @@
-<div data-dojo-attach-event="ondijitclick:_onClick" class="dijitTabInnerDiv dijitTabContent dijitButtonContents"  data-dojo-attach-point="focusNode" role="button">
-	<span role="presentation" class="dijitInline dijitTabStripIcon" data-dojo-attach-point="iconNode"></span>
-	<span data-dojo-attach-point="containerNode,titleNode" class="dijitButtonText"></span>
+<div dojoAttachEvent="onclick:_onButtonClick">
+	<div waiRole="presentation" class="dijitTabInnerDiv" dojoattachpoint="innerDiv,focusNode">
+		<div waiRole="presentation" class="dijitTabContent dijitButtonContents" dojoattachpoint="tabContent">
+			<img waiRole="presentation" alt="" src="${_blankGif}" class="dijitTabStripIcon" dojoAttachPoint="iconNode"/>
+			<span dojoAttachPoint="containerNode,titleNode" class="dijitButtonText"></span>
+		</div>
+	</div>
 </div>

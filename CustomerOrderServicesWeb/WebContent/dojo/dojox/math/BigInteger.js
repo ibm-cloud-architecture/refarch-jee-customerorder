@@ -1,14 +1,13 @@
-// AMD-ID "dojox/math/BigInteger"
-define(["dojo", "dojox"], function(dojo, dojox) {
-
-	dojo.getObject("math.BigInteger", true, dojox);
-	dojo.experimental("dojox.math.BigInteger");
+dojo.provide("dojox.math.BigInteger");
+dojo.experimental("dojox.math.BigInteger");
 
 // Contributed under CLA by Tom Wu <tjw@cs.Stanford.EDU>
 // See http://www-cs-students.stanford.edu/~tjw/jsbn/ for details.
 
 // Basic JavaScript BN library - subset useful for RSA encryption.
 // The API for dojox.math.BigInteger closely resembles that of the java.math.BigInteger class in Java.
+
+(function(){
 
 	// Bits per digit
 	var dbits;
@@ -133,7 +132,7 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 	  else if(b == 2) k = 1;
 	  else if(b == 32) k = 5;
 	  else if(b == 4) k = 2;
-	  else { this._fromRadix(s,b); return; }
+	  else { this.fromRadix(s,b); return; }
 	  this.t = 0;
 	  this.s = 0;
 	  var i = s.length, mi = false, sh = 0;
@@ -425,9 +424,9 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 
 	// (protected) return "-1/this % 2^DB"; useful for Mont. reduction
 	// justification:
-	// xy == 1 (mod m)
-	// xy =  1+km
-	// xy(2-xy) = (1+km)(1-km)
+	//         xy == 1 (mod m)
+	//         xy =  1+km
+	//   xy(2-xy) = (1+km)(1-km)
 	// x[y(2-xy)] = 1-k^2m^2
 	// x[y(2-xy)] == 1 (mod m^2)
 	// if y is 1/x mod m, then y(2-xy) is 1/x mod m^2
@@ -572,18 +571,16 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 		// "constants"
 		ZERO:	nbv(0),
 		ONE:	nbv(1),
-
+		
 		// internal functions
 		_nbi: nbi,
 		_nbv: nbv,
 		_nbits: nbits,
-
+		
 		// internal classes
 		_Montgomery: Montgomery
 	});
 
 	// export to DojoX
 	dojox.math.BigInteger = BigInteger;
-
-	return dojox.math.BigInteger;
-});
+})();

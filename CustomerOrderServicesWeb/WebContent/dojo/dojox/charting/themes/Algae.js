@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Algae = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Algae");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Algae=new dxc.Theme({
 		colors: [
 			"#57808f",
 			"#506885",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#508567"
 		]
 	});
-	return themes.Algae;
-});
+})();

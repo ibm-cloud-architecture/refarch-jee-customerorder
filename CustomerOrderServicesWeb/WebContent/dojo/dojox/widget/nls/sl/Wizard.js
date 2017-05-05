@@ -1,7 +1,6 @@
-define(
 ({
 next: "Naprej",
-previous: "Prejšnji",
+previous: "Nazaj",
 done: "Opravljeno"
 })
-);
+

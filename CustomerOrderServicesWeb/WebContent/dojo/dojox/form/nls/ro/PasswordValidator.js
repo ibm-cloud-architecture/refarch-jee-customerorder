@@ -1,6 +1,5 @@
-define(
 ({
-        nomatchMessage: "Parolele nu se potrivesc.",
-	badPasswordMessage: "Parolă invalidă."
+        nomatchMessage: "Parolele nu se potrivesc. ",
+		badPasswordMessage: "Parola nu este validă. "
 })
-);
+

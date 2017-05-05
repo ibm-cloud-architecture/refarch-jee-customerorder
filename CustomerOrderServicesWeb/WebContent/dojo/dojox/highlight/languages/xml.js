@@ -1,5 +1,8 @@
-define(["../_base"], function(dh){
+dojo.provide("dojox.highlight.languages.xml");
 
+dojo.require("dojox.highlight._base");
+
+(function(){
 	var XML_COMMENT = {
 		className: 'comment',
 		begin: '<!--', end: '-->'
@@ -7,7 +10,7 @@ define(["../_base"], function(dh){
 	
 	var XML_ATTR = {
 		className: 'attribute',
-		begin: ' [a-zA-Z-]+\\s*=\\s*', end: '^',
+		begin: ' [a-zA-Z-]+=', end: '^',
 		contains: ['value']
 	};
 	
@@ -16,7 +19,7 @@ define(["../_base"], function(dh){
 		begin: '"', end: '"'
 	};
 	
-	var dhc = dh.constants;
+	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.xml = {
 		defaultMode: {
 			contains: ['pi', 'comment', 'cdata', 'tag']
@@ -59,7 +62,4 @@ define(["../_base"], function(dh){
 		XML_ATTR: XML_ATTR,
 		XML_VALUE: XML_VALUE
 	};
-
-	return dh.languages.xml;
-
-});
+})();

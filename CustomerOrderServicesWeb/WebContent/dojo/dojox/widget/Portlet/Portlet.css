@@ -39,9 +39,7 @@
 .nihilo .dojoxPortlet .dojoxPortletIcon {
 	background-image: url("../../../dijit/themes/nihilo/images/spriteRoundedIconsSmall.gif");
 }
-.claro .dojoxPortlet .dojoxPortletIcon {
-	background-image: url("../../../dijit/themes/tundra/images/spriteRoundedIconsSmall.gif");
-}
+.dojoxPortlet .dojoxCloseNode, 
 .dojoxPortlet .dojoxCloseNode {
 	background-position: right 0px;
 }
@@ -51,38 +49,27 @@
 
 .tundra .dojoxPortlet .dijitOpen .dojoxArrowDown,
 .soria .dojoxPortlet .dijitOpen .dojoxArrowDown,
-.nihilo .dojoxPortlet .dijitOpen .dojoxArrowDown,
-.claro .dojoxPortlet .dijitOpen .dojoxArrowDown{
+.nihilo .dojoxPortlet .dijitOpen .dojoxArrowDown {
 	background-position: -15px top;
 }
 .tundra .dojoxPortlet .dijitClosed .dojoxArrowDown,
 .soria .dojoxPortlet .dijitClosed .dojoxArrowDown,
-.nihilo .dojoxPortlet .dijitClosed .dojoxArrowDown,
-.claro .dojoxPortlet .dijitClosed .dojoxArrowDown {
+.nihilo .dojoxPortlet .dijitClosed .dojoxArrowDown {
 	background-position: 0 top;
 }
 
 .tundra .dojoxPortlet .dojoxPortletSettingsIcon,
 .soria .dojoxPortlet .dojoxPortletSettingsIcon,
-.nihilo .dojoxPortlet .dojoxPortletSettingsIcon,
-.claro .dojoxPortlet .dojoxPortletSettingsIcon {
+.nihilo .dojoxPortlet .dojoxPortletSettingsIcon {
 	background-image: url(images/icons.png);
 	background-position: 0 1px;
 }
 .tundra .dojoxPortletSettingsContainer,
 .soria .dojoxPortletSettingsContainer,
-.nihilo .dojoxPortletSettingsContainer,
-.claro .dojoxPortletSettingsContainer {
+.nihilo .dojoxPortletSettingsContainer {
 	border-bottom: 1px solid #BFBFBF;
 	padding: 4px;
 }
-.tundra .dijitDialogPaneContent .dojoxPortletSettingsContainer,
-.soria .dijitDialogPaneContent .dojoxPortletSettingsContainer,
-.nihilo .dijitDialogPaneContent .dojoxPortletSettingsContainer,
-.claro .dijitDialogPaneContent .dojoxPortletSettingsContainer {
-	border-bottom: none;
-}
-
 .tundra .dijitDialogPaneContent .dojoxPortletSettingsContainer,
 .soria .dijitDialogPaneContent .dojoxPortletSettingsContainer,
 .nihilo .dijitDialogPaneContent .dojoxPortletSettingsContainer {

@@ -1,4 +1,3 @@
-define(
 ({
 	"nodeActions": "Acciones de ${nodeName}",
 	"selectContents": "Seleccionar contenido",
@@ -8,4 +7,4 @@ define(
 	"moveStart": "Mover cursor al inicio",
 	"moveEnd": "Mover cursor al final"
 })
-);
+

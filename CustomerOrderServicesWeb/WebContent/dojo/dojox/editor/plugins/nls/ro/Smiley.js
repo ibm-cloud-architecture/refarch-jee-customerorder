@@ -1,4 +1,3 @@
-define(
 ({
 	smiley: "Inserare emoticoane",
 	emoticonSmile: "zâmbet",
@@ -6,8 +5,8 @@ define(
 	emoticonWink: "face cu ochiul",
 	emoticonGrin: "rânjet",
 	emoticonCool: "calm",
-	emoticonAngry: "furios",
-	emoticonHalf: "jumătate",
+	emoticonAngry: "furios",  
+	emoticonHalf: "jumătate", 
 	emoticonEyebrow: "sprânceană",
 	emoticonFrown: "posac",
 	emoticonShy: "timid",
@@ -16,9 +15,8 @@ define(
 	emoticonTongue: "limbă",
 	emoticonIdea: "idee",
 	emoticonYes: "da",
-	emoticonNo: "nu",
+	emoticonNo: "nu",	
 	emoticonAngel: "înger",
-	emoticonCrying: "plâns",
-	emoticonHappy: "fericit"
+	emoticonCrying: "plâns"
 })
-);
+

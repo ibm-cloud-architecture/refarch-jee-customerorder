@@ -1,6 +1,4 @@
-define(['dojo/_base/kernel', 'dojo/_base/lang', 'dojo/_base/array', 'dojo/_base/window', 'dojo/_base/sniff'], function(dojo){
-
-dojo.getObject("xml.parser", true, dojox);
+dojo.provide("dojox.xml.parser");
 
 //DOM type to int value for reference.
 //Ints make for more compact code than full constant names.
@@ -18,13 +16,13 @@ dojo.getObject("xml.parser", true, dojox);
 //NOTATION_NODE                 = 12;
 
 dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
-	// summary:
+	//	summary:
 	//		cross-browser implementation of creating an XML document object from null, empty string, and XML text..
 	//
-	// str:
-	//		Optional text to create the document from.  If not provided, an empty XML document will be created.
+	//	str:
+	//		Optional text to create the document from.  If not provided, an empty XML document will be created.  
 	//		If str is empty string "", then a new empty document will be created.
-	// mimetype:
+	//	mimetype:
 	//		Optional mimetype of the text.  Typically, this is text/xml.  Will be defaulted to text/xml if not provided.
 	var _document = dojo.doc;
 	var doc;
@@ -62,7 +60,7 @@ dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
 			if(pe.errorCode !== 0){
 				throw new Error("Line: " + pe.line + "\n" +
 					"Col: " + pe.linepos + "\n" +
-					"Reason: " + pe.reason + "\n" +
+					"Reason: " + pe.reason + "\n" + 
 					"Error Code: " + pe.errorCode + "\n" +
 					"Source: " + pe.srcText);
 			}
@@ -86,18 +84,18 @@ dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
 		}
 	}
 	return null;	//	null
-};
+}
 
 dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
-	// summary:
+	//	summary:
 	//		Implementation of the DOM Level 3 attribute; scan node for text
-	// description:
+	//	description:
 	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//		This function can also update the text of a node by replacing all child
+	//		This function can also update the text of a node by replacing all child 
 	//		content of the node.
-	// node:
+	//	node:
 	//		The node to get the text off of or set the text on.
-	// text:
+	//	text:
 	//		Optional argument of the text to apply to the node.
 	if(arguments.length>1){
 		var _document = node.ownerDocument || dojo.doc;  //Preference is to get the node owning doc first or it may fail
@@ -124,18 +122,18 @@ dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
 		}
 		return _result;	//	String
 	}
-};
+}
 
-dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node|Array*/ newChildren){
-	// summary:
+dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node || Array*/ newChildren){
+	//	summary:
 	//		Removes all children of node and appends newChild. All the existing
 	//		children will be destroyed.
-	// description:
+	//	description:
 	//		Removes all children of node and appends newChild. All the existing
 	//		children will be destroyed.
-	// node:
+	// 	node:
 	//		The node to modify the children on
-	// newChildren:
+	//	newChildren:
 	//		The children to add to the node.  It can either be a single Node or an
 	//		array of Nodes.
 	var nodes = [];
@@ -156,27 +154,27 @@ dojox.xml.parser.replaceChildren = function(/*Element*/node, /*Node|Array*/ newC
 			node.appendChild(child);
 		});
 	}
-};
+}
 
 dojox.xml.parser.removeChildren = function(/*Element*/node){
-	// summary:
+	//	summary:
 	//		removes all children from node and returns the count of children removed.
 	//		The children nodes are not destroyed. Be sure to call dojo.destroy on them
 	//		after they are not used anymore.
-	// node:
+	//	node:
 	//		The node to remove all the children from.
 	var count = node.childNodes.length;
 	while(node.hasChildNodes()){
 		node.removeChild(node.firstChild);
 	}
 	return count; // int
-};
+}
 
 
 dojox.xml.parser.innerXML = function(/*Node*/node){
-	// summary:
+	//	summary:
 	//		Implementation of MS's innerXML function.
-	// node:
+	//	node:
 	//		The node from which to generate the XML text representation.
 	if(node.innerXML){
 		return node.innerXML;	//	String
@@ -186,8 +184,4 @@ dojox.xml.parser.innerXML = function(/*Node*/node){
 		return (new XMLSerializer()).serializeToString(node);	//	String
 	}
 	return null;
-};
-
-return dojox.xml.parser;
-
-});
+}

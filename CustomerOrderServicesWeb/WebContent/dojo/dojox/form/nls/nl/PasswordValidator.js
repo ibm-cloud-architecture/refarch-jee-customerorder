@@ -1,6 +1,5 @@
-define(
 ({
         nomatchMessage: "Wachtwoorden komen niet overeen.",
-	badPasswordMessage: "Ongeldig wachtwoord."
+		badPasswordMessage: "Ongeldig wachtwoord. "
 })
-);
+

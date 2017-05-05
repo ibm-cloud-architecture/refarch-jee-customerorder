@@ -4,7 +4,7 @@
  ****/
 
 .soria .dijitProgressBar {
-	margin:2px 0 2px 0;
+	margin:2px 0px 2px 0px;
 }
 
 .soria .dijitProgressBarEmpty{
@@ -19,8 +19,7 @@
 }
 
 .soria .dijitProgressBarFull {
-	border: 0px solid #8ba0bd;
-	border-right-width: 1px;
+	border-right:1px solid #8ba0bd;
 }
 
 .soria .dijitProgressBarLabel {

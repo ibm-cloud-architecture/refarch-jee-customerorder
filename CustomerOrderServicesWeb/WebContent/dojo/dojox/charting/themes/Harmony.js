@@ -1,5 +1,8 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Harmony = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Harmony");
+dojo.require("dojox.charting.Theme");
+(function(){
+	var dxc=dojox.charting;
+		dxc.themes.Harmony=new dxc.Theme({ 
 		colors: [
 			"#497c91",
 			"#59a0bd",
@@ -33,7 +36,7 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#a5a5a5",
 			"#bebebe",
 			"#d8d8d8"
+			
 		]
 	});
-	return themes.Harmony;
-});
+})();

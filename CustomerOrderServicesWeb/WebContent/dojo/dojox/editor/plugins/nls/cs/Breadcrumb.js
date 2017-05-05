@@ -1,4 +1,3 @@
-define(
 ({
 	"nodeActions": "Akce uzlu ${nodeName}",
 	"selectContents": "Vybrat obsah",
@@ -8,4 +7,4 @@ define(
 	"moveStart": "Přesunout ukazatel na začátek",
 	"moveEnd": "Přesunout ukazatel na konec"
 })
-);
+

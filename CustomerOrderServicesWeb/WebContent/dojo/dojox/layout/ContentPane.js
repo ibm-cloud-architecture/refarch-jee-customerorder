@@ -1,17 +1,14 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/xhr",
-	"dijit/layout/ContentPane",
-	"dojox/html/_base",
-	"dojo/_base/declare"
-], function (lang, xhrUtil, ContentPane, htmlUtil, declare) {
+dojo.provide("dojox.layout.ContentPane");
 
-return declare("dojox.layout.ContentPane", ContentPane, {
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.html._base"); 
+
+dojo.declare("dojox.layout.ContentPane", dijit.layout.ContentPane, {
 	// summary:
 	//		An extended version of dijit.layout.ContentPane.
-	//		Supports infile scripts and external ones declared by `<script src=''...>`
+	//		Supports infile scripts and external ones declared by <script src=''
 	//		relative path adjustments (content fetched from a different folder)
-	//		`<style>` and `<link rel='stylesheet' href='..'>` tags,
+	//		<style> and <link rel='stylesheet' href='..'> tags,
 	//		css paths inside cssText is adjusted (if you set adjustPaths = true)
 	//
 	//		NOTE that dojo.require in script in the fetched file isn't recommended
@@ -23,12 +20,14 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 	adjustPaths: false,
 
 	// cleanContent: Boolean
-	//		Cleans content to make it less likely to generate DOM/JS errors.
-	//		Useful if you send ContentPane a complete page, instead of a html fragment
-	//		scans for:
+	//	summary:
+	//		cleans content to make it less likely to generate DOM/JS errors.
+	//	description:
+	//		useful if you send ContentPane a complete page, instead of a html fragment
+	//		scans for 
 	//
-	//		- title Node, remove
-	//		- DOCTYPE tag, remove
+	//			* title Node, remove
+	//			* DOCTYPE tag, remove
 	cleanContent: false,
 
 	// renderStyles: Boolean
@@ -41,29 +40,41 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 
 	// scriptHasHooks: Boolean
 	//		replace keyword '_container_' in scripts with 'dijit.byId(this.id)'
-	//		NOTE this name might change in the near future
+	// NOTE this name might change in the near future
 	scriptHasHooks: false,
 
-	ioMethod: xhrUtil.get,
-
+	/*======
+	// ioMethod: dojo.xhrGet|dojo.xhrPost
+	//		reference to the method that should grab the content
+	ioMethod: dojo.xhrGet,
+	
+	// ioArgs: Object
+	//		makes it possible to add custom args to xhrGet, like ioArgs.headers['X-myHeader'] = 'true'
 	ioArgs: {},
+	======*/
 
-	onExecError: function(/*Event*/ e){
+	constructor: function(){
+		// init per instance properties, initializer doesn't work here because how things is hooked up in dijit._Widget
+		this.ioArgs = {};
+		this.ioMethod = dojo.xhrGet;
+	},
+
+	onExecError: function(e){
 		// summary:
 		//		event callback, called on script error or on java handler error
-		//		override and return your own html string if you want a some text
+		//		overide and return your own html string if you want a some text 
 		//		displayed within the ContentPane
 	},
 
 	_setContent: function(cont){
 		// override dijit.layout.ContentPane._setContent, to enable path adjustments
 		
-		var setter = this._contentSetter;
-		if(! (setter && setter instanceof htmlUtil._ContentSetter)) {
-			setter = this._contentSetter = new htmlUtil._ContentSetter({
+		var setter = this._contentSetter; 
+		if(! (setter && setter instanceof dojox.html._ContentSetter)) {
+			setter = this._contentSetter = new dojox.html._ContentSetter({
 				node: this.containerNode,
-				_onError: lang.hitch(this, this._onError),
-				onContentError: lang.hitch(this, function(e){
+				_onError: dojo.hitch(this, this._onError),
+				onContentError: dojo.hitch(this, function(e){
 					// fires if a domfault occurs when we are appending this.errorMessage
 					// like for instance if domNode is a UL and we try append a DIV
 					var errMess = this.onContentError(e);
@@ -87,16 +98,7 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 			scriptHookReplacement: "dijit.byId('"+this.id+"')"
 		};
 
-		return this.inherited("_setContent", arguments);
-	},
-	// could put back _renderStyles by wrapping/aliasing dojox.html._ContentSetter.prototype._renderStyles
-
-	destroy: function () {
-		var setter = this._contentSetter;
-		if (setter) {
-			setter.tearDown();
-		}
-		this.inherited(arguments);
+		this.inherited("_setContent", arguments);
 	}
-});
+	// could put back _renderStyles by wrapping/aliasing dojox.html._ContentSetter.prototype._renderStyles
 });

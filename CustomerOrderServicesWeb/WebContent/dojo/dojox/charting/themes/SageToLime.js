@@ -1,7 +1,11 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.SageToLime = new SimpleTheme({
+dojo.provide("dojox.charting.themes.SageToLime");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.SageToLime=new dxc.Theme({
 		colors: [
-			"#abdbcb",
+			"#abdbcb", 
 			"#435a51",
 			"#70998b",
 			"#5f8074",
@@ -13,5 +17,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#68c5ad"
 		]
 	});
-	return themes.SageToLime;
-});
+})();

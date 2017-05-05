@@ -1,4 +1,6 @@
-define(["./_base"], function(base) {
+dojo.provide("dojox.encoding.digests.MD5");
+
+dojo.require("dojox.encoding.digests._base");
 
 /*	A port of Paul Johnstone's MD5 implementation
  *	http://pajhome.org.uk/crypt/md5/index.html
@@ -9,12 +11,13 @@ define(["./_base"], function(base) {
  *
  *	Dojo port by Tom Trenka
  */
-
+(function(){
+	var dxd=dojox.encoding.digests;
 	var chrsz=8;
 
 	//	MD5 rounds functions
 	function R(n,c){ return (n<<c)|(n>>>(32-c)); }
-	function C(q,a,b,x,s,t){ return base.addWords(R(base.addWords(base.addWords(a, q), base.addWords(x, t)), s), b); }
+	function C(q,a,b,x,s,t){ return dxd.addWords(R(dxd.addWords(dxd.addWords(a, q), dxd.addWords(x, t)), s), b); }
 	function FF(a,b,c,d,x,s,t){ return C((b&c)|((~b)&d),a,b,x,s,t); }
 	function GG(a,b,c,d,x,s,t){ return C((b&d)|(c&(~d)),a,b,x,s,t); }
 	function HH(a,b,c,d,x,s,t){ return C(b^c^d,a,b,x,s,t); }
@@ -102,17 +105,17 @@ define(["./_base"], function(base) {
 			c=II(c,d,a,b,x[i+ 2],15, 718787259);
 			b=II(b,c,d,a,x[i+ 9],21,-343485551);
 
-			a=base.addWords(a, olda);
-			b=base.addWords(b, oldb);
-			c=base.addWords(c, oldc);
-			d=base.addWords(d, oldd);
+			a=dxd.addWords(a, olda);
+			b=dxd.addWords(b, oldb);
+			c=dxd.addWords(c, oldc);
+			d=dxd.addWords(d, oldd);
 		}
 		return [a,b,c,d];
 	}
 
 	function hmac(data, key){
-		var wa=base.stringToWord(key);
-		if(wa.length>16){
+		var wa=dxd.stringToWord(key);
+		if(wa.length>16){ 
 			wa=core(wa, key.length*chrsz);
 		}
 		var l=[], r=[];
@@ -120,53 +123,51 @@ define(["./_base"], function(base) {
 			l[i]=wa[i]^0x36363636;
 			r[i]=wa[i]^0x5c5c5c5c;
 		}
-		var h=core(l.concat(base.stringToWord(data)), 512+data.length*chrsz);
+		var h=core(l.concat(dxd.stringToWord(data)), 512+data.length*chrsz);
 		return core(r.concat(h), 640);
 	}
 
 	//	public function
-	base.MD5=function(/* string */data, /* dojox.encoding.digests.outputTypes? */outputType){
-		// summary:
-		//		computes the digest of data, and returns the result according to type outputType
-		var out=outputType || base.outputTypes.Base64;
-		var wa=core(base.stringToWord(data), data.length*chrsz);
+	dxd.MD5=function(/* string */data, /* dojox.encoding.digests.outputTypes? */outputType){
+		//	summary
+		//	computes the digest of data, and returns the result according to type outputType
+		var out=outputType || dxd.outputTypes.Base64;
+		var wa=core(dxd.stringToWord(data), data.length*chrsz);
 		switch(out){
-			case base.outputTypes.Raw:{
+			case dxd.outputTypes.Raw:{
 				return wa;	//	word[]
 			}
-			case base.outputTypes.Hex:{
-				return base.wordToHex(wa);	//	string
+			case dxd.outputTypes.Hex:{
+				return dxd.wordToHex(wa);	//	string
 			}
-			case base.outputTypes.String:{
-				return base.wordToString(wa);	//	string
+			case dxd.outputTypes.String:{
+				return dxd.wordToString(wa);	//	string
 			}
 			default:{
-				return base.wordToBase64(wa);	//	string
+				return dxd.wordToBase64(wa);	//	string
 			}
 		}
 	};
 
 	//	make this private, for later use with a generic HMAC calculator.
-	base.MD5._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
-		// summary:
-		//		computes the digest of data, and returns the result according to type outputType
-		var out=outputType || base.outputTypes.Base64;
+	dxd.MD5._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
+		//	summary
+		//	computes the digest of data, and returns the result according to type outputType
+		var out=outputType || dxd.outputTypes.Base64;
 		var wa=hmac(data, key);
 		switch(out){
-			case base.outputTypes.Raw:{
+			case dxd.outputTypes.Raw:{
 				return wa;	//	word[]
 			}
-			case base.outputTypes.Hex:{
-				return base.wordToHex(wa);	//	string
+			case dxd.outputTypes.Hex:{
+				return dxd.wordToHex(wa);	//	string
 			}
-			case base.outputTypes.String:{
-				return base.wordToString(wa);	//	string
+			case dxd.outputTypes.String:{
+				return dxd.wordToString(wa);	//	string
 			}
 			default:{
-				return base.wordToBase64(wa);	//	string
+				return dxd.wordToBase64(wa);	//	string
 			}
 		}
 	};
-
-	return base.MD5;
-});
+})();

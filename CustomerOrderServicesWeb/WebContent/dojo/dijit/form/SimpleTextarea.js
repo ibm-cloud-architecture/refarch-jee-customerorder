@@ -1,90 +1,91 @@
-define([
-	"dojo/_base/declare", // declare
-	"dojo/dom-class", // domClass.add
-	"dojo/sniff", // has("ie") has("opera")
-	"./TextBox"
-], function(declare, domClass, has, TextBox){
+dojo.provide("dijit.form.SimpleTextarea");
 
-	// module:
-	//		dijit/form/SimpleTextarea
+dojo.require("dijit.form.TextBox");
 
-	return declare("dijit.form.SimpleTextarea", TextBox, {
-		// summary:
-		//		A simple textarea that degrades, and responds to
-		//		minimal LayoutContainer usage, and works with dijit/form/Form.
-		//		Doesn't automatically size according to input, like Textarea.
-		//
-		// example:
-		//	|	<textarea data-dojo-type="dijit/form/SimpleTextarea" name="foo" value="bar" rows=30 cols=40></textarea>
-		//
-		// example:
-		//	|	new SimpleTextarea({ rows:20, cols:30 }, "foo");
+dojo.declare("dijit.form.SimpleTextarea",
+	dijit.form.TextBox,
+	{
+	// summary:
+	//		A simple textarea that degrades, and responds to
+	// 		minimal LayoutContainer usage, and works with dijit.form.Form.
+	//		Doesn't automatically size according to input, like Textarea.
+	//
+	// example:
+	//	|	<textarea dojoType="dijit.form.SimpleTextarea" name="foo" value="bar" rows=30 cols=40></textarea>
+	//
+	// example:
+	//	|	new dijit.form.SimpleTextarea({ rows:20, cols:30 }, "foo");
 
-		baseClass: "dijitTextBox dijitTextArea",
+	baseClass: "dijitTextBox dijitTextArea",
 
-		// rows: Number
-		//		The number of rows of text.
-		rows: "3",
+	attributeMap: dojo.delegate(dijit.form._FormValueWidget.prototype.attributeMap, {
+		rows:"textbox", cols: "textbox"
+	}),
 
-		// rows: Number
-		//		The number of characters per line.
-		cols: "20",
+	// rows: Number
+	//		The number of rows of text.
+	rows: "3",
 
-		templateString: "<textarea ${!nameAttrSetting} data-dojo-attach-point='focusNode,containerNode,textbox' autocomplete='off'></textarea>",
+	// rows: Number
+	//		The number of characters per line.
+	cols: "20",
 
-		postMixInProperties: function(){
-			// Copy value from srcNodeRef, unless user specified a value explicitly (or there is no srcNodeRef)
-			// TODO: parser will handle this in 2.0
-			if(!this.value && this.srcNodeRef){
-				this.value = this.srcNodeRef.value;
-			}
-			this.inherited(arguments);
-		},
+	templateString: "<textarea ${!nameAttrSetting} dojoAttachPoint='focusNode,containerNode,textbox' autocomplete='off'></textarea>",
 
-		buildRendering: function(){
-			this.inherited(arguments);
-			if(has("ie") && this.cols){ // attribute selectors is not supported in IE6
-				domClass.add(this.textbox, "dijitTextAreaCols");
-			}
-		},
+	postMixInProperties: function(){
+		// Copy value from srcNodeRef, unless user specified a value explicitly (or there is no srcNodeRef)
+		if(!this.value && this.srcNodeRef){
+			this.value = this.srcNodeRef.value;
+		}
+		this.inherited(arguments);
+	},
 
-		filter: function(/*String*/ value){
-			// Override TextBox.filter to deal with newlines... specifically (IIRC) this is for IE which writes newlines
-			// as \r\n instead of just \n
-			if(value){
-				value = value.replace(/\r/g, "");
-			}
-			return this.inherited(arguments);
-		},
+	filter: function(/*String*/ value){
+		// Override TextBox.filter to deal with newlines... specifically (IIRC) this is for IE which writes newlines
+		// as \r\n instead of just \n
+		if(value){
+			value = value.replace(/\r/g,"");
+		}
+		return this.inherited(arguments);
+	},
 
-		_onInput: function(/*Event?*/ e){
-			// Override TextBox._onInput() to enforce maxLength restriction
-			if(this.maxLength){
-				var maxLength = parseInt(this.maxLength);
-				var value = this.textbox.value.replace(/\r/g, '');
-				var overflow = value.length - maxLength;
-				if(overflow > 0){
-					var textarea = this.textbox;
-					if(textarea.selectionStart){
-						var pos = textarea.selectionStart;
-						var cr = 0;
-						if(has("opera")){
-							cr = (this.textbox.value.substring(0, pos).match(/\r/g) || []).length;
-						}
-						this.textbox.value = value.substring(0, pos - overflow - cr) + value.substring(pos - cr);
-						textarea.setSelectionRange(pos - overflow, pos - overflow);
-					}else if(this.ownerDocument.selection){ //IE
-						textarea.focus();
-						var range = this.ownerDocument.selection.createRange();
-						// delete overflow characters
-						range.moveStart("character", -overflow);
-						range.text = '';
-						// show cursor
-						range.select();
+	postCreate: function(){
+		this.inherited(arguments);
+		if(dojo.isIE && this.cols){ // attribute selectors is not supported in IE6
+			dojo.addClass(this.textbox, "dijitTextAreaCols");
+		}
+	},
+
+	_previousValue: "",
+	_onInput: function(/*Event?*/ e){
+		// Override TextBox._onInput() to enforce maxLength restriction
+		if(this.maxLength){
+			var maxLength = parseInt(this.maxLength);
+			var value = this.textbox.value.replace(/\r/g,'');
+			var overflow = value.length - maxLength;
+			if(overflow > 0){
+				if(e){ dojo.stopEvent(e); }
+				var textarea = this.textbox;
+				if(textarea.selectionStart){
+					var pos = textarea.selectionStart;
+					var cr = 0;
+					if(dojo.isOpera){
+						cr = (this.textbox.value.substring(0,pos).match(/\r/g) || []).length;
 					}
+					this.textbox.value = value.substring(0,pos-overflow-cr)+value.substring(pos-cr);
+					textarea.setSelectionRange(pos-overflow, pos-overflow);
+				}else if(dojo.doc.selection){ //IE
+					textarea.focus();
+					var range = dojo.doc.selection.createRange();
+					// delete overflow characters
+					range.moveStart("character", -overflow);
+					range.text = '';
+					// show cursor
+					range.select();
 				}
 			}
-			this.inherited(arguments);
+			this._previousValue = this.textbox.value;
 		}
-	});
+		this.inherited(arguments);
+	}
 });

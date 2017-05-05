@@ -1,8 +1,6 @@
-define(
 ({
-	buttonOk: "OK",
+	buttonOk: "ОК",
 	buttonCancel: "Отмена",
 	buttonSave: "Сохранить",
 	itemClose: "Закрыть"
 })
-);

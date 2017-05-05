@@ -1,30 +1,25 @@
-define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready", "dojo/_base/unload",
-		"dojo/_base/window", "dojo/dom-geometry"],
-  function(kernel,lang,has,ready,UnloadUtil,Window,DOMGeom){
-	var dhm = lang.getObject("dojox.html.metrics",true);
-	var dojox = lang.getObject("dojox");
+dojo.provide("dojox.html.metrics");
+
+(function(){
+	var dhm = dojox.html.metrics;
 
 	//	derived from Morris John's emResized measurer
 	dhm.getFontMeasurements = function(){
-		// summary:
-		//		Returns an object that has pixel equivilents of standard font size values.
+		//	summary
+		//	Returns an object that has pixel equivilents of standard font size values.
 		var heights = {
 			'1em':0, '1ex':0, '100%':0, '12pt':0, '16px':0, 'xx-small':0, 'x-small':0,
 			'small':0, 'medium':0, 'large':0, 'x-large':0, 'xx-large':0
 		};
 	
-		var oldStyle;	
-		if(has("ie")){
-			//	We do a font-size fix if and only if one isn't applied already.
-			// NOTE: If someone set the fontSize on the HTML Element, this will kill it.
-			oldStyle = Window.doc.documentElement.style.fontSize || "";
-			if(!oldStyle){
-				Window.doc.documentElement.style.fontSize="100%";
-			}
-		}		
+		if(dojo.isIE){
+			//	we do a font-size fix if and only if one isn't applied already.
+			//	NOTE: If someone set the fontSize on the HTML Element, this will kill it.
+			dojo.doc.documentElement.style.fontSize="100%";
+		}
 	
 		//	set up the measuring node.
-		var div=Window.doc.createElement("div");
+		var div=dojo.doc.createElement("div");
 		var ds = div.style;
 		ds.position="absolute";
 		ds.left="-100px";
@@ -37,20 +32,15 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 		ds.outline="0";
 		ds.lineHeight="1";
 		ds.overflow="hidden";
-		Window.body().appendChild(div);
+		dojo.body().appendChild(div);
 	
 		//	do the measurements.
 		for(var p in heights){
 			ds.fontSize = p;
 			heights[p] = Math.round(div.offsetHeight * 12/16) * 16/12 / 1000;
 		}
-
-		if(has("ie")){
-			// Restore the font to its old style.
-			Window.doc.documentElement.style.fontSize = oldStyle;
-		}
 		
-		Window.body().removeChild(div);
+		dojo.body().removeChild(div);
 		div = null;
 		return heights; 	//	object
 	};
@@ -68,10 +58,10 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 	dhm.getTextBox = function(/* String */ text, /* Object */ style, /* String? */ className){
 		var m, s;
 		if(!measuringNode){
-			m = measuringNode = Window.doc.createElement("div");
-			// Container that we can set constraints on so that it doesn't
+			m = measuringNode = dojo.doc.createElement("div");
+			// Container that we can set contraints on so that it doesn't
 			// trigger a scrollbar.
-			var c = Window.doc.createElement("div");
+			var c = dojo.doc.createElement("div"); 
 			c.appendChild(m);
 			s = c.style;
 			s.overflow='scroll';
@@ -85,7 +75,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 			s.margin = "0";
 			s.padding = "0";
 			s.outline = "0";
-			Window.body().appendChild(c);
+			dojo.body().appendChild(c);
 		}else{
 			m = measuringNode;
 		}
@@ -109,7 +99,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 		}
 		// take a measure
 		m.innerHTML = text;
-		var box = DOMGeom.position(m);
+		var box = dojo.position(m);
 		// position doesn't report right (reports 1, since parent is 1)
 		// So we have to look at the scrollWidth to get the real width
 		// Height is right.
@@ -124,14 +114,13 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 	dhm._fontResizeNode = null;
 
 	dhm.initOnFontResize = function(interval){
-		var f = dhm._fontResizeNode = Window.doc.createElement("iframe");
+		var f = dhm._fontResizeNode = dojo.doc.createElement("iframe");
 		var fs = f.style;
 		fs.position = "absolute";
 		fs.width = "5em";
 		fs.height = "10em";
 		fs.top = "-10000px";
-		fs.display = "none";
-		if(has("ie")){
+		if(dojo.isIE){
 			f.onreadystatechange = function(){
 				if(f.contentWindow.document.readyState == "complete"){
 					f.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
@@ -144,20 +133,20 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 		}
 		//The script tag is to work around a known firebug race condition.  See comments in bug #9046
 		f.setAttribute("src", "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'");
-		Window.body().appendChild(f);
+		dojo.body().appendChild(f);
 		dhm.initOnFontResize = function(){};
 	};
 
 	dhm.onFontResize = function(){};
 	dhm._fontresize = function(){
 		dhm.onFontResize();
-	};
+	}
 
-	UnloadUtil.addOnUnload(function(){
+	dojo.addOnUnload(function(){
 		// destroy our font resize iframe if we have one
 		var f = dhm._fontResizeNode;
 		if(f){
-			if(has("ie") && f.onresize){
+			if(dojo.isIE && f.onresize){
 				f.onresize = null;
 			}else if(f.contentWindow && f.contentWindow.onresize){
 				f.contentWindow.onresize = null;
@@ -166,23 +155,22 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 		}
 	});
 
-	ready(function(){
+	dojo.addOnLoad(function(){
 		// getScrollbar metrics node
 		try{
-			var n=Window.doc.createElement("div");
+			var n=dojo.doc.createElement("div");
 			n.style.cssText = "top:0;left:0;width:100px;height:100px;overflow:scroll;position:absolute;visibility:hidden;";
-			Window.body().appendChild(n);
+			dojo.body().appendChild(n);
 			scroll.w = n.offsetWidth - n.clientWidth;
 			scroll.h = n.offsetHeight - n.clientHeight;
-			Window.body().removeChild(n);
+			dojo.body().removeChild(n);
 			//console.log("Scroll bar dimensions: ", scroll);
 			delete n;
 		}catch(e){}
 
 		// text size poll setup
-		if("fontSizeWatch" in kernel.config && !!kernel.config.fontSizeWatch){
+		if("fontSizeWatch" in dojo.config && !!dojo.config.fontSizeWatch){
 			dhm.initOnFontResize();
 		}
 	});
-	return dhm;
-});
+})();

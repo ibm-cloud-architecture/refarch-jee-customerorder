@@ -1,24 +1,9 @@
-define([
-	"dojo/_base/declare",
-	"./_SelectionPreserver",
-	"./Selection"
-], function(declare, _SelectionPreserver, Selection){
-	
-return declare("dojox.grid.DataSelection", Selection, {
-	constructor: function(grid){
-		if(grid.keepSelection){
-			this.preserver = new _SelectionPreserver(this);
-		}
-	},
-	
-	destroy: function(){
-		if(this.preserver){
-			this.preserver.destroy();
-		}
-	},
-	
+dojo.provide("dojox.grid.DataSelection");
+dojo.require("dojox.grid.Selection");
+
+dojo.declare("dojox.grid.DataSelection", dojox.grid.Selection, {
 	getFirstSelected: function(){
-		var idx = Selection.prototype.getFirstSelected.call(this);
+		var idx = dojox.grid.Selection.prototype.getFirstSelected.call(this);
 
 		if(idx == -1){ return null; }
 		return this.grid.getItem(idx);
@@ -26,7 +11,7 @@ return declare("dojox.grid.DataSelection", Selection, {
 
 	getNextSelected: function(inPrev){
 		var old_idx = this.grid.getItemIndex(inPrev);
-		var idx = Selection.prototype.getNextSelected.call(this, old_idx);
+		var idx = dojox.grid.Selection.prototype.getNextSelected.call(this, old_idx);
 
 		if(idx == -1){ return null; }
 		return this.grid.getItem(idx);
@@ -50,7 +35,7 @@ return declare("dojox.grid.DataSelection", Selection, {
 		}else{
 			idx = this.grid.getItemIndex(inItemOrIndex);
 		}
-		Selection.prototype.addToSelection.call(this, idx);
+		dojox.grid.Selection.prototype.addToSelection.call(this, idx);
 	},
 
 	deselect: function(inItemOrIndex){
@@ -61,7 +46,7 @@ return declare("dojox.grid.DataSelection", Selection, {
 		}else{
 			idx = this.grid.getItemIndex(inItemOrIndex);
 		}
-		Selection.prototype.deselect.call(this, idx);
+		dojox.grid.Selection.prototype.deselect.call(this, idx);
 	},
 
 	deselectAll: function(inItemOrIndex){
@@ -72,10 +57,9 @@ return declare("dojox.grid.DataSelection", Selection, {
 			}else{
 				idx = this.grid.getItemIndex(inItemOrIndex);
 			}
-			Selection.prototype.deselectAll.call(this, idx);
+			dojox.grid.Selection.prototype.deselectAll.call(this, idx);
 		}else{
 			this.inherited(arguments);
 		}
 	}
-});
 });

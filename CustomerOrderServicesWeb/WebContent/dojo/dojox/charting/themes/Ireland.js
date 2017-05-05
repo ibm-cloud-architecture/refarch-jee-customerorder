@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Ireland = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Ireland");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Ireland=new dxc.Theme({
 		colors: [
 			"#abdbcb",
 			"#435a51",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#5f8074"
 		]
 	});
-	return themes.Ireland;
-});
+})();

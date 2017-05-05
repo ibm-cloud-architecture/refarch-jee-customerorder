@@ -1,14 +1,16 @@
-define(["dojo", "dojox/math/round"], function(dojo, round){
+dojo.provide("dojox.drawing.util.common");
+dojo.require("dojox.math.round");
 
+(function(){
+	
 	var uidMap = {};
 	var start = 0;
-	//dojox.drawing.util.common	= 
-	return {
+	dojox.drawing.util.common	= {
 		// summary:
 		//		A collection of common methods used for DojoX Drawing.
 		//		This singleton is accessible in most Drawing classes
 		//		as this.util
-
+		//
 		// NOTE:
 		//		A lot of functions use a EventObject
 		//		as an argument. An attempt was made to accept
@@ -25,36 +27,37 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 		//				x: Number,		// end x
 		//				y:Number		// end y
 		//			}
-
-
-		radToDeg: function(/*Number*/n){
+		//
+		//
+		radToDeg: function(/*Numer*/n){
 			// summary:
 			//		Convert the passed number to degrees.
 			return (n*180)/Math.PI;	//	Number
 		},
 		
-		degToRad: function(/*Number*/n){
+		degToRad: function(/*Numer*/n){
 			// summary:
 			//		Convert the passed number to radians.
 			return (n*Math.PI)/180;	// Number
 		},
 		
-		angle: function(/*EventObject*/obj, /*Float?*/snap){
+		angle: function(/*EventObject*/obj, /* ? Float */snap){
 			// summary:
 			//		Return angle based on mouse object
-			// obj:
-			//		Manager.Mouse event.
-			// snap:
-			//		Returns nearest angle within snap limits
-
+			// arguments:
+			//		obj: EventObject
+			//			Manager.Mouse event.
+			// 		snap: Float 
+			//			Returns nearest angle within snap limits
+			//
 			//obj = this.argsToObj.apply(this, arguments);
 			if(snap){
 				snap = snap/180;
 				var radians = this.radians(obj),
 					seg = Math.PI * snap,
-					rnd = round(radians/seg),
+					rnd = dojox.math.round(radians/seg),
 					new_radian = rnd*seg;
-				return round(this.radToDeg(new_radian)); // Whole Number
+				return dojox.math.round(this.radToDeg(new_radian)); // Whole Number
 			
 			}else{
 				return this.radToDeg(this.radians(obj)); // Float
@@ -70,7 +73,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			// summary:
 			//		Return the radians derived from the coordinates
 			//		in the Mouse object.
-
+			//
 			//var o = this.argsToObj.apply(this, arguments);
 			return Math.atan2(o.start.y-o.y,o.x-o.start.x);
 		},
@@ -79,7 +82,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			// summary:
 			//		Return the length derived from the coordinates
 			//		in the Mouse object.
-
+			//
 			return Math.sqrt(Math.pow(o.start.x-o.x, 2)+Math.pow(o.start.y-o.y, 2));
 		},
 		
@@ -89,7 +92,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			// description:
 			//		x1,y1,x2,y2 represents the Line. 'amt' represents the amount
 			//		to subtract from it.
-
+			//
 			var len = this.distance(this.argsToObj.apply(this, arguments));
 			len = len < amt ? amt : len;
 			var pc = (len-amt)/len;
@@ -103,7 +106,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			//		Attempts to determine in a Mouse Object
 			//		was passed or indiviual numbers. Returns
 			//		an object.
-
+			//
 			var a = arguments;
 			if(a.length < 4){ return a[0]; }
 			return {
@@ -122,7 +125,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			//		Return the length derived from the coordinates
 			//		in the Mouse object. Different from util.length
 			//		in that this always returns an absolute value.
-
+			//
 			var o = this.argsToObj.apply(this, arguments);
 			return Math.abs(Math.sqrt(Math.pow(o.start.x-o.x, 2)+Math.pow(o.start.y-o.y, 2))); // Number
 		},
@@ -139,7 +142,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			//		A *very* helpful method. If you know the center
 			//		(or starting) point, length and angle, find the
 			//		x,y point at the end of that line.
-
+			//
 			var radians =  angle * Math.PI / 180.0;
 			var x = radius * Math.cos(radians);
 			var y = radius * Math.sin(radians);
@@ -154,7 +157,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			//		Ensures the angle in the Mouse Object is within the
 			//		min and max limits. If not one of those limits is used.
 			//		Returns an x,y point for the angle used.
-
+			//
 			var angle = this.angle(obj);
 			if(angle >= min && angle <= max){
 				return obj;	 // Object
@@ -164,17 +167,16 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			return this.pointOnCircle(obj.start.x,obj.start.y,radius, new_angle); // Object
 		},
 		
-		snapAngle: function(/*EventObject*/ obj, /*Float*/ ca){
+		snapAngle: function(/*EventObject*/obj, /*Float*/ca){
 			// summary:
 			//		Snaps a line to the nearest angle
-			// obj: Mouse object (see dojox.drawing.Mouse)
-			// ca: Fractional amount to snap to
-			//		A decimal number fraction of a half circle.
+			//			obj: Mouse object (see dojox.drawing.Mouse)
+			//			ca: Fractional amount to snap to
+			//				A decimal number fraction of a half circle
+			//				.5 would snap to 90 degrees
+			//				.25  would snap to 45 degrees
+			//				.125 would snap to 22.5 degrees, etc.
 			//
-			//		- .5 would snap to 90 degrees
-			//		- .25  would snap to 45 degrees
-			//		- .125 would snap to 22.5 degrees, etc.
-
 			var radians = this.radians(obj),
 				radius = this.length(obj),
 				seg = Math.PI * ca,
@@ -190,13 +192,14 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			start=num;
 		},
 		
-		uid: function(/*String?*/ str){
+		uid: function(/* ? String */str){
 			// summary:
 			//		Creates a unique ID.
-			// str: String
-			//		If provided, kept in a map, incremented
-			//		and used in the id. Otherwise 'shape' is used.
-
+			// arguments:
+			//		str: String
+			//			If provided, kept in a map, incremented
+			//			and used in the id. Otherwise 'shape' is used.
+			//
 			str = str || "shape";
 			uidMap[str] = uidMap[str]===undefined ? start : uidMap[str] + 1;
 			return str + uidMap[str]; // String
@@ -211,7 +214,7 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 		},
 		mixin: function(o1, o2){
 			// TODO: make faster
-			//return dojo.mixin(dojo.clone(o1), dojo.clone(o2));
+			//return dojo.mixin(dojo.clone(o1), dojo.clone(o2));	
 		},
 		
 		objects:{}, //private?
@@ -222,18 +225,18 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 			//		the Toolbar. Since multiple drawings can be on one
 			//		page, this function serves a little more use than
 			//		on first apearance.
-			this.objects[obj.id] = obj;
+			this.objects[obj.id] = obj;	
 		},
 		byId: function(/*String*/id){
 			// summary:
 			//		Get an object that was registered with util.register
-
+			//
 			return this.objects[id];
 		},
 		attr: function(/* Object */ elem, /* property */ prop, /* ? value */ value, squelchErrors){
 			// summary:
 			//		Helper function to attach attributes to SVG and VML raw nodes.
-
+			//
 			
 			if(!elem){ return false; }
 			try{
@@ -247,17 +250,17 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 				if(!value && prop=="id" && elem.target){
 			
 					var n = elem.target;
-					while(n && !dojo.attr(n, "id")){
+					while(!dojo.attr(n, "id")){
 						n = n.parentNode;
 					}
-					return n && dojo.attr(n, "id");
+					return dojo.attr(n, "id");
 				}
 				
 				if(elem.rawNode || elem.target){
 					var args = Array.prototype.slice.call(arguments);
 					args[0] = elem.rawNode || elem.target;
-					return dojo.attr.apply(dojo, args);
-				}
+					return dojo.attr.apply(dojo, args);	
+				}		
 				return dojo.attr(elem, "id");
 				
 				
@@ -274,4 +277,4 @@ define(["dojo", "dojox/math/round"], function(dojo, round){
 		}
 	};
 	
-});
+})();

@@ -1,17 +1,12 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/sniff",
-	"dojo/_base/window",
-	"dojo/dom",
-	"dojo/dom-construct",
-	"dojo/domReady!" // fixes doc.readyState in Fx<=3.5
-], function (dojo, lang, has, windowUtil, domUtil, domConstruct) {
-	// module:
-	//		dojox/embed/Quicktime
-	// summary:
-	//		Base functionality to insert a QuickTime movie
-	//		into a document on the fly.
+dojo.provide("dojox.embed.Quicktime");
+
+(function(d){
+	/*******************************************************
+		dojox.embed.Quicktime
+
+		Base functionality to insert a QuickTime movie
+		into a document on the fly.
+	 ******************************************************/
 
 	var qtMarkup,
 		qtVersion = { major: 0, minor: 0, rev: 0 },
@@ -23,12 +18,11 @@ define([
 		},
 		keyBase = "dojox-embed-quicktime-",
 		keyCount = 0,
-		getQTMarkup = 'This content requires the <a href="http://www.apple.com/quicktime/download/" title="Download and install QuickTime.">QuickTime plugin</a>.',
-		embed = dojo.getObject("dojox.embed", true);
+		getQTMarkup = 'This content requires the <a href="http://www.apple.com/quicktime/download/" title="Download and install QuickTime.">QuickTime plugin</a>.';
 
 	//	*** private methods *********************************************************
 	function prep(kwArgs){
-		kwArgs = dojo.mixin(lang.clone(__def__), kwArgs || {});
+		kwArgs = d.mixin(d.clone(__def__), kwArgs || {});
 		if(!("path" in kwArgs) && !kwArgs.testing){
 			console.error("dojox.embed.Quicktime(ctor):: no path reference to a QuickTime movie was provided.");
 			return null;
@@ -42,7 +36,7 @@ define([
 		return kwArgs;
 	}
 
-	if(has("ie")){
+	if(d.isIE){
 		installed = (function(){
 			try{
 				var o = new ActiveXObject("QuickTimeCheckObject.QuickTimeCheck.1");
@@ -109,32 +103,38 @@ define([
 	}
 
 	/*=====
-	var __QTArgs = {
-		// path: String
+	dojox.embed.__QTArgs = function(path, id, width, height, params, redirect){
+		//	path: String
 		//		The URL of the movie to embed.
-		// id: String?
+		//	id: String?
 		//		A unique key that will be used as the id of the created markup.  If you don't
 		//		provide this, a unique key will be generated.
-		// width: Number?
+		//	width: Number?
 		//		The width of the embedded movie; the default value is 320px.
-		// height: Number?
+		//	height: Number?
 		//		The height of the embedded movie; the default value is 240px
-		// params: Object?
+		//	params: Object?
 		//		A set of key/value pairs that you want to define in the resultant markup.
-		// redirect: String?
+		//	redirect: String?
 		//		A url to redirect the browser to if the current QuickTime version is not supported.
-	};
+		this.id=id;
+		this.path=path;
+		this.width=width;
+		this.height=height;
+		this.params=params;
+		this.redirect=redirect;
+	}
 	=====*/
 
-	var Quicktime=function(/* __QTArgs */kwArgs, /* DOMNode */node){
-		// summary:
-		//		Returns a reference to the HTMLObject/HTMLEmbed that is created to
+	dojox.embed.Quicktime=function(/* dojox.embed.__QTArgs */kwArgs, /* DOMNode */node){
+		//	summary:
+		//		Returns a reference to the HTMLObject/HTMLEmbed that is created to 
 		//		place the movie in the document.  You can use this either with or
 		//		without the new operator.  Note that with any other DOM manipulation,
 		//		you must wait until the document is finished loading before trying
 		//		to use this.
 		//
-		// example:
+		//	example:
 		//		Embed a QuickTime movie in a document using the new operator, and get a reference to it.
 		//	|	var movie = new dojox.embed.Quicktime({
 		//	|		path: "path/to/my/movie.mov",
@@ -142,7 +142,7 @@ define([
 		//	|		height: 300
 		//	|	}, myWrapperNode);
 		//
-		// example:
+		//	example:
 		//		Embed a movie in a document without using the new operator.
 		//	|	var movie = dojox.embed.Quicktime({
 		//	|		path: "path/to/my/movie.mov",
@@ -150,32 +150,32 @@ define([
 		//	|		height: 300
 		//	|	}, myWrapperNode);
 
-		return Quicktime.place(kwArgs, node);	//	HTMLObject
+		return dojox.embed.Quicktime.place(kwArgs, node);	//	HTMLObject
 	};
 
-	dojo.mixin(Quicktime, {
-		// summary:
+	d.mixin(dojox.embed.Quicktime, {
+		//	summary:
 		//		A singleton object used internally to get information
 		//		about the QuickTime player available in a browser, and
 		//		as the factory for generating and placing markup in a
 		//		document.
 		//
-		// minSupported: Number
+		//	minSupported: Number
 		//		The minimum supported version of the QuickTime Player, defaults to
 		//		6.
-		// available: Boolean
+		//	available: Boolean
 		//		Whether or not QuickTime is available.
-		// supported: Boolean
+		//	supported: Boolean
 		//		Whether or not the QuickTime Player installed is supported by
 		//		dojox.embed.
-		// version: Object
+		//	version: Object
 		//		The version of the installed QuickTime Player; takes the form of
 		//		{ major, minor, rev }.  To get the major version, you'd do this:
 		//		var v=dojox.embed.Quicktime.version.major;
-		// initialized: Boolean
+		//	initialized: Boolean
 		//		Whether or not the QuickTime engine is available for use.
-		// onInitialize: Function
-		//		A stub you can connect to if you are looking to fire code when the
+		//	onInitialize: Function
+		//		A stub you can connect to if you are looking to fire code when the 
 		//		engine becomes available.  A note: do NOT use this stub to embed
 		//		a movie in your document; this WILL be fired before DOMContentLoaded
 		//		is fired, and you will get an error.  You should use dojo.addOnLoad
@@ -186,21 +186,21 @@ define([
 		supported: installed,
 		version: qtVersion,
 		initialized: false,
-		onInitialize: function(){
-			Quicktime.initialized = true;
+		onInitialize: function(){ 
+			dojox.embed.Quicktime.initialized = true; 
 		},	//	stub function to let you know when this is ready
 
 		place: function(kwArgs, node){
 			var o = qtMarkup(kwArgs);
 
-			if(!(node = domUtil.byId(node))){
-				node=domConstruct.create("div", { id:o.id+"-container" }, windowUtil.body());
+			if(!(node = d.byId(node))){
+				node=d.create("div", { id:o.id+"-container" }, d.body());
 			}
 			
 			if(o){
 				node.innerHTML = o.markup;
 				if(o.id){
-					return has("ie") ? dom.byId(o.id) : document[o.id];	//	QuickTimeObject
+					return d.isIE? d.byId(o.id) : document[o.id];	//	QuickTimeObject
 				}
 			}
 			return null;	//	QuickTimeObject
@@ -208,7 +208,7 @@ define([
 	});
 
 	//	go get the info
-	if(!has("ie")){
+	if(!d.isIE){
 		var id = "-qt-version-test",
 			o = qtMarkup({ testing:true , width:4, height:4 }),
 			c = 10, // counter to prevent infinite looping
@@ -218,14 +218,14 @@ define([
 		function getVer(){
 			setTimeout(function(){
 				var qt = document[o.id],
-					n = domUtil.byId(id);
+					n = d.byId(id);
 
 				if(qt){
 					try{
 						var v = qt.GetQuickTimeVersion().split(".");
-						Quicktime.version = { major: parseInt(v[0]||0), minor: parseInt(v[1]||0), rev: parseInt(v[2]||0) };
-						if((Quicktime.supported = v[0])){
-							Quicktime.onInitialize();
+						dojox.embed.Quicktime.version = { major: parseInt(v[0]||0), minor: parseInt(v[1]||0), rev: parseInt(v[2]||0) };
+						if(dojox.embed.Quicktime.supported = v[0]){
+							dojox.embed.Quicktime.onInitialize();
 						}
 						c = 0;
 					} catch(e){
@@ -235,24 +235,27 @@ define([
 					}
 				}
 
-				if(!c && n){ domConstruct.destroy(n); }
+				if(!c && n){ d.destroy(n); }
 			}, 20);
 		}
 
-		domConstruct.create("div", {
-			innerHTML: o.markup,
-			id: id,
-			style: { top:top, left:0, width:widthHeight, height:widthHeight, overflow:"hidden", position:"absolute" }
-		}, windowUtil.body());
+		if(d._initFired){
+			// if onload has already fired, then body is available and we can create a new node
+			d.create("div", {
+				innerHTML: o.markup,
+				id: id,
+				style: { top:top, left:0, width:widthHeight, height:widthHeight, overflow:"hidden", position:"absolute" }
+			}, d.body());
+		}else{
+			// body isn't loaded yet, so we need to document.write the QuickTime markup
+			document.write(
+				'<div style="top:'+top+';left:0;width:'+widthHeight+';height:'+widthHeight+';overflow:hidden;position:absolute" id="' + id + '">'
+				+ o.markup
+				+ '</div>');
+		}
 		getVer();
-	}else if(has("ie") && installed){
-		// we already know if IE has QuickTime installed, but we need this to seem like a callback.
-		setTimeout(function(){
-			Quicktime.onInitialize();
-		}, 10);
+	}else if(d.isIE && installed){
+		// we already know if IE has QuickTime installed
+		dojox.embed.Quicktime.onInitialize();
 	}
-
-	lang.setObject("dojox.embed.Quicktime", Quicktime);
-
-	return Quicktime;
-});
+})(dojo);

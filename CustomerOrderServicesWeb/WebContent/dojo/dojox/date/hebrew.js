@@ -1,55 +1,56 @@
-define(["..", "dojo/_base/lang", "dojo/date", "./hebrew/Date"], function(dojox, lang, dd, HDate){
+dojo.provide("dojox.date.hebrew");
 
-var dhebrew = lang.getObject("date.hebrew", true, dojox);
-
+dojo.require("dojox.date.hebrew.Date");
+dojo.require("dojo.date"); // for compare
+	
 // Utility methods to do arithmetic calculations with hebrew.Dates
 
-// added for compat to date
-dhebrew.getDaysInMonth = function(/*dojox/date/hebrew/Date*/month){
+	// added for compat to date
+dojox.date.hebrew.getDaysInMonth = function(/*hebrew.Date*/month){
 	return month.getDaysInHebrewMonth(month.getMonth(), month.getFullYear());
 };
 
 //TODO: define hebrew.isLeapYear?  Or should it be invalid, since it has different meaning?
 
-dhebrew.compare = function(/*dojox/date/hebrew/Date*/dateheb1, /*dojox/date/hebrew/Date*/dateheb2, /*String?*/portion){
-	// summary:
+dojox.date.hebrew.compare = function(/*hebrew.Date*/dateheb1, /*hebrew.Date*/dateheb2, /*String?*/portion){
+	//	summary:
 	//		Compare two hebrew date objects by date, time, or both.
-	// description:
-	//		Returns 0 if equal, positive if a > b, else negative.
-	// date1: dojox/date/hebrew/Date
-	// date2: dojox/date/hebrew/Date
-	//		If not specified, the current hebrew.Date is used.
-	// portion:
+	//	description:
+	//  	Returns 0 if equal, positive if a > b, else negative.
+	//	date1:
+	//		hebrew.Date object
+	//	date2:
+	//		hebrew.Date object.  If not specified, the current hebrew.Date is used.
+	//	portion:
 	//		A string indicating the "date" or "time" portion of a Date object.
 	//		Compares both "date" and "time" by default.  One of the following:
 	//		"date", "time", "datetime"
 
-	if(dateheb1 instanceof HDate){
+	if(dateheb1 instanceof dojox.date.hebrew.Date){
 		dateheb1 = dateheb1.toGregorian();
 	}
-	if(dateheb2 instanceof HDate){
+	if(dateheb2 instanceof dojox.date.hebrew.Date){
 		dateheb2 = dateheb2.toGregorian();
 	}
 	
-	return dd.compare.apply(null, arguments);
+	return dojo.date.compare.apply(null, arguments);
 };
 
 
-dhebrew.add = function(/*dojox/date/hebrew/Date*/date, /*String*/interval, /*int*/amount){
-	// summary:
+dojox.date.hebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/interval, /*int*/amount){
+	//	based on and similar to dojo.date.add
+	//	summary:
 	//		Add to a Date in intervals of different size, from milliseconds to years
-	// date: dojox/date/hebrew/Date
+	//	date: hebrew.Date
 	//		Date object to start with
-	// interval:
+	//	interval:
 	//		A string representing the interval.  One of the following:
-	//		"year", "month", "day", "hour", "minute", "second",
-	//		"millisecond", "week", "weekday"
-	// amount:
+	//			"year", "month", "day", "hour", "minute", "second",
+	//			"millisecond", "week", "weekday"
+	//	amount:
 	//		How much to add to the date.
 
-	//	based on and similar to dojo.date.add
-
-	var newHebrDate = new HDate(date);
+	var newHebrDate = new dojox.date.hebrew.Date(date);
 
 	switch(interval){
 		case "day":
@@ -80,54 +81,50 @@ dhebrew.add = function(/*dojox/date/hebrew/Date*/date, /*String*/interval, /*int
 			newHebrDate.setDate(date.getDate() + amount);
 			break;
 		case "month":
-			var month = date.getMonth(),
-				newMonth = month + amount;
+			var month = date.getMonth(); 
+			var add = month + amount;
 			if(!date.isLeapYear(date.getFullYear())){
-				if(month < 5 && newMonth >= 5){ newMonth++;}
-				else if (month > 5 && newMonth <= 5){ newMonth--;}
+				if(month < 5 && add >= 5){ add++;}
+				else if (month > 5 && add <= 5){ add--;}	
 			}
-			newHebrDate.setMonth(newMonth);
+			newHebrDate.setMonth(add);
 			break;
 		case "hour":
 			newHebrDate.setHours(date.getHours() + amount);
-			break;
+			break;	
 		case "minute":
-			newHebrDate._addMinutes(amount);
-			break;
+			newHebrDate.setMinutes(date.getMinutes() + amount);
+			break;	
 		case "second":
-			newHebrDate._addSeconds(amount);
-			break;
+			newHebrDate.setSeconds(date.getSeconds() + amount);
+			break;	
 		case "millisecond":
-			newHebrDate._addMilliseconds(amount);
+			newHebrDate.setMilliseconds(date.getMilliseconds() + amount);
 			break;
 	}
 
 	return newHebrDate; // dojox.date.hebrew.Date
-};
+}; 
 
-dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebrew/Date?*/date2, /*String?*/interval){
-	// summary:
-	//		date2 - date1
-	// date1: dojox/date/hebrew/Date
-	// date2: dojox/date/hebrew/Date
-	//		If not specified, the current dojox.date.hebrew.Date is used.
-	// interval:
+dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox.date.hebrew.Date?*/date2, /*String?*/interval){
+	//	based on and similar to dojo.date.difference
+	//	summary:
+	//        date1 - date2
+	//	 date2 is hebrew.Date object.  If not specified, the current hebrew.Date is used.
+	//	interval:
 	//		A string representing the interval.  One of the following:
-	//		"year", "month", "day", "hour", "minute", "second",
-	//		"millisecond",  "week", "weekday"
-	//
+	//			"year", "month", "day", "hour", "minute", "second",
+	//			"millisecond",  "week", "weekday"
 	//		Defaults to "day".
 
-	//	based on and similar to dojo.date.difference
-
-	date2 = date2 || new HDate();
+	date2 = date2 || new dojox.date.hebrew.Date();
 	interval = interval || "day";
-	var yearDiff = date2.getFullYear() - date1.getFullYear();
+	var yearDiff = date1.getFullYear() - date2.getFullYear();
 	var delta = 1; // Integer return value
 	switch(interval){
 		case "weekday":
-			var days = Math.round(dhebrew.difference(date1, date2, "day"));
-			var weeks = parseInt(dhebrew.difference(date1, date2, "week"));
+			var days = Math.round(dojox.date.hebrew.difference(date1, date2, "day"));
+			var weeks = parseInt(dojox.date.hebrew.difference(date1, date2, "week"));
 			var mod = days % 7;
 
 			// Even number of weeks
@@ -136,14 +133,14 @@ dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebr
 			}else{
 				// Weeks plus spare change (< 7 days)
 				var adj = 0;
-				var aDay = date1.getDay();
-				var bDay = date2.getDay();
+				var aDay = date2.getDay();
+				var bDay = date1.getDay();
 	
 				weeks = parseInt(days/7);
 				mod = days % 7;
 				// Mark the date advanced by the number of
 				// round weeks (may be zero)
-				var dtMark = new HDate(date1);
+				var dtMark = new dojox.date.hebrew.Date(date2);
 				dtMark.setDate(dtMark.getDate()+(weeks*7));
 				var dayMark = dtMark.getDay();
 	
@@ -202,14 +199,14 @@ dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebr
 			delta = yearDiff;
 			break;
 		case "month":
-			var startdate =  (date2.toGregorian() > date1.toGregorian()) ? date2 : date1; // more
-			var enddate = (date2.toGregorian() > date1.toGregorian()) ? date1 : date2;
+			var startdate =  (date1.toGregorian() > date2.toGregorian()) ? date1 : date2; // more
+			var enddate = (date1.toGregorian() > date2.toGregorian()) ? date2 : date1;
 			
 			var month1 = startdate.getMonth();
 			var month2 = enddate.getMonth();
 			
 			if(yearDiff == 0){
-				delta = ( !date2.isLeapYear(date2.getFullYear())  && startdate.getMonth() > 5 && enddate.getMonth() <=5) ? (startdate.getMonth() - enddate.getMonth() - 1) :
+				delta = ( !date1.isLeapYear(date1.getFullYear())  && startdate.getMonth() > 5 && enddate.getMonth() <=5) ? (startdate.getMonth() - enddate.getMonth() - 1) :
 						(startdate.getMonth() - enddate.getMonth() );
 			}else{
 				delta = (!enddate.isLeapYear(enddate.getFullYear()) &&  month2 < 6) ? (13-month2-1) : (13-month2);
@@ -217,17 +214,17 @@ dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebr
 				var i = enddate.getFullYear()  + 1;
 				var e = startdate.getFullYear();
 				for (i;   i < e;  i++){
-					delta += enddate.isLeapYear(i) ? 13 : 12;
+					delta += enddate.isLeapYear(i) ? 13 : 12; 
 				}
 			}
-			if(date2.toGregorian() < date1.toGregorian()){
+			if(date1.toGregorian() < date2.toGregorian()){
 				delta = -delta;
 			}
 			break;
 		case "week":
 			// Truncate instead of rounding
 			// Don't use Math.floor -- value may be negative
-			delta = parseInt(dhebrew.difference(date1, date2, "day")/7);
+			delta = parseInt(dojox.date.hebrew.difference(date1, date2, "day")/7);
 			break;
 		case "day":
 			delta /= 24;
@@ -242,11 +239,9 @@ dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebr
 			delta /= 1000;
 			// fallthrough
 		case "millisecond":
-			delta *= date2.toGregorian().getTime()- date1.toGregorian().getTime();
+			delta *= date1.toGregorian().getTime()- date2.toGregorian().getTime();
 	}
 
 	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer)
+	return Math.round(delta); // Number (integer) 
 };
-return dhebrew;
-});

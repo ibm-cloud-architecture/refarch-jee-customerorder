@@ -1,13 +1,11 @@
-define(
 ({
 	displayOptions: "[näyttöasetukset]",
 	title: "Otsikko",
 	authors: "Tekijät",
-	contributors: "Lisääjät",
+	contributors: "Osallistujat",
 	id: "Tunnus",
 	close: "[sulje]",
 	updated: "Päivitetty",
 	summary: "Yhteenveto",
 	content: "Sisältö"
 })
-);

@@ -1,14 +1,10 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/connect",
-	"dojo/_base/html",
-	"../gfx",
-	"../xml/DomParser",
-	"./UndoStack"
-], function(dojo){
-	dojo.experimental("dojox.sketch");
+dojo.provide("dojox.sketch.Figure");
+dojo.experimental("dojox.sketch");
 
+dojo.require("dojox.gfx");
+dojo.require("dojox.sketch.UndoStack");
+
+(function(){
 	var ta=dojox.sketch;
 	ta.tools={};
 	ta.registerTool=function(type, fn){ ta.tools[type]=fn; };
@@ -68,10 +64,10 @@ define([
 			return obj;
 		};
 		this.clearSelections=function(){
-			for(var i=0; i<self.selected.length; i++){
+			for(var i=0; i<self.selected.length; i++){ 
 				self.selected[i].setMode(ta.Annotation.Modes.View);
 			}
-			self.selected=[];
+			self.selected=[]; 
 		};
 		this.replaceSelection=function(n, o){
 			if(!self.isSelected(o)){
@@ -81,7 +77,7 @@ define([
 			var idx=-1;
 			for(var i=0; i<self.selected.length; i++){
 				if(self.selected[i]==o){
-					idx=i;
+					idx=i; 
 					break;
 				}
 			}
@@ -138,7 +134,7 @@ define([
 		//	drag handlers.
 		this._md=function(e){
 			//in IE, when clicking into the drawing canvas, the node does not get focused,
-			//do it manually here to force it, otherwise the keydown event listener is
+			//do it manually here to force it, otherwise the keydown event listener is 
 			//never triggered in IE.
 			if(dojox.gfx.renderer=='vml'){
 				self.node.focus();
@@ -177,11 +173,6 @@ define([
 		};
 		this._mm=function(e){
 			if(!self._ctr){ return; }
-			if(self._c && !self._c.shape){
-				//the selected item is gone, cancel editing mode
-				self._clearMouse();
-				return;
-			}
 			var x=e.clientX-self._ctr.x;
 			var y=e.clientY-self._ctr.y;
 			var dx=x-self._lp.x;
@@ -207,15 +198,11 @@ define([
 		this._mu=function(e){
 			if(self._c){
 				//	record the event.
-				if(self._c.shape){
-					self._c.endEdit(); //make sure it's not deleted
-				}
+				self._c.endEdit();
 			}else{
 				self._ctool.onMouseUp(e);
 			}
-			self._clearMouse();
-		};
-		this._clearMouse=function(){
+
 			//	clear the stuff out.
 			self._c=self._ctr=self._lp=self._action=self._prevState=self._startPoint=null;
 			self._cshape=self._start=self._end=self._absEnd=null;
@@ -232,10 +219,10 @@ define([
 		this._ctool=t;
 	};
     //gridSize: int
-    //		if it is greater than 0, all new shapes placed on the drawing will have coordinates
-    //		snapped to the gridSize. For example, if gridSize is set to 10, all coordinates
-    //		(only including coordinates which specifies the x/y position of shape are affected
-    //		by this parameter) will be dividable by 10
+    //      if it is greater than 0, all new shapes placed on the drawing will have coordinates
+    //      snapped to the gridSize. For example, if gridSize is set to 10, all coordinates
+    //      (only including coordinates which specifies the x/y position of shape are affected
+    //      by this parameter) will be dividable by 10
     p.gridSize=0;
     p._calCol=function(v){
         return this.gridSize?(Math.round(v/this.gridSize)*this.gridSize):v;
@@ -350,7 +337,7 @@ define([
 		}
 	};
 	p._get=function(key){
-		if(key&&key.indexOf("bounding")>-1){
+		if(key&&key.indexOf("bounding")>-1){ 
 			key=key.replace("-boundingBox","");
 		}else if(key&&key.indexOf("-labelShape")>-1){
 			key=key.replace("-labelShape","");
@@ -462,21 +449,21 @@ define([
 		var obj=dojox.xml.DomParser.parse(text);
 		var node=this.node;
 		this.load(obj,node);
-		//this.zoom(this.zoomFactor*100); //zoom to original scale
+		//this.zoom(this.zoomFactor*100); //zoom to orignal scale
 	};
 	p.load=function(obj, n){
 		//	create from pseudo-DOM
 		if(this.surface){ this.destroy(true); }
 		var node=obj.documentElement;	//	should be either the document or the docElement
-		this.size={
-			w:parseFloat(node.getAttribute('width'),10),
-			h:parseFloat(node.getAttribute('height'),10)
+		this.size={ 
+			w:parseFloat(node.getAttribute('width'),10), 
+			h:parseFloat(node.getAttribute('height'),10) 
 		};
 		var g=node.childrenByName("g")[0];
 		var img=g.childrenByName("image")[0];
 		this.imageSize={
-			w:parseFloat(img.getAttribute('width'),10),
-			h:parseFloat(img.getAttribute('height'),10)
+			w:parseFloat(img.getAttribute('width'),10), 
+			h:parseFloat(img.getAttribute('height'),10) 
 		};
 		this.imageSrc=img.getAttribute("xlink:href");
 		this.initialize(n);
@@ -529,13 +516,11 @@ define([
 			+ 'xmlns:dojoxsketch="http://dojotoolkit.org/dojox/sketch" '
 			+ 'width="' + this.size.w + '" height="' + this.size.h + '">'
 			+ '<g>'
-			+ '<image xlink:href="' + this.imageSrc + '" x="0" y="0" width="'
+			+ '<image xlink:href="' + this.imageSrc + '" x="0" y="0" width="' 
 			+ this.size.w + '" height="' + this.size.h + '" />';
 		for(var i=0; i<this.shapes.length; i++){ s+= this.shapes[i].serialize(); }
 		s += '</g></svg>';
 		return s;
 	};
 	p.getValue=p.serialize;
-
-	return dojox.sketch.Figure;
-});
+})();

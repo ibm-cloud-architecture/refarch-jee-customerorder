@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: CustomerOrderServices.jar
+Class-Path: CustomerOrderServices.jar 
  commons-codec.jar 
  commons-lang.jar 
  httpclient.jar 

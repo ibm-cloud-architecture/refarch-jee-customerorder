@@ -1,7 +1,4 @@
-define(
-//begin v1.x content
-{
-	"percentFormat": "'‪'#,##0%'‬'"
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'percentFormat':"'‪'#,##0%'‬'"
+})

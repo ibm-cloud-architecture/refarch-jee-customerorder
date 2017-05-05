@@ -1,45 +1,44 @@
+dojo.provide("dojox.string.BidiComplex");
+dojo.experimental("dojox.string.BidiComplex");
+
 // summary:
 //		BiDiComplex module handles complex expression issues known when using BiDi characters
-//		in File Paths, URLs, E-mail Address, XPATH, etc.
+//		in File Paths, URLs, E-mail Address, XPATH, etc. 
 //		this module adds property listeners to the text fields to correct the text representation
-//		in both static text and dynamic text during user input.
+//		in both static text and dynamic text during user input. 
 
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/connect", "dojo/_base/sniff",
-		"dojo/keys"], 
-  function(dojo, lang, arr, hub, has, keys){
-	dojo.experimental("dojox.string.BidiComplex");
-	var bdc = lang.getObject("string.BidiComplex", true, dojox);
+(function(){  
 
 	var _str0 = []; //FIXME: shared reference here among various functions means the functions can't be reused
 
-	bdc.attachInput = function(/*DOMNode*/field, /*String*/pattern){
+	dojox.string.BidiComplex.attachInput = function(/*DOMNode*/field, /*String*/pattern){
 		// summary:
-		//		Attach key listeners to the INPUT field to accommodate dynamic complex BiDi expressions
+		//		Attach key listeners to the INPUT field to accomodate dynamic complex BiDi expressions 
 		// field: INPUT DOM node
 		// pattern: Complex Expression Pattern type. One of "FILE_PATH", "URL", "EMAIL", "XPATH"
 
 		field.alt = pattern;
 
-		hub.connect(field, "onkeydown",  this, "_ceKeyDown");
-		hub.connect(field, "onkeyup", this, "_ceKeyUp");
+		dojo.connect(field, "onkeydown",  this, "_ceKeyDown");
+		dojo.connect(field, "onkeyup", this, "_ceKeyUp");
 
-		hub.connect(field, "oncut", this, "_ceCutText");
-		hub.connect(field, "oncopy", this, "_ceCopyText");
+		dojo.connect(field, "oncut", this, "_ceCutText");
+		dojo.connect(field, "oncopy", this, "_ceCopyText");
 
-		field.value = bdc.createDisplayString(field.value, field.alt);
+		field.value = dojox.string.BidiComplex.createDisplayString(field.value, field.alt);    
 	};
 		
-	bdc.createDisplayString = function(/*String*/str, /*String*/pattern){
+	dojox.string.BidiComplex.createDisplayString = function(/*String*/str, /*String*/pattern){
 		// summary:
-		//		Create the display string by adding the Unicode direction Markers
+		//		Create the display string by adding the Unicode direction Markers 
 		// pattern: Complex Expression Pattern type. One of "FILE_PATH", "URL", "EMAIL", "XPATH"
 
-		str = bdc.stripSpecialCharacters(str);
-		var segmentsPointers = bdc._parse(str, pattern);
+		str = dojox.string.BidiComplex.stripSpecialCharacters(str);
+		var segmentsPointers = dojox.string.BidiComplex._parse(str, pattern); 
 		
 		var buf = '\u202A'/*LRE*/ + str;
-		var shift = 1;
-		arr.forEach(segmentsPointers, function(n){
+		var shift = 1;                                           
+		dojo.forEach(segmentsPointers, function(n){
 			if(n != null){
 				var preStr = buf.substring(0, n + shift);
 				var postStr = buf.substring(n + shift, buf.length);
@@ -47,54 +46,54 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 				shift++;
 			}
 		});
-		return buf;
+		return buf;        
 	};
 
-	bdc.stripSpecialCharacters = function(str){
+	dojox.string.BidiComplex.stripSpecialCharacters = function(str){
 		// summary:
 		//		removes all Unicode directional markers from the string
 
 		return str.replace(/[\u200E\u200F\u202A-\u202E]/g, ""); // String
 	};
 
-	bdc._ceKeyDown = function(event){
-		var elem = has("ie") ? event.srcElement : event.target;
+	dojox.string.BidiComplex._ceKeyDown = function(event){
+		var elem = dojo.isIE ? event.srcElement : event.target;        
 		_str0 = elem.value;
 	};
 				
-	bdc._ceKeyUp = function(event){
+	dojox.string.BidiComplex._ceKeyUp = function(event){
 		var LRM = '\u200E';
-		var elem = has("ie") ? event.srcElement : event.target;
+		var elem = dojo.isIE ? event.srcElement : event.target;
 
 		var str1 = elem.value;
 		var ieKey = event.keyCode;
 		
-		if((ieKey == keys.HOME)
-			|| (ieKey == keys.END)
-			|| (ieKey == keys.SHIFT)){
+		if((ieKey == dojo.keys.HOME)
+			|| (ieKey == dojo.keys.END)
+			|| (ieKey == dojo.keys.SHIFT)){
 			return;
 		}
 
 		var cursorStart, cursorEnd;
-		var selection = bdc._getCaretPos(event, elem);
+		var selection = dojox.string.BidiComplex._getCaretPos(event, elem);
 		if(selection){
 			cursorStart = selection[0];
 			cursorEnd = selection[1];
 		}
 
 	//Jump over a cursor processing
-		if(has("ie")){
+		if(dojo.isIE){
 			var cursorStart1 = cursorStart, cursorEnd1 = cursorEnd;
 
-			if(ieKey == keys.LEFT_ARROW){
+			if(ieKey == dojo.keys.LEFT_ARROW){
 				if((str1.charAt(cursorEnd-1) == LRM)
 						&& (cursorStart == cursorEnd)){
-					bdc._setSelectedRange(elem,cursorStart - 1, cursorEnd - 1);
+					dojox.string.BidiComplex._setSelectedRange(elem,cursorStart - 1, cursorEnd - 1);
 				}
 				return;
 			}
 
-			if(ieKey == keys.RIGHT_ARROW){
+			if(ieKey == dojo.keys.RIGHT_ARROW){             
 				if(str1.charAt(cursorEnd-1) == LRM){
 					cursorEnd1 = cursorEnd + 1;
 					if(cursorStart == cursorEnd){
@@ -102,55 +101,55 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 					}
 				}
 
-				bdc._setSelectedRange(elem, cursorStart1, cursorEnd1);
+				dojox.string.BidiComplex._setSelectedRange(elem, cursorStart1, cursorEnd1);                        
 				return;
-			}
+			}                   
 		}else{ //Firefox
-			if(ieKey == keys.LEFT_ARROW){
+			if(ieKey == dojo.keys.LEFT_ARROW){
 				if(str1.charAt(cursorEnd-1) == LRM){
-					bdc._setSelectedRange(elem, cursorStart - 1, cursorEnd - 1);
+					dojox.string.BidiComplex._setSelectedRange(elem, cursorStart - 1, cursorEnd - 1);
 				}
 				return;
 			}
-			if(ieKey == keys.RIGHT_ARROW){
+			if(ieKey == dojo.keys.RIGHT_ARROW){
 				if(str1.charAt(cursorEnd-1) == LRM){
-					bdc._setSelectedRange(elem, cursorStart + 1, cursorEnd + 1);
+					dojox.string.BidiComplex._setSelectedRange(elem, cursorStart + 1, cursorEnd + 1);
 				}
 				return;
 			}
 		}
 		
-		var str2 = bdc.createDisplayString(str1, elem.alt);
+		var str2 = dojox.string.BidiComplex.createDisplayString(str1, elem.alt);
 
 		if(str1 != str2)
 		{
 			window.status = str1 + " c=" + cursorEnd;
 			elem.value = str2;
 
-			if((ieKey == keys.DELETE) && (str2.charAt(cursorEnd)==LRM)){
+			if((ieKey == dojo.keys.DELETE) && (str2.charAt(cursorEnd)==LRM)){
 				elem.value = str2.substring(0, cursorEnd) + str2.substring(cursorEnd+2, str2.length);
 			}
 
-			if(ieKey == keys.DELETE){
-				bdc._setSelectedRange(elem,cursorStart,cursorEnd);
-			}else if(ieKey == keys.BACKSPACE){
+			if(ieKey == dojo.keys.DELETE){
+				dojox.string.BidiComplex._setSelectedRange(elem,cursorStart,cursorEnd); 
+			}else if(ieKey == dojo.keys.BACKSPACE){
 				if((_str0.length >= cursorEnd) && (_str0.charAt(cursorEnd-1)==LRM)){
-					bdc._setSelectedRange(elem, cursorStart - 1, cursorEnd - 1);
+					dojox.string.BidiComplex._setSelectedRange(elem, cursorStart - 1, cursorEnd - 1);
 				}else{
-					bdc._setSelectedRange(elem, cursorStart, cursorEnd);
+					dojox.string.BidiComplex._setSelectedRange(elem, cursorStart, cursorEnd);
 				}
 			}else if(elem.value.charAt(cursorEnd) != LRM){
-				bdc._setSelectedRange(elem, cursorStart + 1, cursorEnd + 1);
+				dojox.string.BidiComplex._setSelectedRange(elem, cursorStart + 1, cursorEnd + 1);
 			}
 		}
 	};
 
-	bdc._processCopy = function(elem, text, isReverse){
+	dojox.string.BidiComplex._processCopy = function(elem, text, isReverse){
 		// summary:
 		//		This function strips the unicode directional controls when the text copied to the Clipboard
 
 		if(text == null){
-			if(has("ie")){
+			if(dojo.isIE){
 				var range = document.selection.createRange();
 				text = range.text;
 			}else{
@@ -158,31 +157,31 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			}
 		}
 
-		var textToClipboard = bdc.stripSpecialCharacters(text);
+		var textToClipboard = dojox.string.BidiComplex.stripSpecialCharacters(text);
 	
-		if(has("ie")){
+		if(dojo.isIE){
 			window.clipboardData.setData("Text", textToClipboard);
 		}
 		return true;
 	};
 
-	bdc._ceCopyText = function(elem){
-		if(has("ie")){
+	dojox.string.BidiComplex._ceCopyText = function(elem){
+		if(dojo.isIE){
 			elem.returnValue = false;
 		}
-		return bdc._processCopy(elem, null, false);
+		return dojox.string.BidiComplex._processCopy(elem, null, false);
 	};
 
-	bdc._ceCutText = function(elem){
+	dojox.string.BidiComplex._ceCutText = function(elem){
 
-		var ret = bdc._processCopy(elem, null, false);
-		if(!ret){
+		var ret = dojox.string.BidiComplex._processCopy(elem, null, false);
+		if(!ret){ 
 			return false;
 		}
 
-		if(has("ie")){
-	//		curPos = elem.selectionStart;
-			document.selection.clear();
+		if(dojo.isIE){
+	//		curPos = elem.selectionStart; 
+			document.selection.clear(); 
 		}else{
 			var curPos = elem.selectionStart;
 			elem.value = elem.value.substring(0, curPos) + elem.value.substring(elem.selectionEnd);
@@ -193,8 +192,8 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 	};
 
 	// is there dijit code to do this?
-	bdc._getCaretPos = function(event, elem){
-		if(has("ie")){
+	dojox.string.BidiComplex._getCaretPos = function(event, elem){
+		if(dojo.isIE){
 			var position = 0,
 			range = document.selection.createRange().duplicate(),
 			range2 = range.duplicate(),
@@ -217,8 +216,8 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 	};
 
 	// is there dijit code to do this?
-	bdc._setSelectedRange = function(elem,selectionStart,selectionEnd){
-		if(has("ie")){
+	dojox.string.BidiComplex._setSelectedRange = function(elem,selectionStart,selectionEnd){
+		if(dojo.isIE){
 			var range = elem.createTextRange();
 			if(range){
 				if(elem.type == "textarea"){
@@ -227,18 +226,18 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 					range.expand('textedit');
 				}
 
-				range.collapse();
+				range.collapse();            
 				range.moveEnd('character', selectionEnd);
 				range.moveStart('character', selectionStart);
 				range.select();
 			}
-		}else{
+		}else{        
 			elem.selectionStart = selectionStart;
 			elem.selectionEnd = selectionEnd;
 		}
 	};
 
-	var _isBidiChar = function(c){
+	var _isBidiChar = function(c){    
 		return (c >= '\u0030' && c <= '\u0039') || (c > '\u00ff');
 	};
 
@@ -247,11 +246,11 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 	};
 
 	var _isCharBeforeBiDiChar = function(buffer, i, previous){
-		while(i > 0){
+		while(i > 0){    
 			if(i == previous){
 				return false;
 			}
-			i--;
+			i--;                        
 			if(_isBidiChar(buffer.charAt(i))){
 				return true;
 			}
@@ -259,11 +258,11 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 				return false;
 			}
 		}
-		return false;
+		return false;       
 	};
 
 
-	bdc._parse = function(/*String*/str, /*String*/pattern){
+	dojox.string.BidiComplex._parse = function(/*String*/str, /*String*/pattern){    
 		var previous = -1, segmentsPointers = [];
 		var delimiters = {
 			FILE_PATH: "/\\:.",
@@ -276,40 +275,39 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			case "FILE_PATH":
 			case "URL":
 			case "XPATH":
-				arr.forEach(str, function(ch, i){
+				dojo.forEach(str, function(ch, i){
 					if(delimiters.indexOf(ch) >= 0 && _isCharBeforeBiDiChar(str, i, previous)){
 						previous = i;
-						segmentsPointers.push(i);
+						segmentsPointers.push(i);  
 					}
 				});
 				break;
 			case "EMAIL":
 				var inQuotes = false; // FIXME: unused?
 	
-				arr.forEach(str, function(ch, i){
+				dojo.forEach(str, function(ch, i){     
 					if(ch== '\"'){
 						if(_isCharBeforeBiDiChar(str, i, previous)){
-							previous = i;
-							segmentsPointers.push(i);
-						}
+							previous = i;    
+							segmentsPointers.push(i);  
+						}                    
 						i++;
 						var i1 = str.indexOf('\"', i);
 						if(i1 >= i){
 							i = i1;
 						}
 						if(_isCharBeforeBiDiChar(str, i, previous)){
-							previous = i;
-							segmentsPointers.push(i);
-						}
+							previous = i;    
+							segmentsPointers.push(i);  
+						}                                   
 					}
 	
 					if(delimiters.indexOf(ch) >= 0 && _isCharBeforeBiDiChar(str, i, previous)){
-								previous = i;
-								segmentsPointers.push(i);
-					}
+								previous = i;    
+								segmentsPointers.push(i); 
+					}                                            
 				});
 		}
 		return segmentsPointers;
-	};
-	return bdc;
-});
+	};  
+})();

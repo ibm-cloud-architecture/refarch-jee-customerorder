@@ -1,8 +1,8 @@
 dojo.provide("dojox.mobile.app.AlertDialog");
 dojo.experimental("dojox.mobile.app.AlertDialog");
-dojo.require("dijit._WidgetBase");
+dojo.require("dijit._Widget");
 
-dojo.declare("dojox.mobile.app.AlertDialog", dijit._WidgetBase, {
+dojo.declare("dojox.mobile.app.AlertDialog", dijit._Widget, {
 
 	// title: String
 	//		The title of the AlertDialog
@@ -101,7 +101,7 @@ dojo.declare("dojox.mobile.app.AlertDialog", dijit._WidgetBase, {
 
 			// Find the widget that was tapped.
 			while(!dijit.byNode(node)){
-				node = node.parentNode;
+				node - node.parentNode;
 			}
 		}
 

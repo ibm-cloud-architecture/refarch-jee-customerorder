@@ -1,5 +1,4 @@
-define(
 ({
-	"save": "Enregistrer"
+	"save": "Sauvegarder"
 })
-);
+

@@ -1,5 +1,3 @@
-define({ root:
-//begin v1.x content
 ({
 	insertTableTitle: "Insert Table",
 	modifyTableTitle: "Modify Table",
@@ -11,7 +9,7 @@ define({ root:
 	tableWidth: "Table Width:",
 	backgroundColor: "Background Color:",
 	borderColor: "Border Color:",
-	borderThickness: "Border Thickness:",
+	borderThickness: "BorderThickness",
 	percent: "percent",
 	pixels: "pixels",
 	"default": "default",
@@ -20,7 +18,6 @@ define({ root:
 	right: "right",
 	buttonSet: "Set", // translated elsewhere?
 	buttonInsert: "Insert",
-	buttonCancel: "Cancel",
 
 	selectTableLabel: "Select Table",
 	insertTableRowBeforeLabel: "Add Row Before",
@@ -28,46 +25,5 @@ define({ root:
 	insertTableColumnBeforeLabel: "Add Column Before",
 	insertTableColumnAfterLabel: "Add Column After",
 	deleteTableRowLabel: "Delete Row",
-	deleteTableColumnLabel: "Delete Column",
-	
-	colorTableCellTitle: "Background Color Table Cell",
-	tableContextMenuTitle: "Table Context Menu"
-	
+	deleteTableColumnLabel: "Delete Column"
 })
-//end v1.x content
-,
-"zh": true,
-"zh-tw": true,
-"uk": true,
-"tr": true,
-"th": true,
-"sv": true,
-"sl": true,
-"sk": true,
-"ru": true,
-"ro": true,
-"pt": true,
-"pt-pt": true,
-"pl": true,
-"nl": true,
-"nb": true,
-"ko": true,
-"kk": true,
-"ja": true,
-"it": true,
-"id": true,
-"hu": true,
-"hr": true,
-"he": true,
-"fr": true,
-"fi": true,
-"es": true,
-"el": true,
-"de": true,
-"da": true,
-"cs": true,
-"ca": true,
-"bg": true,
-"az": true,
-"ar": true
-});

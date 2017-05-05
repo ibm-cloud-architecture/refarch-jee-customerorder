@@ -1,54 +1,55 @@
-define(["..", "dojo/_base/lang", "dojo/date", "./islamic/Date"], function(dojox, lang, dd, IDate){
+dojo.provide("dojox.date.islamic");
 
-var dislamic = lang.getObject("date.islamic", true, dojox);
-
+dojo.require("dojox.date.islamic.Date");
+dojo.require("dojo.date"); // for compare
+	
 // Utility methods to do arithmetic calculations with islamic.Dates
 
 	// added for compat to date
-dislamic.getDaysInMonth = function(/*dojox/date/islamic/Date*/month){
+dojox.date.islamic.getDaysInMonth = function(/*islamic.Date*/month){
 	return month.getDaysInIslamicMonth(month.getMonth(), month.getFullYear());
 };
 
 //TODO: define islamic.isLeapYear?  Or should it be invalid, since it has different meaning?
 
-dislamic.compare = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/islamic/Date*/date2, /*String?*/portion){
-	// summary:
+dojox.date.islamic.compare = function(/*islamic.Date*/date1, /*islamic.Date*/date2, /*String?*/portion){
+	//	summary:
 	//		Compare two islamic date objects by date, time, or both.
-	// description:
-	//		Returns 0 if equal, positive if a > b, else negative.
-	// date1: dojox/date/islamic/Date
-	// date2: dojox/date/islamic/Date
-	//		If not specified, the current islamic.Date is used.
-	// portion:
+	//	description:
+	//  	Returns 0 if equal, positive if a > b, else negative.
+	//	date1:
+	//		islamic.Date object
+	//	date2:
+	//		islamic.Date object.  If not specified, the current islamic.Date is used.
+	//	portion:
 	//		A string indicating the "date" or "time" portion of a Date object.
 	//		Compares both "date" and "time" by default.  One of the following:
 	//		"date", "time", "datetime"
 
-	if(date1 instanceof IDate){
+	if(date1 instanceof dojox.date.islamic.Date){
 		date1 = date1.toGregorian();
 	}
-	if(date2 instanceof IDate){
+	if(date2 instanceof dojox.date.islamic.Date){
 		date2 = date2.toGregorian();
 	}
 	
-	return dd.compare.apply(null, arguments);
+	return dojo.date.compare.apply(null, arguments);
 };
 
-dislamic.add = function(/*dojox/date/islamic/Date*/date, /*String*/interval, /*int*/amount){
-	// summary:
+dojox.date.islamic.add = function(/*dojox.date.islamic.Date*/date, /*String*/interval, /*int*/amount){
+	//	based on and similar to dojo.date.add
+	//	summary:
 	//		Add to a Date in intervals of different size, from milliseconds to years
-	// date: dojox/date/islamic/Date
+	//	date: islamic.Date
 	//		Date object to start with
-	// interval:
+	//	interval:
 	//		A string representing the interval.  One of the following:
-	//		"year", "month", "day", "hour", "minute", "second",
-	//		"millisecond", "week", "weekday"
-	// amount:
+	//			"year", "month", "day", "hour", "minute", "second",
+	//			"millisecond", "week", "weekday"
+	//	amount:
 	//		How much to add to the date.
 
-	//	based on and similar to dojo.date.add
-
-	var newIslamDate = new IDate(date);
+	var newIslamDate = new dojox.date.islamic.Date(date);
 
 	switch(interval){
 		case "day":
@@ -66,9 +67,9 @@ dislamic.add = function(/*dojox/date/islamic/Date*/date, /*String*/interval, /*i
 					remdays = (amount > 0) ?  -1 : 1;
 				}else if(day == 6){ //shabat
 					day = 4;
-					remdays = (amount > 0) ? -2 : 2;
+					remdays = (amount > 0) ? -2 : 2;		
 				}
-				var add = (amount > 0) ? (5 - day - 1) : -day
+				var add = (amount > 0) ? (5 - day - 1) : -day 
 				var amountdif = amount - add;
 				var div = parseInt(amountdif / 5);
 				if(amountdif % 5 != 0){
@@ -86,49 +87,45 @@ dislamic.add = function(/*dojox/date/islamic/Date*/date, /*String*/interval, /*i
 			newIslamDate.setDate(date.getDate() + amount);
 			break;
 		case "month":
-			var month = date.getMonth();
+			var month = date.getMonth(); 
 			newIslamDate.setMonth(month + amount);
 			break;
 		case "hour":
 			newIslamDate.setHours(date.getHours() + amount);
-			break;
+			break;	
 		case "minute":
-			newIslamDate._addMinutes(amount);
-			break;
+			newIslamDate.setMinutes(date.getMinutes() + amount);
+			break;	
 		case "second":
-			newIslamDate._addSeconds(amount);
-			break;
+			newIslamDate.setSeconds(date.getSeconds() + amount);
+			break;	
 		case "millisecond":
-			newIslamDate._addMilliseconds(amount);
+			newIslamDate.setMilliseconds(date.getMilliseconds() + amount);
 			break;
 	}
 
 	return newIslamDate; // dojox.date.islamic.Date
-};
+}; 
 
-dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/islamic/Date?*/date2, /*String?*/interval){
-	// summary:
-	//		date2 - date1
-	// date1: dojox/date/islamic/Date
-	// date2: dojox/date/islamic/Date
-	//		If not specified, the current dojox.date.islamic.Date is used.
-	// interval:
+dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*dojox.date.islamic.Date?*/date2, /*String?*/interval){
+	//	based on and similar to dojo.date.difference
+	//	summary:
+	//        date1 - date2
+	//	 date2 is islamic.Date object.  If not specified, the current islamic.Date is used.
+	//	interval:
 	//		A string representing the interval.  One of the following:
-	//		"year", "month", "day", "hour", "minute", "second",
-	//		"millisecond",  "week", "weekday"
-	//
+	//			"year", "month", "day", "hour", "minute", "second",
+	//			"millisecond",  "week", "weekday"
 	//		Defaults to "day".
 
-	//	based on and similar to dojo.date.difference
-
-	date2 = date2 || new IDate();
+	date2 = date2 || new dojox.date.islamic.Date();
 	interval = interval || "day";
-	var yearDiff = date2.getFullYear() - date1.getFullYear();
+	var yearDiff = date1.getFullYear() - date2.getFullYear();
 	var delta = 1; // Integer return value
 	switch(interval){
 		case "weekday":
-			var days = Math.round(dislamic.difference(date1, date2, "day"));
-			var weeks = parseInt(dislamic.difference(date1, date2, "week"));
+			var days = Math.round(dojox.date.islamic.difference(date1, date2, "day"));
+			var weeks = parseInt(dojox.date.islamic.difference(date1, date2, "week"));
 			var mod = days % 7;
 
 			// Even number of weeks
@@ -137,14 +134,14 @@ dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/is
 			}else{
 				// Weeks plus spare change (< 7 days)
 				var adj = 0;
-				var aDay = date1.getDay();
-				var bDay = date2.getDay();
+				var aDay = date2.getDay();
+				var bDay = date1.getDay();
 	
 				weeks = parseInt(days/7);
 				mod = days % 7;
 				// Mark the date advanced by the number of
 				// round weeks (may be zero)
-				var dtMark = new IDate(date1);
+				var dtMark = new dojox.date.islamic.Date(date2);
 				dtMark.setDate(dtMark.getDate()+(weeks*7));
 				var dayMark = dtMark.getDay();
 	
@@ -203,8 +200,8 @@ dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/is
 			delta = yearDiff;
 			break;
 		case "month":
-			var startdate =  (date2.toGregorian() > date1.toGregorian()) ? date2 : date1; // more
-			var enddate = (date2.toGregorian() > date1.toGregorian()) ? date1 : date2;
+			var startdate =  (date1.toGregorian() > date2.toGregorian()) ? date1 : date2; // more
+			var enddate = (date1.toGregorian() > date2.toGregorian()) ? date2 : date1;
 			
 			var month1 = startdate.getMonth();
 			var month2 = enddate.getMonth();
@@ -217,17 +214,17 @@ dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/is
 				var i = enddate.getFullYear()+1;
 				var e = startdate.getFullYear();
 				for (i;   i < e;  i++){
-					delta += 12;
+					delta += 12; 
 				}
 			}
-			if (date2.toGregorian() < date1.toGregorian()){
+			if (date1.toGregorian() < date2.toGregorian()){
 				delta = -delta;
 			}
 			break;
 		case "week":
 			// Truncate instead of rounding
 			// Don't use Math.floor -- value may be negative
-			delta = parseInt(dislamic.difference(date1, date2, "day")/7);
+			delta = parseInt(dojox.date.islamic.difference(date1, date2, "day")/7);
 			break;
 		case "day":
 			delta /= 24;
@@ -242,11 +239,9 @@ dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/is
 			delta /= 1000;
 			// fallthrough
 		case "millisecond":
-			delta *= date2.toGregorian().getTime()- date1.toGregorian().getTime();
+			delta *= date1.toGregorian().getTime()- date2.toGregorian().getTime();
 	}
 
 	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer)
+	return Math.round(delta); // Number (integer) 
 };
-return dislamic;
-});

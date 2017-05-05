@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Fed',
 	'copy': 'Kopiér',
@@ -38,14 +37,13 @@ define(
 	'formatBlock': 'Afsnitstypografi',
 	'fontSize': 'Skriftstørrelse',
 	'fontName': 'Skriftnavn',
-	'tabIndent': 'Tabulatorindrykning',
-	"fullScreen": "Fuld skærm til/fra",
+	'tabIndent': 'Indrykning med tabulator',
+	"fullScreen": "Aktivér/deaktivér fuldskærm",
 	"viewSource": "Vis HTML-kilde",
 	"print": "Udskriv",
 	"newPage": "Ny side",
 	/* Error messages */
 	'systemShortcut': 'Funktionen "${0}" kan kun bruges i din browser med en tastaturgenvej. Brug ${1}.',
-	'ctrlKey':'Ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'ctrlKey':'Ctrl+${0}'
 })
-);
+

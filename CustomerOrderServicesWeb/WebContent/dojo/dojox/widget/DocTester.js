@@ -6,18 +6,16 @@ dojo.require("dijit._Templated");
 dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.testing.DocTest");
 
-dojo.declare('dojox.widget.DocTester',
+dojo.declare('dojox.widget.DocTester', 
 	[dijit._Widget, dijit._Templated],
 	{
-		// summary:
-		//		A widget to run DocTests inside an HTML page.
-
+		// summary: A widget to run DocTests inside an HTML page.
+		// 
 		templateString: dojo.cache('dojox.widget','DocTester/DocTester.html'),
 		widgetsInTemplate: true,
 	
 		_fillContent:function(/*DomNode*/source){
-			// summary:
-			//		Overridden from _Templates.js, which actually just takes care of filling the containerNode.
+			// summary: Overridden from _Templates.js, which actually just takes care of filling the containerNode.
 			var src = source.innerHTML;
 			this.doctests = new dojox.testing.DocTest();
 			this.tests = this.doctests.getTestsFromString(this._unescapeHtml(src));
@@ -67,8 +65,7 @@ dojo.declare('dojox.widget.DocTester',
 		},
 		
 		reset:function(){
-			// summary:
-			//		Reset the DocTester visuals and enable the "Run tests" button again.
+			// summary: Reset the DocTester visuals and enable the "Run tests" button again.
 			dojo.style(this.runButtonNode.domNode, "display", "");
 			dojo.style(this.resetButtonNode.domNode, "display", "none");
 			this.numTestsOkNode.innerHTML = "0";
@@ -77,13 +74,13 @@ dojo.declare('dojox.widget.DocTester',
 			dojo.query(".testCase", this.domNode).removeClass("resultOk").removeClass("resultNok");
 		},
 		
-		_unescapeHtml:function(/* String */ str){
+		_unescapeHtml:function(/*string*/str){
+			// TODO Should become dojo.html.unentities() or so, when exists use instead
 			// summary:
 			//		Adds escape sequences for special characters in XML: &<>"'
 			str = String(str).replace(/&amp;/gm, "&").replace(/&lt;/gm, "<")
 				.replace(/&gt;/gm, ">").replace(/&quot;/gm, '"');
-			// TODO Should become dojo.html.unentities() or so, when exists use instead
-			return str; // String
+			return str; // string
 		}
 	}
 );

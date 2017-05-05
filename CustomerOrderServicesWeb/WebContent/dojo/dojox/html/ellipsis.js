@@ -1,18 +1,19 @@
-define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojo/colors"], function(d){
-	/*=====
-	return {
-		// summary:
-		//		offers cross-browser support for text-overflow: ellipsis
-		// description:
-		//		Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
-		//		the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
-		//		It should also be a block-level element (i.e. `<div>`) - it will not work on td elements.
-		//		NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
-	};
-	=====*/
-	
-	if(d.isFF < 7){ //TODO: feature detect text-overflow in computed style?
-		// The delay (in ms) to wait so that we don't keep querying when many
+dojo.provide("dojox.html.ellipsis");
+
+/*=====
+dojox.html.ellipsis = {
+	// summary: offers cross-browser support for text-overflow: ellipsis
+	//
+	// description: Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
+	//	the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
+	//	It should also be a block-level element (i.e. <div>) - it will not work on td elements.
+	//	NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
+}
+=====*/
+
+(function(d){
+	if(d.isMoz){
+		// The delay (in ms) to wait so that we don't keep querying when many 
 		// changes happen at once - set config "dojoxFFEllipsisDelay" if you
 		// want a different value
 		var delay = 1;
@@ -22,41 +23,37 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 				delay = 1;
 			}
 		}
-		try{
-			var createXULEllipsis = (function(){
-				// Create our stub XUL elements for cloning later
-				// NOTE: this no longer works as of FF 4.0:
-				// https://developer.mozilla.org/En/Firefox_4_for_developers#Remote_XUL_support_removed
-				var sNS = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
-				var xml = document.createElementNS(sNS, 'window');
-				var label = document.createElementNS(sNS, 'description');
-				label.setAttribute('crop', 'end');
-				xml.appendChild(label);
-
-				return function(/* Node */ n){
-					// Summary:
-					//		Given a node, it creates the XUL and sets its
-					//		content so that it will have an ellipsis
-					var x = xml.cloneNode(true);
-					x.firstChild.setAttribute('value', n.textContent);
-					n.innerHTML = '';
-					n.appendChild(x);
-				};
-			})();
-		}catch(e){}
+		
+		// Create our stub XUL elements for cloning later
+		var sNS = 'http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul';
+		var xml = document.createElementNS(sNS, 'window');
+		var label = document.createElementNS(sNS, 'description');
+		label.setAttribute('crop', 'end');
+		xml.appendChild(label);
+		
+		var createXULEllipsis = function(/* Node */ n){
+			// Summary:
+			//		Given a node, it creates the XUL and sets its
+			//		content so that it will have an ellipsis
+			var x = xml.cloneNode(true);
+			x.firstChild.setAttribute('value', n.textContent);
+			n.innerHTML = '';
+			n.appendChild(x);
+		};
 		
 		// Create our iframe elements for cloning later
 		var create = d.create;
 		var dd = d.doc;
 		var dp = d.place;
 		var iFrame = create("iframe", {className: "dojoxEllipsisIFrame",
-					src: "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'", style: {display: "none"}});
+					src: "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'"});
 		var rollRange = function(/* W3C Range */ r, /* int? */ cnt){
-			// summary:
+			// Summary:
 			//		Rolls the given range back one character from the end
-			// r: W3C Range
+			//
+			//	r: W3C Range
 			//		The range to roll back
-			// cnt: int?
+			//	cnt: int?
 			//		An optional number of times to roll back (defaults 1)
 			if(r.collapsed){
 				// Do nothing - we are already collapsed
@@ -95,7 +92,7 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 			}
 		};
 		var createIFrameEllipsis = function(/* Node */ n){
-			// summary:
+			// Summary:
 			//		Given a node, it creates an iframe and and ellipsis div and
 			//		sets up the connections so that they will work correctly.
 			//		This function is used when createXULEllipsis is not able
@@ -159,7 +156,7 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 			d.forEach(s[fn].apply(s, [opt]), function(n){
 				if(!n || n._djx_ellipsis_done){ return; }
 				n._djx_ellipsis_done = true;
-				if(createXULEllipsis && n.textContent == n.innerHTML && !hc(n, "dojoxEllipsisSelectable")){
+				if(n.textContent == n.innerHTML && !hc(n, "dojoxEllipsisSelectable")){
 					// We can do the faster XUL version, instead of calculating
 					createXULEllipsis(n);
 				}else{
@@ -190,4 +187,4 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 			connFx();
 		});
 	}
-});
+})(dojo);

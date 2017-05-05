@@ -1,10 +1,9 @@
-define(
 ({
 	/* These are already handled in the default RTE
-	amp:"ampersand",lt:"less-than sign",
-	gt:"greater-than sign",
-	nbsp:"no-break space\nnon-breaking space",
-	quot:"quote",
+		amp:"ampersand",lt:"less-than sign",
+		gt:"greater-than sign",
+		nbsp:"no-break space\nnon-breaking space",
+		quot:"quote",
 	*/
 	iexcl:"punto esclamativo capovolto",
 	cent:"simbolo del centesimo",
@@ -32,7 +31,7 @@ define(
 	cedil:"cediglia\ncediglia con spazio",
 	sup1:"esponente uno\nnumero uno in esponente",
 	ordm:"indicatore ordinale maschile",
-	raquo:"virgolette doppie angolari indicanti a destra\nguillemet indicante a destra",
+	raquo:"virgolette doppie angolari indicanti a destra\n guillemet indicante a destra",
 	frac14:"frazione semplice un quarto\nfrazione un quarto",
 	frac12:"frazione semplice un mezzo\nfrazione un mezzo",
 	frac34:"frazione semplice tre quarti\nfrazione tre quarti",
@@ -68,7 +67,7 @@ define(
 	Uuml:"lettera latina U maiuscola con dieresi",
 	Yacute:"lettera latina Y maiuscola con accento acuto",
 	THORN:"lettera latina THORN maiuscola",
-	szlig:"lettera latina s minuscola sonora\esse-zeta",
+	szlig:"lettera latina s minuscola sonora\nesse-zeta",
 	agrave:"lettera latina a minuscola con accento grave\nlettera latina a minuscola grave",
 	aacute:"lettera latina a minuscola con accento acuto",
 	acirc:"lettera latina a minuscola con accento circonflesso",
@@ -93,7 +92,7 @@ define(
 	otilde:"lettera latina o minuscola con tilde",
 	ouml:"lettera latina o minuscola con dieresi",
 	divide:"segno di divisione",
-	oslash:"lettera latina o minuscola con barra obliqua1nlettera latina o minuscola barrata",
+	oslash:"lettera latina o minuscola con barra obliqua\nlettera latina o minuscola barrata",
 	ugrave:"lettera latina u minuscola con accento grave",
 	uacute:"lettera latina u minuscola con accento acuto",
 	ucirc:"lettera latina u minuscola con accento circonflesso",
@@ -101,6 +100,7 @@ define(
 	yacute:"lettera latina y minuscola con accento acuto",
 	thorn:"lettera latina thorn minuscola",
 	yuml:"lettera latina y minuscola con dieresi",
+
 // Greek Characters and Symbols
 	fnof:"f latina minuscola con uncino\nfunzione\nfiorino",
 	Alpha:"lettera greca maiuscola alpha",
@@ -254,4 +254,4 @@ define(
 	rsaquo:"virgoletta angolare singola rivolta a destra",
 	euro:"simbolo dell'euro"
 })
-);
+

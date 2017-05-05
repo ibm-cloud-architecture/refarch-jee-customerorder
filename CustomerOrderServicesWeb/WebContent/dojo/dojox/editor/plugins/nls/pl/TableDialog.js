@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "Wstawianie tabeli",
 	modifyTableTitle: "Modyfikowanie tabeli",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "Szerokość tabeli:",
 	backgroundColor: "Kolor tła:",
 	borderColor: "Kolor ramki:",
-	borderThickness: "Grubość krawędzi:",
+	borderThickness: "Grubość ramki",
 	percent: "procent",
 	pixels: "piksle",
 	"default": "domyślna",
@@ -19,15 +18,13 @@ define(
 	right: "prawa strona",
 	buttonSet: "Ustaw", // translated elsewhere?
 	buttonInsert: "Wstaw",
-	buttonCancel: "Anuluj",
+
 	selectTableLabel: "Wybierz tabelę",
 	insertTableRowBeforeLabel: "Dodaj wiersz przed",
 	insertTableRowAfterLabel: "Dodaj wiersz po",
 	insertTableColumnBeforeLabel: "Dodaj kolumnę przed",
 	insertTableColumnAfterLabel: "Dodaj kolumnę po",
 	deleteTableRowLabel: "Usuń wiersz",
-	deleteTableColumnLabel: "Usuń kolumnę",
-	colorTableCellTitle: "Kolor tła - komórka tabeli",
-	tableContextMenuTitle: "Menu kontekstowe tabeli"
+	deleteTableColumnLabel: "Usuń kolumnę"
 })
-);
+

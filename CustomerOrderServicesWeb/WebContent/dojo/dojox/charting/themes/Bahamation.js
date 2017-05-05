@@ -1,5 +1,9 @@
-define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
-	themes.Bahamation = new SimpleTheme({
+dojo.provide("dojox.charting.themes.Bahamation");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.Bahamation=new dxc.Theme({
 		colors: [
 			"#3f9998",
 			"#3fc0c3",
@@ -8,5 +12,4 @@ define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 			"#c663a6"
 		]
 	});
-	return themes.Bahamation;
-});
+})();

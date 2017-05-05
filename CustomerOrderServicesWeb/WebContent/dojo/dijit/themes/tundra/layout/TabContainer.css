@@ -9,9 +9,13 @@
 .tundra .dijitTab {
 	line-height:normal;
 	margin-right:4px;	/* space between one tab and the next in top/bottom mode */
-    padding:2px 8px 2px 9px;
+	padding:0px;
 	border:1px solid #ccc;
 	background:#e2e2e2 url("../images/tabEnabled.png") repeat-x;
+}
+
+.tundra .dijitTabInnerDiv {
+	padding:2px 8px 2px 9px;
 }
 
 .tundra .dijitTabSpacer {
@@ -29,11 +33,11 @@
 	top: 2px;
 }
 .tundra .dijitTabContainerBottom .nowrapTabStrip .dijitTab {
-	top: 0;
+	top: 0px;
 	bottom: 2px;
 }
 
-/* selected tab */
+/* checked tab*/
 .tundra .dijitTabChecked {
 	/* the selected tab (with or without hover) */
 	background-color:#fff;
@@ -92,13 +96,14 @@
 .tundra .dijitTabContainerTabListNested .dijitTab {
 	background: none;
 	border: none;
-	top: 0;		/* to override top: 1px/-1px for normal tabs */
+	top: 0px;		/* to override top: 1px/-1px for normal tabs */
 }
-
-.tundra .dijitTabContainerTabListNested .dijitTabHover .tabLabel {
+.tundra .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
+}
+.tundra .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent .tabLabel {
 	text-decoration: underline;
 }
-.tundra .dijitTabContainerTabListNested .dijitTabChecked .tabLabel {
+.tundra .dijitTabContainerTabListNested .dijitTabChecked .dijitTabContent .tabLabel {
 	text-decoration: underline;
 	font-weight: bold;
 	/*background:#f3f3f3;*/
@@ -129,13 +134,13 @@
 /* top tabs */
 
 .tundra .dijitTabContainerTop-tabs {
-	margin-bottom: 0;
+	margin-bottom: 0px;
 	border-color: #cccccc;
 	padding-left: 3px;
 	background-position: bottom;
 }
 .tundra .dijitTabContainerTop-tabs .dijitTab {
-	top: 0;
+	top: 0px;
 	margin-bottom: -1px;
 }
 
@@ -144,7 +149,7 @@
 	border-top: none;
 }
 
-/* selected tab */
+/* checked tabs */
 .tundra .dijitTabContainerTop-tabs .dijitTabChecked {
 	border-bottom-color:white;
 }
@@ -165,20 +170,20 @@
 }
 
 .tundra .dijitTabContainerTopNone {
-	padding-top: 0;
+	padding-top: 0px;
 }
 
 
 /* ================================ */
 /* bottom tabs */
 .tundra .dijitTabContainerBottom-tabs {
-	margin-top: 0;
+	margin-top: 0px;
 	border-color: #cccccc;
 	background-position: top;
 	padding-left: 3px;
 }
 .tundra .dijitTabContainerBottom-tabs .dijitTab {
-	bottom: 0;
+	bottom: 0px;
 	margin-top: -1px;
 }
 
@@ -187,7 +192,7 @@
 	border-bottom: none;
 }
 
-/* selected tab */
+/* checked tabs */
 .tundra .dijitTabContainerBottom-tabs .dijitTabChecked {
 	border-top-color:white;
 }
@@ -217,7 +222,7 @@
 	border-right: none;
 }
 
-/* selected tab */
+/* checked tabs */
 .tundra .dijitTabContainerRight-tabs .dijitTabChecked {
 	border-left-color:white;
 }
@@ -240,12 +245,12 @@
 	height: 100%;
 }
 
-/* left container */
+/* left conatiner */
 .tundra .dijitTabContainerLeft-container {
 	border-left: none;
 }
 
-/* selected tab */
+/* checked tabs */
 .tundra .dijitTabContainerLeft-tabs .dijitTabChecked {
 	border-right-color:white;
 }
@@ -262,7 +267,7 @@
 /* left/right tabs */
 .tundra .dijitTabContainerLeft-tabs .dijitTab,
 .tundra .dijitTabContainerRight-tabs .dijitTab {
-	margin-right:0;
+	margin-right:0px;
 	margin-bottom:4px;	/* space between one tab and the next in left/right mode */
 }
 
@@ -270,11 +275,11 @@
 
 /* this resets the tabcontainer stripe when within a contentpane */
 .tundra .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
-	border-left: 0 solid #ccc;
-	border-top: 0 solid #ccc;
-	border-right: 0 solid #ccc;
-	padding-top: 0;
-	padding-left: 0;
+	border-left: 0px solid #ccc;
+	border-top: 0px solid #ccc;
+	border-right: 0px solid #ccc;
+	padding-top: 0px;
+	padding-left: 0px;
 }
 
 /* ================================ */
@@ -287,16 +292,27 @@
 }
 
 .tundra .dijitTabContainerBottom .tabStripButton {
-	padding-top: 3px;
+	padding-top: 2px;
 }
 
-.tundra .tabStrip-disabled .tabStripButton {
+.tundra .tabStrip-disabled .tabStripButton .dijitTabInnerDiv {
 	padding-bottom: 3px;
 	padding-top: 1px;
 }
 
-.tundra .tabStripButton {
+.tundra .tabStripButton .dijitTabInnerDiv {
 	padding: 3px 2px 4px 2px;
+}
+
+.dj_ie6 .tundra .tabStripButton .dijitTabInnerDiv,
+.dj_ie7 .tundra .tabStripButton .dijitTabInnerDiv,
+.dj_opera .tundra .tabStripButton .dijitTabInnerDiv {
+	padding-bottom: 5px;
+}
+.dj_ie6 .tundra .tabStrip-disabled .tabStripButton .dijitTabInnerDiv,
+.dj_ie7 .tundra .tabStrip-disabled .tabStripButton .dijitTabInnerDiv,
+.dj_opera .tundra .tabStrip-disabled .tabStripButton .dijitTabInnerDiv {
+	padding-bottom: 4px;
 }
 
 .tundra .dijitTabStripIcon {

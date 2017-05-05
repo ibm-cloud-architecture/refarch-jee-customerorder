@@ -1,8 +1,5 @@
-define(
-//begin v1.x content
-{
-	"group": ".",
-	"decimal": ","
-}
-//end v1.x content
-);
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'decimal':",",
+	'group':"."
+})

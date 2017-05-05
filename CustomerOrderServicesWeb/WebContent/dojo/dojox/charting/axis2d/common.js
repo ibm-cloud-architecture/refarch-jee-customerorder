@@ -1,8 +1,10 @@
-define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom-geometry", "dojox/gfx", "dojo/has"],
-	function(lang, win, domGeom, g, has){
+dojo.provide("dojox.charting.axis2d.common");
 
-	var common = lang.getObject("dojox.charting.axis2d.common", true);
-	
+dojo.require("dojox.gfx");
+
+(function(){
+	var g = dojox.gfx;
+
 	var clearNode = function(s){
 		s.marginLeft   = "0px";
 		s.marginTop    = "0px";
@@ -24,69 +26,65 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom-geometry", "dojox/gfx"
 			var bcr = n.getBoundingClientRect();
 			return bcr.width || (bcr.right - bcr.left);
 		}else{
-			return domGeom.getMarginBox(n).w;
+			return dojo.marginBox(n).w;
 		}
 	};
 
-	return lang.mixin(common, {
-		// summary:
+	dojo.mixin(dojox.charting.axis2d.common, {
+		//	summary:
 		//		Common methods to be used by any axis.  This is considered "static".
 		createText: {
 			gfx: function(chart, creator, x, y, align, text, font, fontColor){
-				// summary:
+				//	summary:
 				//		Use dojox.gfx to create any text.
-				// chart: dojox.charting.Chart
+				//	chart: dojox.charting.Chart2D
 				//		The chart to create the text into.
-				// creator: dojox.gfx.Surface
+				//	creator: dojox.gfx.Surface
 				//		The graphics surface to use for creating the text.
-				// x: Number
+				//	x: Number
 				//		Where to create the text along the x axis (CSS left).
-				// y: Number
+				//	y: Number
 				//		Where to create the text along the y axis (CSS top).
-				// align: String
+				//	align: String
 				//		How to align the text.  Can be "left", "right", "center".
-				// text: String
+				//	text: String
 				//		The text to render.
-				// font: String
+				//	font: String
 				//		The font definition, a la CSS "font".
-				// fontColor: String|dojo.Color
+				//	fontColor: String|dojo.Color
 				//		The color of the resultant text.
-				// returns: dojox.gfx.Text
+				//	returns: dojox.gfx.Text
 				//		The resultant GFX object.
 				return creator.createText({
 					x: x, y: y, text: text, align: align
 				}).setFont(font).setFill(fontColor);	//	dojox.gfx.Text
 			},
 			html: function(chart, creator, x, y, align, text, font, fontColor, labelWidth){
-				// summary:
+				//	summary:
 				//		Use the HTML DOM to create any text.
-				// chart: dojox.charting.Chart
+				//	chart: dojox.charting.Chart2D
 				//		The chart to create the text into.
-				// creator: dojox.gfx.Surface
+				//	creator: dojox.gfx.Surface
 				//		The graphics surface to use for creating the text.
-				// x: Number
+				//	x: Number
 				//		Where to create the text along the x axis (CSS left).
-				// y: Number
+				//	y: Number
 				//		Where to create the text along the y axis (CSS top).
-				// align: String
+				//	align: String
 				//		How to align the text.  Can be "left", "right", "center".
-				// text: String
+				//	text: String
 				//		The text to render.
-				// font: String
+				//	font: String
 				//		The font definition, a la CSS "font".
-				// fontColor: String|dojo.Color
+				//	fontColor: String|dojo.Color
 				//		The color of the resultant text.
-				// labelWidth: Number?
+				//	labelWidth: Number?
 				//		The maximum width of the resultant DOM node.
-				// returns: DOMNode
+				//	returns: DOMNode
 				//		The resultant DOMNode (a "div" element).
 
 				// setup the text node
-				var p = win.doc.createElement("div"), s = p.style, boxWidth;
-				// bidi support, if this function exists the module was loaded 
-				if(chart.getTextDir){
-					p.dir = chart.getTextDir(text);
-				}
+				var p = dojo.doc.createElement("div"), s = p.style, boxWidth;
 				clearNode(s);
 				s.font = font;
 				p.innerHTML = String(text).replace(/\s/g, "&nbsp;");
@@ -94,21 +92,16 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom-geometry", "dojox/gfx"
 				// measure the size
 				s.position = "absolute";
 				s.left = "-10000px";
-				win.body().appendChild(p);
+				dojo.body().appendChild(p);
 				var size = g.normalizedLength(g.splitFontString(font).size);
 
 				// do we need to calculate the label width?
 				if(!labelWidth){
 					boxWidth = getBoxWidth(p);
 				}
-				// when the textDir is rtl, but the UI ltr needs
-				// to recalculate the starting point
-				if(p.dir == "rtl"){
-					x += labelWidth ? labelWidth : boxWidth;
-				}
 
 				// new settings for the text node
-				win.body().removeChild(p);
+				dojo.body().removeChild(p);
 
 				s.position = "relative";
 				if(labelWidth){
@@ -147,18 +140,15 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom-geometry", "dojox/gfx"
 				s.top = Math.floor(y - size) + "px";
 				s.whiteSpace = "nowrap";	// hack for WebKit
 				// setup the wrapper node
-				var wrap = win.doc.createElement("div"), w = wrap.style;
+				var wrap = dojo.doc.createElement("div"), w = wrap.style;
 				clearNode(w);
 				w.width = "0px";
 				w.height = "0px";
 				// insert nodes
-				wrap.appendChild(p);
+				wrap.appendChild(p)
 				chart.node.insertBefore(wrap, chart.node.firstChild);
-				if(has("dojo-bidi")){
-					chart.htmlElementsRegistry.push([wrap, x, y, align, text, font, fontColor]);
-				}
 				return wrap;	//	DOMNode
 			}
 		}
 	});
-});
+})();

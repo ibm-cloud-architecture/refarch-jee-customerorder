@@ -1,7 +1,6 @@
-define(
 ({
-	name: "Meno",
-	path: "Cesta",
-	size: "Veľkosť (v bajtoch)"
+name: "Názov",
+path: "Cesta",
+size: "Veľkosť (v bajtoch)"
 })
-);
+

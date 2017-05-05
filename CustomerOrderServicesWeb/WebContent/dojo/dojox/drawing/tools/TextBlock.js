@@ -1,6 +1,8 @@
-define(["dojo", "dijit/registry", "../util/oo", "../manager/_registry", "../stencil/Text"],
-function(dojo, dijit, oo, registry, StencilText){
+dojo.provide("dojox.drawing.tools.TextBlock");
+dojo.require("dojox.drawing.stencil.Text");
 
+(function(){
+	
 	var conEdit;
 	dojo.addOnLoad(function(){
 		//		In order to use VML in IE, it's necessary to remove the
@@ -9,8 +11,7 @@ function(dojo, dijit, oo, registry, StencilText){
 		//		The solution is to include one in the main document
 		//		that can be appended and removed as necessary:
 		//		<div id="conEdit" contenteditable="true"></div>
-
-		// console.log("Removing conedit");
+		//
 		conEdit = dojo.byId("conEdit");
 		if(!conEdit){
 			console.error("A contenteditable div is missing from the main document. See 'dojox.drawing.tools.TextBlock'")
@@ -19,30 +20,43 @@ function(dojo, dijit, oo, registry, StencilText){
 		}
 	});
 	
-	var TextBlock = oo.declare(
+	dojox.drawing.tools.TextBlock = dojox.drawing.util.oo.declare(
+		// summary:
+		//		A tool to create text fields on a canvas.
+		// description:
+		//		Extends stencil.Text by adding an HTML layer that
+		//		can be dragged out to a certain size, and accept
+		//		a text entry. Will wrap text to the width of the
+		//		html field.
+		//		When created programmtically, use 'auto' to shrink
+		//		the width to the size of the text. Use line breaks
+		//		( \n ) to create new lines.
+		//
 		// TODO - disable zoom while showing?
-
+		//
 		// FIXME:
 		//		Handles width: auto, align:middle, etc. but for
 		//		display only, edit is out of whack
-
-		StencilText,
+		//
+		dojox.drawing.stencil.Text,
 		function(options){
-			// summary:
-			//		constructor
-
+			// summary: constructor
+			//
 			if(options.data){
 				var d = options.data;
-				var text = d.text ? this.typesetter(d.text) : d.text;
-				var w = !d.width ? this.style.text.minWidth : d.width=="auto" ? "auto" : Math.max(d.width, this.style.text.minWidth);
+				var text = d.text;
+				var w = !d.width ? this.style.text.minWidth : d.width=="auto" ? "auto" : Math.max(d.width, this.style.text.minWidth)
 				var h = this._lineHeight;
+				
+				// need to typeset before measuring width
+				text = this.typesetter(text);
 				
 				if(text && w=="auto"){
 					var o = this.measureText(this.cleanText(text, false), w);
 					w = o.w;
 					h = o.h;
 				}else{
-					// w = this.style.text.minWidth;
+					//	w = this.style.text.minWidth;
 					this._text = "";
 				}
 				
@@ -71,12 +85,9 @@ function(dojo, dijit, oo, registry, StencilText){
 						this.render(text);
 					}
 					setTimeout(dojo.hitch(this, function(){
-						this.editMode = false;
+						this.editMode = false;	
 					}),100)
 					
-				}else{
-					// Why make it if it won't render...
-					this.render();
 				}
 				
 			}else{
@@ -86,53 +97,41 @@ function(dojo, dijit, oo, registry, StencilText){
 			//console.log("TextBlock:", this.id)
 		},
 		{
-			// summary:
-			//		A tool to create text fields on a canvas.
-			// description:
-			//		Extends stencil.Text by adding an HTML layer that
-			//		can be dragged out to a certain size, and accept
-			//		a text entry. Will wrap text to the width of the
-			//		html field.
-			//		When created programmtically, use 'auto' to shrink
-			//		the width to the size of the text. Use line breaks
-			//		( \n ) to create new lines.
-
 			draws:true,
 			baseRender:false,
 			type:"dojox.drawing.tools.TextBlock",
-			_caretStart: 0,
-			_caretEnd: 0,
-			_blockExec: false,
 			
 /*=====
 StencilData: {
 	// summary:
 	//		The data used to create the dojox.gfx Text
-	// x: Number
+	// 	x: Number
 	//		Left point x
-	// y: Number
+	// 	y: Number
 	//		Top point y
-	// width: Number|String?
-	//		Optional width of Text. Not required but recommended.
+	// 	width: ? Number|String
+	//		Optional width of Text. Not required but reccommended.
 	//		for auto-sizing, use 'auto'
-	// height: Number?
+	// 	height: ? Number
 	//		Optional height of Text. If not provided, _lineHeight is used.
-	// text: String
+	// 	text: String
 	//		The string content. If not provided, may auto-delete depending on defaults.
 },
 =====*/
 			
 			// selectOnExec: Boolean
 			//		Whether the Stencil is selected when the text field
-			//		is executed or not
+			//		is executed or not	
 			selectOnExec:true,
-
+			//
 			// showEmpty: Boolean
 			//		If true and there is no text in the data, the TextBlock
 			//		Is displayed and focused and awaits input.
 			showEmpty: false,
 			
 			onDrag: function(/*EventObject*/obj){
+				// summary: See stencil._Base.onDrag
+				//
 				if(!this.parentNode){
 					this.showParent(obj);
 				}
@@ -145,12 +144,15 @@ StencilData: {
 			},
 			
 			onUp: function(/*EventObject*/obj){
+				// summary: See stencil._Base.onUp
+				//
+
 				if(!this._downOnCanvas){ return; }
 				this._downOnCanvas = false;
 				
 				var c = dojo.connect(this, "render", this, function(){
 					dojo.disconnect(c);
-					this.onRender(this);
+					this.onRender(this);	
 					
 				});
 				this.editMode = true;
@@ -164,7 +166,7 @@ StencilData: {
 				// summary:
 				//		Internal. Builds the parent node for the
 				//		contenteditable HTML node.
-
+				//
 				if(this.parentNode){ return; }
 				var x = obj.pageX || 10;
 				var y = obj.pageY || 10;
@@ -196,7 +198,7 @@ StencilData: {
 				// summary:
 				//		Internal. Inserts the contenteditable HTML node
 				//		into its parent node, and styles it.
-
+				//
 				// style parent
 				var d = this.style.textMode.edit;
 				this._box.border = d.width+"px "+d.style+" "+d.color;
@@ -214,34 +216,19 @@ StencilData: {
 				// In Safari, if the txt ends with '&' it gets stripped
 				conEdit.innerHTML = txt || "";
 				
-				return conEdit; //HTMLNode
+				return conEdit; //HTMLNade
 			},
 			connectTextField: function(){
 				// summary:
 				//		Internal. Creates the connections to the
 				//		contenteditable HTML node.
-
+				//
 				if(this._textConnected){ return; } // good ol' IE and its double events
-				// FIXME:
-				// Ouch-getting greekPalette by id.  At the minimum this should
-				// be from the plugin manager
-				var greekPalette = dijit.byId("greekPalette");
-				var greekHelp = greekPalette==undefined ? false : true;
-				if(greekHelp){
-					//set it up
-					dojo.mixin(greekPalette,{
-						_pushChangeTo: conEdit,
-						_textBlock: this
-					});
-				};
-				
 				this._textConnected = true;
-				this._dropMode = false;
 				this.mouse.setEventMode("TEXT");
 				this.keys.editMode(true);
 				var kc1, kc2, kc3, kc4, self = this, _autoSet = false,
 					exec = function(){
-						if(self._dropMode){ return; }
 						dojo.forEach([kc1,kc2,kc3,kc4], function(c){
 							dojo.disconnect(c)
 						});
@@ -260,74 +247,26 @@ StencilData: {
 						dojo.style(conEdit, "height", this._lineHeight+"px"); _autoSet = false;
 					}
 					
-					if(!this._blockExec){
-						if(evt.keyCode==13 || evt.keyCode==27){
-							dojo.stopEvent(evt);
-							exec();
-						}
-					} else {
-						if(evt.keyCode==dojo.keys.SPACE){
-							dojo.stopEvent(evt);
-							greekHelp && greekPalette.onCancel();
-						}
+					
+					if(evt.keyCode==13 || evt.keyCode==27){
+						dojo.stopEvent(evt);
+						exec();
 					}
 				});
 				kc2 = dojo.connect(conEdit, "keydown", this, function(evt){
 					if(evt.keyCode==13 || evt.keyCode==27){ // TODO: make escape an option
 						dojo.stopEvent(evt);
 					}
-					// if backslash, user is inputting a special character
-					// This gives popup help.
-					if(evt.keyCode==220){
-						if(!greekHelp){
-							console.info("For greek letter assistance instantiate: dojox.drawing.plugins.drawing.GreekPalette");
-							return;
-						}
-						dojo.stopEvent(evt);
-						this.getSelection(conEdit);
-						// Differences in how browsers handle events made it necessary
-						// to stop the evt and add the backslash here.
-						this.insertText(conEdit,"\\");
-						this._dropMode = true;
-						this._blockExec = true;
-						greekPalette.show({
-							around:this.parentNode,
-							orient:{'BL':'TL'}
-						});
-					}
-					if(!this._dropMode){
-						this._blockExec = false;
-					} else {
-						// Controls for when we have a character helper and it's active
-						switch(evt.keyCode){
-							case dojo.keys.UP_ARROW:
-							case dojo.keys.DOWN_ARROW:
-							case dojo.keys.LEFT_ARROW:
-							case dojo.keys.RIGHT_ARROW:
-								dojo.stopEvent(evt);
-								greekPalette._navigateByArrow(evt);
-								break;
-							case dojo.keys.ENTER:
-								dojo.stopEvent(evt);
-								greekPalette._onCellClick(evt);
-								break;
-							case dojo.keys.BACKSPACE:
-							case dojo.keys.DELETE:
-								dojo.stopEvent(evt);
-								greekPalette.onCancel();
-								break;
-						}
-					}
-					
 				});
 				
 				kc3 = dojo.connect(document, "mouseup", this, function(evt){
 					// note: _onAnchor means an anchor has been clicked upon
+					
 					if(!this._onAnchor && evt.target.id != "conEdit"){
 						dojo.stopEvent(evt);
 						exec();
-					}else if(evt.target.id == "conEdit" && conEdit.innerHTML == ""){
-						// wonky stuff happens when you click on the
+					}else{
+						// wonky stuff happens when you click on the 
 						// field when its empty.
 						conEdit.blur();
 						setTimeout(function(){
@@ -362,16 +301,15 @@ StencilData: {
 							exec();
 							self.onUp = function(){}
 						}
-					}
+					}	
 				}), 500);
 			},
-			
 			
 			execText: function(){
 				// summary:
 				//		Internal. Method fired when text is executed,
 				//		via mouse-click-off, ESC key or Enter key.
-
+				//
 				var d = dojo.marginBox(this.parentNode);
 				var w = Math.max(d.w, this.style.text.minWidth);
 				
@@ -411,8 +349,8 @@ StencilData: {
 					this._text = "";
 					this._textArray = [];
 				}
-				// Only for Combo objects (vectors, rectangle, or ellipse).
 				this.render(o.text);
+				// Only for Combo objects (vectors, rectangle, or ellipse).
 				this.onChangeText(this.getText());
 			},
 			
@@ -420,7 +358,7 @@ StencilData: {
 				// summary:
 				//		Internal?
 				//		Method used to instantiate the contenteditable HTML node.
-
+				//
 				this.editMode = true;
 				var text = this.getText() || "";
 				console.log("EDIT TEXT:",text, " ",text.replace("/n", " "));
@@ -451,7 +389,7 @@ StencilData: {
 			cleanText: function(/*String*/txt, /*Boolean*/removeBreaks){
 				// summary:
 				//		Cleans text. Strings HTML chars and double spaces
-				//		and optionally removes line breaks.
+				//  	and optionally removes line breaks.
 				var replaceHtmlCodes = function(str){
 					var chars = {
 						"&lt;":"<",
@@ -484,17 +422,18 @@ StencilData: {
 				//		height of a block of text. This method creates an
 				//		HTML text block and those measurements are used for
 				//		displaying the SVG/VML text.
-				// str: String
-				//		The text to display and measure.
-				// width: [optional] Number
-				//		If the width is not provided, it will be assumed
-				//		that the text is one line and the width will be
-				//		measured and the _lineHeight used for th height.
-				//		If width is provided, word-wrap is assumed, and
-				//		line breaks will be inserted into the text at each
-				//		point where a word wraps in the HTML. The height is
-				//		then measured.
-
+				// arguments:
+				//		str: String
+				//			The text to display and measure.
+				//		width: [optional] Number 
+				//			If the width is not provided, it will be assumed
+				//			that the text is one line and the width will be
+				//			measured and the _lineHeight used for th height.
+				//			If width is provided, word-wrap is assumed, and
+				//			line breaks will be inserted into the text at each
+				//			point where a word wraps in the HTML. The height is
+				//			then measured.
+				//
 				var r = "(<br\\s*/*>)|(\\n)|(\\r)";
 				this.showParent({width:width || "auto", height:"auto"});
 				this.createTextField(str);
@@ -533,7 +472,7 @@ StencilData: {
 					
 					dojo.forEach(strAr, function(ar, i){
 						strAr[i] = ar.join(" ");
-					});
+					});	
 					txt = strAr.join("\n");
 					
 					// get the resultant height
@@ -552,6 +491,8 @@ StencilData: {
 			
 			_downOnCanvas:false,
 			onDown: function(/*EventObject*/obj){
+				// summary: See stencil._Base.onDown
+				//
 				this._startdrag = {
 					x: obj.pageX,
 					y: obj.pageY
@@ -566,7 +507,7 @@ StencilData: {
 				//		Internal. Creates HTML nodes at each corner
 				//		of the contenteditable div. These nodes are
 				//		draggable and will resize the div horizontally.
-
+				//
 				this._anchors = {};
 				var self = this;
 				var d = this.style.anchors,
@@ -643,94 +584,19 @@ StencilData: {
 				for(var n in this._anchors){
 					dojo.forEach(this._anchors[n].con, dojo.disconnect, dojo);
 					dojo.destroy(this._anchors[n].a);
-				};
-			},
-			
-			setSavedCaret: function(val){
-				// summary:
-				//		Internal, called when caret needs to
-				//		be moved into position after text is added
-				this._caretStart = this._caretEnd = val;
-			},
-			
-			getSavedCaret: function(){
-				return {start: this._caretStart, end: this._caretEnd}
-			},
-			
-			insertText: function(node,val){
-				// summary:
-				//		Uses saved caret position to insert text
-				//		into position and place caret at the end of
-				//		insertion
-
-				var t, text = node.innerHTML;
-				var caret = this.getSavedCaret();
-				
-				text = text.replace(/&nbsp;/g, " ");
-				t = text.substr(0,caret.start) + val + text.substr(caret.end);
-				t = this.cleanText(t,true);
-				this.setSavedCaret(Math.min(t.length,(caret.end + val.length)));
-				node.innerHTML = t;
-				this.setSelection(node,"stored");
-			},
-			
-			getSelection: function(node){
-				// summary:
-				//		This gets and stores the caret position
-				//		in the contentEditable div (conEdit).
-				//		NOTE: Doesn't work with html nodes inside
-				//		the div.
-
-				var start, end;
-				if(dojo.doc.selection){
-					var r = dojo.doc.selection.createRange();
-					var rs = dojo.body().createTextRange();
-					rs.moveToElementText(node);
-					var re = rs.duplicate();
-					rs.moveToBookmark(r.getBookmark());
-					re.setEndPoint('EndToStart', rs);
-					start = this._caretStart = re.text.length;
-					end = this._caretEnd = re.text.length+r.text.length;
-					console.warn("Caret start: ",start," end: ",end," length: ",re.text.length," text: ",re.text);
-				} else {
-					this._caretStart = dojo.global.getSelection().getRangeAt(node).startOffset;
-					this._caretEnd = dojo.global.getSelection().getRangeAt(node).endOffset;
-					console.log("Caret start: ", this._caretStart," end: ", this._caretEnd);
 				}
 			},
-			
 			setSelection: function(node, what){
 				// summary:
-				//		Used for placing the cursor during edits and character help.
-				//		Takes the values: end, beg, start, all or any numerical value
-				//		(in which case the number will constitute the caret position)
-
+				//		Used for placing the cursor at the end of the
+				//		text on edit.
+				//
 				console.warn("setSelection:");
 				if(dojo.doc.selection){ // IE
-					var rs = dojo.body().createTextRange();
-					rs.moveToElementText(node);
-					
-					switch(what){
-						case "end":
-							rs.collapse(false);
-							break;
-						case "beg" || "start":
-							rs.collapse();
-							break;
-						case "all":
-							rs.collapse();
-							rs.moveStart("character", 0);
-							rs.moveEnd("character",node.text.length);
-							break;
-						case "stored":
-							rs.collapse();
-							var dif = this._caretStart-this._caretEnd;
-							//console.log("start: ",this._caretStart, " end: ",this._caretEnd," dif: ",dif);
-							rs.moveStart("character",this._caretStart);
-							rs.moveEnd("character",dif);
-							break;
-					}
-					rs.select();
+					var r = dojo.body().createTextRange();
+					r.moveToElementText(node);
+					r.collapse(false);
+					r.select();
 					
 				}else{
 					var getAllChildren = function(node, children){
@@ -742,51 +608,50 @@ StencilData: {
 							}else if(n.tagName && n.tagName.toLowerCase()=="img"){
 								children.push(n);
 							}
-								
+							
 							if(n.childNodes && n.childNodes.length){
 								getAllChildren(n, children);
 							}
 						}
 						return children;
 					};
-					console.log("ff node:", node);
+					console.log("ff node:", node)
 					node.focus();
 					var selection = dojo.global.getSelection();
 					selection.removeAllRanges();
-					var r = dojo.doc.createRange();
+					console.log(1);
+					r = dojo.doc.createRange();
+					r.selectNodeContents(node);
+					console.log(2);
 					var nodes = getAllChildren(node);
-					switch(what){
-						case "end":
-							console.log("len:", nodes[nodes.length - 1].textContent.length);
-							r.setStart(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
-							r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
-							break;
-						case "beg" || "start":
-							r.setStart(nodes[0], 0);
-							r.setEnd(nodes[0], 0);
-							break;
-						case "all":
-							r.setStart(nodes[0], 0);
-							r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
-							break;
-						case "stored":
-							console.log("Caret start: ",this._caretStart," caret end: ",this._caretEnd);
-							r.setStart(nodes[0], this._caretStart);
-							r.setEnd(nodes[0], this._caretEnd);
+					console.log(3);
+					if(what == "end"){
+						console.log("len:", nodes[nodes.length - 1].textContent.length);
+						r.setStart(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+						r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
+					}else if(what=="beg" || what == "start"){
+						r.setStart(nodes[0], 0);
+						r.setEnd(nodes[0], 0);
+					}else if(what=="all"){
+						r.setStart(nodes[0], 0);
+						r.setEnd(nodes[nodes.length - 1], nodes[nodes.length - 1].textContent.length);
 					}
+					
 					selection.addRange(r);
-					console.log("sel ", what, " on ", node);
+					
+					console.log("sel ", what, " on ", node)
 				}
 			}
 		}
 	);
-	dojo.setObject("dojox.drawing.tools.TextBlock", TextBlock);
-	TextBlock.setup = {
+	
+	dojox.drawing.tools.TextBlock.setup = {
+		// summary: See stencil._Base ToolsSetup
+		//
 		name:"dojox.drawing.tools.TextBlock",
 		tooltip:"Text Tool",
 		iconClass:"iconText"
 	};
-	registry.register(TextBlock.setup, "tool");
-
-	return TextBlock;
-});
+	dojox.drawing.register(dojox.drawing.tools.TextBlock.setup, "tool");
+	
+})();

@@ -1,5 +1,4 @@
-define(
 ({
 	"pageBreak": "Zalomení stránky"
 })
-);
+

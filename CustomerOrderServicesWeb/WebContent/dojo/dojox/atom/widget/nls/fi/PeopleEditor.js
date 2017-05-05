@@ -1,7 +1,5 @@
-define(
 ({
 	add: "Lisää",
 	addAuthor: "Lisää tekijä",
-	addContributor: "Lisää lisääjä"
+	addContributor: "Lisää osallistuja"
 })
-);

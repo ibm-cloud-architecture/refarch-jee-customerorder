@@ -1,12 +1,13 @@
-define("dojox/testing/DocTest", ["dojo/string"], function() {
+dojo.provide("dojox.testing.DocTest");
+dojo.require("dojo.string");
 
-return dojo.declare(
+dojo.declare(
 	"dojox.testing.DocTest",
 	null,
 	{
-		// summary:
+		//	summary:
 		//		This class executes doctests.
-		// description:
+		//	description:
 		//		DocTests are tests that are defined inside the comment.
 		//		A doctest looks as if it was copied from the shell (which it mostly is).
 		//		A doctest is executed when the following conditions match:
@@ -14,13 +15,13 @@ return dojo.declare(
 		//		2) the line always starts with spaces/tabs followed by "//"
 		//		   and at least one space
 		//		3) the line(s) of the test to execute starts with ">>>"
-		//		   preceded by what is described in 2)
+		//		   preceeded by what is described in 2)
 		//		4) the first line after 3) starting without ">>>" is the exptected result.
-		//		   preceded by what is described in 2)
+		//		   preceeded by what is described in 2)
 		//		5) the test sequence is terminated by an empty line, or the next
 		//		   test in the following line, or a new line that does not start as described in 2)
 		//		   (simple said: is not a comment)
-		//		   preceded by what is described in 2)
+		//		   preceeded by what is described in 2)
 		//
 		//		I.e. the following is a simple doctest, that will actually also be run
 		//		if you run this class against this file here:
@@ -56,10 +57,9 @@ return dojo.declare(
 		errors: [],
 		
 		getTests:function(/*String*/moduleName){
-			// summary:
-			//		Extract the tests from the given module or string.
+			// summary: Extract the tests from the given module or string.
 			// examples:
-			//		>>> dojo.isArray(new dojox.testing.DocTest().getTests("dojox.testing.DocTest")) // Use the module name to extract the tests from.
+			// 		>>> dojo.isArray(new dojox.testing.DocTest().getTests("dojox.testing.DocTest")) // Use the module name to extract the tests from.
 			//		true
 			var path = dojo.moduleUrl(moduleName).path;
 			// TODO:
@@ -80,10 +80,8 @@ return dojo.declare(
 		},
 		
 		_getTestsFromString:function(/*String*/data, /*Boolean*/insideComments){
-			// summary:
-			//		Parse the given string for tests.
-			// insideComments: Boolean
-			//		if false "data" contains only the pure tests, comments already stripped.
+			// summary: Parse the given string for tests.
+			// insideComments: Boolean, if false "data" contains only the pure tests, comments already stripped.
 			var trim = dojo.hitch(dojo.string, "trim");
 			var lines = data.split("\n");
 			var len = lines.length;
@@ -96,7 +94,7 @@ return dojo.declare(
 			for(var i=0; i<len+1; i++){
 				// Trim the line, so we don't have to worry about leading
 				// spaces or tabs, bla bla ...
-				var l = trim(lines[i] || ""); // The '|| ""' makes sure tests that have no preceding \n are taken into account too.
+				var l = trim(lines[i] || ""); // The '|| ""' makes sure tests that have no preceeding \n are taken into account too.
 				// TODO:
 				//		detect tests that dont match the condition: commands,
 				//		result, empty line. esp the empty line might be missing
@@ -141,8 +139,8 @@ return dojo.declare(
 							line:test.line
 						});
 					}
-					test = {
-						commands: [],
+					test = { 
+						commands: [], 
 						expectedResult: [],
 						line:0
 					};
@@ -152,9 +150,9 @@ return dojo.declare(
 		},
 		
 		run: function(moduleName){
-			// summary:
+			//	summary:
 			//		Run the doctests in the module given.
-			// example:
+			//	example:
 			//		doctest = new dojox.testing.DocTest();
 			//		doctest.run("dojox.testing.DocTest");
 			//		doctest.errors should finally be an empty array.
@@ -189,10 +187,10 @@ return dojo.declare(
 		},
 		
 		_run: function(/*Array*/tests){
-			// summary:
-			//		Each element in the array contains the test in the first element,
+			//	summary:
+			//		Each element in the array contains the test in the first element, 
 			//		and the expected result in the second element.
-			// tests:
+			//	tests:
 			//		Make sure that the types are compared properly. There used to be
 			//		the bug that a return value false was compared to "false" which
 			//		made the test fail. This is fixed and should be verified by the
@@ -224,8 +222,8 @@ return dojo.declare(
 				var msg = "Test "+(i+1)+": ";
 				var viewCommands = t.commands.join(" ");
 				// Show the first part of the test command.
-				viewCommands = (viewCommands.length > 50 ?
-								viewCommands.substr(0,50) + "..." :
+				viewCommands = (viewCommands.length > 50 ? 
+								viewCommands.substr(0,50) + "..." : 
 								viewCommands
 				);
 				if(res.success){
@@ -251,7 +249,7 @@ return dojo.declare(
 		},
 		
 		runTest: function(commands, expected){
-			var ret = {
+			var ret = { 
 				success: false,
 				actualResult: null
 			};
@@ -261,7 +259,7 @@ return dojo.declare(
 			var cmds = commands.join("\n");
 			ret.actualResult = eval(cmds);
 			if( (String(ret.actualResult)==expected) ||
-				(dojo.toJson(ret.actualResult)==expected) ||
+				(dojo.toJson(ret.actualResult)==expected) || 
 				(
 					(expected.charAt(0)=='"')&&
 					(expected.charAt(expected.length-1)=='"')&&
@@ -277,5 +275,3 @@ return dojo.declare(
 		}
 	}
 );
-
-});

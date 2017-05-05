@@ -1,15 +1,15 @@
-define(['dojo/main', 'dojo/io/iframe', 'dojox/data/dom', 'dojo/_base/xhr', 'dojo/_base/url'], function(dojo, iframe, dom){
-	dojo.getObject("io.proxy.xip", true, dojox);
+dojo.provide("dojox.io.proxy.xip");
+
+dojo.require("dojo.io.iframe");
+dojo.require("dojox.data.dom");
 
 dojox.io.proxy.xip = {
-	// summary:
-	//		Object that implements the iframe handling for XMLHttpRequest
-	//		IFrame Proxying.
-	//
-	//		Do not use this object directly. See the Dojo Book page
-	//		on XMLHttpRequest IFrame Proxying:
-	//		http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
-	//		Usage of XHR IFrame Proxying does not work from local disk in Safari.
+	//summary: Object that implements the iframe handling for XMLHttpRequest
+	//IFrame Proxying.
+	//description: Do not use this object directly. See the Dojo Book page
+	//on XMLHttpRequest IFrame Proxying:
+	//http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
+	//Usage of XHR IFrame Proxying does not work from local disk in Safari.
 
 	/*
 	This code is really focused on just sending one complete request to the server, and
@@ -41,7 +41,7 @@ dojox.io.proxy.xip = {
 	together.
 	*/
 
-	xipClientUrl: ((dojo.config || djConfig)["xipClientUrl"]) || dojo.moduleUrl("dojox.io.proxy", "xip_client.html").toString(),
+	xipClientUrl: ((dojo.config || djConfig)["xipClientUrl"]) || dojo.moduleUrl("dojox.io.proxy", "xip_client.html"),
 
 
 	//MSIE has the lowest limit for URLs with fragment identifiers,
@@ -55,14 +55,13 @@ dojox.io.proxy.xip = {
 
 
 	send: function(/*Object*/facade){
-		// summary:
-		//		starts the xdomain request using the provided facade.
-		//		This method first does some init work, then delegates to _realSend.
+		//summary: starts the xdomain request using the provided facade.
+		//This method first does some init work, then delegates to _realSend.
 
 		var url = this.xipClientUrl;
 		//Make sure we are not dealing with javascript urls, just to be safe.
 		if(url.split(":")[0].match(/javascript/i) || facade._ifpServerUrl.split(":")[0].match(/javascript/i)){
-			return null;
+			return;
 		}
 		
 		//Make xip_client a full URL.
@@ -92,18 +91,17 @@ dojox.io.proxy.xip = {
 	},
 
 	_realSend: function(facade){
-		// summary:
-		//		starts the actual xdomain request using the provided facade.
+		//summary: starts the actual xdomain request using the provided facade.
 		var stateId = "XhrIframeProxy" + (this._stateIdCounter++);
 		facade._stateId = stateId;
 
-		var frameUrl = facade._ifpServerUrl + "#0:init:id=" + stateId + "&client="
+		var frameUrl = facade._ifpServerUrl + "#0:init:id=" + stateId + "&client=" 
 			+ encodeURIComponent(this.fullXipClientUrl) + "&callback=" + encodeURIComponent(this._callbackName);
 
 		this._state[stateId] = {
 			facade: facade,
 			stateId: stateId,
-			clientFrame: iframe.create(stateId, "", frameUrl),
+			clientFrame: dojo.io.iframe.create(stateId, "", frameUrl),
 			isSending: false,
 			serverUrl: facade._ifpServerUrl,
 			requestData: null,
@@ -153,7 +151,7 @@ dojox.io.proxy.xip = {
 			if(contentType){
 				var mimeType = contentType.split(";")[0];
 				if(mimeType.indexOf("application/xml") == 0 || mimeType.indexOf("text/xml") == 0){
-					facade.responseXML = dom.createDocument(response.responseText, contentType);
+					facade.responseXML = dojox.data.dom.createDocument(response.responseText, contentType);
 				}
 			}
 		}
@@ -175,7 +173,7 @@ dojox.io.proxy.xip = {
 			uri: facade._uri
 		};
 		if(reqHeaders.length > 0){
-			requestData.requestHeaders = reqHeaders.join("\r\n");
+			requestData.requestHeaders = reqHeaders.join("\r\n");		
 		}
 		if(facade._method){
 			requestData.method = facade._method;
@@ -301,8 +299,8 @@ dojox.io.proxy.xip = {
 	},
 
 	fragmentReceivedEvent: function(evt){
-		// summary:
-		//		HTML5 document messaging endpoint. Unpack the event to see if we want to use it.
+		//summary: HTML5 document messaging endpoint. Unpack the event to see
+		//if we want to use it.
 		if(evt.uri.split("#")[0] == this.fullXipClientUrl){
 			this.fragmentReceived(evt.data);
 		}
@@ -328,7 +326,7 @@ dojox.io.proxy.xip = {
 				this.setServerUrl(stateId, "ok");
 				break;
 			case "part":
-				state.responseMessage += msg.message;
+				state.responseMessage += msg.message;			
 				this.setServerUrl(stateId, "ok");
 				break;
 			case "end":
@@ -368,12 +366,11 @@ dojo._xhrObj = dojox.io.proxy.xip.createFacade;
 	not use it.
 */
 dojox.io.proxy.xip.XhrIframeFacade = function(ifpServerUrl){
-	// summary:
-	//		XMLHttpRequest facade object used by dojox.io.proxy.xip.
-	//
-	//		Do not use this object directly. See the Dojo Book page
-	//		on XMLHttpRequest IFrame Proxying:
-	//		http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
+	//summary: XMLHttpRequest facade object used by dojox.io.proxy.xip.
+	
+	//description: Do not use this object directly. See the Dojo Book page
+	//on XMLHttpRequest IFrame Proxying:
+	//http://dojotoolkit.org/book/dojo-book-0-4/part-5-connecting-pieces/i-o/cross-domain-xmlhttprequest-using-iframe-proxy
 	this._requestHeaders = {};
 	this._allResponseHeaders = null;
 	this._responseHeaders = {};
@@ -437,8 +434,4 @@ dojo.extend(dojox.io.proxy.xip.XhrIframeFacade, {
 			}
 		}
 	}
-});
-
-return dojox.io.proxy.xip;
-
 });

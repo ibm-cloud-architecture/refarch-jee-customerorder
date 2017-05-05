@@ -1,28 +1,24 @@
-define([
-	"dojo",
-	"dijit",
-	"dojox",
-	"dijit/_editor/_Plugin",
-	"dijit/TooltipDialog",
-	"dijit/form/DropDownButton",
-	"dojo/_base/connect",
-	"dojo/_base/declare",
-	"dojo/i18n",
-	"dojox/html/entities",
-	"dojox/editor/plugins/EntityPalette",
-	"dojo/i18n!dojox/editor/plugins/nls/InsertEntity"
-], function(dojo, dijit, dojox, _Plugin) {
+dojo.provide("dojox.editor.plugins.InsertEntity");
 
-var InsertEntity = dojo.declare("dojox.editor.plugins.InsertEntity", _Plugin,{
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.TooltipDialog");
+dojo.require("dojox.editor.plugins.EntityPalette");
+dojo.require("dojox.html.entities");
+
+dojo.require("dojo.i18n");
+
+dojo.requireLocalization("dojox.editor.plugins", "InsertEntity");
+
+dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin allows the user to select from standard Symbols (HTML Entities)
+	//		This plugin allows the user to select from standard Symbols (HTML Entities) 
 	//		to insert at the current cursor position.  It binds to the key pattern:
 	//		ctrl-shift-s for opening the insert symbol dropdown.
 	//
 	// description:
 	//		The commands provided by this plugin are:
-	//
-	//		- insertEntity - inserts the selected HTML entity character
+	//		* insertEntity - inserts the selected HTML entity character
 
 	// iconClassPrefix: [const] String
 	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
@@ -45,12 +41,6 @@ var InsertEntity = dojo.declare("dojox.editor.plugins.InsertEntity", _Plugin,{
 			tabIndex: "-1",
 			dropDown: this.dropDown
 		});
-	},
-
-	updateState: function(){
-		// summary:
-		//		Over-ride for button state control for disabled to work.
-		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -82,8 +72,8 @@ var InsertEntity = dojo.declare("dojox.editor.plugins.InsertEntity", _Plugin,{
 
 	_postFilterEntities: function(s/*String content passed in*/){
 		// summary:
-		//		A function to filter out entity characters into encoded form so they
-		//		are properly displayed in the editor.  It gets registered with the
+		//		A function to filter out entity characters into encoded form so they 
+		//		are properly displayed in the editor.  It gets registered with the 
 		//		postFilters of the editor.
 		// tags:
 		//		private.
@@ -96,12 +86,9 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name? o.args.name.toLowerCase() : "";
 	if(name === "insertentity"){
-		o.plugin = new InsertEntity({
+		o.plugin = new dojox.editor.plugins.InsertEntity({
 			showCode: ("showCode" in o.args)?o.args.showCode:false,
 			showEntityName: ("showEntityName" in o.args)?o.args.showEntityName:false
 		});
 	}
-});
-
-return InsertEntity;
 });

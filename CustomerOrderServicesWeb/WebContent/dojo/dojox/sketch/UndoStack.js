@@ -1,10 +1,7 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/declare",
-	"../xml/DomParser"
-], function(dojo){
-	dojo.getObject("sketch", true, dojox);
+dojo.provide("dojox.sketch.UndoStack");
+dojo.require("dojox.xml.DomParser");
+
+(function(){
 	var ta=dojox.sketch;
 	ta.CommandTypes={ Create:"Create", Move:"Move", Modify:"Modify", Delete:"Delete", Convert:"Convert"};
 
@@ -100,6 +97,4 @@ define([
 			}
 		}
 	});
-
-	return dojox.sketch.UndoStack;
-});
+})();

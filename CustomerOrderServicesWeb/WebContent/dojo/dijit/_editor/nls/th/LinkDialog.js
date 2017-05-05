@@ -1,14 +1,13 @@
-define(
 ({
 	createLinkTitle: "คุณสมบัติลิงก์",
-	insertImageTitle: "คุณสมบัติรูปภาพ",
+	insertImageTitle: "คุณสมบัติอิมเมจ",
 	url: "URL:",
-	text: "คำอธิบาย:",
+	text: "รายละเอียด",
 	target: "เป้าหมาย:",
-	set: "เซ็ต",
+	set: "ตั้งค่า",
 	currentWindow: "หน้าต่างปัจจุบัน",
 	parentWindow: "หน้าต่างหลัก",
 	topWindow: "หน้าต่างบนสุด",
 	newWindow: "หน้าต่างใหม่"
 })
-);
+

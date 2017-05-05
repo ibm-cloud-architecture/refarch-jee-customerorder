@@ -1,44 +1,44 @@
-define(["dojo/_base/connect", "dojo/_base/declare", 
-	"./PlotAction", "dojox/gfx/matrix", 
-	"dojox/gfx/fx", "dojo/fx", "dojo/fx/easing"], 
-	function(Hub, declare, PlotAction, m, gf, df, dfe){
+dojo.provide("dojox.charting.action2d.Magnify");
 
-	/*=====
-	var __MagnifyCtorArgs = {
-		// summary:
-		//		Additional arguments for magnifying actions.
-		// duration: Number?
-		//		The amount of time in milliseconds for an animation to last.  Default is 400.
-		// easing: dojo/fx/easing/*?
-		//		An easing object (see dojo.fx.easing) for use in an animation.  The
-		//		default is dojo.fx.easing.backOut.
-		// scale: Number?
-		//		The amount to magnify the given object to.  Default is 2.
-	};
-	=====*/
-	
-	var DEFAULT_SCALE = 2;
+dojo.require("dojox.charting.action2d.Base");
+dojo.require("dojox.gfx.matrix");
+dojo.require("dojo.fx");
 
-	return declare("dojox.charting.action2d.Magnify", PlotAction, {
-		// summary:
+/*=====
+dojo.declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
+	//	summary:
+	//		Additional arguments for highlighting actions.
+
+	//	scale: Number?
+	//		The amount to magnify the given object to.  Default is 2.
+	scale: 2
+});
+=====*/
+(function(){
+	var DEFAULT_SCALE = 2,
+		m = dojox.gfx.matrix,
+		gf = dojox.gfx.fx;
+
+	dojo.declare("dojox.charting.action2d.Magnify", dojox.charting.action2d.Base, {
+		//	summary:
 		//		Create an action that magnifies the object the action is applied to.
 
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dfe.backOut,	// easing for the action
+			easing:   dojo.fx.easing.backOut,	// easing for the action
 			scale:    DEFAULT_SCALE	// scale of magnification
 		},
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, plot, kwArgs){
-			// summary:
+			//	summary:
 			//		Create the magnifying action.
-			// chart: dojox/charting/Chart
+			//	chart: dojox.charting.Chart2D
 			//		The chart this action belongs to.
-			// plot: String?
+			//	plot: String?
 			//		The plot to apply the action to. If not passed, "default" is assumed.
-			// kwArgs: __MagnifyCtorArgs?
+			//	kwArgs: dojox.charting.action2d.__MagnifyCtorArgs?
 			//		Optional keyword arguments for this action.
 
 			// process optional named parameters
@@ -48,17 +48,12 @@ define(["dojo/_base/connect", "dojo/_base/declare",
 		},
 
 		process: function(o){
-			// summary:
+			//	summary:
 			//		Process the action on the given object.
-			// o: dojox/gfx/shape.Shape
+			//	o: dojox.gfx.Shape
 			//		The object on which to process the magnifying action.
 			if(!o.shape || !(o.type in this.overOutEvents) ||
 				!("cx" in o) || !("cy" in o)){ return; }
-
-			// if spider deal only with circle
-			if(o.element == "spider_plot" || o.element == "spider_poly"){
-				return;
-			}
 
 			var runName = o.run.name, index = o.index, vector = [], anim, init, scale;
 
@@ -94,7 +89,7 @@ define(["dojo/_base/connect", "dojo/_base/declare",
 			if(o.shape){
 				vector.push(gf.animateTransform(kwArgs));
 			}
-			if(o.outline){
+			if(o.oultine){
 				kwArgs.shape = o.outline;
 				vector.push(gf.animateTransform(kwArgs));
 			}
@@ -108,9 +103,9 @@ define(["dojo/_base/connect", "dojo/_base/declare",
 				return;
 			}
 
-			anim.action = df.combine(vector);
+			anim.action = dojo.fx.combine(vector);
 			if(o.type == "onmouseout"){
-				Hub.connect(anim.action, "onEnd", this, function(){
+				dojo.connect(anim.action, "onEnd", this, function(){
 					if(this.anim[runName]){
 						delete this.anim[runName][index];
 					}
@@ -119,5 +114,4 @@ define(["dojo/_base/connect", "dojo/_base/declare",
 			anim.action.play();
 		}
 	});
-	
-});
+})();

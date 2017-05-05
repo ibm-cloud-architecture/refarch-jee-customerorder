@@ -1,14 +1,13 @@
-define(
 ({
 	createLinkTitle: "Länkegenskaper",
 	insertImageTitle: "Bildegenskaper",
 	url: "URL-adress:",
 	text: "Beskrivning:",
 	target: "Mål:",
-	set: "Använd",
-	currentWindow: "Aktuellt fönster",
-	parentWindow: "Överordnat fönster",
-	topWindow: "Översta fönstret",
-	newWindow: "Nytt fönster"
+	set: "Ange",
+	currentWindow: "aktuellt fönster",
+	parentWindow: "överordnat fönster",
+	topWindow: "översta fönstret",
+	newWindow: "nytt fönster"
 })
-);
+

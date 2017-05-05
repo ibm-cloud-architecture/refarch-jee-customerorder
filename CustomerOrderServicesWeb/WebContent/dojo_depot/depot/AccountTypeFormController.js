@@ -10,6 +10,8 @@ dojo.require("dojox.dtl.Context");
 dojo.require("dijit.form.NumberSpinner");
 
 
+
+
 dojo.declare("depot.AccountTypeFormController",null,
 {
 	template:null,

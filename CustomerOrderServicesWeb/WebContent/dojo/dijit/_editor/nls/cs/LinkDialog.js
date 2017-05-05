@@ -1,4 +1,3 @@
-define(
 ({
 	createLinkTitle: "Vlastnosti odkazu",
 	insertImageTitle: "Vlastnosti obrázku",
@@ -11,4 +10,4 @@ define(
 	topWindow: "Okno nejvyšší úrovně",
 	newWindow: "Nové okno"
 })
-);
+

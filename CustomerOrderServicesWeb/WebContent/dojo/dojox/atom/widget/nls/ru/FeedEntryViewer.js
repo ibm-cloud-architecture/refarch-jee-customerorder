@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[показать опции]",
 	title: "Название",
@@ -10,4 +9,3 @@ define(
 	summary: "Сводка",
 	content: "Информационное наполнение"
 })
-);

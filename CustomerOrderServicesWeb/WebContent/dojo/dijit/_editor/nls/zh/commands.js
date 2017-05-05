@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': '粗体',
 	'copy': '复制',
@@ -25,7 +24,7 @@ define(
 	'undo': '撤销',
 	'unlink': '除去链接',
 	'createLink': '创建链接',
-	'toggleDir': '切换方向',
+	'toggleDir': '固定方向',
 	'insertImage': '插入图像',
 	'insertTable': '插入/编辑表',
 	'toggleTableBorder': '切换表边框',
@@ -39,13 +38,11 @@ define(
 	'fontSize': '字体大小',
 	'fontName': '字体名称',
 	'tabIndent': '制表符缩进',
-	"fullScreen": "切换全屏",
+	"fullScreen": "切换全屏幕",
 	"viewSource": "查看 HTML 源代码",
 	"print": "打印",
 	"newPage": "新建页面",
 	/* Error messages */
-	'systemShortcut': '只能通过使用键盘快捷键在浏览器中执行 "${0}" 操作。请使用 ${1}。',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': '只能在浏览器中通过键盘快捷方式执行“${0}”操作。使用 ${1}。'
 })
-);
+

@@ -1,32 +1,35 @@
-define(["./_base"], function(){
-	dojo.experimental("dojox.timing.ThreadPool");
+dojo.provide("dojox.timing.ThreadPool");
+dojo.require("dojox.timing");
+
+dojo.experimental("dojox.timing.ThreadPool");
 
 //	dojox.timing.Timer is included as part of _base
 /********************************************************************
-	This is a port of the original System.Threading.ThreadPool from
+	This is a port of the original System.Threading.ThreadPool from 
 	the f(m) class library.
 	
 	Donated to the Dojo toolkit by the author :)
 *********************************************************************/
+(function(){
 	var t=dojox.timing;
-	t.threadStates={
-		UNSTARTED:"unstarted",
-		STOPPED:"stopped",
-		PENDING:"pending",
-		RUNNING:"running",
-		SUSPENDED:"suspended",
-		WAITING:"waiting",
+	t.threadStates={ 
+		UNSTARTED:"unstarted", 
+		STOPPED:"stopped", 
+		PENDING:"pending", 
+		RUNNING:"running", 
+		SUSPENDED:"suspended", 
+		WAITING:"waiting", 
 		COMPLETE:"complete",
 		ERROR:"error"
 	};
 
 	//	Before rar says a word, we actually *use* these numbers for a purpose :)
-	t.threadPriorities={
-		LOWEST:1,
-		BELOWNORMAL:2,
-		NORMAL:3,
-		ABOVENORMAL:4,
-		HIGHEST:5
+	t.threadPriorities={ 
+		LOWEST:1, 
+		BELOWNORMAL:2, 
+		NORMAL:3, 
+		ABOVENORMAL:4, 
+		HIGHEST:5 
 	};
 	
 	t.Thread=function(/* Function */fn, /* dojox.timing.threadPriorities? */priority){
@@ -73,7 +76,7 @@ define(["./_base"], function(){
 		this.getMaxThreads=function(){ return maxThreads; };
 		this.getAvailableThreads=function(){ return availableThreads; };
 		this.getTickInterval=function(){ return interval; };
-		this.queueUserWorkItem=function(/* Function|dojox/timing/Thread */fn){
+		this.queueUserWorkItem=function(/* Function || dojox.timing.Thread */fn){
 			var item=fn;
 			if(item instanceof Function){
 				item=new t.Thread(item);
@@ -92,7 +95,7 @@ define(["./_base"], function(){
 			}
 			return true;
 		};
-		this.removeQueuedUserWorkItem=function(/* Function|dojox/timing/Thread */item){
+		this.removeQueuedUserWorkItem=function(/* Function || dojox.timing.Thread */item){
 			if(item instanceof Function){
 				var idx=-1;
 				for(var i=0; i<queue.length; i++){
@@ -147,5 +150,4 @@ define(["./_base"], function(){
 		//	dedicate the timer to us.
 		timer.onTick=self.invoke;
 	})(16, 5000);
-	return dojox.timing.ThreadPool;
-});
+})();

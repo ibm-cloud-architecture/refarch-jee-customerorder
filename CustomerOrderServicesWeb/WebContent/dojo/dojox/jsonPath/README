@@ -39,7 +39,7 @@ Expressions:
 	[,]			Union operator
 	[start:end:step]	array slice operator
 	?()			applies a filter/script expression
-	()			script expressions
+	()			script expresions
 
 	some examples:
 

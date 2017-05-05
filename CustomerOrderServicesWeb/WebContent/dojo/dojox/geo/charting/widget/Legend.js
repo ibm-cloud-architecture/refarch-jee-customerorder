@@ -1,93 +1,62 @@
-define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/declare",
-	"dojo/_base/html",
-	"dojo/dom",
-	"dojo/dom-construct",
-	"dojo/dom-class",
-	"dojo/_base/window",
-	"dijit/_Widget"
-], function(dojo, lang, arr, declare, html,dom,domConstruct,domClass, win, Widget){
+dojo.provide("dojox.geo.charting.widget.Legend");
 
-	return declare("dojox.geo.charting.widget.Legend",Widget, {
-		// summary:
-		//		A legend widget displaying association between colors and Feature value ranges.
-		//
-		// description:
-		//		This widget basically is a table comprising (icon,string) pairs, describing the color scheme
-		//		used for the map and its associated text descriptions.
-		//
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+dojo.require("dojox.lang.functional.array");
+dojo.require("dojox.lang.functional.fold");
 
-		// example:
-		// |	var legend = new dojox.geo.charting.widget.Legend({
-		// |		map: map
-		// |	});
-		horizontal:true,
-		legendBody:null,
-		swatchSize:18,
-		map:null,
-		postCreate: function(){
-			if(!this.map){return;}
-			this.series = this.map.series;
-			if(!this.domNode.parentNode){
-				// compatibility with older version : add to map domNode if not already attached to a parentNode.
-				dom.byId(this.map.container).appendChild(this.domNode);
-			}
-			this.refresh();
-		},
-		buildRendering: function(){
-			this.domNode = domConstruct.create("table",
-						{role: "group", "class": "dojoxLegendNode"});
-			this.legendBody = domConstruct.create("tbody", null, this.domNode);
-			this.inherited(arguments);
-		},
-
-		refresh: function(){
-			// summary:
-			//		Refreshes this legend contents when Map series has changed.
-
-			// cleanup
-			while(this.legendBody.lastChild){
-				domConstruct.destroy(this.legendBody.lastChild);
-			}
-
-			if(this.horizontal){
-				domClass.add(this.domNode,"dojoxLegendHorizontal");
-				this._tr = win.doc.createElement("tr");
-				this.legendBody.appendChild(this._tr);
-			}
-
-			var s = this.series;
-			if(s.length == 0){return;}
-
-			arr.forEach(s,function(x){
-				this._addLabel(x.color, x.name);
-			},this);
-		},
-		_addLabel:function(color,label){
-			var icon = win.doc.createElement("td");
-			var text = win.doc.createElement("td");
-			var div = win.doc.createElement("div");
-			domClass.add(icon, "dojoxLegendIcon");
-			domClass.add(text, "dojoxLegendText");
-			div.style.width  = this.swatchSize + "px";
-			div.style.height = this.swatchSize + "px";
-			icon.appendChild(div);
-
-			if(this.horizontal){
-				this._tr.appendChild(icon);
-				this._tr.appendChild(text);
-			}else{
-				var tr = win.doc.createElement("tr");
-				this.legendBody.appendChild(tr);
-				tr.appendChild(icon);
-				tr.appendChild(text);
-			}
-
-			div.style.background = color;
-			text.innerHTML = String(label);
+dojo.declare("dojox.geo.charting.widget.Legend",[dijit._Widget, dijit._Templated], {
+	templateString: "<table dojoAttachPoint='legendNode' class='dojoxLegendNode'><tbody dojoAttachPoint='legendBody'></tbody></table>",
+	horizontal:true,
+	legendNode:null,
+	legendBody:null,
+	swatchSize:18,
+	postCreate: function(){
+		if(!this.map){return;}
+		this.series = this.map.series;
+		dojo.byId(this.map.container).appendChild(this.domNode);
+		this.refresh();
+	},
+	refresh:function(){
+		// cleanup
+		while(this.legendBody.lastChild){
+			dojo.destroy(this.legendBody.lastChild);
 		}
-	});
+		
+		if(this.horizontal){
+			dojo.addClass(this.legendNode,"dojoxLegendHorizontal");
+			this._tr = dojo.doc.createElement("tr");
+			this.legendBody.appendChild(this._tr);
+		}
+		
+		var s = this.series;
+		if(s.length == 0){return;}
+		
+		dojo.forEach(s,function(x){
+			this._addLabel(x.color, x.name);
+		},this);
+	},
+	_addLabel:function(color,label){
+		var icon = dojo.doc.createElement("td");
+		var text = dojo.doc.createElement("td");
+		var div = dojo.doc.createElement("div");
+		dojo.addClass(icon, "dojoxLegendIcon");
+		dojo.addClass(text, "dojoxLegendText");
+		div.style.width  = this.swatchSize + "px";
+		div.style.height = this.swatchSize + "px";
+		icon.appendChild(div);
+		
+		if(this.horizontal){
+			this._tr.appendChild(icon);
+			this._tr.appendChild(text);
+		}else{
+			var tr = dojo.doc.createElement("tr");
+			this.legendBody.appendChild(tr);
+			tr.appendChild(icon);
+			tr.appendChild(text);
+		}
+		
+		div.style.background = color;
+		text.innerHTML = String(label);
+	}
 });

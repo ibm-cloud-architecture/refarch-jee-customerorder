@@ -1,10 +1,12 @@
-define(["dojo/_base/lang", "dojo/_base/Color", "../../Theme", "../common"],
-	function(lang, Color, Theme, themes){
+dojo.provide("dojox.charting.themes.PlotKit.base");
 
-	// the baseline theme for all PlotKIt themes
-	var pk = lang.getObject("PlotKit", true, themes);
+dojo.require("dojox.charting.Theme");
 
-	pk.base = new Theme({
+// the baseline theme for all PlotKIt themes
+(function(){
+	var dc = dojox.charting, pk = dc.themes.PlotKit;
+
+	pk.base = new dc.Theme({
 		chart:{
 			stroke: null,
 			fill:   "yellow"
@@ -36,20 +38,16 @@ define(["dojo/_base/lang", "dojo/_base/Color", "../../Theme", "../common"],
 	});
 
 	pk.base.next = function(elementType, mixin, doPost){
-		var theme = Theme.prototype.next.apply(this, arguments);
+		var theme = dc.Theme.prototype.next.apply(this, arguments);
 		if(elementType == "line"){
 			theme.marker.outline = {width: 2, color: "#fff"};
 			theme.series.stroke.width = 3.5;
 			theme.marker.stroke.width = 2;
-		}else if(elementType == "candlestick"){
+		} else if (elementType == "candlestick"){
 			theme.series.stroke.width = 1;
-		}else if(theme.series.stroke.color && (theme.series.stroke.color.toString() ==
-				new Color(this.colors[(this._current-1) % this.colors.length]).toString())){
-			// if the user did not override the stroke, let's force blank
+		} else {
 			theme.series.stroke.color = "#fff";
 		}
 		return theme;
 	};
-	
-	return pk;
-});
+})();

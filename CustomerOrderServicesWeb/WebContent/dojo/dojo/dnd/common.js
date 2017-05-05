@@ -1,44 +1,26 @@
-define(["../sniff", "../_base/kernel", "../_base/lang", "../dom"],
-	function(has, kernel, lang, dom){
+dojo.provide("dojo.dnd.common");
 
-// module:
-//		dojo/dnd/common
+dojo.dnd.getCopyKeyState = dojo.isCopyKey;
 
-var exports = lang.getObject("dojo.dnd", true);
-/*=====
-// TODO: for 2.0, replace line above with this code.
-var exports = {
-	// summary:
-	//		TODOC
-};
-=====*/
-
-exports.getCopyKeyState = function(evt){
-	return evt[has("mac") ? "metaKey" : "ctrlKey"]
-};
-
-exports._uniqueId = 0;
-exports.getUniqueId = function(){
+dojo.dnd._uniqueId = 0;
+dojo.dnd.getUniqueId = function(){
 	// summary:
 	//		returns a unique string for use with any DOM element
 	var id;
 	do{
-		id = kernel._scopeName + "Unique" + (++exports._uniqueId);
-	}while(dom.byId(id));
+		id = dojo._scopeName + "Unique" + (++dojo.dnd._uniqueId);
+	}while(dojo.byId(id));
 	return id;
 };
 
-exports._empty = {};
+dojo.dnd._empty = {};
 
-exports.isFormElement = function(/*Event*/ e){
+dojo.dnd.isFormElement = function(/*Event*/ e){
 	// summary:
 	//		returns true if user clicked on a form element
 	var t = e.target;
 	if(t.nodeType == 3 /*TEXT_NODE*/){
 		t = t.parentNode;
 	}
-	return " a button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
+	return " button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 };
-
-return exports;
-});

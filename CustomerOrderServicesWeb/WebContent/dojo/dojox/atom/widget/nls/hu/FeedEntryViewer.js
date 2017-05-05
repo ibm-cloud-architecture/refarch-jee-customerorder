@@ -1,4 +1,3 @@
-define(
 ({
 	displayOptions: "[megjelenítési beállítások]",
 	title: "Cím",
@@ -10,4 +9,3 @@ define(
 	summary: "Összegzés",
 	content: "Tartalom"
 })
-);

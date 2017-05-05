@@ -1,24 +1,22 @@
-define(
 ({
 	smiley: "Wstaw emotikon",
 	emoticonSmile: "uśmiech",
 	emoticonLaughing: "śmiech",
 	emoticonWink: "mrugnięcie",
 	emoticonGrin: "szeroki uśmiech",
-	emoticonCool: "cwaniak",
-	emoticonAngry: "złość",
-	emoticonHalf: "niesmak",
-	emoticonEyebrow: "uniesienie brwi",
+	emoticonCool: "na luzie",
+	emoticonAngry: "złość",  
+	emoticonHalf: "niesmak", 
+	emoticonEyebrow: "brew",
 	emoticonFrown: "niezadowolenie",
 	emoticonShy: "nieśmiałość",
 	emoticonGoofy: "niezdarność",
-	emoticonOops: "ups",
-	emoticonTongue: "pokazywanie języka",
+	emoticonOops: "oj",
+	emoticonTongue: "język",
 	emoticonIdea: "pomysł",
-	emoticonYes: "tak",
-	emoticonNo: "nie",
+	emoticonYes: "Tak",
+	emoticonNo: "Nie",	
 	emoticonAngel: "anioł",
-	emoticonCrying: "płacz",
-	emoticonHappy: "radość"
+	emoticonCrying: "płacz"
 })
-);
+

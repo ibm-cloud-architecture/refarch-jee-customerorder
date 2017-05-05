@@ -1,9 +1,6 @@
-define([
-	"dojo/_base/lang",
-	"dojo/_base/kernel",
-	"dojo/_base/declare"
-], function(lang, dojo, declare){
-return declare("dojox.form.manager._ValueMixin", null, {
+dojo.provide("dojox.form.manager._ValueMixin");
+
+dojo.declare("dojox.form.manager._ValueMixin", null, {
 	// summary:
 	//		Form manager's mixin for getting/setting form values in the unified manner.
 	// description:
@@ -14,9 +11,9 @@ return declare("dojox.form.manager._ValueMixin", null, {
 	elementValue: function(name, value){
 		// summary:
 		//		Set or get a form widget/element or an attached point node by name.
-		// name: String
+		// name: String:
 		//		The name.
-		// value: Object?
+		// value: Object?:
 		//		Optional. The value to set.
 
 		if(name in this.formWidgets){
@@ -33,7 +30,7 @@ return declare("dojox.form.manager._ValueMixin", null, {
 	gatherFormValues: function(names){
 		// summary:
 		//		Collect form values.
-		// names: Object?
+		// names: Object?:
 		//		If it is an array, it is a list of names of form elements to be collected.
 		//		If it is an object, dictionary keys are names to be collected.
 		//		If it is omitted, all known form elements are to be collected.
@@ -43,12 +40,12 @@ return declare("dojox.form.manager._ValueMixin", null, {
 		}, names);
 
 		if(this.inspectFormNodes){
-			lang.mixin(result, this.inspectFormNodes(function(name){
+			dojo.mixin(result, this.inspectFormNodes(function(name){
 				return this.formNodeValue(name);
 			}, names));
 		}
 
-		lang.mixin(result, this.inspectAttachedPoints(function(name){
+		dojo.mixin(result, this.inspectAttachedPoints(function(name){
 			return this.formPointValue(name);
 		}, names));
 
@@ -58,7 +55,7 @@ return declare("dojox.form.manager._ValueMixin", null, {
 	setFormValues: function(values){
 		// summary:
 		//		Set values to form elements
-		// values: Object
+		// values: Object:
 		//		A dictionary of key-value pairs.
 		if(values){
 			this.inspectFormWidgets(function(name, widget, value){
@@ -77,5 +74,4 @@ return declare("dojox.form.manager._ValueMixin", null, {
 		}
 		return this;
 	}
-});
 });

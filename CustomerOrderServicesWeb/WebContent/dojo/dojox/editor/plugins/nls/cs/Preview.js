@@ -1,5 +1,4 @@
-define(
 ({
 	"preview": "Náhled"
 })
-);
+

@@ -1,12 +1,12 @@
-define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Path"],
-function(lang, oo, registry, StencilPath){
+dojo.provide("dojox.drawing.tools.Path");
 
-//dojox.drawing.tools.Path
-var Path = oo.declare(
-	StencilPath,
+dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
+	// summary:
+	//		Class for a drawable Path
+	//
+	dojox.drawing.stencil.Path,
 	function(){
-		// summary:
-		//		constructor
+		// summary: constructor
 		
 		this.pathMode = "";
 		this.currentPathMode = "";
@@ -15,12 +15,9 @@ var Path = oo.declare(
 		
 	},
 	{
-		// summary:
-		//		Class for a drawable Path
-
 		draws:true,
 		onDown: function(obj){
-			if(!this._started){
+			if(!this._started){ 
 				this.onStartPath(obj);
 			}
 			
@@ -60,15 +57,15 @@ var Path = oo.declare(
 				
 				switch(evt.letter){
 					case "c":
-						this.onCompletePath(true); break;
+						this.onCompletePath(true); break;		
 					case "l": this.pathMode = "L"; break;
-					case "m": this.makeSubPath(false); break;
-					case "q": this.pathMode = "Q"; break;
+					case "m": this.makeSubPath(false); break;		
+					case "q": this.pathMode = "Q"; break;		
 					case "s": this.pathMode = "S"; break;
 					case "z": this.makeSubPath(true); break;
 				}
 				 
-				//console.log("KEY:", evt.letter);
+				//console.log("KEY:", evt.letter);	
 			});
 		},
 		
@@ -195,14 +192,12 @@ var Path = oo.declare(
 	}
 );
 
-lang.setObject("dojox.drawing.tools.Path", Path);
-Path.setup = {
+dojox.drawing.tools.Path.setup = {
+	// summary: See Base ToolsSetup
+	//
 	name:"dojox.drawing.tools.Path",
 	tooltip:"Path Tool",
 	iconClass:"iconLine"
 };
 
-registry.register(Path.setup, "tool");
-
-return Path;
-});
+dojox.drawing.register(dojox.drawing.tools.Path.setup, "tool");

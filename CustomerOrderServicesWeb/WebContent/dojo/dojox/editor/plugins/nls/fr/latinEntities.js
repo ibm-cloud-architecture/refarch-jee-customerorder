@@ -1,10 +1,9 @@
-define(
 ({
 	/* These are already handled in the default RTE
-	amp:"ampersand",lt:"less-than sign",
-	gt:"greater-than sign",
-	nbsp:"no-break space\nnon-breaking space",
-	quot:"quote",
+		amp:"ampersand",lt:"less-than sign",
+		gt:"greater-than sign",
+		nbsp:"no-break space\nnon-breaking space",
+		quot:"quote",
 	*/
 	iexcl:"point d'exclamation inversé",
 	cent:"signe cent",
@@ -28,7 +27,7 @@ define(
 	acute:"accent aigu\naccent aigu d'espacement",
 	micro:"signe micro",
 	para:"symbole de paragraphe",
-	middot:"point médian\nvirgule géorgienne\npoint médian grec",
+	middot:"point médian\nvirgule géorgiennea\npoint médian grec",
 	cedil:"cédille\ncédille d'espacement",
 	sup1:"exposant un\npuissance un",
 	ordm:"indicateur ordinal masculin",
@@ -101,6 +100,7 @@ define(
 	yacute:"Latin - y minuscule avec accent aigu",
 	thorn:"Latin - thorn minuscule",
 	yuml:"Latin - y minuscule avec tréma",
+
 // Greek Characters and Symbols
 	fnof:"Latin - f minuscule avec crochet\nfonction\nflorin",
 	Alpha:"Grec - alpha majuscule",
@@ -161,7 +161,7 @@ define(
 	Prime:"double apostrophe\nsecondes\npouces",
 	oline:"surligné\nbarre supérieure d'espacement",
 	frasl:"barre de fraction",
-	weierp:"P majuscule script\nensemble de puissances\nfonction elliptique de Weierstrass",
+	weierp:"P majuscule scripte\nensemble de puissances\nfonction elliptique de Weierstrass",
 	image:"I majuscule noir\npartie imaginaire",
 	real:"R majuscule noir\npartie réelle",
 	trade:"signe de marque commerciale",
@@ -254,4 +254,4 @@ define(
 	rsaquo:"guillemet simple orienté vers la droite",
 	euro:"signe euro"
 })
-);
+

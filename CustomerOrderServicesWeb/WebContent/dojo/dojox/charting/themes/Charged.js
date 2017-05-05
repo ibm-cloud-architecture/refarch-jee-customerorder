@@ -1,9 +1,15 @@
-define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutils, themes){
+dojo.provide("dojox.charting.themes.Charged");
 
-	var g = Theme.generateGradient,
+dojo.require("dojox.gfx.gradutils");
+dojo.require("dojox.charting.Theme");
+
+// created by Tom Trenka
+
+(function(){
+	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme, g = Theme.generateGradient,
 		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 0, y2: 75};
 	
-	themes.Charged = new Theme({
+	themes.Charged = new dc.Theme({
 		chart: {
 			fill: "#ededdf",
 			pageStyle: {backgroundColor: "#ededdf", backgroundImage: "none", color: "inherit"}
@@ -37,19 +43,19 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 		},
 		seriesThemes: [
 			{fill: g(defaultFill, "#004cbf", "#06f")},
-			{fill: g(defaultFill, "#bf004c", "#f06")},
-			{fill: g(defaultFill, "#43bf00", "#6f0")},
-			{fill: g(defaultFill, "#7300bf", "#90f")},
-			{fill: g(defaultFill, "#bf7300", "#f90")},
-			{fill: g(defaultFill, "#00bf73", "#0f9")}
+			{fill: g(defaultFill, "#bf004c", "#f06")},	
+			{fill: g(defaultFill, "#43bf00", "#6f0")},	
+			{fill: g(defaultFill, "#7300bf", "#90f")},	
+			{fill: g(defaultFill, "#bf7300", "#f90")},	
+			{fill: g(defaultFill, "#00bf73", "#0f9")}	
 		],
 		markerThemes: [
-			{fill: "#06f", stroke: {color: "#06f"}},
+			{fill: "#06f", stroke: {color: "#06f"}},	
 			{fill: "#f06", stroke: {color: "#f06"}},
-			{fill: "#6f0", stroke: {color: "#6f0"}},
-			{fill: "#90f", stroke: {color: "#90f"}},
-			{fill: "#f90", stroke: {color: "#f90"}},
-			{fill: "#0f9", stroke: {color: "#0f9"}}
+			{fill: "#6f0", stroke: {color: "#6f0"}},	
+			{fill: "#90f", stroke: {color: "#90f"}},	
+			{fill: "#f90", stroke: {color: "#f90"}},	
+			{fill: "#0f9", stroke: {color: "#0f9"}}	
 		]
 	});
 	
@@ -78,10 +84,8 @@ define(["../Theme", "dojox/gfx/gradutils", "./common"], function(Theme, gradutil
 	themes.Charged.post = function(theme, elementType){
 		theme = Theme.prototype.post.apply(this, arguments);
 		if((elementType == "slice" || elementType == "circle") && theme.series.fill && theme.series.fill.type == "radial"){
-			theme.series.fill = gradutils.reverse(theme.series.fill);
+			theme.series.fill = dojox.gfx.gradutils.reverse(theme.series.fill);
 		}
 		return theme;
 	};
-	
-	return themes.Charged;
-});
+})();

@@ -1,23 +1,12 @@
-define(
 ({
 	"findLabel": "Trova:",
-	"findTooltip": "Immettere il testo da ricercare",
 	"replaceLabel": "Sostituisci con:",
-	"replaceTooltip": "Immettere il testo con cui sostituire",
-	"findReplace": "Trova e sostituisci",
-	"matchCase": "Corrispondenza maiuscolo/minuscolo",
-	"matchCaseTooltip": "Corrispondenza maiuscolo/minuscolo",
+	"findReplace": "Mostra/Nascondi Trova/Sostituisci",
+	"matchCase": "Maiuscole/minuscole", 
 	"backwards": "Indietro",
-	"backwardsTooltip": "Ricercare il testo all'indietro",
-	"replaceAllButton": "Sostituisci tutti",
-	"replaceAllButtonTooltip": "Sostituisci tutto il testo",
+	"replaceAll": "Tutte le occorrenze", 
 	"findButton": "Trova",
-	"findButtonTooltip": "Trova il testo",
 	"replaceButton": "Sostituisci",
-	"replaceButtonTooltip": "Sostituisci il testo",
-	"replaceDialogText": "Sostituite ${0} ricorrenze.",
-	"eofDialogText": "Ultime ${0} ricorrenze",
-	"eofDialogTextFind": "trovato",
-	"eofDialogTextReplace": "sostituito"
+	"replaceDialogText": "Occorrenze sostituite: ${0}."
 })
-);
+

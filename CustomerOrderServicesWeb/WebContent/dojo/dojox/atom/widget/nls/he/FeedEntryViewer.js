@@ -1,6 +1,5 @@
-define(
 ({
-	displayOptions: "[אפשרויות הצגה]",
+	displayOptions: "[הצגת אפשרויות]",
 	title: "כותרת",
 	authors: "מחברים",
 	contributors: "תורמים",
@@ -10,4 +9,3 @@ define(
 	summary: "סיכום",
 	content: "תוכן"
 })
-);

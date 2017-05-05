@@ -1,31 +1,40 @@
-define(["..", "dojo/_base/lang", "dojo/date/locale", "dojo/i18n"], function(dojox, lang, ddl, i18n){
+dojo.provide("dojox.date.relative");
 
-var drelative = lang.getObject("date.relative", true, dojox);
+dojo.require("dojo.date");
+dojo.require("dojo.date.locale");
 
+(function(d){
 /*=====
-var __FormatOptions = {
-	// locale: String
+	dojox.date.relative.__FormatOptions = function(){
+	//	locale: String
 	//		override the locale used to determine formatting rules
-	// relativeDate: Date
+	//	relativeDate: Date
 	//		Date to calculate relation to (defaults to new Date())
-	// weekCheck: boolean
+	//	weekCheck: boolean
 	//		Whether or not to display the day of week (defaults true)
-};
+		this.locale = locale;
+		this.relativeDate = relativeDate;
+		this.weekCheck = weekCheck;
+	}
 =====*/
 
-var DAY = 1000*60*60*24,
-	SIX_DAYS = 6 * DAY,
-	del = dojo.delegate,
-	ggb = ddl._getGregorianBundle,
-	fmt = ddl.format;
+var DAY = 1000*60*60*24;
+var SIX_DAYS = 6 * DAY;
+var del = d.delegate;
+var ddl = d.date.locale;
+var ggb = ddl._getGregorianBundle;
+var fmt = ddl.format;
 
 function _clearTime(date){
-	date = new Date(date);
-	date.setHours(0, 0, 0, 0);
+	date = dojo.clone(date);
+	date.setHours(0);
+	date.setMinutes(0);
+	date.setSeconds(0);
+	date.setMilliseconds(0);
 	return date;
 }
 
-drelative.format = function(/*Date*/dateObject, /*__FormatOptions?*/options){
+dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.__FormatOptions?*/options){
 	// summary:
 	//		Format a Date object as a String, using locale-specific settings,
 	//		relative to the current date or some other date.
@@ -41,7 +50,7 @@ drelative.format = function(/*Date*/dateObject, /*__FormatOptions?*/options){
 	//		is displayed
 	//
 	//		If the day portion of the date falls within the past week (or the
-	//		week preceding relativeDate, if present), then the display will show
+	//		week preceeding relativeDate, if present), then the display will show
 	//		day of week and time.  This functionality can be turned off by setting
 	//		weekCheck to false.
 	//
@@ -57,21 +66,21 @@ drelative.format = function(/*Date*/dateObject, /*__FormatOptions?*/options){
 	
 	options = options || {};
 	
-	var today = _clearTime(options.relativeDate || new Date()),
-		diff = today.getTime() - _clearTime(dateObject).getTime(),
-		fmtOpts = {locale: options.locale};
+	var today = _clearTime(options.relativeDate || new Date());
+	var diff = today.getTime() - _clearTime(dateObject).getTime();
+	var fmtOpts = {locale: options.locale};
 	
 	if(diff === 0){
 		// today: 9:32 AM
 		return fmt(dateObject, del(fmtOpts, {selector: "time"}));
 	}else if(diff <= SIX_DAYS && diff > 0 && options.weekCheck !== false){
 		// within the last week: Mon 9:32 am
-		return fmt(dateObject, del(fmtOpts, {selector: "date", datePattern: "EEE"})) +
+		return fmt(dateObject, del(fmtOpts, {selector: "date", datePattern: "EEE"})) + 
 				" " +
 				fmt(dateObject, del(fmtOpts, {selector: "time", formatLength: "short"}));
 	}else if(dateObject.getFullYear() == today.getFullYear()){
 		// this year: Nov 1
-		var bundle = ggb(i18n.normalizeLocale(options.locale));
+		var bundle = ggb(dojo.i18n.normalizeLocale(options.locale));
 		return fmt(dateObject, del(fmtOpts, {
 			selector: "date",
 			datePattern: bundle["dateFormatItem-MMMd"]
@@ -85,6 +94,4 @@ drelative.format = function(/*Date*/dateObject, /*__FormatOptions?*/options){
 		}));
 	}
 };
-
-	return drelative;
-});
+})(dojo);

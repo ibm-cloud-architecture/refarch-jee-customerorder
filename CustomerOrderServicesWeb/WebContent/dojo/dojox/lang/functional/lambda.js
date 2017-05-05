@@ -1,16 +1,15 @@
-define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, arr){
-	var df = lang.getObject("lang.functional", true, dojox);
+dojo.provide("dojox.lang.functional.lambda");
 
 // This module adds high-level functions and related constructs:
 //	- anonymous functions built from the string
 
-// Acknowledgements:
-//	- lambda() is based on work by Oliver Steele
+// Acknoledgements:
+//	- lambda() is based on work by Oliver Steele 
 //		(http://osteele.com/sources/javascript/functional/functional.js)
 //		which was published under MIT License
 
 // Notes:
-//	- lambda() produces functions, which after the compilation step are
+//	- lambda() produces functions, which after the compilation step are 
 //		as fast as regular JS functions (at least theoretically).
 
 // Lambda input values:
@@ -18,7 +17,8 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 //	- converts strings to functions
 //	- converts arrays to a functional composition
 
-	var lcache = {};
+(function(){
+	var df = dojox.lang.functional, lcache = {};
 
 	// split() is augmented on IE6 to ensure the uniform behavior
 	var split = "ab".split(/a*/).length > 1 ? String.prototype.split :
@@ -35,7 +35,7 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 			while(sects.length){
 				s = sects.pop();
 				args = sects.pop().split(/\s*,\s*|\s+/m);
-				if(sects.length){ sects.push("(function(" + args.join(", ") + "){ return (" + s + "); })"); }
+				if(sects.length){ sects.push("(function(" + args + "){return (" + s + ")})"); }
 			}
 		}else if(s.match(/\b_\b/)){
 			args = ["_"];
@@ -52,13 +52,13 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 					s = s + "$2";
 				}
 			}else{
-				// the point of the long regex below is to exclude all well-known
+				// the point of the long regex below is to exclude all well-known 
 				// lower-case words from the list of potential arguments
 				var vars = s.
 					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|dojo|dijit|dojox|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
 					match(/([a-z_$][a-z_$\d]*)/gi) || [], t = {};
-				arr.forEach(vars, function(v){
-					if(!t.hasOwnProperty(v)){
+				dojo.forEach(vars, function(v){
+					if(!(v in t)){
 						args.push(v);
 						t[v] = 1;
 					}
@@ -69,18 +69,18 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 	};
 
 	var compose = function(/*Array*/ a){
-		return a.length ?
+		return a.length ? 
 					function(){
 						var i = a.length - 1, x = df.lambda(a[i]).apply(this, arguments);
 						for(--i; i >= 0; --i){ x = df.lambda(a[i]).call(this, x); }
 						return x;
 					}
-				:
+				: 
 					// identity
 					function(x){ return x; };
 	};
 
-	lang.mixin(df, {
+	dojo.mixin(df, {
 		// lambda
 		rawLambda: function(/*String*/ s){
 			// summary:
@@ -103,8 +103,8 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 			//		built from the snippet. It is meant to be evaled in the
 			//		proper context, so local variables can be pulled from the
 			//		environment.
-			var l = lambda(s);
-			return "function(" + l.args.join(",") + "){return (" + l.body + ");}";	// String
+			s = lambda(s);
+			return "function(" + s.args.join(",") + "){return (" + s.body + ");}";	// String
 		},
 		lambda: function(/*Function|String|Array*/ s){
 			// summary:
@@ -117,9 +117,9 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 			//		a function object.
 			if(typeof s == "function"){ return s; }
 			if(s instanceof Array){ return compose(s); }
-			if(lcache.hasOwnProperty(s)){ return lcache[s]; }
-			var l = lambda(s);
-			return lcache[s] = new Function(l.args, "return (" + l.body + ");");	// Function
+			if(s in lcache){ return lcache[s]; }
+			s = lambda(s);
+			return lcache[s] = new Function(s.args, "return (" + s.body + ");");	// Function
 		},
 		clearLambdaCache: function(){
 			// summary:
@@ -127,6 +127,4 @@ define(["../..", "dojo/_base/lang", "dojo/_base/array"], function(dojox, lang, a
 			lcache = {};
 		}
 	});
-	
-	return df;
-});
+})();

@@ -1,34 +1,14 @@
-define([
-	"./_base/lang",
-	"./Evented",
-	"./_base/kernel",
-	"./_base/array",
-	"./aspect",
-	"./_base/fx",
-	"./dom",
-	"./dom-style",
-	"./dom-geometry",
-	"./ready",
-	"require" // for context sensitive loading of Toggler
-], function(lang, Evented, dojo, arrayUtil, aspect, baseFx, dom, domStyle, geom, ready, require){
-
-	// module:
-	//		dojo/fx
+dojo.provide("dojo.fx");
+dojo.require("dojo.fx.Toggler"); // FIXME: remove this back-compat require in 2.0 
+/*=====
+dojo.fx = {
+	// summary: Effects library on top of Base animations
+};
+=====*/
+(function(){
 	
-	// For back-compat, remove in 2.0.
-	if(!dojo.isAsync){
-		ready(0, function(){
-			var requires = ["./fx/Toggler"];
-			require(requires);	// use indirection so modules not rolled into a build
-		});
-	}
-
-	var coreFx = dojo.fx = {
-		// summary:
-		//		Effects library on top of Base animations
-	};
-
-	var _baseObj = {
+	var d = dojo, 
+		_baseObj = {
 			_fire: function(evt, args){
 				if(this[evt]){
 					this[evt].apply(this, args||[]);
@@ -43,62 +23,61 @@ define([
 		this._current = this._onAnimateCtx = this._onEndCtx = null;
 
 		this.duration = 0;
-		arrayUtil.forEach(this._animations, function(a){
+		d.forEach(this._animations, function(a){
 			this.duration += a.duration;
 			if(a.delay){ this.duration += a.delay; }
 		}, this);
 	};
-	_chain.prototype = new Evented();
-	lang.extend(_chain, {
+	d.extend(_chain, {
 		_onAnimate: function(){
 			this._fire("onAnimate", arguments);
 		},
 		_onEnd: function(){
-			this._onAnimateCtx.remove();
-			this._onEndCtx.remove();
+			d.disconnect(this._onAnimateCtx);
+			d.disconnect(this._onEndCtx);
 			this._onAnimateCtx = this._onEndCtx = null;
 			if(this._index + 1 == this._animations.length){
 				this._fire("onEnd");
 			}else{
 				// switch animations
 				this._current = this._animations[++this._index];
-				this._onAnimateCtx = aspect.after(this._current, "onAnimate", lang.hitch(this, "_onAnimate"), true);
-				this._onEndCtx = aspect.after(this._current, "onEnd", lang.hitch(this, "_onEnd"), true);
+				this._onAnimateCtx = d.connect(this._current, "onAnimate", this, "_onAnimate");
+				this._onEndCtx = d.connect(this._current, "onEnd", this, "_onEnd");
 				this._current.play(0, true);
 			}
 		},
 		play: function(/*int?*/ delay, /*Boolean?*/ gotoStart){
 			if(!this._current){ this._current = this._animations[this._index = 0]; }
 			if(!gotoStart && this._current.status() == "playing"){ return this; }
-			var beforeBegin = aspect.after(this._current, "beforeBegin", lang.hitch(this, function(){
+			var beforeBegin = d.connect(this._current, "beforeBegin", this, function(){
 					this._fire("beforeBegin");
-				}), true),
-				onBegin = aspect.after(this._current, "onBegin", lang.hitch(this, function(arg){
+				}),
+				onBegin = d.connect(this._current, "onBegin", this, function(arg){
 					this._fire("onBegin", arguments);
-				}), true),
-				onPlay = aspect.after(this._current, "onPlay", lang.hitch(this, function(arg){
+				}),
+				onPlay = d.connect(this._current, "onPlay", this, function(arg){
 					this._fire("onPlay", arguments);
-					beforeBegin.remove();
-					onBegin.remove();
-					onPlay.remove();
-				}));
+					d.disconnect(beforeBegin);
+					d.disconnect(onBegin);
+					d.disconnect(onPlay);
+				});
 			if(this._onAnimateCtx){
-				this._onAnimateCtx.remove();
+				d.disconnect(this._onAnimateCtx);
 			}
-			this._onAnimateCtx = aspect.after(this._current, "onAnimate", lang.hitch(this, "_onAnimate"), true);
+			this._onAnimateCtx = d.connect(this._current, "onAnimate", this, "_onAnimate");
 			if(this._onEndCtx){
-				this._onEndCtx.remove();
+				d.disconnect(this._onEndCtx);
 			}
-			this._onEndCtx = aspect.after(this._current, "onEnd", lang.hitch(this, "_onEnd"), true);
+			this._onEndCtx = d.connect(this._current, "onEnd", this, "_onEnd");
 			this._current.play.apply(this._current, arguments);
 			return this;
 		},
 		pause: function(){
 			if(this._current){
-				var e = aspect.after(this._current, "onPause", lang.hitch(this, function(arg){
+				var e = d.connect(this._current, "onPause", this, function(arg){
 						this._fire("onPause", arguments);
-						e.remove();
-					}), true);
+						d.disconnect(e);
+					});
 				this._current.pause();
 			}
 			return this;
@@ -107,20 +86,17 @@ define([
 			this.pause();
 			var offset = this.duration * percent;
 			this._current = null;
-
-			arrayUtil.some(this._animations, function(a, index){
-				if(offset <= a.duration){
+			d.some(this._animations, function(a){
+				if(a.duration <= offset){
 					this._current = a;
-					this._index = index;
 					return true;
 				}
 				offset -= a.duration;
 				return false;
-			}, this);
+			});
 			if(this._current){
-				this._current.gotoPercent(offset / this._current.duration);
+				this._current.gotoPercent(offset / this._current.duration, andPlay);
 			}
-			if (andPlay) { this.play(); }
 			return this;
 		},
 		stop: function(/*boolean?*/ gotoEnd){
@@ -131,10 +107,10 @@ define([
 					}
 					this._current = this._animations[this._index];
 				}
-				var e = aspect.after(this._current, "onStop", lang.hitch(this, function(arg){
+				var e = d.connect(this._current, "onStop", this, function(arg){
 						this._fire("onStop", arguments);
-						e.remove();
-					}), true);
+						d.disconnect(e);
+					});
 				this._current.stop();
 			}
 			return this;
@@ -143,34 +119,31 @@ define([
 			return this._current ? this._current.status() : "stopped";
 		},
 		destroy: function(){
-			this.stop();
-			if(this._onAnimateCtx){ this._onAnimateCtx.remove(); }
-			if(this._onEndCtx){ this._onEndCtx.remove(); }
+			if(this._onAnimateCtx){ d.disconnect(this._onAnimateCtx); }
+			if(this._onEndCtx){ d.disconnect(this._onEndCtx); }
 		}
 	});
-	lang.extend(_chain, _baseObj);
+	d.extend(_chain, _baseObj);
 
-	coreFx.chain = function(/*dojo/_base/fx.Animation[]*/ animations){
-		// summary:
-		//		Chain a list of `dojo/_base/fx.Animation`s to run in sequence
+	dojo.fx.chain = function(/*dojo.Animation[]*/ animations){
+		// summary: 
+		//		Chain a list of `dojo.Animation`s to run in sequence
 		//
 		// description:
-		//		Return a `dojo/_base/fx.Animation` which will play all passed
-		//		`dojo/_base/fx.Animation` instances in sequence, firing its own
+		//		Return a `dojo.Animation` which will play all passed
+		//		`dojo.Animation` instances in sequence, firing its own
 		//		synthesized events simulating a single animation. (eg:
-		//		onEnd of this animation means the end of the chain,
+		//		onEnd of this animation means the end of the chain, 
 		//		not the individual animations within)
 		//
 		// example:
 		//	Once `node` is faded out, fade in `otherNode`
-		//	|	require(["dojo/fx"], function(fx){
-		//	|		fx.chain([
-		//	|			fx.fadeIn({ node:node }),
-		//	|			fx.fadeOut({ node:otherNode })
-		//	|		]).play();
-		//	|	});
+		//	|	dojo.fx.chain([
+		//	|		dojo.fadeIn({ node:node }),
+		//	|		dojo.fadeOut({ node:otherNode })
+		//	|	]).play();
 		//
-		return new _chain(animations); // dojo/_base/fx.Animation
+		return new _chain(animations) // dojo.Animation
 	};
 
 	var _combine = function(animations){
@@ -179,26 +152,26 @@ define([
 		this._finished = 0;
 
 		this.duration = 0;
-		arrayUtil.forEach(animations, function(a){
+		d.forEach(animations, function(a){
 			var duration = a.duration;
 			if(a.delay){ duration += a.delay; }
 			if(this.duration < duration){ this.duration = duration; }
-			this._connects.push(aspect.after(a, "onEnd", lang.hitch(this, "_onEnd"), true));
+			this._connects.push(d.connect(a, "onEnd", this, "_onEnd"));
 		}, this);
-
-		this._pseudoAnimation = new baseFx.Animation({curve: [0, 1], duration: this.duration});
+		
+		this._pseudoAnimation = new d.Animation({curve: [0, 1], duration: this.duration});
 		var self = this;
-		arrayUtil.forEach(["beforeBegin", "onBegin", "onPlay", "onAnimate", "onPause", "onStop", "onEnd"],
+		d.forEach(["beforeBegin", "onBegin", "onPlay", "onAnimate", "onPause", "onStop", "onEnd"], 
 			function(evt){
-				self._connects.push(aspect.after(self._pseudoAnimation, evt,
-					function(){ self._fire(evt, arguments); },
-				true));
+				self._connects.push(d.connect(self._pseudoAnimation, evt,
+					function(){ self._fire(evt, arguments); }
+				));
 			}
 		);
 	};
-	lang.extend(_combine, {
+	d.extend(_combine, {
 		_doAction: function(action, args){
-			arrayUtil.forEach(this._animations, function(a){
+			d.forEach(this._animations, function(a){
 				a[action].apply(a, args);
 			});
 			return this;
@@ -225,7 +198,7 @@ define([
 		},
 		gotoPercent: function(/*Decimal*/percent, /*Boolean?*/ andPlay){
 			var ms = this.duration * percent;
-			arrayUtil.forEach(this._animations, function(a){
+			d.forEach(this._animations, function(a){
 				a.gotoPercent(a.duration < ms ? 1 : (ms / a.duration), andPlay);
 			});
 			this._call("gotoPercent", arguments);
@@ -240,49 +213,42 @@ define([
 			return this._pseudoAnimation.status();
 		},
 		destroy: function(){
-			this.stop();
-			arrayUtil.forEach(this._connects, function(handle){
-				handle.remove();
-			});
+			d.forEach(this._connects, dojo.disconnect);
 		}
 	});
-	lang.extend(_combine, _baseObj);
+	d.extend(_combine, _baseObj);
 
-	coreFx.combine = function(/*dojo/_base/fx.Animation[]*/ animations){
-		// summary:
-		//		Combine a list of `dojo/_base/fx.Animation`s to run in parallel
+	dojo.fx.combine = function(/*dojo.Animation[]*/ animations){
+		// summary: 
+		//		Combine a list of `dojo.Animation`s to run in parallel
 		//
 		// description:
-		//		Combine an array of `dojo/_base/fx.Animation`s to run in parallel,
-		//		providing a new `dojo/_base/fx.Animation` instance encompasing each
+		//		Combine an array of `dojo.Animation`s to run in parallel, 
+		//		providing a new `dojo.Animation` instance encompasing each
 		//		animation, firing standard animation events.
 		//
 		// example:
 		//	Fade out `node` while fading in `otherNode` simultaneously
-		//	|	require(["dojo/fx"], function(fx){
-		//	|		fx.combine([
-		//	|			fx.fadeIn({ node:node }),
-		//	|			fx.fadeOut({ node:otherNode })
-		//	|		]).play();
-		//	|	});
+		//	|	dojo.fx.combine([
+		//	|		dojo.fadeIn({ node:node }),
+		//	|		dojo.fadeOut({ node:otherNode })
+		//	|	]).play();
 		//
 		// example:
 		//	When the longest animation ends, execute a function:
-		//	|	require(["dojo/fx"], function(fx){
-		//	|		var anim = fx.combine([
-		//	|			fx.fadeIn({ node: n, duration:700 }),
-		//	|			fx.fadeOut({ node: otherNode, duration: 300 })
-		//	|		]);
-		//	|		aspect.after(anim, "onEnd", function(){
-		//	|			// overall animation is done.
-		//	|		}, true);
-		//	|		anim.play(); // play the animation
+		//	|	var anim = dojo.fx.combine([
+		//	|		dojo.fadeIn({ node: n, duration:700 }),
+		//	|		dojo.fadeOut({ node: otherNode, duration: 300 })
+		//	|	]);
+		//	|	dojo.connect(anim, "onEnd", function(){
+		//	|		// overall animation is done.
 		//	|	});
+		//	|	anim.play(); // play the animation
 		//
-		return new _combine(animations); // dojo/_base/fx.Animation
+		return new _combine(animations); // dojo.Animation
 	};
 
-	coreFx.wipeIn = function(/*Object*/ args){
+	dojo.fx.wipeIn = function(/*Object*/ args){
 		// summary:
 		//		Expand a node to it's natural height.
 		//
@@ -293,19 +259,16 @@ define([
 		//		Node must have no margin/border/padding.
 		//
 		// args: Object
-		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
+		//		A hash-map of standard `dojo.Animation` constructor properties
 		//		(such as easing: node: duration: and so on)
 		//
 		// example:
-		//	|	require(["dojo/fx"], function(fx){
-		//	|		fx.wipeIn({
-		//	|			node:"someId"
-		//	|		}).play()
-		//	|	});
+		//	|	dojo.fx.wipeIn({
+		//	|		node:"someId"
+		//	|	}).play()
+		var node = args.node = d.byId(args.node), s = node.style, o;
 
-		var node = args.node = dom.byId(args.node), s = node.style, o;
-
-		var anim = baseFx.animateProperty(lang.mixin({
+		var anim = d.animateProperty(d.mixin({
 			properties: {
 				height: {
 					// wrapped in functions so we wait till the last second to query (in case value has changed)
@@ -320,7 +283,7 @@ define([
 							s.visibility = "";
 							return 1;
 						}else{
-							var height = domStyle.get(node, "height");
+							var height = d.style(node, "height");
 							return Math.max(height, 1);
 						}
 					},
@@ -331,36 +294,32 @@ define([
 			}
 		}, args));
 
-		var fini = function(){
+		d.connect(anim, "onEnd", function(){ 
 			s.height = "auto";
 			s.overflow = o;
-		};
-		aspect.after(anim, "onStop", fini, true);
-		aspect.after(anim, "onEnd", fini, true);
+		});
 
-		return anim; // dojo/_base/fx.Animation
-	};
+		return anim; // dojo.Animation
+	}
 
-	coreFx.wipeOut = function(/*Object*/ args){
+	dojo.fx.wipeOut = function(/*Object*/ args){
 		// summary:
-		//		Shrink a node to nothing and hide it.
+		//		Shrink a node to nothing and hide it. 
 		//
 		// description:
 		//		Returns an animation that will shrink node defined in "args"
 		//		from it's current height to 1px, and then hide it.
 		//
 		// args: Object
-		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
+		//		A hash-map of standard `dojo.Animation` constructor properties
 		//		(such as easing: node: duration: and so on)
-		//
+		// 
 		// example:
-		//	|	require(["dojo/fx"], function(fx){
-		//	|		fx.wipeOut({ node:"someId" }).play()
-		//	|	});
-
-		var node = args.node = dom.byId(args.node), s = node.style, o;
-
-		var anim = baseFx.animateProperty(lang.mixin({
+		//	|	dojo.fx.wipeOut({ node:"someId" }).play()
+		
+		var node = args.node = d.byId(args.node), s = node.style, o;
+		
+		var anim = d.animateProperty(d.mixin({
 			properties: {
 				height: {
 					end: 1 // 0 causes IE to display the whole panel
@@ -368,50 +327,48 @@ define([
 			}
 		}, args));
 
-		aspect.after(anim, "beforeBegin", function(){
+		d.connect(anim, "beforeBegin", function(){
 			o = s.overflow;
 			s.overflow = "hidden";
 			s.display = "";
-		}, true);
-		var fini = function(){
+		});
+		d.connect(anim, "onEnd", function(){
 			s.overflow = o;
 			s.height = "auto";
 			s.display = "none";
-		};
-		aspect.after(anim, "onStop", fini, true);
-		aspect.after(anim, "onEnd", fini, true);
+		});
 
-		return anim; // dojo/_base/fx.Animation
-	};
+		return anim; // dojo.Animation
+	}
 
-	coreFx.slideTo = function(/*Object*/ args){
+	dojo.fx.slideTo = function(/*Object*/ args){
 		// summary:
 		//		Slide a node to a new top/left position
 		//
 		// description:
-		//		Returns an animation that will slide "node"
+		//		Returns an animation that will slide "node" 
 		//		defined in args Object from its current position to
 		//		the position defined by (args.left, args.top).
 		//
 		// args: Object
-		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
+		//		A hash-map of standard `dojo.Animation` constructor properties
 		//		(such as easing: node: duration: and so on). Special args members
 		//		are `top` and `left`, which indicate the new position to slide to.
 		//
 		// example:
-		//	|	.slideTo({ node: node, left:"40", top:"50", units:"px" }).play()
+		//	|	dojo.fx.slideTo({ node: node, left:"40", top:"50", units:"px" }).play()
 
-		var node = args.node = dom.byId(args.node),
+		var node = args.node = d.byId(args.node), 
 			top = null, left = null;
 
 		var init = (function(n){
 			return function(){
-				var cs = domStyle.getComputedStyle(n);
+				var cs = d.getComputedStyle(n);
 				var pos = cs.position;
 				top = (pos == 'absolute' ? n.offsetTop : parseInt(cs.top) || 0);
 				left = (pos == 'absolute' ? n.offsetLeft : parseInt(cs.left) || 0);
 				if(pos != 'absolute' && pos != 'relative'){
-					var ret = geom.position(n, true);
+					var ret = d.position(n, true);
 					top = ret.y;
 					left = ret.x;
 					n.style.position="absolute";
@@ -422,16 +379,15 @@ define([
 		})(node);
 		init();
 
-		var anim = baseFx.animateProperty(lang.mixin({
+		var anim = d.animateProperty(d.mixin({
 			properties: {
 				top: args.top || 0,
 				left: args.left || 0
 			}
 		}, args));
-		aspect.after(anim, "beforeBegin", init, true);
+		d.connect(anim, "beforeBegin", anim, init);
 
-		return anim; // dojo/_base/fx.Animation
-	};
+		return anim; // dojo.Animation
+	}
 
-	return coreFx;
-});
+})();

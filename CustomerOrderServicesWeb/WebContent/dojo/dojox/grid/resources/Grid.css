@@ -88,12 +88,19 @@
 	padding-bottom: 0;
 	border-bottom-width: 3px;
 }
+
+.dojoxGridSortNode{
+	white-space:nowrap;
+}
 .dojoxGridArrowButtonNode {
 	display: none;
 	padding-left: 16px;
 }
 .dojoxGridArrowButtonChar {
 	display:inline;
+}
+.dojoxGridColCaption {
+	overflow:hidden;
 }
 
 /* Need to explicitly define how to treat hovering over the arrow on IE */ 
@@ -218,21 +225,13 @@
 
 /* cells */
 
-.dojoxGrid .dojoxGridCell {
+.dojoxGridCell {
 	border: 1px solid;
 	border-color: #EBEADB;
 	border-right-color: #D5CDB5;
 	padding: 3px 3px 3px 3px;
 	text-align: left;
 	overflow: hidden;
-	word-wrap: break-word;
-}
-
-.dojoxGrid .dojoxGridFixedRowHeight .dojoxGridCell {
-	white-space: nowrap;
-	word-break: keep-all;
-	word-wrap: normal;
-	text-overflow: ellipsis;
 }
 
 .dojoxGridCellFocus {
@@ -296,11 +295,6 @@
 }
 
 /* Drag and Drop */
-.dojoxGridRowTable .dojoDndHorizontal th.dojoDndItem {
-	display: table-cell;
-	/* overwrite margin/padding setting from dijit.css */
-	margin: 0;
-}
 .dojoxGridDndAvatar {
 	font-size: 100%;
 }
@@ -413,7 +407,7 @@
 
 /* Tree Grid */
 .dojoxGridExpandoCell {
-	vertical-align: middle;
+	vertical-align: top;
 }
 .dojoxGridSummarySpan {
 	visibility: hidden;

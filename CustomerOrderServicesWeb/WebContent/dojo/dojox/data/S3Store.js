@@ -1,10 +1,13 @@
-define(["dojo/_base/declare", "dojox/data/JsonRestStore", "dojox/rpc/ProxiedPath"], 
-  function(declare, JsonRestStore, ProxiedPath) {
-return declare("dojox.data.S3Store", JsonRestStore,
+dojo.provide("dojox.data.S3Store");
+dojo.require("dojox.rpc.ProxiedPath");
+dojo.require("dojox.data.JsonRestStore");
+
+// S3JsonRestStore is an extension of JsonRestStore to handle
+// Amazon's S3 service using JSON data
+
+dojo.declare("dojox.data.S3Store",
+	dojox.data.JsonRestStore,
 	{
-	// summary:
-	//		S3JsonRestStore is an extension of JsonRestStore to handle
-	//		Amazon's S3 service using JSON data
 		_processResults : function(results){
 			// unfortunately, S3 returns query results in XML form
 			var keyElements = results.getElementsByTagName("Key");
@@ -29,5 +32,3 @@ return declare("dojox.data.S3Store", JsonRestStore,
 		}
 	}
 );
-
-});

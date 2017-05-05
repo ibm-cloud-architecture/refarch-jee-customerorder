@@ -1,4 +1,3 @@
-define(
 ({
 	'bold': 'Полужирный',
 	'copy': 'Копировать',
@@ -9,10 +8,10 @@ define(
 	'insertOrderedList': 'Нумерованный список',
 	'insertUnorderedList': 'Список с маркерами',
 	'italic': 'Курсив',
-	'justifyCenter': 'Выровнять по центру',
+	'justifyCenter': 'По центру',
 	'justifyFull': 'По ширине',
-	'justifyLeft': 'Выровнять по левому краю',
-	'justifyRight': 'Выровнять по правому краю',
+	'justifyLeft': 'По левому краю',
+	'justifyRight': 'По правому краю',
 	'outdent': 'Втяжка',
 	'paste': 'Вставить',
 	'redo': 'Повторить',
@@ -44,8 +43,6 @@ define(
 	"print": "Печать",
 	"newPage": "Создать страницу",
 	/* Error messages */
-	'systemShortcut': 'Действие "${0}" можно выполнить в браузере только путем нажатия клавиш ${1}.',
-	'ctrlKey':'ctrl+${0}',
-	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
+	'systemShortcut': 'Действие "${0}" можно выполнить в браузере только путем нажатия клавиш ${1}.'
 })
-);
+

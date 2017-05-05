@@ -1,6 +1,4 @@
-define(
 ({
-		previousMessage: "Tidigare val",
-		nextMessage: "Fler val"
+		previousMessage: "Föregående alternativ",
+		nextMessage: "Fler alternativ"
 })
-);

@@ -1,4 +1,3 @@
-define(
 ({
 	insertTableTitle: "插入表格",
 	modifyTableTitle: "修改表格",
@@ -10,7 +9,7 @@ define(
 	tableWidth: "表格寬度：",
 	backgroundColor: "背景顏色：",
 	borderColor: "邊框顏色：",
-	borderThickness: "邊框寬度：",
+	borderThickness: "邊框寬度",
 	percent: "百分比",
 	pixels: "像素",
 	"default": "預設值",
@@ -19,15 +18,13 @@ define(
 	right: "靠右",
 	buttonSet: "設定", // translated elsewhere?
 	buttonInsert: "插入",
-	buttonCancel: "取消",
+
 	selectTableLabel: "選取表格",
 	insertTableRowBeforeLabel: "在前面新增一個列",
 	insertTableRowAfterLabel: "在後面新增一個列",
 	insertTableColumnBeforeLabel: "在前面新增一個直欄",
 	insertTableColumnAfterLabel: "在後面新增一個直欄",
 	deleteTableRowLabel: "刪除列",
-	deleteTableColumnLabel: "刪除欄",
-	colorTableCellTitle: "背景色表資料格",
-	tableContextMenuTitle: "表格快速功能表"
+	deleteTableColumnLabel: "刪除欄"
 })
-);
+

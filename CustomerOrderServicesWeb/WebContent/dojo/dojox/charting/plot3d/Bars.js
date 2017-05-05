@@ -1,18 +1,20 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/Color", "dojo/has", "./Base"],
-	function(kernel, declare, Color, has, Base) {
+dojo.provide("dojox.charting.plot3d.Bars");
+
+dojo.require("dojox.charting.plot3d.Base");
+
+(function(){
 
 	// reduce function borrowed from dojox.fun
 	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-		// summary:
-		//		repeatedly applies a binary function to an array from left
-		//		to right; returns the final value.
-		a = typeof a == "string" ? a.split("") : a; o = o || kernel.global;
+		// summary: repeatedly applies a binary function to an array from left 
+		//	to right; returns the final value.
+		a = typeof a == "string" ? a.split("") : a; o = o || dojo.global;
 		var z = a[0];
 		for(var i = 1; i < a.length; z = f.call(o, z, a[i++]));
 		return z;	// Object
 	};
 
-	return declare("dojox.charting.plot3d.Bars", Base, {
+	dojo.declare("dojox.charting.plot3d.Bars", dojox.charting.plot3d.Base, {
 		constructor: function(width, height, kwArgs){
 			this.depth = "auto";
 			this.gap   = 0;
@@ -23,7 +25,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/Color", "dojo/has
 				if("gap"   in kwArgs){ this.gap   = kwArgs.gap; }
 				if("material" in kwArgs){
 					var m = kwArgs.material;
-					if(typeof m == "string" || m instanceof Color){
+					if(typeof m == "string" || m instanceof dojo.Color){
 						this.material.color = m;
 					}else{
 						this.material = m;
@@ -50,14 +52,11 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/Color", "dojo/has
 			for(var i = 0; i < this.data.length; ++i, org += step){
 				creator
 					.createCube({
-						bottom: {x: org + this.gap, y: 0, z: 0},
+						bottom: {x: org + this.gap, y: 0, z: 0}, 
 						top:    {x: org + step - this.gap, y: this.data[i] * scale, z: depth}
 					})
 					.setFill(this.material);
 			}
-			if(has("dojo-bidi")){
-				this._checkOrientation(chart);
-			}
 		}
 	});
-});
+})();

@@ -1,6 +1,5 @@
-define(
 ({
-	displayOptions: "[mostra opcions]",
+	displayOptions: "[opcions de visualització]",
 	title: "Títol",
 	authors: "Autors",
 	contributors: "Col·laboradors",
@@ -10,4 +9,4 @@ define(
 	summary: "Resum",
 	content: "Contingut"
 })
-);
+

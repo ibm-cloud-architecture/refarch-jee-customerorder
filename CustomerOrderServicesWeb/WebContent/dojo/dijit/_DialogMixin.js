@@ -1,21 +1,15 @@
-define([
-	"dojo/_base/declare", // declare
-	"./a11y"	// _getTabNavigable
-], function(declare, a11y){
+dojo.provide("dijit._DialogMixin");
 
-	// module:
-	//		dijit/_DialogMixin
+dojo.require("dijit._Widget");
 
-	return declare("dijit._DialogMixin", null, {
+dojo.declare("dijit._DialogMixin", null,
+	{
 		// summary:
 		//		This provides functions useful to Dialog and TooltipDialog
 
-		// actionBarTemplate: String
-		//		HTML snippet to show the action bar (gray bar with OK/cancel buttons).
-		//		Blank by default, but used by ConfirmDialog/ConfirmTooltipDialog subclasses.
-		actionBarTemplate: "",
+		attributeMap: dijit._Widget.prototype.attributeMap,
 
-		execute: function(/*Object*/ /*===== formContents =====*/){
+		execute: function(/*Object*/ formContents){
 			// summary:
 			//		Callback when the user hits the submit button.
 			//		Override this method to handle Dialog execution.
@@ -31,22 +25,22 @@ define([
 
 		onCancel: function(){
 			// summary:
-			//		Called when user has pressed the Dialog's cancel button, to notify container.
+			//	    Called when user has pressed the Dialog's cancel button, to notify container.
 			// description:
-			//		Developer shouldn't override or connect to this method;
+			//	    Developer shouldn't override or connect to this method;
 			//		it's a private communication device between the TooltipDialog
-			//		and the thing that opened it (ex: `dijit/form/DropDownButton`)
+			//		and the thing that opened it (ex: `dijit.form.DropDownButton`)
 			// type:
 			//		protected
 		},
 
 		onExecute: function(){
 			// summary:
-			//		Called when user has pressed the dialog's OK button, to notify container.
+			//	    Called when user has pressed the dialog's OK button, to notify container.
 			// description:
-			//		Developer shouldn't override or connect to this method;
+			//	    Developer shouldn't override or connect to this method;
 			//		it's a private communication device between the TooltipDialog
-			//		and the thing that opened it (ex: `dijit/form/DropDownButton`)
+			//		and the thing that opened it (ex: `dijit.form.DropDownButton`)
 			// type:
 			//		protected
 		},
@@ -60,16 +54,22 @@ define([
 			this.execute(this.get('value'));
 		},
 
-		_getFocusItems: function(){
+		_getFocusItems: function(/*Node*/ dialogNode){
 			// summary:
-			//		Finds focusable items in dialog,
-			//		and sets this._firstFocusItem and this._lastFocusItem
+			//		Find focusable Items each time a dialog is opened,
+			//		setting _firstFocusItem and _lastFocusItem
 			// tags:
 			//		protected
 
-			var elems = a11y._getTabNavigable(this.domNode);
-			this._firstFocusItem = elems.lowest || elems.first || this.closeButtonNode || this.domNode;
+			var elems = dijit._getTabNavigable(dojo.byId(dialogNode));
+			this._firstFocusItem = elems.lowest || elems.first || dialogNode;
 			this._lastFocusItem = elems.last || elems.highest || this._firstFocusItem;
+			if(dojo.isMoz && this._firstFocusItem.tagName.toLowerCase() == "input" &&
+					dojo.getNodeProp(this._firstFocusItem, "type").toLowerCase() == "file"){
+				// FF doesn't behave well when first element is input type=file, set first focusable to dialog container
+				dojo.attr(dialogNode, "tabIndex", "0");
+				this._firstFocusItem = dialogNode;
+			}
 		}
-	});
-});
+	}
+);

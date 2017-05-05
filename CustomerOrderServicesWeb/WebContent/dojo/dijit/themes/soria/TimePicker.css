@@ -5,7 +5,7 @@
 }
 
 .soria .dijitTimePickerTick {
-	color: gray;
+	color:white;
 }
 
 .soria .dijitTimePickerMarker {
@@ -24,10 +24,28 @@
 	color:white;
 }
 
-.soria .dijitTimePickerTick .dijitTimePickerItemInner {
-	font-size: 0.8em;
+.soria .dijitTimePickerItemHover,
+.soria .dijitTimePickerItemSelected {
+	position: relative;
+	z-index: 10;
 }
 
+.soria .dijitTimePickerTick .dijitTimePickerItemInner {
+	font-size:0.4em;
+}
+
+.soria .dijitTimePickerItemHover .dijitTimePickerItemInner,
 .soria .dijitTimePickerItemSelected .dijitTimePickerItemInner {
-	font-size: 1em;
+	font-size:1em;
+}
+
+.soria .dijitTimePickerMarkerHover {
+	border-top: 1px solid #94b9ef;
+}
+
+.soria .dijitTimePickerTickHover,
+.soria .dijitTimePickerTickSelected {
+	margin-top:-0.3em;
+	margin-bottom:-0.3em;
+	border-bottom: none;
 }

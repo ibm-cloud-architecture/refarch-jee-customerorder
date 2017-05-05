@@ -1,17 +1,8 @@
-define([
-	"../main",
-	"dojo/_base/lang",
-	"dojo/dom"
-], function(dojox, lang, dom){
+dojo.provide("dojox.grid.util");
 
-	var dgu = lang.getObject("grid.util", true, dojox);
-
-/*=====
-dgu = {
-	// summary:
-	//		grid utility library
-};
-=====*/
+// summary: grid utility library
+(function(){
+	var dgu = dojox.grid.util;
 
 	dgu.na = '...';
 	dgu.rowIndexTag = "gridRowIndex";
@@ -45,7 +36,7 @@ dgu = {
 	};
 
 	dgu.removeNode = function(inNode){
-		inNode = dom.byId(inNode);
+		inNode = dojo.byId(inNode);
 		inNode && inNode.parentNode && inNode.parentNode.removeChild(inNode);
 		return inNode;
 	};
@@ -74,7 +65,4 @@ dgu = {
 		inArray[inI] = inArray[inJ];
 		inArray[inJ] = cache;
 	};
-
-	return dgu;
-
-});
+})();

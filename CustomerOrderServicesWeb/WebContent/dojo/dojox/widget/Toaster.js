@@ -1,28 +1,12 @@
-define([
-	"dojo/_base/declare", // declare
-        "dojo/_base/lang", // lang.getObject...
-	"dojo/_base/connect", // connect.connect, connect.subscribe
-	"dojo/_base/fx", // fx.fadeOut
-        "dojo/dom-style", // domStyle.set
-	"dojo/dom-class", // domClass.add
-	"dojo/dom-geometry", // domGeometry.getMarginBox
-	"dijit/registry",    // registry.getUniqueId()
-	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dijit/BackgroundIframe",
-	"dojo/fx",
-	"dojo/has",
-	"dojo/_base/window",
-	"dojo/window"
-], function(declare, lang, connect, baseFx, domStyle, domClass, domGeometry, registry, WidgetBase, Templated, BackgroundIframe, coreFx, has, baseWindow, window){
+dojo.provide("dojox.widget.Toaster");
 
-	lang.getObject("dojox.widget", true);
+dojo.require("dojo.fx");
+dojo.require("dojo.window");
 
-	var capitalize = function(/* String */w){
-	    return w.substring(0,1).toUpperCase() + w.substring(1);
-	};
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
 
-	return declare("dojox.widget.Toaster", [WidgetBase, Templated], {
+dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		// summary:
 		//		Message that slides in from the corner of the screen, used for notifications
 		//		like "new email".
@@ -54,7 +38,7 @@ define([
 		//		Position from which message slides into screen, one of
 		//		["br-up", "br-left", "bl-up", "bl-right", "tr-down", "tr-left", "tl-down", "tl-right"]
 		positionDirection: "br-up",
-
+		
 		// positionDirectionTypes: Array
 		//		Possible values for positionDirection parameter
 		positionDirectionTypes: ["br-up", "br-left", "bl-up", "bl-right", "tr-down", "tr-left", "tl-down", "tl-right"],
@@ -64,32 +48,36 @@ define([
 		duration: 2000,
 
 		// slideDuration: Integer
-		//		Number of milliseconds for the slide animation, increasing will cause the Toaster
-		//		to slide in more slowly.
+		//		Number of milliseconds for the slide animation, increasing will cause the Toaster 
+		//    to slide in more slowly.
 		slideDuration: 500,
 
-		// separator: String
+		//separator: String
 		//		String used to separate messages if consecutive calls are made to setContent before previous messages go away
 		separator: "<hr></hr>",
 
 		postCreate: function(){
 			this.inherited(arguments);
 			this.hide();
-
+			
 			// place node as a child of body for positioning
-			baseWindow.body().appendChild(this.domNode);
-
+			dojo.body().appendChild(this.domNode);
+			
 			if(this.messageTopic){
-				connect.subscribe(this.messageTopic, this, "_handleMessage");
+				dojo.subscribe(this.messageTopic, this, "_handleMessage");
 			}
 		},
 
 		_handleMessage: function(/*String|Object*/message){
-			if(lang.isString(message)){
+			if(dojo.isString(message)){
 				this.setContent(message);
 			}else{
 				this.setContent(message.message, message.type, message.duration);
 			}
+		},
+
+		_capitalize: function(/* String */w){
+				return w.substring(0,1).toUpperCase() + w.substring(1);
 		},
 
 		setContent: function(/*String|Function*/message, /*String*/messageType, /*int?*/duration){
@@ -108,7 +96,7 @@ define([
 					this.slideAnim.stop();
 				}
 				if(this.slideAnim.status() == "playing" || (this.fadeAnim && this.fadeAnim.status() == "playing")){
-					setTimeout(lang.hitch(this, function(){
+					setTimeout(dojo.hitch(this, function(){
 						this.setContent(message, messageType, duration);
 					}), 50);
 					return;
@@ -117,23 +105,23 @@ define([
 
 			// determine type of content and apply appropriately
 			for(var type in this.messageTypes){
-				domClass.remove(this.containerNode, "dijitToaster" + capitalize(this.messageTypes[type]));
+				dojo.removeClass(this.containerNode, "dijitToaster" + this._capitalize(this.messageTypes[type]));
 			}
 
-			domStyle.set(this.containerNode, "opacity", 1);
+			dojo.style(this.containerNode, "opacity", 1);
 
 			this._setContent(message);
 
-			domClass.add(this.containerNode, "dijitToaster" + capitalize(messageType || this.defaultType));
+			dojo.addClass(this.containerNode, "dijitToaster" + this._capitalize(messageType || this.defaultType));
 
 			// now do funky animation of widget appearing from
 			// bottom right of page and up
 			this.show();
-			var nodeSize = domGeometry.getMarginBox(this.containerNode);
+			var nodeSize = dojo.marginBox(this.containerNode);
 			this._cancelHideTimer();
 			if(this.isVisible){
 				this._placeClip();
-				//update hide timer if no sticky message in stack
+				//update hide timer if no sticky message in stack 
 				if(!this._stickyMessage) {
 					this._setHideTimer(duration);
 				}
@@ -156,7 +144,7 @@ define([
 				}else{
 					throw new Error(this.id + ".positionDirection is invalid: " + pd);
 				}
-				this.slideAnim = coreFx.slideTo({
+				this.slideAnim = dojo.fx.slideTo({
 					node: this.containerNode,
 					top: 0, left: 0,
 					duration: this.slideDuration});
@@ -164,7 +152,7 @@ define([
 						//we build the fadeAnim here so we dont have to duplicate it later
 						// can't do a fadeHide because we're fading the
 						// inner node rather than the clipping node
-						this.fadeAnim = baseFx.fadeOut({
+						this.fadeAnim = dojo.fadeOut({
 							node: this.containerNode,
 							duration: 1000});
 						this.connect(this.fadeAnim, "onEnd", function(evt){
@@ -184,9 +172,9 @@ define([
 				this.slideAnim.play();
 			}
 		},
-
+		
 		_setContent: function(message){
-			if(lang.isFunction(message)){
+			if(dojo.isFunction(message)){
 				message(this);
 				return;
 			}
@@ -201,13 +189,13 @@ define([
 				this._hideTimer=null;
 			}
 		},
-
+		
 		_setHideTimer:function(duration){
 			this._cancelHideTimer();
 			//if duration == 0 we keep the message displayed until clicked
 			if(duration>0){
 				this._cancelHideTimer();
-				this._hideTimer=setTimeout(lang.hitch(this, function(evt){
+				this._hideTimer=setTimeout(dojo.hitch(this, function(evt){
 					// we must hide the iframe in order to fade
 					// TODO: figure out how to fade with a BackgroundIframe
 					if(this.bgIframe && this.bgIframe.iframe){
@@ -222,11 +210,11 @@ define([
 			else
 				this._stickyMessage=true;
 		},
-
+		
 		_placeClip: function(){
-			var view = window.getBox();
+			var view = dojo.window.getBox();
 
-			var nodeSize = domGeometry.getMarginBox(this.containerNode);
+			var nodeSize = dojo.marginBox(this.containerNode);
 
 			var style = this.clipNode.style;
 			// sets up the size of the clipping node
@@ -244,17 +232,13 @@ define([
 				style.left = (view.w - nodeSize.w - 1 - view.l)+"px";
 			}else if(pd.match(/^[tb]l-/)){
 				style.left = 0 + "px";
-			}else if(pd.match(/^[tb]c-/)){
-				style.left = Math.round((view.w - nodeSize.w - 1 - view.l)/2)+"px";
 			}
 
 			style.clip = "rect(0px, " + nodeSize.w + "px, " + nodeSize.h + "px, 0px)";
-			if(has("ie")){
+			if(dojo.isIE){
 				if(!this.bgIframe){
-					if (!this.clipNode.id) {
-						this.clipNode.id = registry.getUniqueId("dojox_widget_Toaster_clipNode");
-					}
-					this.bgIframe = new BackgroundIframe(this.clipNode);
+					this.clipNode.id = dijit.getUniqueId("dojox_widget_Toaster_clipNode");
+					this.bgIframe = new dijit.BackgroundIframe(this.clipNode);
 				}
 				var iframe = this.bgIframe.iframe;
 				if(iframe){ iframe.style.display="block"; }
@@ -262,35 +246,31 @@ define([
 		},
 
 		onSelect: function(/*Event*/e){
-			// summary:
-			//		callback for when user clicks the message
+			// summary: callback for when user clicks the message
 		},
 
 		show: function(){
-			// summary:'
-			//		show the Toaster
-			domStyle.set(this.domNode, 'display', 'block');
+			// summary: show the Toaster
+			dojo.style(this.domNode, 'display', 'block');
 
 			this._placeClip();
 
 			if(!this._scrollConnected){
-				this._scrollConnected = connect.connect(window, "onscroll", this, this._placeClip);
+				this._scrollConnected = dojo.connect(window, "onscroll", this, this._placeClip);
 			}
 		},
 
 		hide: function(){
-			// summary:
-			//		hide the Toaster
+			// summary: hide the Toaster
 
-			domStyle.set(this.domNode, 'display', 'none');
+			dojo.style(this.domNode, 'display', 'none');
 
 			if(this._scrollConnected){
-				connect.disconnect(this._scrollConnected);
+				dojo.disconnect(this._scrollConnected);
 				this._scrollConnected = false;
 			}
 
-			domStyle.set(this.containerNode, "opacity", 1);
+			dojo.style(this.containerNode, "opacity", 1);
 		}
-	});
-
-});
+	}
+);

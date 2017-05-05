@@ -1,44 +1,45 @@
-define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction", 
-	"dojo/fx", "dojo/fx/easing", "dojox/gfx/matrix", "dojox/gfx/fx"], 
-	function(hub, declare, PlotAction, df, dfe, m, gf){
+dojo.provide("dojox.charting.action2d.Shake");
 
-	/*=====
-	var __ShakeCtorArgs = {
-			// summary:
-			//		Additional arguments for shaking actions.
-			// duration: Number?
-			//		The amount of time in milliseconds for an animation to last.  Default is 400.
-			// easing: dojo/fx/easing/*?
-			//		An easing object (see dojo.fx.easing) for use in an animation.  The
-			//		default is dojo.fx.easing.backOut.
-			// shift: Number?
-			//		The amount in pixels to shift the pie slice.  Default is 3.
-	};
-	=====*/
+dojo.require("dojox.charting.action2d.Base");
+dojo.require("dojox.gfx.matrix");
+dojo.require("dojo.fx");
 
-	var DEFAULT_SHIFT = 3;
+/*=====
+dojo.declare("dojox.charting.action2d.__ShakeCtorArgs", dojox.charting.action2d.__BaseCtorArgs, {
+	//	summary:
+	//		Additional arguments for highlighting actions.
 
-	return declare("dojox.charting.action2d.Shake", PlotAction, {
-		// summary:
+	//	shift: Number?
+	//		The amount in pixels to shift the pie slice.  Default is 3.
+	shift: 3
+});
+=====*/
+(function(){
+	var DEFAULT_SHIFT = 3,
+		m = dojox.gfx.matrix,
+		gf = dojox.gfx.fx;
+
+	dojo.declare("dojox.charting.action2d.Shake", dojox.charting.action2d.Base, {
+		//	summary:
 		//		Create a shaking action for use on an element in a chart.
 
 		// the data description block for the widget parser
 		defaultParams: {
 			duration: 400,	// duration of the action in ms
-			easing:   dfe.backOut,	// easing for the action
+			easing:   dojo.fx.easing.backOut,	// easing for the action
 			shiftX:   DEFAULT_SHIFT,	// shift of the element along the X axis
 			shiftY:   DEFAULT_SHIFT		// shift of the element along the Y axis
 		},
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, plot, kwArgs){
-			// summary:
+			//	summary:
 			//		Create the shaking action and connect it to the plot.
-			// chart: dojox/charting/Chart
+			//	chart: dojox.charting.Chart2D
 			//		The chart this action belongs to.
-			// plot: String?
+			//	plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			// kwArgs: __ShakeCtorArgs?
+			//	kwArgs: dojox.charting.action2d.__ShakeCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.shiftX = typeof kwArgs.shiftX == "number" ? kwArgs.shiftX : DEFAULT_SHIFT;
@@ -48,13 +49,15 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 		},
 
 		process: function(o){
-			// summary:
+			//	summary:
 			//		Process the action on the given object.
-			// o: dojox/gfx/shape.Shape
+			//	o: dojox.gfx.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || !(o.type in this.overOutEvents)){ return; }
 
-			var runName = o.run.name, index = o.index, vector = [], anim;
+			var runName = o.run.name, index = o.index, vector = [], anim,
+				shiftX = o.type == "onmouseover" ? this.shiftX : -this.shiftX,
+				shiftY = o.type == "onmouseover" ? this.shiftY : -this.shiftY;
 
 			if(runName in this.anim){
 				anim = this.anim[runName][index];
@@ -94,9 +97,9 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 				return;
 			}
 
-			anim.action = df.combine(vector);
+			anim.action = dojo.fx.combine(vector);
 			if(o.type == "onmouseout"){
-				hub.connect(anim.action, "onEnd", this, function(){
+				dojo.connect(anim.action, "onEnd", this, function(){
 					if(this.anim[runName]){
 						delete this.anim[runName][index];
 					}
@@ -105,4 +108,4 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 			anim.action.play();
 		}
 	});
-});
+})();
