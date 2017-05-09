@@ -28,3 +28,4 @@ hs_err_pid*
 CustomerOrderServices/build/*
 CustomerOrderServicesTest/WebContent/WEB-INF/classes/*
 CustomerOrderServicesWeb/WebContent/WEB-INF/classes/*
+target
