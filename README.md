@@ -90,45 +90,44 @@ Next connect to the inventory database INDB and run the required scripts from th
 4. Go to the **Resources > JDBC > Data sources** section to create a new data source.
 
   1. Make sure that the scope is at **Cell** level and click **New**
-  2.  Create the ORDERDB data source
-  3.  ORDERDB Step 1
-    1.  Data source name: **OrderDS**
-    2.  JNDI name: **jdbc/orderds**
-  4.  ORDERDB Step 2
-    1. Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
-  5.  ORDERDB Step 3
-    1. Driver Type: **4**
-    2. Database name: **ORDERDB**
-    3. Server name: **Your default DB2 host**
-    4. Port number: **Your default DB2 port**
-  6.  ORDERDB Step 4
-    1. Authentication alias for XA recovery: **DB2User**
-    2. Componenet-managed authentication alias: **DB2User**
-    3. Mapping-configuration alias: **DefaultPrincipalMapping**
-    4. Container-managed authentication alias: **DB2User**
-  7.  Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option.  You will see a success message if the connection is established successfully.
-  8. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
-    1. Your database is started as we did in the beginning.  
-    2. Your host and port number are correct.
-    3. The classpath for the Driver is set properly.  
-    4. Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.
-  9.  Create the INVENTORYDB data source using the same process as before.
-  10.  INVENTORYDB Step 1
-    1.  Data source name: **INDS**
-    2.  JNDI name: **jdbc/inds**
-  11.  INVENTORYDB Step 2
-    1. Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
-  12.  INVENTORYDB Step 3
-    1. Driver Type: **4**
-    2. Database name: **ORDERDB**
-    3. Server name: **Your default DB2 host**
-    4. Port number: **Your default DB2 port**
-  13.  INVENTORYDB Step 4
+  2.  OrderDB Step 1
+    -  Data source name: **OrderDS**
+    -  JNDI name: **jdbc/orderds**
+  3.  OrderDB Step 2
+    - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+  4.  ORDERDB Step 3
+    - Driver Type: **4**
+    - Database name: **ORDERDB**
+    - Server name: **Your default DB2 host**
+    - Port number: **Your default DB2 port**
+  5.  OrderDB Step 4
     - Authentication alias for XA recovery: **DB2User**
-    - Componenet-managed authentication alias: **DB2User**
+    - Component-managed authentication alias: **DB2User**
     - Mapping-configuration alias: **DefaultPrincipalMapping**
     - Container-managed authentication alias: **DB2User**
-  14. Remember to save and test the connection again.
+  6.  Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option.  You will see a success message if the connection is established successfully.
+  7. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
+    - Your database is started as we did in the beginning.  
+    - Your host and port number are correct.
+    - The classpath for the Driver is set properly.  
+    - Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.
+  8.  Create the INVENTORYDB data source using the same process as before.  Click **New**.
+  9.  InventoryDB Step 1
+    -  Data source name: **INDS**
+    -  JNDI name: **jdbc/inds**
+  10.  InventoryDB Step 2
+    - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+  11.  InventoryDB Step 3
+    - Driver Type: **4**
+    - Database name: **ORDERDB**
+    - Server name: **Your default DB2 host**
+    - Port number: **Your default DB2 port**
+  12.  InventoryDB Step 4
+    - Authentication alias for XA recovery: **DB2User**
+    - Component-managed authentication alias: **DB2User**
+    - Mapping-configuration alias: **DefaultPrincipalMapping**
+    - Container-managed authentication alias: **DB2User**
+  13. Remember to save and test the connection again.
 
 #### Running the Application in WAS7
 
