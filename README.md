@@ -144,6 +144,6 @@ Next connect to the inventory database INDB and run the required scripts from th
   -  Click on **Summary** (Step 16) and click **Finish**.
   -  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
 
-5.  Go back to the Enterprise Applications list, select the application, and click **Start**.
-6.  Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
-7.  Access the application at http://localhost:9080/CustomerOrderServicesWeb
+3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
+4.  Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
+5.  Access the application at http://localhost:9080/CustomerOrderServicesWeb
