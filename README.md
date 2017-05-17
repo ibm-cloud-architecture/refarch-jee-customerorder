@@ -78,17 +78,12 @@ Next connect to the inventory database INDB and run the required scripts from th
 ##### Configuring JDBC Resources
 
 1. Go to the **Resources > JDBC > JDBC Providers** section and ensure that you are at the **Cell** scope.  Click the New Button to create a new JDBC provider.
-
-  1.  Database type : **DB2**
-  2.  Provider type : **DB2 Using IBM JCC Driver**
-  3.  Implementation type : **XA data source**
-
+  -  Database type : **DB2**
+  -  Provider type : **DB2 Using IBM JCC Driver**
+  -  Implementation type : **XA data source**
 2. You need to enter the database class path information. Enter the directory where the DB2 Java is set.
-
 3. Press **Next** and then **Finish**. Save the Configuration.
-
 4. Go to the **Resources > JDBC > Data sources** section to create a new data source.
-
   1. Make sure that the scope is at **Cell** level and click **New**
   2.  OrderDB Step 1
     -  Data source name: **OrderDS**
@@ -133,21 +128,21 @@ Next connect to the inventory database INDB and run the required scripts from th
 
 1.  Build the EAR using Maven in CustomerOrderServicesProject.
 
-  1.  Install Maven and run `mvn -v` to test your version
-  2.  `cd CustomerOrderServicesProject`
-  3.  `mvn clean package`
-  4.  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear`.
+  -  Install Maven and run `mvn -v` to test your version
+  -  `cd CustomerOrderServicesProject`
+  -  `mvn clean package`
+  -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear`.
 
 2. Install the EAR to http://localhost:9060/ibm/console
 
-  1.  Login to the Administrative Console.
-  2.  Select **Applications > Application Types > WebSphere enterprise applications**
-  3.  Choose **Install > Browse the EAR > Next > Choose Detailed**
-  4.  Click on **Step 4**.  Verify the **CustomerOrderServicesApp** line has a reference to the **IBM WebSphere Application Server traditional V7.0 JAX-RS Library**.
-  5.  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
-  6.  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
-  7.  Click on **Summary** (Step 16) and click **Finish**.
-  8.  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
+  -  Login to the Administrative Console.
+  -  Select **Applications > Application Types > WebSphere enterprise applications**
+  -  Choose **Install > Browse the EAR > Next > Choose Detailed**
+  -  Click on **Step 4**.  Verify the **CustomerOrderServicesApp** line has a reference to the **IBM WebSphere Application Server traditional V7.0 JAX-RS Library**.
+  -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
+  -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
+  -  Click on **Summary** (Step 16) and click **Finish**.
+  -  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
 
 5.  Go back to the Enterprise Applications list, select the application, and click **Start**.
 6.  Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
