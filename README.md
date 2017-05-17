@@ -124,10 +124,10 @@ Next connect to the inventory database INDB and run the required scripts from th
     3. Server name: **Your default DB2 host**
     4. Port number: **Your default DB2 port**
   13.  INVENTORYDB Step 4
-    1. Authentication alias for XA recovery: **DB2User**
-    2. Componenet-managed authentication alias: **DB2User**
-    3. Mapping-configuration alias: **DefaultPrincipalMapping**
-    4. Container-managed authentication alias: **DB2User**
+    - Authentication alias for XA recovery: **DB2User**
+    - Componenet-managed authentication alias: **DB2User**
+    - Mapping-configuration alias: **DefaultPrincipalMapping**
+    - Container-managed authentication alias: **DB2User**
   14. Remember to save and test the connection again.
 
 #### Running the Application in WAS7
