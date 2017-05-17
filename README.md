@@ -23,7 +23,7 @@ There are several components of the overall application architecture:
 
 The following are prerequisites for deploying the original ASIS version of this application:
 - [WebSphere Application Server Version 7](http://www-03.ibm.com/software/products/en/appserv-was)
-- [IBM WebSphere Applicaton Server Feature Pack for Web 2.0 and Mobile, Version 1.1.0](WebSphere Application Server Feature Pack for Web 2.0 and Mobile V1.1)
+- [IBM WebSphere Applicaton Server Feature Pack for Web 2.0 and Mobile, Version 1.1.0](http://www-01.ibm.com/support/docview.wss?uid=swg24033752)
 - [WebSphere Application Server V7 Feature Pack for OSGi and JPA](http://www-01.ibm.com/support/docview.wss?uid=swg24033884)
 
 #### Getting the project repository
