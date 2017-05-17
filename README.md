@@ -2,236 +2,154 @@
 
 ## Application Overview
 
-Details and simple diagram to be added
+The application is a simple store-front shopping application, built during the early days of the Web 2.0 movement.  As such, it is in major need of upgrades from both the technology and business point of view.  Users interact directly with a browser-based interface and manage their cart to submit orders.  This application is built using the traditional [3-Tier Architecture](http://www.tonymarston.net/php-mysql/3-tier-architecture.html) model, with an HTTP server, an application server, and a supporting database.
+
+![Phase 0 Application Architecture](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/apparch-pc-phase0-customerorderservices.png)
+
+There are several components of the overall application architecture:
+- Starting with the database, the application leverages two SQL-based databases running on [IBM DB2](https://www.ibm.com/analytics/us/en/technology/db2/).
+- The application exposes its data model through an [Enterprise JavaBean](https://en.wikipedia.org/wiki/Enterprise_JavaBeans) layer, named **CustomerOrderServices**.  This components leverages the [Java Persistence API](https://en.wikibooks.org/wiki/Java_Persistence/What_is_JPA%3F) to exposed the backend data model to calling services with minimal coding effort.
+  - As of the [WebSphere Application Server](http://www-03.ibm.com/software/products/en/appserv-was) Version 7 build, the application is using **EJB 3.0** and **JPA 2.0** versions of the respective capabilities.
+- The next tier of the application, named **CustomerOrderServicesWeb**, exposes the necessary business APIs via REST-based web services.  This component leverages the [JAX-RS](https://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services) libraries for creating Java-based REST services with minimal coding effort.
+  - As of the [WebSphere Application Server](http://www-03.ibm.com/software/products/en/appserv-was) Version 7 build, the application is using **JAX-RS 1.1** version of the respective capability.
+- The application's user interface is exposed through the **CustomerOrderServicesWeb** component as well, in the form of a [Dojo Toolkit](#tbd)-based JavaScript application.  Delivering the user interface and business APIs in the same component is one major inhibitor our migration strategy will help to alleviate in the long-term.
+- Finally, there is an additional integration testing component, named **CustomerOrderServicesTest** that is built to quickly validate an application's build and deployment to a given application server.  This test component contains both **JPA** and **JAX-RS**-based tests.  
 
 ## Getting Started
 
 ### Building and deploying the application on WebSphere Application Server 7
 
-#### Environment SetUp
+#### Prerequisites
 
-Grab all the archives from http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/
-
-1. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/C1FZ9ML_was70_linux_x86-64.tar.gz
-2. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/7.0.0.43-WS-UPDI-LinuxAMD64.tar.gz
-3. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/7.0.0-WS-WAS-LinuxX64-FP0000043.pak 
-4. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/7.0.0-WS-WASSDK-LinuxX64-FP0000043.pak 
-5. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/WAS_V70_FP_WEB2.0_V11_MP.tar.gz 
-6. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/CZF7DML.zip 
-7. http://rtpgsa.ibm.com/projects/c/case/artifacts/stonehenge/vagrant/WAS7/was.7.0.import.zip
-
-#### Getting your environment ready
-
-1. Use C1FZ9ML_was70_linux_x86-64.tar.gz and untar it. Execute the installation file (install) inside the WAS directory. This installs WAS7 into your system. The installer walks through the installation steps.
-
-   Go to **C1FZ9ML_was70_linux_x86-64**
-   
-   **cd WAS**
-   
-   **./install**
-
-   By the end you should be able to see IBM WebSphere Application Server V7.0 in your applications.
-
-2. Install the UpdateInstaller. Use 7.0.0.43-WS-UPDI-LinuxAMD64.tar.gz and untar it. 
-
-   Go to **7.0.0.43-WS-UPDI-LinuxAMD64**
-   
-   **cd UpdateInstaller**
-   
-   **./install**
-
-   This installer walks you through the installation process. During the installation process, it asks you for the maintenance packages. Then browse the path containing 7.0.0-WS-WAS-LinuxX64-FP0000043.pak and 7.0.0-WS-WASSDK-LinuxX64-FP0000043.pak and continue the process. 
-
-3. Install web2mobilefep_1.1. Use **WAS_V70_FP_WEB2.0_V11_MP.tar.gz** and untar it.
-
-   **./install**
-
-   Before running this, set JAVA_HOME and WAS_HOME variables.
-   
-   For example,
-
-       export JAVA_HOME=/home/vagrant/IBM/WebSphere/AppServer1/java
-       export WAS_HOME=/home/vagrant/IBM/WebSphere/AppServer1
-
-   The installer will run you through the installation process and the feature gets installed in your system.
-
-4. Install Feature Pack for Java Persistence API 2.0. For this, use CZF7DML.zip and unzip it.
-
-   Go to **CZF7DML**
-   
-   **cd local-repositories**
-
-   You will find a repository.config file in this directory. Now import this repo into the Installation Manager and install the JPA feature available.
-
-   IBM Installation Manager --> File --> Preferences --> Add Repository --> Browse repository.config from local-repositories
-
-   Once this is done, use the install option to find the package and then install the same. During the installation choose the JPA feature for installation when prompted.
-
-5. Import the WAS 7 into the installation manager. This can be done by using was.7.0.import.zip. Unzip was.7.0.import.zip.
-
-   Go to **was.7.0.import
-   cd Fixpack70043Sync**
-
-   You will find a **repository.config** file in this directory. Import the same into the Installation Manager.
-
-   IBM Installation Manager --> File --> Preferences --> Add Repository --> Browse repository.config from Fixpack70043Sync
-
-   Now choose the import option available in the installation manager and select the WAS7 installation directory to import it into the IBM Installation Manager.
-
-   Once the import is done, check if the installation manager recommends any updates. If there are any recommended updates, please update them.
+The following are prerequisites for deploying the original ASIS version of this application:
+- [WebSphere Application Server Version 7](http://www-03.ibm.com/software/products/en/appserv-was)
+- [IBM WebSphere Applicaton Server Feature Pack for Web 2.0 and Mobile, Version 1.1.0](WebSphere Application Server Feature Pack for Web 2.0 and Mobile V1.1)
+- [WebSphere Application Server V7 Feature Pack for OSGi and JPA](http://www-01.ibm.com/support/docview.wss?uid=swg24033884)
 
 #### Getting the project repository
 
-You can clone the repository from https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
+
+1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  
+2. `cd refarch-jee-customerorder`  
+3. `git checkout rad96-was70`  
+
 
 #### Running the Database and Creating the tables
 
-This project uses DB2 as its database. Before creating the databasesa and getting connected to them, verify if your database is running. You can verfiy it using
+This project uses DB2 as its database. Before creating the databases and getting connected to them, verify if your database is running. You can verify it using
 
-1. su database_instance_name
-2. db2start
+1. `su {database_instance_name}`
+2. `db2start`
 
 Create two databases - ORDERDB and INDB
 
-1. db2 create database ORDERDB
-2. db2 create database INDB
+1. `db2 create database ORDERDB`
+2. `db2 create database INDB`
 
-After this, run the database scripts for the ORDERDB.  This also cleans the database tables just in case if needed.  
+After this, run the database scripts for the ORDERDB.  This also cleans the database tables, just in case.  
 
-Connect to the Database using the db2 connect to ORDERDB command. 
+Run the createOrderDB.sql script present inside the 'Common' sub-directory of the project directory.
 
-Run the createOrderDB.sql script present inside the 'Common' sub directory of the project directory.
+1. `db2 connect to ORDERDB`
+2. `db2 -tf Common/createOrderDB.sql`
 
-	db2 -tf /<Project Directory>/Common/createOrderDB.sql
+Next connect to the inventory database INDB and run the required scripts from the 'Common' sub-directory.
 
-Next connect to the inventory database INDB using the command db2 connect to INDB.
+1. `db2 connect to INDB`
+2. `db2 -tf Common/InventoryDdl.sql`
+3. `db2 -tf Common/InventoryData.sql`
 
-Run InventoryDdl.sql and InventoryData.sql scripts present inside the 'Common' sub directory of the project directory.
+`TODO Document additional default user creation via scripts`
 
-	db2 -tf /<Project Directory>/Common/InventoryDdl.sql
-	db2 -tf /<Project Directory>/Common/InventoryData.sql
-  
 #### Configuring the WebSphere v7 Environment with Security and Resources
 
 ##### Setting Up Security
 
-1. Launch the Admin console by going to the Server View in a RAD workspace, right click on a Server and select Administration --> Run Administrative console.
+1. Log into the Admin Console via http://localhost:9043/admin.
 
-2. Log into the admin console. Admin Console can be accesed at http://localhost:9043/admin.
+3. In the Global security section, check **Enable application security** and click **Save**.
 
-3. In the Global security section, enable the **Application security**.
+4. In the **Users and Groups** section, select **Manage Users** to create the users and **Manage Groups** to create groups. During deployment, you will need to map your desired users or groups to the **SecureShopper** role.
+  - Alternatively, you can leverage an external user registry such as LDAP for your users.  This is path the encompassing reference architecture has taken for this application.
 
-4. In the Users and Groups section, use Manage users to create the users and Manage Groups to create Groups. During deployment, you will need to map your desired users or groups to the SecureShopper role. 
-
-5. Under Global Security, select J2C authentication data. Create the DBUser using your db2 instance and password.
+5. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
 
 ##### Configuring JDBC Resources
 
-1. Go to the JDBC --> Providers section and ensure that you are at the Cell Level Configuration.  Click the New Button to create a New DataSource.
+1. Go to the **Resources > JDBC > JDBC Providers** section and ensure that you are at the **Cell** scope.  Click the New Button to create a new JDBC provider.
 
-	Database type : **DB2**
-	Provider type : **DB2 Using IBM JCC Driver**
-	Implementation type : **XA data source**
-	
-2. You need to enter the database class path information. Enter the directory where the DB2 java is set.
+  1.  Database type : **DB2**
+  2.  Provider type : **DB2 Using IBM JCC Driver**
+  3.  Implementation type : **XA data source**
+
+2. You need to enter the database class path information. Enter the directory where the DB2 Java is set.
 
 3. Press **Next** and then **Finish**. Save the Configuration.
 
-4. Go to the Data sources section to create a new Data source.
+4. Go to the **Resources > JDBC > Data sources** section to create a new data source.
 
-	JDBC --> Data sources 
-	
-   Make sure that the scope is at **cell** level.
-   
-   Under Preferences, click **New**.
-   
-   a) Page 1: Enter basic data source information
-   	
-	Data source name: OrderDS
-	JNDI name: jdbc/orderds
-	
-   b) Page 2: Select JDBC provider
-   	
-	Select an existing JDBC provider --> DB2 Using IBM JCC Driver (XA)
-   
-   c) Page 3:
-   
-      1. Driver Type: **4**
-      2. Database name: **ORDERDB**
-      3. Server name: **localhost**
-      4. Port number: **Your deafult DB2 port**
+  1. Make sure that the scope is at **Cell** level and click **New**
+  2.  Create the ORDERDB data source
+  3.  ORDERDB Step 1
+    1.  Data source name: **OrderDS**
+    2.  JNDI name: **jdbc/orderds**
+  4.  ORDERDB Step 2
+    1. Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+  5.  ORDERDB Step 3
+    1. Driver Type: **4**
+    2. Database name: **ORDERDB**
+    3. Server name: **Your default DB2 host**
+    4. Port number: **Your default DB2 port**
+  6.  ORDERDB Step 4
+    1. Authentication alias for XA recovery: **DB2User**
+    2. Componenet-managed authentication alias: **DB2User**
+    3. Mapping-configuration alias: **DefaultPrincipalMapping**
+    4. Container-managed authentication alias: **DB2User**
+  7.  Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option.  You will see a success message if the connection is established successfully.
+  8. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
+    1. Your database is started as we did in the beginning.  
+    2. Your host and port number are correct.
+    3. The classpath for the Driver is set properly.  
+    4. Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.
+  9.  Create the INVENTORYDB data source using the same process as before.
+  10.  INVENTORYDB Step 1
+    1.  Data source name: **INDS**
+    2.  JNDI name: **jdbc/inds**
+  11.  INVENTORYDB Step 2
+    1. Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+  12.  INVENTORYDB Step 3
+    1. Driver Type: **4**
+    2. Database name: **ORDERDB**
+    3. Server name: **Your default DB2 host**
+    4. Port number: **Your default DB2 port**
+  13.  INVENTORYDB Step 4
+    1. Authentication alias for XA recovery: **DB2User**
+    2. Componenet-managed authentication alias: **DB2User**
+    3. Mapping-configuration alias: **DefaultPrincipalMapping**
+    4. Container-managed authentication alias: **DB2User**
+  14. Remember to save and test the connection again.
 
-   d) Page 4: Set all aliases to DBUser
-   
-      1. Authentication alias for XA recovery: **DB2User**
-      2. Componenet-managed authentication alias: **DB2User**
-      3. Mapping-configuration alias: **DefaultPrincipalMapping**
-      4. Container-managed authentication alias: **DB2User**
-	
-   e) Once this is done, under Preferences, there will be a new resource called OrderDS. Make sure that the resources got connected using **Test Connection** option.
-   
-      You will see a success message if the connection is established successfully.
-      
-   f) Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
-	
-      1. Your database is started as we did in the beginning.  
-      2. Your host and port number are correct.
-      3. The classpath for the Driver is set properly.  
-      4. Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.You can check your variable values by selecting WebSphere variables.  Ensure your variables are at the cell level. 
-   
-   g) Create another new Data source using the same process as the previous one.
-   
-      1. Data source name: INDS
-      2. JNDI name: jdbc/inds
-      3. Select an existing JDBC provider --> DB2 Using IBM JCC Driver (XA)
-      4. Driver Type: **4**, Database name: **ORDERDB**, Server name: **localhost**, Port number: **Your deafult DB2 port** 
-      5. Set all aliases to DBUser, Authentication alias for XA recovery: **DB2User**, Componenet-managed authentication alias: **DB2User**, Mapping-configuration alias: **DefaultPrincipalMapping**, Container-managed authentication alias: **DB2User**
-      6. Test the connection.
-      
 #### Running the Application in WAS7
 
-1. Open RAD and create a new server in RAD
+1.  Build the EAR using Maven in CustomerOrderServicesProject.
 
-   In RAD --> Go to Servers view --> Right click and select New --> Server. 
-   Then select WAS 7 and input the server details.
+  1.  Install Maven and run `mvn -v` to test your version
+  2.  `cd CustomerOrderServicesProject`
+  3.  `mvn clean package`
+  4.  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear`.
 
-   Once done start the server.
+2. Install the EAR to http://localhost:9060/ibm/console
 
-2. Import the project directory from **https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git**
+  1.  Login to the Administrative Console.
+  2.  Select **Applications > Application Types > WebSphere enterprise applications**
+  3.  Choose **Install > Browse the EAR > Next > Choose Detailed**
+  4.  Click on **Step 4**.  Verify the **CustomerOrderServicesApp** line has a reference to the **IBM WebSphere Application Server traditional V7.0 JAX-RS Library**.
+  5.  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
+  6.  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
+  7.  Click on **Summary** (Step 16) and click **Finish**.
+  8.  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
 
-   Go to the project repository and then checkout **rad96-was70 branch**.
-
-   `git checkout rad96-was70`  
-
-3. From this branch, build the EAR using Maven in CustomerOrderServicesProject.
-
-   Install Maven --> `mvn -v` to test your version
-   **cd Project_Repository
-   cd CustomerOrderServicesProject
-   mvn clean package**
-
-   By the end you will have an EAR built in subdirectory target of CustomerOrderServicesApp.
-
-   CustomerOrderServicesApp --> target --> CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear
-
-4. Install the EAR from the 'target' subdirectory to http://localhost:9060/ibm/console
-
-   Login to the console.
-   Select Applications --> Application Types --> WebSphere enterprise applications
-   Choose Install --> Browse the EAR --> Next --> Choose Detailed 
-
-   Once done you will have a couple of steps. Verify the following.
-
-   a) Check the **Map Shared Libraries** (Click on Step 4) and make sure the CustomerOrderServicesApp line has a reference to the IBM WebSphere Application Server traditional V7.0 JAX-RS Library.
-   
-   b) Check **Map environment variables to web modules** (Click on Step 12) and customize the environment variables for your system. This is most likely just going to be the DBUNIT_SCHEMA, DBUNIT_USERNAME, and DBUNIT_PASSWORD. Those values need to be specific to your local DB2 installation.
-   
-   c) Check **Map security roles to users or groups** (Click on Step 13) and make sure the SecureShopper role is mapped to the SecureShopper group.
-   
-   d) Click on **Summary** (Step 16) and click Finish.
-
-   Once you see Application CustomerOrderServicesApp installed successfully, click Save and now your application is ready.
-
-5. Go back to the enterprise applications list and select the application. Then click start and you are good to go.
-
-   Access the application at http://localhost:9080/CustomerOrderServicesWeb
+5.  Go back to the Enterprise Applications list, select the application, and click **Start**.
+6.  Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
+7.  Access the application at http://localhost:9080/CustomerOrderServicesWeb
