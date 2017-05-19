@@ -60,6 +60,8 @@ Next connect to the inventory database INDB and run the required scripts from th
 2. `db2 -tf Common/InventoryDdl.sql`
 3. `db2 -tf Common/InventoryData.sql`
 
+If you want to re-run the scripts, please make sure you drop the databases and create them again.
+
 `TODO Document additional default user creation via scripts`
 
 #### Configuring the WebSphere v7 Environment with Security and Resources
