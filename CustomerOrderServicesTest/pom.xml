@@ -50,12 +50,14 @@
       <groupId>org.apache.wink</groupId>
       <artifactId>wink-client</artifactId>
       <version>1.4</version>
-    </dependency>
-<dependency>
-    <groupId>org.apache.wink</groupId>
-    <artifactId>wink-client-apache-httpclient</artifactId>
-    <version>1.4</version>
-</dependency>
+      <scope>provided</scope>
+    </dependency> <!-- Includes dependency on org.slf4j:slf4j-api -->
+    <dependency>
+      <groupId>org.apache.wink</groupId>
+      <artifactId>wink-client-apache-httpclient</artifactId>
+      <version>1.4</version>
+      <scope>provided</scope>
+    </dependency> <!-- Includes dependency on org.slf4j:slf4j-api -->
   </dependencies>
   <build>
     <plugins>

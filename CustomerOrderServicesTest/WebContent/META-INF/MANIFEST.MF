@@ -8,8 +8,6 @@ Class-Path: CustomerOrderServices.jar
  jackson-jaxrs-1.5.0.jar 
  jackson-mapper-asl-1.5.0.jar 
  jcl-over-slf4j-1.5.8.jar 
- slf4j-api-1.5.8.jar 
- slf4j-jdk14-1.5.8.jar 
  ibm-wink-jaxrs-1.0.0.jar 
  jsr311-api-1.0.jar
 
