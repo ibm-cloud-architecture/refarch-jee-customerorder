@@ -2,7 +2,6 @@
     <wb-module deploy-name="CustomerOrderServicesTest">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
         <property name="context-root" value="CustomerOrderServicesTest"/>
         <property name="java-output-path" value="/CustomerOrderServicesTest/WebContent/WEB-INF/classes"/>
     </wb-module>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
-  <runtime name="WebSphere Application Server traditional V9.0"/>
+  <runtime name="WebSphere Application Server traditional V9.0 (2)"/>
   <fixed facet="java"/>
   <fixed facet="jst.ejb"/>
   <installed facet="jst.ejb" version="3.0"/>
