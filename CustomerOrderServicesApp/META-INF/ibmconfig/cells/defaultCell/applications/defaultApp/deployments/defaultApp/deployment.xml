@@ -5,7 +5,6 @@
     <modules xmi:type="appdeployment:EJBModuleDeployment" xmi:id="EJBModuleDeployment_1493369867897" startingWeight="5000" uri="CustomerOrderServices.jar"/>
     <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1493369867898" startingWeight="10000" uri="CustomerOrderServicesWeb.war"/>
     <classloader xmi:id="Classloader_1493369867897" mode="PARENT_FIRST">
-      <libraries xmi:id="LibraryRef_1493369867897" libraryName="IBM WebSphere Application Server traditional V7.0 JAX-RS Library"/>
     </classloader>
   </deployedObject>
 </appdeployment:Deployment>
