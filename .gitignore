@@ -29,3 +29,12 @@ CustomerOrderServices/build/*
 CustomerOrderServicesTest/WebContent/WEB-INF/classes/*
 CustomerOrderServicesWeb/WebContent/WEB-INF/classes/*
 target
+
+# Ignore IDE specific files
+#.classpath
+#.factorypath
+#.apt_generated
+#.project
+#.settings
+#.metadata
+#.tern-project
