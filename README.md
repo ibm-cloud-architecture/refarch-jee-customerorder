@@ -17,14 +17,13 @@ There are several components of the overall application architecture:
 
 ## Getting Started
 
-### Building and deploying the application on WebSphere Application Server 7
+### Building and deploying the application on WebSphere Application Server 9
 
 #### Prerequisites
 
 The following are prerequisites for deploying the original ASIS version of this application:
-- [WebSphere Application Server Version 7](http://www-03.ibm.com/software/products/en/appserv-was)
-- [IBM WebSphere Applicaton Server Feature Pack for Web 2.0 and Mobile, Version 1.1.0](http://www-01.ibm.com/support/docview.wss?uid=swg24033752)
-- [WebSphere Application Server V7 Feature Pack for OSGi and JPA](http://www-01.ibm.com/support/docview.wss?uid=swg24033884)
+- [WebSphere Application Server Version 9](http://www-03.ibm.com/software/products/en/appserv-was)
+- Configured to use JPA 2.0 on the server [Reference](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee/master/phases/phase1_images/source_report/Source11.png) _Current requirement, should be removed soon_
 
 #### Getting the project repository
 
@@ -32,7 +31,7 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  
 2. `cd refarch-jee-customerorder`  
-3. `git checkout rad96-was70`  
+3. `git checkout eclipse-was90`  
 
 
 #### Running the Database and Creating the tables
@@ -64,7 +63,7 @@ If you want to re-run the scripts, please make sure you drop the databases and c
 
 `TODO Document additional default user creation via scripts`
 
-#### Configuring the WebSphere v7 Environment with Security and Resources
+#### Configuring the WebSphere v9 Environment with Security and Resources
 
 ##### Setting Up Security
 
@@ -126,24 +125,23 @@ If you want to re-run the scripts, please make sure you drop the databases and c
     - Container-managed authentication alias: **DB2User**
   13. Remember to save and test the connection again.
 
-#### Running the Application in WAS7
+#### Running the Application in WAS9
 
 1.  Build the EAR using Maven in CustomerOrderServicesProject.
 
   -  Install Maven and run `mvn -v` to test your version
   -  `cd CustomerOrderServicesProject`
   -  `mvn clean package`
-  -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear`.
+  -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-X.Y.Z-SNAPSHOT.ear`.
 
 2. Install the EAR to http://localhost:9060/ibm/console
 
   -  Login to the Administrative Console.
   -  Select **Applications > Application Types > WebSphere enterprise applications**
   -  Choose **Install > Browse the EAR > Next > Choose Detailed**
-  -  Click on **Step 4**.  Verify the **CustomerOrderServicesApp** line has a reference to the **IBM WebSphere Application Server traditional V7.0 JAX-RS Library**.
   -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
   -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
-  -  Click on **Summary** (Step 16) and click **Finish**.
+  -  Click on **Summary** (Step 18) and click **Finish**.
   -  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
 
 3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
