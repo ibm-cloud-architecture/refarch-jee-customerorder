@@ -23,7 +23,7 @@
       <groupId>org.dbunit</groupId>
       <artifactId>dbunit</artifactId>
       <version>2.2</version>
-    <scope>compile</scope>
+    <scope>provided</scope>
       <exclusions>
         <exclusion>  
           <groupId>commons-logging</groupId>
@@ -34,64 +34,65 @@
           <artifactId>commons-lang</artifactId>
         </exclusion>
         <exclusion>
-        <groupId>poi</groupId>
-    <artifactId>poi</artifactId>
+          <groupId>poi</groupId>
+          <artifactId>poi</artifactId>
         </exclusion>
         <exclusion>
-        <groupId>commons-collections</groupId>
-    <artifactId>commons-collections</artifactId>
-    </exclusion>
-      <exclusion>
-      <groupId>junit-addons</groupId>
-    <artifactId>junit-addons</artifactId>
-      </exclusion>
+          <groupId>commons-collections</groupId>
+          <artifactId>commons-collections</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>junit-addons</groupId>
+          <artifactId>junit-addons</artifactId>
+        </exclusion>
       </exclusions>
-      </dependency>
-      <dependency>
+    </dependency>
+    <dependency>
       <groupId>com.ibm.websphere.appserver.api</groupId>
       <artifactId>com.ibm.websphere.appserver.api.jaxrs</artifactId>
       <version>1.0.10</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-     <groupId>com.ibm.websphere.appserver.api</groupId>
-     <artifactId>com.ibm.websphere.appserver.api.json</artifactId>
-     <version>1.0</version>
-     <scope>provided</scope>
-   </dependency>
+      <groupId>com.ibm.websphere.appserver.api</groupId>
+      <artifactId>com.ibm.websphere.appserver.api.json</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
-     <groupId>org.codehaus.jackson</groupId>
-     <artifactId>jackson-jaxrs</artifactId>
-     <version>1.7.1</version>
-     <scope>provided</scope>
-   </dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-jaxrs</artifactId>
+      <version>1.7.1</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
-     <groupId>org.apache.wink</groupId>
-     <artifactId>wink-client</artifactId>
-     <version>1.4</version>
-     <scope>compile</scope>
+      <groupId>org.apache.wink</groupId>
+      <artifactId>wink-client</artifactId>
+      <version>1.4</version>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
-     <groupId>com.sun.xml.bind</groupId>
-    <artifactId>jaxb-impl</artifactId>
-    </exclusion>
-    <exclusion>
-    <groupId>org.apache.geronimo.specs</groupId>
-    <artifactId>geronimo-annotation_1.1_spec</artifactId>
-    </exclusion>
-    <exclusion>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    </exclusion>
-    <exclusion>
-    <groupId>javax.xml.bind</groupId>
-    <artifactId>jaxb-api</artifactId>
-    </exclusion>
-    <exclusion>
-    <groupId>javax.activation</groupId>
-    <artifactId>activation</artifactId></exclusion>
-    </exclusions>
- </dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-annotation_1.1_spec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
