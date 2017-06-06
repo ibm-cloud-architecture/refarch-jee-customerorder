@@ -10,32 +10,30 @@ import javax.persistence.Column;
 @DiscriminatorValue("BUSINESS")
 public class BusinessCustomer extends AbstractCustomer implements Serializable {
 
-	private static final long serialVersionUID = 1713153640263735000L;
-
 	public BusinessCustomer() {
-		
+		// TODO Auto-generated constructor stub
 	}
 	
 	@Column(name="BUSINESS_VOLUME_DISCOUNT")
-	protected boolean volumeDiscount;
+	protected String volumeDiscount;
 	
 	
 	@Column(name="BUSINESS_PARTNER")
-	protected boolean businessPartner;
+	protected String businessPartner;
 	
 	
 	@Column(name="BUSINESS_DESCRIPTION")
 	protected String description;
 	public boolean isVolumeDiscount() {
-		return volumeDiscount;
+		return "Y".equals(volumeDiscount);
 	}
-	public void setVolumeDiscount(boolean volumeDiscount) {
+	public void setVolumeDiscount(String volumeDiscount) {
 		this.volumeDiscount = volumeDiscount;
 	}
 	public boolean isBusinessPartner() {
-		return businessPartner;
+		return "Y".equals(businessPartner);
 	}
-	public void setBusinessPartner(boolean businessPartner) {
+	public void setBusinessPartner(String businessPartner) {
 		this.businessPartner = businessPartner;
 	}
 	public String getDescription() {
