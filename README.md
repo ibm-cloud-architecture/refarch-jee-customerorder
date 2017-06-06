@@ -116,7 +116,7 @@ If you want to re-run the scripts, please make sure you drop the databases and c
     - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
   11.  InventoryDB Step 3
     - Driver Type: **4**
-    - Database name: **ORDERDB**
+    - Database name: **INDB**
     - Server name: **Your default DB2 host**
     - Port number: **Your default DB2 port**
   12.  InventoryDB Step 4
