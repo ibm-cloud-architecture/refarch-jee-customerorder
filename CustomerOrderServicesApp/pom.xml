@@ -68,7 +68,7 @@
             </webModule>
           </modules>
           <earSourceDirectory>${basedir}</earSourceDirectory>
-          <earSourceIncludes>**/ibmconfig/**,**/ibm-application-bnd.xml</earSourceIncludes>
+          <earSourceIncludes>**/ibmconfig/**,**/ibm-application-bnd.xml,lib/**</earSourceIncludes>
           <earSourceExcludes>**/target/**</earSourceExcludes>
           <security>
             <security-role>
