@@ -62,7 +62,11 @@ Next connect to the inventory database INDB and run the required scripts from th
 
 If you want to re-run the scripts, please make sure you drop the databases and create them again.
 
-`TODO Document additional default user creation via scripts`
+As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table. 
+
+In order to add your application users to you application database:
+1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
+2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
 
 #### Configuring the WebSphere v7 Environment with Security and Resources
 
