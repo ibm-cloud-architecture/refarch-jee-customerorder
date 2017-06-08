@@ -2,12 +2,12 @@
 
 ### Branches
 
-* [master](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/master) -- READMEs.
-* [was70-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev) -- Development branch for WebSphere Application Server V7.0 application code. Development Environment: RAD V9.6 + WAS V7.0. Builds either from RAD or using Maven.
-* [was70-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-prod) -- Production branch for WebSphere Application Server V7.0 application code. Does not contain any IDE specific file. Builds only using Maven.
-* [was70-unit-test](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-unit-test) -- Branch to keep the current effort on implementing some unit test for WebSphere Application Server V7.0 code.
+* [master](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/master) - READMEs.
+* [was70-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev) - Development branch for WebSphere Application Server V7.0 application code. Development Environment: RAD V9.6 + WAS V7.0. Builds either from RAD or using Maven.
+* [was70-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-prod) - Production branch for WebSphere Application Server V7.0 application code. Does not contain any IDE specific file. Builds only using Maven.
+* [was70-unit-test](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-unit-test) - Branch to keep the current effort on implementing some unit test for WebSphere Application Server V7.0 code.
 * [was90-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-dev) - Development branch for WebSphere Application Server V9.0 application code. Development Environment: eclipse MARS 2 + WAS V9.0. Builds either from eclipse or using Maven.
-* [was90-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-prod) -- Production branch for WebSphere Application Server V9.0 application code. Does not contain any IDE specific file. Builds only using Maven.
+* [was90-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-prod) - Production branch for WebSphere Application Server V9.0 application code. Does not contain any IDE specific file. Builds only using Maven.
 
 ## [WebSphere Application Server Version 7](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev)
 
@@ -30,4 +30,10 @@ There are several components of the overall application architecture:
 
 ### Application Overview
 
-Details to be added later
+Application architecture, both logical and physical, is the same as the WAS7 version
+
+Detailed code migration efforts are available in the [Phase 1: Modernizing the Existing Application](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/phases/phase1.md) documentation in the root repository.
+
+#### Application Component Version Updates
+
+TBD Based on updates to EJB, JPA, JAX-RS levels
