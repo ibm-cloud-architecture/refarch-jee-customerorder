@@ -31,7 +31,7 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  
 2. `cd refarch-jee-customerorder`  
-3. `git checkout eclipse-was90`  
+3. `git checkout was90-prod`  
 
 
 #### Running the Database and Creating the tables
@@ -64,7 +64,7 @@ If you want to re-run the scripts, please make sure you drop the databases and c
 As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table. 
 
 In order to add your application users to you application database:
-1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
+1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
 2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
 
 #### Configuring the WebSphere v9 Environment with Security and Resources
