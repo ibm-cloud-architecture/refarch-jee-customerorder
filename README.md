@@ -69,6 +69,24 @@ In order to add your application users to you application database:
 
 #### Configuring the WebSphere v9 Environment with Security and Resources
 
+Websphere environment configuration can be setup using the automation script or it can be done manually. You can choose from either ways based upon your convenience.
+
+#### Using the Configuration Script
+
+1. The configuration file (Jython script) can be accessed here [migConfig.py](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Common/migConfig.py). It resides in the 'Common' sub-directory.
+
+2. Start the WebSphere Application Server.
+
+3. Go to the **<WAS_PROFILE_DIR>/bin**, and use the following command.
+
+`<Profile Home>/bin/wsadmin.(bat/sh) –lang jython –f <Location of Jython script>`
+
+4. This script prompts the user for input. Please provide the necessary information.
+
+5. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
+
+#### Manual Setup
+
 ##### Setting Up Security
 
 1. Log into the Admin Console via http://localhost:9043/admin.
