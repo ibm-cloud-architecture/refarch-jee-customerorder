@@ -1,6 +1,15 @@
 # Customer Order Services - JavaEE Enterprise Application
 
-## [WebSphere Application Server Version 7](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/rad96-was70)
+### Branches
+
+* [master](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/master) -- READMEs.
+* [was70-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev) -- Development branch for WebSphere Application Server V7.0 application code. Development Environment: RAD V9.6 + WAS V7.0. Builds either from RAD or using Maven.
+* [was70-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-prod) -- Production branch for WebSphere Application Server V7.0 application code. Does not contain any IDE specific file. Builds only using Maven.
+* [was70-unit-test](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-unit-test) -- Branch to keep the current effort on implementing some unit test for WebSphere Application Server V7.0 code.
+* [was90-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-dev) - Development branch for WebSphere Application Server V9.0 application code. Development Environment: eclipse MARS 2 + WAS V9.0. Builds either from eclipse or using Maven.
+* [was90-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-prod) -- Production branch for WebSphere Application Server V9.0 application code. Does not contain any IDE specific file. Builds only using Maven.
+
+## [WebSphere Application Server Version 7](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev)
 
 ### Application Overview
 
@@ -17,7 +26,7 @@ There are several components of the overall application architecture:
 - The application's user interface is exposed through the **CustomerOrderServicesWeb** component as well, in the form of a [Dojo Toolkit](#tbd)-based JavaScript application.  Delivering the user interface and business APIs in the same component is one major inhibitor our migration strategy will help to alleviate in the long-term.
 - Finally, there is an additional integration testing component, named **CustomerOrderServicesTest** that is built to quickly validate an application's build and deployment to a given application server.  This test component contains both **JPA** and **JAX-RS**-based tests.  
 
-## [WebSphere Application Server Version 8.5.5](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/rad96-was855)
+## [WebSphere Application Server Version 9](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-dev)
 
 ### Application Overview
 
