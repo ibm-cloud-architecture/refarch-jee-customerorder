@@ -32,7 +32,7 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  
 2. `cd refarch-jee-customerorder`  
-3. `git checkout rad96-was70`  
+3. `git checkout was70-dev`  
 
 
 #### Running the Database and Creating the tables
