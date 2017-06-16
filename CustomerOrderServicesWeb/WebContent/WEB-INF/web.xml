@@ -33,6 +33,9 @@
 			
 		</web-resource-collection>
 		<auth-constraint><role-name>SecureShopper</role-name></auth-constraint>
+        <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
 	</security-constraint>
 	<login-config>
 		<auth-method>BASIC</auth-method>
