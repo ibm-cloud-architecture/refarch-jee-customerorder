@@ -33,6 +33,23 @@ You can clone the repository from its main GitHub repository page and checkout t
 2. `cd refarch-jee-customerorder`  
 3. `git checkout was90-prod`  
 
+#### Step 0: Perform assessment walkthrough
+
+#### Step 1: Configure LDAP
+
+#### Step 2: Provision Secure Gateway
+
+#### Step 3: Create DB2 service instance
+
+#### Step 4: Initialize databases
+
+#### Step 5: Create WebSphere Application Server service instance
+
+#### Step 6: Run WebSphere configuration scripts
+
+#### Step 7: Install Customer Order Services application
+
+### Backup
 
 #### Running the Database and Creating the tables
 
@@ -61,7 +78,7 @@ Next connect to the inventory database INDB and run the required scripts from th
 
 If you want to re-run the scripts, please make sure you drop the databases and create them again.
 
-As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table. 
+As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
 
 In order to add your application users to you application database:
 1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
