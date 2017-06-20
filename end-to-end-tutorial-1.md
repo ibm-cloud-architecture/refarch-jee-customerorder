@@ -35,19 +35,121 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 #### Step 0: Perform assessment walkthrough
 
-#### Step 1: Configure LDAP
+Details to be added.
 
-#### Step 2: Provision Secure Gateway
+#### Step 1: Provision Secure Gateway
 
-#### Step 3: Create DB2 service instance
+1.Go to your bluemix console and create a [**Secure Gateway** service](https://console.ng.bluemix.net/catalog/services/secure-gateway/)
 
-#### Step 4: Initialize databases
+2.You can choose the **Essentials** plan for free.
 
-#### Step 5: Create WebSphere Application Server service instance
+3.**Add Gateway** to the service. Inorder to add the gateway, you need one the clients (IBM Installer, Docker, IBM DataPower) installed.
 
-#### Step 6: Run WebSphere configuration scripts
+##### Docker 
 
-#### Step 7: Install Customer Order Services application
+Details to be added.
+
+#### Step 2: Create DB2 service instance
+
+Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
+
+#### Step 3: Initialize databases
+
+This project uses DB2 as its database. Before creating the databases and getting connected to them, verify if your database is running. You can verify it using
+
+1. `su {database_instance_name}`
+2. `db2start`
+
+Create two databases - ORDERDB and INDB
+
+1. `db2 create database ORDERDB`
+2. `db2 create database INDB`
+
+After this, run the database scripts for the ORDERDB.  This also cleans the database tables, just in case.  
+
+Run the createOrderDB.sql script present inside the 'Common' sub-directory of the project directory.
+
+1. `db2 connect to ORDERDB`
+2. `db2 -tf Common/createOrderDB.sql`
+
+Next connect to the inventory database INDB and run the required scripts from the 'Common' sub-directory.
+
+1. `db2 connect to INDB`
+2. `db2 -tf Common/InventoryDdl.sql`
+3. `db2 -tf Common/InventoryData.sql`
+
+If you want to re-run the scripts, please make sure you drop the databases and create them again.
+
+As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
+
+In order to add your application users to you application database:
+1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
+2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
+
+#### Step 4: Create WebSphere Application Server service instance
+
+1.Go to your bluemix console and create a [**WebSphere Application Server** instance](https://console.bluemix.net/catalog/services/websphere-application-server)
+
+2. Name your service and Choose your environment.
+
+3. Choose **WAS Base Plan** and create the instance.
+
+4. Provision your server based on your requirements.
+
+5. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the VPN as instructed.
+
+6. Get a public IP address. This can be done using the **Manage Public IP Access** option. 
+
+7. You can **ssh** into the WebSphere Application Server instance using the Admin Username and Password provided in your instance.
+
+#### Step 5: Run WebSphere configuration scripts
+
+1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.ibm.com/CASE/stonehenge/tree/master/resources/scripts/WAS_Configuration). (To be moved to public repo)
+
+2. Start the WebSphere Application Server.
+
+3. Go to the **<WAS_PROFILE_DIR>/bin**, and use the following command.
+
+`<Profile Home>/bin/wsadmin.(bat/sh) –lang jython –f <Location of Jython script>`
+
+4. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
+
+##### WAS_config.py generation
+
+This generates the WAS configuration jython script. For this to execute, [was.properties](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/WAS_Configuration/was.properties) file should be provided as input.
+
+1. Please provide the parameters required in the **was.properties** file.
+
+2. Run `sh was_config_jython.sh -f was.properties`
+
+3. This script walks you through some installation steps. Please provide the information required.
+
+4. Once this completes executing, WAS_config.py file gets generated.
+
+#### Step 6: Install Customer Order Services application
+
+1.  Build the EAR using Maven in CustomerOrderServicesProject.
+
+  -  Install Maven and run `mvn -v` to test your version
+  -  `cd CustomerOrderServicesProject`
+  -  `mvn clean package`
+  -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-X.Y.Z-SNAPSHOT.ear`.
+
+2. Install the EAR to the Admin console.
+
+  -  Login to the Administrative Console.
+  -  Select **Applications > Application Types > WebSphere enterprise applications**
+  -  Choose **Install > Browse the EAR > Next > Choose Detailed**
+  -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
+  -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
+  -  Click on **Summary** (Step 18) and click **Finish**.
+  -  Once you see Application **CustomerOrderServicesApp** installed successfully, click **Save** and now your application is ready.
+
+3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
+
+4.  Initial users can be created by running the **JPA** tests in the https://your-host/CustomerOrderServicesTest web application.
+
+5.  Access the application at https://your-host/CustomerOrderServicesWeb/#shopPage
 
 ### Backup
 
