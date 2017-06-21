@@ -47,36 +47,37 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 Details to be added.
 
-### Step 3: Create DB2 service instance
+### Step 3: Create DB2 service instance for ORDERDB
 
 Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
+1. Create an instance of `Db2 on Cloud SQL DB (formerly dashDB TX)`
+2. Name it `DB2 on Cloud - ORDERDB`
+3. Click on Open
+4. Click on `Run SQL`
+5. Click on `Open Script` and browse to `createOrderDB.sql` inside the 'Common' sub-directory of the project directory.
+6. Click `Run All`
+7. You should see some successes and some failures.  This is due to the scripts cleaning up previous data, but none exists yet.  You should see 28 successful SQL statements and 30 failures.
+8. Go to the dropdown in the upper right and click on `Connection Info`
+9. **DETERMINE PASSWORD**
+10. Select `Without SSL` and copy the following information for later:
+- Host name
+- Port number _(most likely 50000)_
+- Database name _(most likely BLUDB)_
+- User ID _(most likely bluadmin)_
+- Password
 
-### Step 4: Initialize databases
+### Step 4: Create DB2 service instance for INVENTORYDB
 
-This project uses DB2 as its database. Before creating the databases and getting connected to them, verify if your database is running. You can verify it using
+**TODO**
 
-1. `su {database_instance_name}`
-2. `db2start`
+Replicate Step 3 but with DDLs below... 
 
-Create two databases - ORDERDB and INDB
+1. `db2 -tf Common/InventoryDdl.sql`
+2. `db2 -tf Common/InventoryData.sql`
 
-1. `db2 create database ORDERDB`
-2. `db2 create database INDB`
+### Step 5. Configure users in ORDERDB
 
-After this, run the database scripts for the ORDERDB.  This also cleans the database tables, just in case.  
-
-Run the createOrderDB.sql script present inside the 'Common' sub-directory of the project directory.
-
-1. `db2 connect to ORDERDB`
-2. `db2 -tf Common/createOrderDB.sql`
-
-Next connect to the inventory database INDB and run the required scripts from the 'Common' sub-directory.
-
-1. `db2 connect to INDB`
-2. `db2 -tf Common/InventoryDdl.sql`
-3. `db2 -tf Common/InventoryData.sql`
-
-If you want to re-run the scripts, please make sure you drop the databases and create them again.
+**TBD**
 
 As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
 
@@ -84,49 +85,50 @@ In order to add your application users to you application database:
 1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
 2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
 
-### Step 5: Create WebSphere Application Server service instance
+### Step 6: Create WebSphere Application Server service instance
 
-1.Go to your bluemix console and create a [**WebSphere Application Server** instance](https://console.bluemix.net/catalog/services/websphere-application-server)
+1.Go to your [Bluemix console](https://console.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console.bluemix.net/catalog/services/websphere-application-server)
 
-2. Name your service and Choose your environment.
+2. Name your service, choose the **WAS Base Plan**, and create the instance.
 
-3. Choose **WAS Base Plan** and create the instance.
+3. Provision your server based on your requirements.
 
-4. Provision your server based on your requirements.
+4. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the VPN as instructed. **Needs URL**
 
-5. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the VPN as instructed.
+5. Get a public IP address. This can be done using the **Manage Public IP Access** option. **Needs doc & link**
 
-6. Get a public IP address. This can be done using the **Manage Public IP Access** option. 
+6. You can **ssh** into the WebSphere Application Server instance using the Admin Username and Password provided in your instance.
 
-7. You can **ssh** into the WebSphere Application Server instance using the Admin Username and Password provided in your instance.
+### Step 7: Run WebSphere configuration scripts
 
-### Step 6: Run WebSphere configuration scripts
+1.  Connect to the WebSphere Server via **ssh**.
 
-1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.ibm.com/CASE/stonehenge/tree/master/resources/scripts/WAS_Configuration). (To be moved to public repo)
-
-2. Start the WebSphere Application Server.
-
-3. Go to the **<WAS_PROFILE_DIR>/bin**, and use the following command.
-
-`<Profile Home>/bin/wsadmin.(bat/sh) –lang jython –f <Location of Jython script>`
-
-4. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
-
-##### WAS_config.py generation
-
-This generates the WAS configuration jython script. For this to execute, [was.properties](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/WAS_Configuration/was.properties) file should be provided as input.
-
-1. Please provide the parameters required in the **was.properties** file.
+2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
+  1. [was.properties](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/WAS_Configuration/was.properties)
+  2. [create_ldap_jython.sh](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/LDAP/create_ldap_jython.sh)
+  3. [WAS_config.py](https://github.ibm.com/CASE/stonehenge/tree/master/resources/scripts/WAS_Configuration)
+ 
+ **TODO** Provide curl/wget commands to public configuration scripts
+ 
+1. Edit **was.properties** and provide the correct parameters for your environment.
 
 2. Run `sh was_config_jython.sh -f was.properties`
 
 3. This script walks you through some installation steps. Please provide the information required.
 
-4. Once this completes executing, WAS_config.py file gets generated.
+3. Start the WebSphere Application Server. **TODO**
+
+4. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
+
+`<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_config.py`
+
+5. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
+
+6.  You may now disconnect from the remote WASaaS instance.
 
 ### Step 7: Install Customer Order Services application
 
-1.  Build the EAR using Maven in CustomerOrderServicesProject.
+1.  On your local machine, build the EAR using Maven in CustomerOrderServicesProject.
 
   -  Install Maven and run `mvn -v` to test your version
   -  `cd CustomerOrderServicesProject`
