@@ -4,7 +4,7 @@
 
 The application is a simple store-front shopping application, built during the early days of the Web 2.0 movement.  As such, it is in major need of upgrades from both the technology and business point of view.  Users interact directly with a browser-based interface and manage their cart to submit orders.  This application is built using the traditional [3-Tier Architecture](http://www.tonymarston.net/php-mysql/3-tier-architecture.html) model, with an HTTP server, an application server, and a supporting database.
 
-![Phase 0 Application Architecture](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/WASaaS.jpg)
+![Phase 0 Application Architecture](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/apparch-pc-phase0-customerorderservices.png)
 
 There are several components of the overall application architecture:
 - Starting with the database, the application leverages two SQL-based databases running on [IBM DB2](https://www.ibm.com/analytics/us/en/technology/db2/).
@@ -22,7 +22,7 @@ There are several components of the overall application architecture:
 The following are prerequisites for completing this tutorial:
 - Bluemix Services:
   - [WebSphere Application Server Version 9](https://console.bluemix.net/catalog/services/websphere-application-server) - Referred to as _WASaaS_ throughout the rest of the tutorial
-  - [DB2 on Cloud SQL DB](https://console.bluemix.net/catalog/services/db2-on-cloud-sql-db-formerly-dashdb-tx)
+  - [DB2 on Cloud SQL DB](https://console.bluemix.net/catalog/services/db2-on-cloud-sql-db-formerly-dashdb-tx) 
 - Command line tools:
   - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
   - [Maven](https://maven.apache.org/install.html)
@@ -32,7 +32,7 @@ The following are prerequisites for completing this tutorial:
     - [Linux (OpenVPN)](https://openvpn.net/index.php/access-server/download-openvpn-as-sw.html)
     - [Mac (Tunnelblick)](https://tunnelblick.net/)
   - SSH capability
-    - Windows users will need Putty or OpenSSH
+    - Windows users will need [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) or [OpenSSH](https://www.openssh.com/)
   - [WebSphere Application Server Migration Toolkit for Application Binaries](https://developer.ibm.com/wasdev/downloads/#asset/tools-Migration_Toolkit_for_Application_Binaries)
 
 ### Step 1: Getting the project repository
