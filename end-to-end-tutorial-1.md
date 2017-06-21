@@ -21,9 +21,21 @@ There are several components of the overall application architecture:
 
 #### Prerequisites
 
-The following are prerequisites for deploying the original ASIS version of this application:
-- [WebSphere Application Server Version 9](http://www-03.ibm.com/software/products/en/appserv-was)
-- Configured to use JPA 2.0 on the server [Reference](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee/master/phases/phase1_images/source_report/Source11.png) _Current requirement, should be removed soon_
+The following are prerequisites for completing this tutorial:
+- Bluemix Services:
+  - [WebSphere Application Server Version 9](https://console.bluemix.net/catalog/services/websphere-application-server) - Referred to as _WASaaS_ throughout the rest of the tutorial
+  - [DB2 on Cloud SQL DB](https://console.bluemix.net/catalog/services/db2-on-cloud-sql-db-formerly-dashdb-tx)
+- Command line tools:
+  - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+  - [Maven](https://maven.apache.org/install.html)
+  - VPN Client for connectivity to WASaaS private network
+    - [Windows 64-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-x86_64.exe)
+    - [Windows 32-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-i686.exe)
+    - [Linux (OpenVPN)](https://openvpn.net/index.php/access-server/download-openvpn-as-sw.html)
+    - [Mac (Tunnelblick)](https://tunnelblick.net/)
+  - SSH capability
+    - Windows users will need Putty or OpenSSH
+  - [WebSphere Application Server Migration Toolkit for Application Binaries](https://developer.ibm.com/wasdev/downloads/#asset/tools-Migration_Toolkit_for_Application_Binaries)
 
 #### Getting the project repository
 
