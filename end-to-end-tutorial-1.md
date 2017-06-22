@@ -84,7 +84,7 @@ TODO Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 1. `db2 -tf Common/InventoryDdl.sql`
 2. `db2 -tf Common/InventoryData.sql`
 
-### Step 6: Create WebSphere Application Server service instance
+### Step 5: Create WebSphere Application Server service instance
 
 1.Go to your [Bluemix console](https://console.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console.bluemix.net/catalog/services/websphere-application-server)
 
@@ -98,7 +98,7 @@ TODO Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 
 6. You can **ssh** into the WebSphere Application Server instance using the Admin Username and Password provided in your instance.
 
-### Step 7: Run WebSphere configuration scripts
+### Step 6: Run WebSphere configuration scripts
 
 1.  Connect to the WebSphere Server via **ssh**.
 
