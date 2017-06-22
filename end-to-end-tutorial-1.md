@@ -59,30 +59,46 @@ TODO Details to be added:  Merge from Don's work
 
 ### Step 3: Create DB2 service instance for ORDERDB
 
-TODO Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
-
-1. Create an instance of `Db2 on Cloud SQL DB (formerly dashDB TX)`
-2. Name it `DB2 on Cloud - ORDERDB`
-3. Click on Open
-4. Click on `Run SQL`
-5. Click on `Open Script` and browse to `createOrderDB.sql` inside the 'Common' sub-directory of the project directory.
-6. Click `Run All`
-7. You should see some successes and some failures.  This is due to the scripts cleaning up previous data, but none exists yet.  You should see 28 successful SQL statements and 30 failures.
-8. Go to the dropdown in the upper right and click on `Connection Info`
-9. **TODO DB SERVICE INSTANCE DETERMINE PASSWORD**
-10. Select `Without SSL` and copy the following information for later:
-- Host name
+1. Create an instance of `Db2 on Cloud SQL DB (formerly dashDB TX)` and name it `DB2 on Cloud - ORDERDB`
+2. When you are redirected back to your Services dashboard, click on the new database service instance.
+2. Click on `Service Credentials` and then click on `New credential`.
+3. Click `Add` and then click on `View credentials`.
+4. Make note of the `password` field for your instance.
+5. Click on `Manage` and then click on `Open`.
+6. Click on `Run SQL`
+7. Click on `Open Script` and browse to `createOrderDB.sql` inside the 'Common' sub-directory of the project directory.
+8. Click `Run All`
+9. You should see some successes and some failures.  This is due to the scripts cleaning up previous data, but none exists yet.  You should see 28 successful SQL statements and 30 failures.
+10. Go to the dropdown in the upper right and click on `Connection Info`
+11. Select `Without SSL` and copy the following information for later:
+- Host name _(most likely in the form of dashdb-txn-flex-yp-dalXX-YY.services.dal.bluemix.net)_
 - Port number _(most likely 50000)_
 - Database name _(most likely BLUDB)_
 - User ID _(most likely bluadmin)_
-- Password
+- Password _(previous password from the `View credentials` tab)_
 
 ### Step 4: Create DB2 service instance for INVENTORYDB
 
-**TODO Replicate Step 3 but with DDLs below**
-
-1. `db2 -tf Common/InventoryDdl.sql`
-2. `db2 -tf Common/InventoryData.sql`
+1. Create an instance of `Db2 on Cloud SQL DB (formerly dashDB TX)` and name it `DB2 on Cloud - INVENTORYDB`
+2. When you are redirected back to your Services dashboard, click on the new database service instance.
+3. Click on `Service Credentials` and then click on `New credential`.
+4. Click `Add` and then click on `View credentials`.
+5. Make note of the `password` field for your instance.
+6. Click on `Manage` and then click on `Open`.
+7. Click on `Run SQL`
+8. Click on `Open Script` and browse to `InventoryDdl.sql` inside the 'Common' sub-directory of the project directory.
+9. Click `Run All`
+10. You should see some successes and some failures.  This is due to the scripts cleaning up previous data, but none exists yet.  You should see 5 successful SQL statements and 4 failures.
+11. Click on `Open Script` and browse to `InventoryData.sql` inside the 'Common' sub-directory of the project directory.  Confirm the prompt that you would like to open this new file and replace the previous content of the SQL Editor.
+12. Click `Run All`
+13.  You should now see 12 successes.
+14. Go to the dropdown in the upper right and click on `Connection Info`
+15. Select `Without SSL` and copy the following information for later:
+- Host name _(most likely in the form of dashdb-txn-flex-yp-dalXX-YY.services.dal.bluemix.net)_
+- Port number _(most likely 50000)_
+- Database name _(most likely BLUDB)_
+- User ID _(most likely bluadmin)_
+- Password _(previous password from the `View credentials` tab)_
 
 ### Step 5: Create WebSphere Application Server service instance
 
