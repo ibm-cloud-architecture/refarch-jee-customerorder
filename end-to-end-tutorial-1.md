@@ -121,22 +121,34 @@ TODO Details to be added:  Merge from Don's work
 2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
     1. [ldap.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
     2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
+    3. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was.properties)
+    4. [was_config_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was_config_jython.sh)
  
  **TODO Provide curl/wget commands to public configuration scripts**
  
-3. Run `sh was_config_jython.sh -f was.properties`
+3. Run `sh was_config_jython.sh -f was.properties`.  
 
-4. This script walks you through some installation steps. Please provide the information required.
+This script walks you through some installation steps. You will provide the necessary information for creating the required JDBC Resources and authentication information.  You will need to reference the previous information from the DB2 service instances.
 
-5. Start the WebSphere Application Server. **TODO**
+4. Run `sh create_ldap_jython.sh -f ldap.properties`
 
-6. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
+This script will connect the WebSphere Application Server instance through a remote LDAP server through [IBM Secure Gateway](#tbd).
+
+4. Start the WebSphere Application Server. **TODO  This is most likely not needed due to service starting the server automatically**
+
+5. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
 
 `<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_config.py`
 
-7. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
+6.  In the same directory, run the following command:
+
+`<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_LDAP_config.py`
+
+7. Once the scripts are executed successfully, the database & LDAP security configuration setup is complete. You can verify the configuration by opening your Admin Console (with credentials from the service instance page) and testing the connections of your JDBC Datasources.
 
 8.  You may now disconnect from the remote WASaaS instance.
+
+9.  Restart the WebSphere Application Server instance from the Bluemix Service Instance details page.
 
 ### Step 7: Install Customer Order Services application
 
