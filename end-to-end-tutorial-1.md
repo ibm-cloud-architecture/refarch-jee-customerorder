@@ -194,13 +194,15 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
  
 ![LDAP_TestConn](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_TestConn.png)
 
-8. Click on the **Test connection** button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
+8. Click **OK** to confirm the settings.
 
-9. Go to the Additional Properties at the bottom of the page and click on **Advanced Lightweight Directory Access Protocol (LDAP) user registry settings**
+9. Click on the **Test connection** button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
+
+10. Go to the Additional Properties at the bottom of the page and click on **Advanced Lightweight Directory Access Protocol (LDAP) user registry settings**
 
 ![LDAP Advanced](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_Adv.png)
 
-10. Set the User filter and group filter.
+11. Set the User filter and group filter.
 
     **User filter: (&(uid=%v)(objectclass=inetorgperson))**
     
@@ -208,7 +210,7 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
     
 ![LDAP Advanced Settings](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_Adv_Settings.png)
 
-11. Apply the changes and save the settings.
+12. Apply the changes and save the settings.
 
 ##### Configuring JDBC Resources
 
@@ -231,7 +233,7 @@ On the same page, create another new user named **DBUsuer-INVENTORYDB** using yo
 
 ![Readme 6](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme6.png)
 
-3. You need to enter the database class path information. Enter the directory where the DB2 Java is set.
+3. You need to enter the database classpath information for the DB2 driver JARs.  This value should be `/opt/IBM/WebSphere/AppServer/deploytool/itp/plugins/com.ibm.datatools.db2_2.2.200.v20150728_2354/driver` for your new WebSphere Application Server instance.
 
 ![Readme 7](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme7.png)
 
@@ -251,8 +253,8 @@ On the same page, create another new user named **DBUsuer-INVENTORYDB** using yo
    4. ORDERDB - Step 3
       - Driver Type: **4**
       - Database name: **BLUDB**
-      - Server name: **Your default DB2 host**
-      - Port number: **Your default DB2 port**
+      - Server name: **The DB2 host from your "DB2 on Cloud - ORDERDB" service instance**
+      - Port number: **The DB2 port from your "DB2 on Cloud - ORDERDB" service instance***
         ![Readme 11](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme11.png)
    5. OrderDB - Step 4
       - Authentication alias for XA recovery: **DB2User-ORDERDB**
@@ -279,8 +281,8 @@ On the same page, create another new user named **DBUsuer-INVENTORYDB** using yo
    3. InventoryDB - Step 3
       - Driver Type: **4**
       - Database name: **BLUDB**
-      - Server name: **Your default DB2 host**
-      - Port number: **Your default DB2 port**
+      - Server name: **The DB2 host from your "DB2 on Cloud - INVENTORYDB" service instance**
+      - Port number: **The DB2 port from your "DB2 on Cloud - INVENTORYDB" service instance***
    4. InventoryDB - Step 4
       - Authentication alias for XA recovery: **DB2User-INVENTORYDB**
       - Component-managed authentication alias: **DB2User-INVENTORYDB**
