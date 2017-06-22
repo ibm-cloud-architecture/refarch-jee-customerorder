@@ -158,8 +158,8 @@ Once the VPN is configured, you can access the Admin console. Please add the exc
 
 1. You will need to add a new firewall rule to the WebSphere instance to communicate with the remote LDAP server.  While **ssh**'ed into the WebSphere instance, run the following commands to allow traffic between WAS and LDAP via our Secure Gateway connection.
 
-`sudo iptables -A INPUT -p tcp -s 169.54.229.5 -j ACCEPT`  
-`sudo iptables -A OUTPUT -p tcp -d  169.54.229.5 -j ACCEPT`  
+`sudo iptables -I INPUT -p tcp -s 169.54.229.5 -j ACCEPT`  
+`sudo iptables -I OUTPUT -p tcp -d  169.54.229.5 -j ACCEPT`  
 `sudo  /sbin/service iptables save`  
 
 2. Log into the Admin Console via the adddress accessible from your service instance page.
