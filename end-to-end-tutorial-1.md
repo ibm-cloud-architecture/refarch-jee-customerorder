@@ -108,11 +108,56 @@ TODO Details to be added:  Merge from Don's work
 
 3. Once the service instance is created, provision a **WebSphere Version 9.0.0.0** server of size **Medium**.  This should be a server deployment taking up 2 of your 2 trial credits.  This step can take up to 30 minutes to complete.
 
-4. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the VPN as instructed. **Needs URL**
+4. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the [VPN](https://console.bluemix.net/docs/services/ApplicationServeronCloud/systemAccess.html#setup_openvpn) as instructed. 
 
-5. Get a public IP address. This can be done using the **Manage Public IP Access** option. **Needs doc & link**
+   - [Windows 64-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-x86_64.exe)
+   - [Windows 32-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-i686.exe)
+   - [Linux (OpenVPN)](https://openvpn.net/index.php/access-server/download-openvpn-as-sw.html)
+   - [Mac (Tunnelblick)](https://tunnelblick.net/)  
+   
+   Download, extract, and install the VPN configuration files by clicking the **Download** button.
+   
+   **VPN - Windows Configuration**
+   
+   1. From the [openVPN Windows download](http://swupdate.openvpn.org/community/releases/) link, download
+      [openvpn-install-2.3.4-I001-x86_64.exe](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.4-I001-x86_64.exe) for 64-bit, or
+      [openvpn-install-2.3.4-I001-i686.exe](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.4-I001-i686.exe) for 32-bit.
+      
+   2. Ensure you [Run as a Windows Administrator](https://technet.microsoft.com/en-us/magazine/ff431742.aspx) and openVPN is installed.
+   
+   3. Download the VPN configuration files from the OpenVPN download link of the WebSphere Application Server in Bluemix instance in the service dashboard. Extract all four files in the compressed file to the {OpenVPN home}\config directory. 
+   
+   `C:\Program Files\OpenVPN\Config`
+   
+   4. Start the openVPN client program "OpenVPN GUI". Ensure that you select [Run as a Windows Administrator](https://technet.microsoft.com/en-us/magazine/ff431742.aspx) to start the program. If you do not, you might not be able to connect.
 
-6. You can **ssh** into the WebSphere Application Server instance using the Admin Username and Password provided in your instance.
+   **VPN - Linux Configuration**
+ 
+   1. To install openVPN, follow the [instructions](https://openvpn.net/index.php/access-server/docs/admin-guides/182-how-to-connect-to-access-server-with-linux-clients.html).
+   
+      If you need to manually download and install the RPM Package Manager, go to [openVPN unix/linux download](https://openvpn.net/index.php/access-server/download-openvpn-as-sw.html). You might need assistance from your Linux administrator.
+
+   2. Download the VPN configuration files from the OpenVPN download link of the WebSphere Application Server in Bluemix instance in the service dashboard. Extract the files into the directory from which you plan to start the openVPN client. You need all four files in the same directory.
+   
+   3. Start the openVPN client program. Open a terminal window and go to the directory that contains the config files. Run the following command as root:
+   
+   `openvpn --config vt-wasaas-wasaas.ovpn`
+   
+   **VPN - MAC configuration**
+   
+   1. One method is to install [Tunnelblick](https://tunnelblick.net/), an open source software product.
+   
+   2. Extract the VPN configuration files from the WebSphere service. Tunnelblick prompts for your admin password for Mac and adds the config to the set of VPNs you can use to connect.
+   
+   3. Connect to the VPN network and then you can access your virtual machine. After your first access, Tunnelblick caches the configuration and you can connect from [Tunnelblick](https://tunnelblick.net/). You can put an icon on the top menu bar for easy access.
+   
+Once the VPN is configured, you can access the Admin console. Please add the exception for insecure connection when it prompts to access the admin console.
+   
+5. Get a public IP address. This can be done using the [**Manage Public IP Access**](https://console.bluemix.net/docs/services/ApplicationServeronCloud/networkEnvironment.html#networkEnvironment) option. 
+
+6. You can **ssh** into the WebSphere Application Server instance using the Admin Username **root** and Password provided in your bluemix instance.
+
+   In **Application Hosts/Nodes**, by expanding the Traditional **WebSphere Base option**, you can find the details of your OS distribution, Admin username, Admin password and Key Store password.
 
 ### Step 6: Run WebSphere configuration scripts
 
