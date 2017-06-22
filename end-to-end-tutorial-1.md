@@ -103,7 +103,7 @@ TODO Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 1.  Connect to the WebSphere Server via **ssh**.
 
 2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
-    1. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
+    1. [ldap.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
     2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
  
  **TODO Provide curl/wget commands to public configuration scripts**
