@@ -17,10 +17,6 @@ There are several components of the overall application architecture:
 
 ## Building and deploying the application on WebSphere Application Server 9
 
-### Tutorial Overview
-
-**TBD Team recap that syncs with deck**
-
 ### Step 0: Prerequisites
 
 The following are prerequisites for completing this tutorial:
@@ -29,7 +25,6 @@ The following are prerequisites for completing this tutorial:
   - [DB2 on Cloud SQL DB](https://console.bluemix.net/catalog/services/db2-on-cloud-sql-db-formerly-dashdb-tx) 
 - Command line tools:
   - [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-  - [Maven](https://maven.apache.org/install.html)
   - VPN Client for connectivity to WASaaS private network
     - [Windows 64-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-x86_64.exe)
     - [Windows 32-Bit (OpenVPN)](https://swupdate.openvpn.org/community/releases/openvpn-install-2.3.11-I001-i686.exe)
@@ -163,17 +158,15 @@ Once the VPN is configured, you can access the Admin console. Please add the exc
 
 1. You will need to add a new firewall rule to the WebSphere instance to communicate with the remote LDAP server.  While **ssh**'ed into the WebSphere instance, run the following commands to allow traffic between WAS and LDAP via our Secure Gateway connection.
 
-`sudo iptables -A INPUT -p tcp -s 169.54.229.5 -j ACCEPT`
-`sudo iptables -A OUTPUT -p tcp -d  169.54.229.5 -j ACCEPT`
-`sudo  /sbin/service iptables save`
+`sudo iptables -A INPUT -p tcp -s 169.54.229.5 -j ACCEPT`  
+`sudo iptables -A OUTPUT -p tcp -d  169.54.229.5 -j ACCEPT`  
+`sudo  /sbin/service iptables save`  
 
 2. Log into the Admin Console via the adddress accessible from your service instance page.
 
 3. In the Global security section, check **Enable application security** and click **Save**.
 
 ![Readme 1](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme1.png)
-
-4. You can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
 
 ##### LDAP Configuration 
 
@@ -189,26 +182,19 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
 
 ![LDAP_CONFIGURE](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_configure.png)
 
-4. Set the Primary administrative user name. (This user must exist in the LDAP registry).
+4. Set the Primary administrative user name to **uid=wasadmin,ou=caseinc,o=root**.
 
-5. Select IBM Tivoli Directory Server from the Type of LDAP server dropdown menu.
+5. Select **IBM Tivoli Directory Server** from the Type of LDAP server dropdown menu.
 
-6. Set the appropriate Host and Port to reach the LDAP Server.
+6. Set the Host and Port to **cap-sg-prd-4.integration.ibmcloud.com** and **17830** respectively.
 
-7. Set the LDAP admin credentials using the Bind distinguished name and Bind password text fields.
-
- * Primary administrative user name : uid=wasadmin,ou=caseinc,o=root
- * Type of LDAP server              : IBM Tivoli Directory Server
- * LDAP Host                        : cap-sg-prd-4.integration.ibmcloud.com
- * Port                             : 17830
- * Bind distinguished name (DN)     : cn=root
- * Bind password                    : purpleTDS!
+7. Set the LDAP admin credentials using the Bind distinguished name and password below:
+   * Bind distinguished name (DN)     : **cn=root**
+   * Bind password                    : **purpleTDS!**
  
 ![LDAP_TestConn](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_TestConn.png)
 
 8. Click on the Test connection button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
-
-**TODO END LDAP**
 
 ##### Configuring JDBC Resources
 
@@ -250,7 +236,7 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
         ![Readme 10](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme10.png)
    4. ORDERDB - Step 3
       - Driver Type: **4**
-      - Database name: **ORDERDB**
+      - Database name: **BLUDB**
       - Server name: **Your default DB2 host**
       - Port number: **Your default DB2 port**
         ![Readme 11](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme11.png)
@@ -278,7 +264,7 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
       - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
    3. InventoryDB - Step 3
       - Driver Type: **4**
-      - Database name: **INDB**
+      - Database name: **BLUDB**
       - Server name: **Your default DB2 host**
       - Port number: **Your default DB2 port**
    4. InventoryDB - Step 4
