@@ -106,7 +106,7 @@ TODO Details to be added:  Merge from Don's work
 
 2. Name your service, choose the **WAS Base Plan**, and create the instance.
 
-3. Provision your server based on your requirements.
+3. Once the service instance is created, provision a **WebSphere Version 9.0.0.0** server of size **Medium**.  This should be a server deployment taking up 2 of your 2 trial credits.  This step can take up to 30 minutes to complete.
 
 4. Once done, you can access the Admin console using the **Open the Admin Console** option. In order to access the Admin console, install the VPN as instructed. **Needs URL**
 
