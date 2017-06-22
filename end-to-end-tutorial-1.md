@@ -158,8 +158,8 @@ Once the VPN is configured, you can access the Admin console. Please add the exc
 
 1. You will need to add a new firewall rule to the WebSphere instance to communicate with both the DB2 service and the remote LDAP server.  While **ssh**'ed into the WebSphere instance, run the following commands to allow traffic between WAS, DB2, and LDAP via our Secure Gateway connection.
 
-`cd /opt/IBM/WebSphere/AppServer/virtual/bin`
-`sudo ./openFirewallPorts.sh -ports 50000:tcp,17830:tcp -persist true`
+`cd /opt/IBM/WebSphere/AppServer/virtual/bin`  
+`sudo ./openFirewallPorts.sh -ports 50000:tcp,17830:tcp -persist true`  
 
 2. Log into the Admin Console via the adddress accessible from your service instance page.
 
