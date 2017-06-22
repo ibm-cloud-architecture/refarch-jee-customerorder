@@ -202,9 +202,9 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
 
 10. Set the User filter and group filter.
 
-    **User filter: (&(uid=%v)(objectclass=inetorgperson)(ou=caseinc))**
+    **User filter: (&(uid=%v)(objectclass=inetorgperson))**
     
-    **Group filter: (&(cn=%v)(objectclass=groupOfUniqueNames)(ou=caseinc))**
+    **Group filter: (&(cn=%v)(objectclass=groupOfUniqueNames))**
     
 ![LDAP Advanced Settings](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_Adv_Settings.png)
 
