@@ -39,13 +39,28 @@ The following are prerequisites for completing this tutorial:
     - Windows users will need [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) or [OpenSSH](https://www.openssh.com/)
   - [WebSphere Application Server Migration Toolkit for Application Binaries](https://developer.ibm.com/wasdev/downloads/#asset/tools-Migration_Toolkit_for_Application_Binaries)
  
+### Step 1: Getting the project repository
+  		  
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
+  		  
+1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  		   
+2. `cd refarch-jee-customerorder`
+3. `git checkout was90-prod`
+ 
 ### Step 2: Perform assessment walkthrough
 
-**TODO Details to be added:  Merge from Don's work**
+#### Step 2.1: Use the Migration Toolkit for Application Binaries to evaluate the applications
+
+TODO Insert & format Don's document from https://ibm.box.com/s/icn00hjcv2hejpnmvpl90oxkvacwgjmp
+
+#### Step 2.2: TBD
+
+TODO Details to be added:  Merge from Don's work
 
 ### Step 3: Create DB2 service instance for ORDERDB
 
-Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
+TODO Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
+
 1. Create an instance of `Db2 on Cloud SQL DB (formerly dashDB TX)`
 2. Name it `DB2 on Cloud - ORDERDB`
 3. Click on Open
@@ -68,16 +83,6 @@ Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 
 1. `db2 -tf Common/InventoryDdl.sql`
 2. `db2 -tf Common/InventoryData.sql`
-
-### Step 5. Configure users in ORDERDB
-
-**TODO  Is this necessary?**
-
-As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
-
-In order to add your application users to you application database:
-1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
-2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
 
 ### Step 6: Create WebSphere Application Server service instance
 
@@ -147,3 +152,17 @@ In order to add your application users to you application database:
 10.  Add an item to the cart by clicking on an available item.  Drag and drop the item to the cart. 
 
 11.  Take a screencap and submit the image to the available proctors as proof of completion.
+
+
+
+## BACKUP
+
+### Step 5. Configure users in ORDERDB
+
+**TODO  Is this necessary?**
+
+As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
+
+In order to add your application users to you application database:
+1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
+2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
