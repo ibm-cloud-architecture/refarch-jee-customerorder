@@ -294,10 +294,15 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
    -  Choose **Install > Browse the EAR > Next > Choose Detailed**
    -  Click on **Step 12**.
    -  Customize the environment variables for your **DBUser-ORDERDB** instance:
-     - **DBUNIT_SCHEMA:** BLUDB
-     - **DBUNIT_USERNAME:** bluadmin
-     - **DBUNIT_PASSWORD:** _(Value acquired in Step 3.4)_
-   -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
+      - **DBUNIT_SCHEMA:** BLUDB
+      - **DBUNIT_USERNAME:** bluadmin
+      - **DBUNIT_PASSWORD:** _(Value acquired in Step 3.4)_
+   -  Click on **Step 13** to map the necessary users to the application.
+      - Click on the checkbox for the **SecureShopper** Role.
+      - Then click on **Map Users**.  
+      - Click **Search** and select the `rbarcia` & `kbrown` users.
+      - Click the right-facing arrow to move those selected users into the **Selected** box on the right.
+      - Click **OK**
    -  Click on **Summary** (Step 18) and click **Finish**.
    -  Once you see Application **CustomerOrderServicesApp** installed successfully, click **Save** and now your application is ready.
 
@@ -318,17 +323,3 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
 10.  Add an item to the cart by clicking on an available item.  Drag and drop the item to the cart. 
 
 11.  Take a screencap and submit the image to the available proctors as proof of completion.
-
-
-
-## BACKUP
-
-### Step 5. Configure users in ORDERDB
-
-**TODO  Is this necessary?**
-
-As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
-
-In order to add your application users to you application database:
-1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
-2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
