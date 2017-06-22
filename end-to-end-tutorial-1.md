@@ -159,47 +159,11 @@ Once the VPN is configured, you can access the Admin console. Please add the exc
 
    In **Application Hosts/Nodes**, by expanding the Traditional **WebSphere Base option**, you can find the details of your OS distribution, Admin username, Admin password and Key Store password.
 
-### Step 6: Run WebSphere configuration scripts
+### Step 6: Perform WebSphere configuration
 
-1.  Connect to the WebSphere Server via **ssh**.
+1. Log into the Admin Console via the adddress accessible from your service instance page.
 
-2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
-    1. [ldap.properties](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
-    2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
-    3. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was.properties)
-    4. [was_config_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was_config_jython.sh)
- 
- **TODO Provide curl/wget commands to public configuration scripts**
- 
-3. Run `sh was_config_jython.sh -f was.properties`.  
-
-This script walks you through some installation steps. You will provide the necessary information for creating the required JDBC Resources and authentication information.  You will need to reference the previous information from the DB2 service instances.
-
-4. Run `sh create_ldap_jython.sh -f ldap.properties`
-
-This script will connect the WebSphere Application Server instance through a remote LDAP server through [IBM Secure Gateway](#tbd).
-
-4. Start the WebSphere Application Server. **TODO  This is most likely not needed due to service starting the server automatically**
-
-5. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
-
-`<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_config.py`
-
-6.  In the same directory, run the following command:
-
-`<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_LDAP_config.py`
-
-7. Once the scripts are executed successfully, the database & LDAP security configuration setup is complete. You can verify the configuration by opening your Admin Console (with credentials from the service instance page) and testing the connections of your JDBC Datasources.
-
-8.  You may now disconnect from the remote WASaaS instance.
-
-9.  Restart the WebSphere Application Server instance from the Bluemix Service Instance details page.
-
-#### Manual Configuration
-
-##### Setting Up Security
-
-1. Log into the Admin Console.
+**TODO will need to be updated to be external LDAP**
 
 3. In the Global security section, check **Enable application security** and click **Save**.
 
@@ -224,11 +188,17 @@ During deployment, you will need to map your desired users or groups to the **Se
 
 <sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
 
-6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
+**TODO END LDAP**
+
+##### Configuring JDBC Resources
+
+6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser-ORDERDB** using your DB2 on Cloud instance and password.  The user will be `bluadmin` and the password will be specific to the instance you named **DB2 on Cloud - ORDERDB**.
 
 ![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
-##### Configuring JDBC Resources
+7. On the same page, create another new user named **DBUsuer-INVENTORYDB** using your DB2 on Cloud instance and password.  The user will again be `bluadmin`, but the password will be different as you are connecting to a different DB2 database on a different Bluemix service instance.
+
+![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
 1. Go to the **Resources > JDBC > JDBC Providers** section and ensure that you are at the **Cell** scope.
 
@@ -265,10 +235,10 @@ During deployment, you will need to map your desired users or groups to the **Se
       - Port number: **Your default DB2 port**
         ![Readme 11](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme11.png)
    5. OrderDB - Step 4
-      - Authentication alias for XA recovery: **DB2User**
-      - Component-managed authentication alias: **DB2User**
+      - Authentication alias for XA recovery: **DB2User-ORDERDB**
+      - Component-managed authentication alias: **DB2User-ORDERDB**
       - Mapping-configuration alias: **DefaultPrincipalMapping**
-      - Container-managed authentication alias: **DB2User**
+      - Container-managed authentication alias: **DB2User-ORDERDB**
         ![Readme 12](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme12.png)
       
 6. Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option. You will see a success message if the connection is established successfully.
@@ -292,10 +262,10 @@ During deployment, you will need to map your desired users or groups to the **Se
       - Server name: **Your default DB2 host**
       - Port number: **Your default DB2 port**
    4. InventoryDB - Step 4
-      - Authentication alias for XA recovery: **DB2User**
-      - Component-managed authentication alias: **DB2User**
+      - Authentication alias for XA recovery: **DB2User-INVENTORYDB**
+      - Component-managed authentication alias: **DB2User-INVENTORYDB**
       - Mapping-configuration alias: **DefaultPrincipalMapping**
-      - Container-managed authentication alias: **DB2User**
+      - Container-managed authentication alias: **DB2User-INVENTORYDB**
 9. Remember to save and test the connection again.
 
 ### Step 7: Install Customer Order Services application
@@ -306,7 +276,11 @@ During deployment, you will need to map your desired users or groups to the **Se
    -  Login to the Administrative Console.
    -  Select **Applications > Application Types > WebSphere enterprise applications**
    -  Choose **Install > Browse the EAR > Next > Choose Detailed**
-   -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
+   -  Click on **Step 12**.
+   -  Customize the environment variables for your **DBUser-ORDERDB** instance:
+     - **DBUNIT_SCHEMA:** BLUDB
+     - **DBUNIT_USERNAME:** bluadmin
+     - **DBUNIT_PASSWORD:** _(Value acquired in Step 3.4)_
    -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
    -  Click on **Summary** (Step 18) and click **Finish**.
    -  Once you see Application **CustomerOrderServicesApp** installed successfully, click **Save** and now your application is ready.
