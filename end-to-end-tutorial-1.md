@@ -17,6 +17,10 @@ There are several components of the overall application architecture:
 
 ## Building and deploying the application on WebSphere Application Server 9
 
+### Tutorial Overview
+
+**TBD Team recap that syncs with deck**
+
 ### Step 0: Prerequisites
 
 The following are prerequisites for completing this tutorial:
@@ -34,18 +38,10 @@ The following are prerequisites for completing this tutorial:
   - SSH capability
     - Windows users will need [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) or [OpenSSH](https://www.openssh.com/)
   - [WebSphere Application Server Migration Toolkit for Application Binaries](https://developer.ibm.com/wasdev/downloads/#asset/tools-Migration_Toolkit_for_Application_Binaries)
-
-### Step 1: Getting the project repository
-
-You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
-
-1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`  
-2. `cd refarch-jee-customerorder`  
-3. `git checkout was90-prod`  
-
+ 
 ### Step 2: Perform assessment walkthrough
 
-Details to be added.
+**TBD Details to be added:**  Merge from Don's work
 
 ### Step 3: Create DB2 service instance for ORDERDB
 
@@ -68,16 +64,14 @@ Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 
 ### Step 4: Create DB2 service instance for INVENTORYDB
 
-**TODO**
-
-Replicate Step 3 but with DDLs below... 
+**TODO Replicate Step 3 but with DDLs below... **
 
 1. `db2 -tf Common/InventoryDdl.sql`
 2. `db2 -tf Common/InventoryData.sql`
 
 ### Step 5. Configure users in ORDERDB
 
-**TBD**
+**TODO  Is this necessary?**
 
 As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table.
 
@@ -104,55 +98,52 @@ In order to add your application users to you application database:
 1.  Connect to the WebSphere Server via **ssh**.
 
 2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
-  1. [was.properties](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/WAS_Configuration/was.properties)
-  2. [create_ldap_jython.sh](https://github.ibm.com/CASE/stonehenge/blob/master/resources/scripts/LDAP/create_ldap_jython.sh)
-  3. [WAS_config.py](https://github.ibm.com/CASE/stonehenge/tree/master/resources/scripts/WAS_Configuration)
+    1. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/was.properties)
+    2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
  
- **TODO** Provide curl/wget commands to public configuration scripts
+ **TODO Provide curl/wget commands to public configuration scripts**
  
-1. Edit **was.properties** and provide the correct parameters for your environment.
+3. Run `sh was_config_jython.sh -f was.properties`
 
-2. Run `sh was_config_jython.sh -f was.properties`
+4. This script walks you through some installation steps. Please provide the information required.
 
-3. This script walks you through some installation steps. Please provide the information required.
+5. Start the WebSphere Application Server. **TODO**
 
-3. Start the WebSphere Application Server. **TODO**
-
-4. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
+6. Go to the **<WAS_PROFILE_DIR>/bin**, and run the following command:
 
 `<Profile Home>/bin/wsadmin.sh –lang jython –f ~/WAS_config.py`
 
-5. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
+7. Once the script gets executed successfully, the configuration setup is completed. You can verify the configuration by opening your admin console and then check if all the resources are correct.
 
-6.  You may now disconnect from the remote WASaaS instance.
+8.  You may now disconnect from the remote WASaaS instance.
 
 ### Step 7: Install Customer Order Services application
 
-1.  On your local machine, build the EAR using Maven in CustomerOrderServicesProject.
+1.  We have provided a built EAR that has had the previously discussed changes for installation on WAS V9.0.  It is available at [https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear) for download.
 
-  -  Install Maven and run `mvn -v` to test your version
-  -  `cd CustomerOrderServicesProject`
-  -  `mvn clean package`
-  -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-X.Y.Z-SNAPSHOT.ear`.
-
-2. Install the EAR to the Admin console.
-
-  -  Login to the Administrative Console.
-  -  Select **Applications > Application Types > WebSphere enterprise applications**
-  -  Choose **Install > Browse the EAR > Next > Choose Detailed**
-  -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
-  -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
-  -  Click on **Summary** (Step 18) and click **Finish**.
-  -  Once you see Application **CustomerOrderServicesApp** installed successfully, click **Save** and now your application is ready.
+2.  Install the EAR to the Admin console.
+   -  Login to the Administrative Console.
+   -  Select **Applications > Application Types > WebSphere enterprise applications**
+   -  Choose **Install > Browse the EAR > Next > Choose Detailed**
+   -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
+   -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
+   -  Click on **Summary** (Step 18) and click **Finish**.
+   -  Once you see Application **CustomerOrderServicesApp** installed successfully, click **Save** and now your application is ready.
 
 3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
 
 4.  Initial users can be created by running the **JPA** tests in the https://your-host/CustomerOrderServicesTest web application.
 
-5.  Access the application at https://your-host/CustomerOrderServicesWeb/#shopPage
+5.  Prime the database with the JPA tests avaiable at https://your-host/CustomerOrderServicesTest. 
 
 6.  Login as the user `rbarcia` with the password of `bl0wfish`.  
 
-7.  Add an item to the cart by clicking on an available item.  Drag and drop the item to the cart. 
+7.  Select the first two tests and click `Run`
 
-8.  Take a screencap and submit the image to the available proctors as proof of completion.
+8.  Access the application at https://your-host/CustomerOrderServicesWeb/#shopPage
+
+9.  Login as the user `rbarcia` with the password of `bl0wfish`.  
+
+10.  Add an item to the cart by clicking on an available item.  Drag and drop the item to the cart. 
+
+11.  Take a screencap and submit the image to the available proctors as proof of completion.
