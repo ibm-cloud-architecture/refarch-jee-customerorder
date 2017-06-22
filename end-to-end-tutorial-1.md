@@ -169,24 +169,40 @@ Once the VPN is configured, you can access the Admin console. Please add the exc
 
 ![Readme 1](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme1.png)
 
-4. In the **Users and Groups** section, select **Manage Users** and create the following users:
+4. You can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
 
-- username: **rbarcia**  password: **bl0wfish**
-- username: **kbrown**   password: **bl0wfish**
+##### LDAP Configuration 
 
-![Readme 2](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme2.png)
+In order to manually set WebSphere up to use a standalone LDAP registry for Authentication and Authorization of application users, follow these instructions:
 
-5. In the **Users and Groups** section, select **Manage Groups** and create the following group:
+1. Open WebSphere Admin Console and go to Security --> Global Security.
 
-- group name: **SecureShopper**
+![LDAP_HOME](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_home.png)
 
-This JEE application implements role-based security whereby only those users and groups with appropriate roles can execute certain actions. As a result, all users must belong to the SecureShopper group if they want to be able to access to the protected customer resources:
+2. In the *User account repository section* at the bottom of the page, select **Standalone LDAP registry** from the *Available realm definition* dropdown menu.
 
-![Readme 3](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme3.png)
+3. Click on Configure...
 
-During deployment, you will need to map your desired users or groups to the **SecureShopper** role. By default, SecureShopper group gets mapped to the SecureShopper role.
+![LDAP_CONFIGURE](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_configure.png)
 
-<sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
+4. Set the Primary administrative user name. (This user must exist in the LDAP registry).
+
+5. Select IBM Tivoli Directory Server from the Type of LDAP server dropdown menu.
+
+6. Set the appropriate Host and Port to reach the LDAP Server.
+
+7. Set the LDAP admin credentials using the Bind distinguished name and Bind password text fields.
+
+ * Primary administrative user name : uid=wasadmin,ou=caseinc,o=root
+ * Type of LDAP server              : IBM Tivoli Directory Server
+ * LDAP Host                        : cap-sg-prd-4.integration.ibmcloud.com
+ * Port                             : 17830
+ * Bind distinguished name (DN)     : cn=root
+ * Bind password                    : purpleTDS!
+ 
+![LDAP_TestConn](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_TestConn.png)
+
+8. Click on the Test connection button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
 
 **TODO END LDAP**
 
