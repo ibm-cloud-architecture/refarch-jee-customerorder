@@ -41,7 +41,7 @@ The following are prerequisites for completing this tutorial:
  
 ### Step 2: Perform assessment walkthrough
 
-**TBD Details to be added:**  Merge from Don's work
+**TODO Details to be added:  Merge from Don's work**
 
 ### Step 3: Create DB2 service instance for ORDERDB
 
@@ -54,7 +54,7 @@ Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 6. Click `Run All`
 7. You should see some successes and some failures.  This is due to the scripts cleaning up previous data, but none exists yet.  You should see 28 successful SQL statements and 30 failures.
 8. Go to the dropdown in the upper right and click on `Connection Info`
-9. **DETERMINE PASSWORD**
+9. **TODO DB SERVICE INSTANCE DETERMINE PASSWORD**
 10. Select `Without SSL` and copy the following information for later:
 - Host name
 - Port number _(most likely 50000)_
@@ -64,7 +64,7 @@ Details to be added - Db2 on Cloud SQL DB (formerly dashDB TX)
 
 ### Step 4: Create DB2 service instance for INVENTORYDB
 
-**TODO Replicate Step 3 but with DDLs below... **
+**TODO Replicate Step 3 but with DDLs below**
 
 1. `db2 -tf Common/InventoryDdl.sql`
 2. `db2 -tf Common/InventoryData.sql`
