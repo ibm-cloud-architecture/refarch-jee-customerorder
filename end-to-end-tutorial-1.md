@@ -194,11 +194,25 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
  
 ![LDAP_TestConn](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_TestConn.png)
 
-8. Click on the Test connection button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
+8. Click on the **Test connection** button at the top to make sure your standalone LDAP server is reachable by your WebSphere Application Server.
+
+9. Go to the Additional Properties at the bottom of the page and click on **Advanced Lightweight Directory Access Protocol (LDAP) user registry settings**
+
+![LDAP Advanced](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_Adv.png)
+
+10. Set the User filter and group filter.
+
+    **User filter: (&(uid=%v)(objectclass=inetorgperson)(ou=caseinc))**
+    
+    **Group filter: (&(cn=%v)(objectclass=groupOfUniqueNames)(ou=caseinc))**
+    
+![LDAP Advanced Settings](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LDAP_Images/LDAP_Adv_Settings.png)
+
+11. Apply the changes and save the settings.
 
 ##### Configuring JDBC Resources
 
-6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser-ORDERDB** using your DB2 on Cloud instance and password.  The user will be `bluadmin` and the password will be specific to the instance you named **DB2 on Cloud - ORDERDB**.
+6. Under **Global Security**, expand **Java Authentication and Autorization Service** and choose **J2C authentication data**. Create a new user named **DBUser-ORDERDB** using your DB2 on Cloud instance and password.  The user will be `bluadmin` and the password will be specific to the instance you named **DB2 on Cloud - ORDERDB**.
 
 ![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
@@ -274,6 +288,8 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
       - Container-managed authentication alias: **DB2User-INVENTORYDB**
 9. Remember to save and test the connection again.
 
+**Note**: Whenever you make any changes to the WebSphere Configuration Settings, it prompts you with a warning message. Please review and save the modifications.
+
 ### Step 7: Install Customer Order Services application
 
 1.  We have provided a built EAR that has had the previously discussed changes for installation on WAS V9.0.  It is available at [https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS9/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS9/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear) for download.
@@ -298,15 +314,15 @@ In order to manually set WebSphere up to use a standalone LDAP registry for Auth
 
 3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
 
-4.  Initial users can be created by running the **JPA** tests in the https://your-host/CustomerOrderServicesTest web application.
+4.  Initial users can be created by running the **JPA** tests in the **https://<i></i>your-host/CustomerOrderServicesTest** web application.
 
-5.  Prime the database with the JPA tests avaiable at https://your-host/CustomerOrderServicesTest. 
+5.  Prime the database with the JPA tests avaiable at **https://<i></i>your-host/CustomerOrderServicesTest** . 
 
 6.  Login as the user `rbarcia` with the password of `bl0wfish`.  
 
 7.  Select the first two tests and click `Run`
 
-8.  Access the application at https://your-host/CustomerOrderServicesWeb/#shopPage
+8.  Access the application at **https://<i></i>your-host/CustomerOrderServicesWeb/#shopPage**
 
 9.  Login as the user `rbarcia` with the password of `bl0wfish`.  
 
