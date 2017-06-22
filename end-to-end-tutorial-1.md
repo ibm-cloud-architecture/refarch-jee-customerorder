@@ -51,7 +51,19 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 #### Step 2.1: Use the Migration Toolkit for Application Binaries to evaluate the applications
 
-TODO Insert & format Don's document from https://ibm.box.com/s/icn00hjcv2hejpnmvpl90oxkvacwgjmp
+Use the Migration Toolkit for Application Binaries to evaluate the applications
+In this section you will use the Migration Toolkit for Application Binaries to generate evaluation reports for the EAR file CustomerOrderServicesApp-0.1.0
+SNAPSHOT.ear. It the original app that runs on WAS V7.
+
+In this section you will generate and review the Application Evaluation Report for CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear
+To generate the Application Evaluation Report for CustomerOrderServicesApp
+
+    1. 	Navigate to {binaryAppScanner.jar_LOCATION} by issuing the command:
+
+        'cd {binaryAppScanner.jar_LOCATION}'
+
+    2. 	Run the Migration Toolkit for Application Binaries passing the binaryInputPath to CustomerOrderServicesApp and the –evaluate action as shown below:
+        'java –jar binaryAppScanner.jar {CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear_LOCATION}/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear --evaluate'
 
 #### Step 2.2: TBD
 
