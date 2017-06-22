@@ -102,7 +102,7 @@ TODO Details to be added:  Merge from Don's work
 
 ### Step 5: Create WebSphere Application Server service instance
 
-1.Go to your [Bluemix console](https://console.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console.bluemix.net/catalog/services/websphere-application-server)
+1.Go to your [Bluemix console](https://new-console.ng.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console-regional.ng.bluemix.net/catalog/services/websphere-application-server)
 
 2. Name your service, choose the **WAS Base Plan**, and create the instance.
 
