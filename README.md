@@ -61,12 +61,6 @@ Next connect to the inventory database INDB and run the required scripts from th
 
 If you want to re-run the scripts, please make sure you drop the databases and create them again.
 
-As you will see in the following section, the Customer Order Services application implements application security. Hence, you need to have your application users defined in both your LDAP/Security registry and the application database. The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. As a result, you need to add your application users to this table. 
-
-In order to add your application users to you application database:
-1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70-dev/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70-dev/Common/addResidentialCustomer.sql) sql files you can find in the Common folder to define your users in there.
-2. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
-
 ### 4. Configuring the WebSphere v7 Environment with Security and Resources
 
 Websphere environment configuration can be setup using the automation script or it can be done manually. You can choose from either ways based upon your convenience.
@@ -95,14 +89,26 @@ Websphere environment configuration can be setup using the automation script or 
 
 ![Readme 1](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme1.png)
 
-4. In the **Users and Groups** section, select **Manage Users** to create the users and **Manage Groups** to create groups. During deployment, you will need to map your desired users or groups to the **SecureShopper** role.
+4. In the **Users and Groups** section, select **Manage Users** and create the following users:
+
+- username: **rbarcia**  password: **bl0wfish**
+- username: **kbrown**   password: **bl0wfish**
 
 ![Readme 2](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme2.png)
+
+5. In the **Users and Groups** section, select **Manage Groups** and create the following group:
+
+- group name: **SecureShopper**
+
+This JEE application implements role-based security whereby only those users and groups with appropriate roles can execute certain actions. As a result, all users must belong to the SecureShopper group if they want to be able to access to the protected customer resources:
+
 ![Readme 3](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme3.png)
 
-<sup>\*</sup>_Alternatively, you can leverage an external user registry such as LDAP for your users.  This is path the encompassing reference architecture has taken for this application._
+During deployment, you will need to map your desired users or groups to the **SecureShopper** role. By default, SecureShopper group gets mapped to the SecureShopper role.
 
-5. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
+<sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
+
+6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
 
 ![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
@@ -176,7 +182,7 @@ Websphere environment configuration can be setup using the automation script or 
       - Container-managed authentication alias: **DB2User**
 9. Remember to save and test the connection again.
 
-### 5. Running the Application in WAS7
+### 5. Installing the Application in WAS7
 
 1.  Build the EAR using Maven in CustomerOrderServicesProject.
 
@@ -207,8 +213,22 @@ Websphere environment configuration can be setup using the automation script or 
 
 ![Readme 20](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme20.png)
 
-4. Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
+### 6. Running the application
+
+**IMPORTANT:** Before starting to use the application, we need to run some integration tests which will not only make sure the application, security, DB, etc are in place and working propperly but also **populate the database** with the needed infromation for the app to work.
+
+In order to run the integration tests, go to the test application (http://localhost:9080/CustomerOrderServicesTest) and run the **JPA** tests. **You must use rbarcia or kbown** as the test users. That is, you must login using those users.
 
 ![Readme 21](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme21.png)
 
-5. Access the application at http://localhost:9080/CustomerOrderServicesWeb
+You should see that the tests results are successful:
+
+![Readme 22](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme22.png)
+
+In order to create new users for the application, you need to have your application users defined in both your LDAP/Security registry and the application database. For adding users to your security registry please see the previous [security section](#setting-up-security). The _ORDERDB_ application database contains a table called _CUSTOMER_ which will store the application users. Therefore, you also need to add your application users to this table:
+
+1. Edit the [addBusinessCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70-dev/Common/addBusinessCustomer.sql) and/or [addResidentialCustomer.sql](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was70-dev/Common/addResidentialCustomer.sql) sql files you can find in the Common folder for this repo to define your users in there.
+2. Connect to the ORDERDB database: `db2 connect to ORDERDB`
+3. Execute the sql files: `db2 -tf Common/addBusinessCustomer.sql` and/or `db2 -tf Common/addResidentialCustomer.sql`
+
+You should now be able to log into the Customer Order Services application with your newly created users.
