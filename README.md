@@ -16,7 +16,7 @@ There are several components of the overall application architecture:
 - Finally, there is an additional integration testing component, named **CustomerOrderServicesTest** that is built to quickly validate an application's build and deployment to a given application server.  This test component contains both **JPA** and **JAX-RS**-based tests.  
 
 
-## Building and deploying the application on WebSphere Application Server 7
+## Build and deploy the application on WebSphere Application Server 7
 
 ### 1. Prerequisites
 
@@ -79,7 +79,7 @@ Websphere environment configuration can be setup using the automation script or 
 
 3. Go to the **<WAS_PROFILE_DIR>/bin**, and use the following command.
 
-  `<Profile Home>/bin/wsadmin.(bat/sh) –lang jython –f <Location of Jython script>`
+    `<Profile Home>/bin/wsadmin.(bat/sh) –lang jython –f <Location of Jython script>`
 
 4. This script prompts the user for input. Please provide the necessary information.
 
@@ -107,45 +107,45 @@ Websphere environment configuration can be setup using the automation script or 
 2. You need to enter the database class path information. Enter the directory where the DB2 Java is set.
 3. Press **Next** and then **Finish**. Save the Configuration.
 4. Go to the **Resources > JDBC > Data sources** section to create a new data source.
-  1. Make sure that the scope is at **Cell** level and click **New**
-  2.  OrderDB Step 1
+   1. Make sure that the scope is at **Cell** level and click **New**
+   2. OrderDB Step 1
       -  Data source name: **OrderDS**
       -  JNDI name: **jdbc/orderds**
-  3.  OrderDB Step 2
+   3. OrderDB Step 2
       - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
-  4.  ORDERDB Step 3
+   4. ORDERDB Step 3
       - Driver Type: **4**
       - Database name: **ORDERDB**
       - Server name: **Your default DB2 host**
       - Port number: **Your default DB2 port**
-  5.  OrderDB Step 4
+   5. OrderDB Step 4
       - Authentication alias for XA recovery: **DB2User**
       - Component-managed authentication alias: **DB2User**
       - Mapping-configuration alias: **DefaultPrincipalMapping**
       - Container-managed authentication alias: **DB2User**
-  6.  Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option.  You will see a success message if the connection is established successfully.
-  7. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
+5. Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option.  You will see a success message if the connection is established successfully.
+6. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
       - Your database is started as we did in the beginning.  
       - Your host and port number are correct.
       - The classpath for the Driver is set properly.  
       - Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.
-  8.  Create the INVENTORYDB data source using the same process as before.  Click **New**.
-  9.  InventoryDB Step 1
+7. Create the INVENTORYDB data source using the same process as before.  Click **New**.
+   1. InventoryDB Step 1
       -  Data source name: **INDS**
       -  JNDI name: **jdbc/inds**
-  10.  InventoryDB Step 2
+   2. InventoryDB Step 2
       - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
-  11.  InventoryDB Step 3
+   3. InventoryDB Step 3
       - Driver Type: **4**
       - Database name: **INDB**
       - Server name: **Your default DB2 host**
       - Port number: **Your default DB2 port**
-  12.  InventoryDB Step 4
+   4. InventoryDB Step 4
       - Authentication alias for XA recovery: **DB2User**
       - Component-managed authentication alias: **DB2User**
       - Mapping-configuration alias: **DefaultPrincipalMapping**
       - Container-managed authentication alias: **DB2User**
-  13. Remember to save and test the connection again.
+8. Remember to save and test the connection again.
 
 ### 5. Running the Application in WAS7
 
@@ -167,6 +167,6 @@ Websphere environment configuration can be setup using the automation script or 
     -  Click on **Summary** (Step 16) and click **Finish**.
     -  Once you see `Application CustomerOrderServicesApp installed successfully`, click **Save** and now your application is ready.
 
-3.  Go back to the Enterprise Applications list, select the application, and click **Start**.
-4.  Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
-5.  Access the application at http://localhost:9080/CustomerOrderServicesWeb
+3. Go back to the Enterprise Applications list, select the application, and click **Start**.
+4. Initial users can be created by running the **JPA** tests in the http://localhost:9080/CustomerOrderServicesTest web application.
+5. Access the application at http://localhost:9080/CustomerOrderServicesWeb
