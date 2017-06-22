@@ -102,7 +102,7 @@ TODO Details to be added:  Merge from Don's work
 
 ### Step 5: Create WebSphere Application Server service instance
 
-1.Go to your [Bluemix console](https://new-console.ng.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console-regional.ng.bluemix.net/catalog/services/websphere-application-server)
+1. Go to your [Bluemix console](https://new-console.ng.bluemix.net/) and create a [**WebSphere Application Server** instance](https://console-regional.ng.bluemix.net/catalog/services/websphere-application-server)
 
 2. Name your service, choose the **WAS Base Plan**, and create the instance.
 
@@ -194,6 +194,109 @@ This script will connect the WebSphere Application Server instance through a rem
 8.  You may now disconnect from the remote WASaaS instance.
 
 9.  Restart the WebSphere Application Server instance from the Bluemix Service Instance details page.
+
+#### Manual Configuration
+
+##### Setting Up Security
+
+1. Log into the Admin Console.
+
+3. In the Global security section, check **Enable application security** and click **Save**.
+
+![Readme 1](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme1.png)
+
+4. In the **Users and Groups** section, select **Manage Users** and create the following users:
+
+- username: **rbarcia**  password: **bl0wfish**
+- username: **kbrown**   password: **bl0wfish**
+
+![Readme 2](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme2.png)
+
+5. In the **Users and Groups** section, select **Manage Groups** and create the following group:
+
+- group name: **SecureShopper**
+
+This JEE application implements role-based security whereby only those users and groups with appropriate roles can execute certain actions. As a result, all users must belong to the SecureShopper group if they want to be able to access to the protected customer resources:
+
+![Readme 3](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme3.png)
+
+During deployment, you will need to map your desired users or groups to the **SecureShopper** role. By default, SecureShopper group gets mapped to the SecureShopper role.
+
+<sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
+
+6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
+
+![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
+
+##### Configuring JDBC Resources
+
+1. Go to the **Resources > JDBC > JDBC Providers** section and ensure that you are at the **Cell** scope.
+
+![Readme 5](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme5.png)
+
+2. Click the New Button to create a new JDBC provider.
+    -  Database type : **DB2**
+    -  Provider type : **DB2 Using IBM JCC Driver**
+    -  Implementation type : **XA data source**
+
+![Readme 6](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme6.png)
+
+3. You need to enter the database class path information. Enter the directory where the DB2 Java is set.
+
+![Readme 7](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme7.png)
+
+4. Press **Next** and then **Finish**. Save the Configuration.
+
+![Readme 8](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme8.png)
+
+5. Go to the **Resources > JDBC > Data sources** section to create a new data source.
+   1. Make sure that the scope is at **Cell** level and click **New**
+   2. OrderDB - Step 1
+      -  Data source name: **OrderDS**
+      -  JNDI name: **jdbc/orderds**      
+         ![Readme 9](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme9.png)
+   3. OrderDB - Step 2
+      - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+        ![Readme 10](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme10.png)
+   4. ORDERDB - Step 3
+      - Driver Type: **4**
+      - Database name: **ORDERDB**
+      - Server name: **Your default DB2 host**
+      - Port number: **Your default DB2 port**
+        ![Readme 11](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme11.png)
+   5. OrderDB - Step 4
+      - Authentication alias for XA recovery: **DB2User**
+      - Component-managed authentication alias: **DB2User**
+      - Mapping-configuration alias: **DefaultPrincipalMapping**
+      - Container-managed authentication alias: **DB2User**
+        ![Readme 12](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme12.png)
+      
+6. Once this is done, under Preferences, there will be a new resource called **OrderDS**. Make sure that the resources got connected using **Test Connection** option. You will see a success message if the connection is established successfully.
+
+![Readme 13](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme13.png)
+
+7. Check the Data source and select Test Connection to ensure you created the database correctly.  If the connection fails, a few things to check are
+      - Your database is started as we did in the beginning.  
+      - Your host and port number are correct.
+      - The classpath for the Driver is set properly.  
+      - Check the WebSphere Variables.  You may want to change them to point to your local DB2 install.
+8. Create the INVENTORYDB data source using the same process as before.  Click **New**.
+   1. InventoryDB - Step 1
+      -  Data source name: **INDS**
+      -  JNDI name: **jdbc/inds**
+   2. InventoryDB - Step 2
+      - Select an existing JDBC provider --> **DB2 Using IBM JCC Driver (XA)**
+   3. InventoryDB - Step 3
+      - Driver Type: **4**
+      - Database name: **INDB**
+      - Server name: **Your default DB2 host**
+      - Port number: **Your default DB2 port**
+   4. InventoryDB - Step 4
+      - Authentication alias for XA recovery: **DB2User**
+      - Component-managed authentication alias: **DB2User**
+      - Mapping-configuration alias: **DefaultPrincipalMapping**
+      - Container-managed authentication alias: **DB2User**
+9. Remember to save and test the connection again.
 
 ### Step 7: Install Customer Order Services application
 
