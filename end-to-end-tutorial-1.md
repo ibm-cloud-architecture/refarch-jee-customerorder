@@ -119,10 +119,10 @@ TODO Details to be added:  Merge from Don's work
 1.  Connect to the WebSphere Server via **ssh**.
 
 2. Download the WAS configuration scripts on the remote WAS instance via `curl` or `wget`.  There are three scripts that are used here, which automate the migration of the server and application configuration.  
-    1. [ldap.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
-    2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
-    3. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was.properties)
-    4. [was_config_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was_config_jython.sh)
+    1. [ldap.properties](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/LDAP/ldap.properties)
+    2. [create_ldap_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/LDAP/create_ldap_jython.sh)
+    3. [was.properties](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was.properties)
+    4. [was_config_jython.sh](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/WAS_CONFIG/was_config_jython.sh)
  
  **TODO Provide curl/wget commands to public configuration scripts**
  
