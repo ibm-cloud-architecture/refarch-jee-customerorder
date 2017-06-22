@@ -30,10 +30,6 @@ There are several components of the overall application architecture:
 
 ### Application Overview
 
-Application architecture, both logical and physical, is the same as the WAS7 version
+Application architecture, both logical and physical, is the same as the WAS7 version. Application component versions are still the same since we are applying the *lift and shift* pattern which consist of migrating your WebSphere Application Server deployment to the IBM Cloud with the minimum change possible. As a result, EJB, JPA, JAX-RS levels are still the same as in the WebSphere Application Server 7 version.
 
 Detailed code migration efforts are available in the [Phase 1: Modernizing the Existing Application](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/phases/phase1.md) documentation in the root repository.
-
-#### Application Component Version Updates
-
-TBD Based on updates to EJB, JPA, JAX-RS levels
