@@ -106,7 +106,7 @@ During deployment, you will need to map your desired users or groups to the **Se
 
 <sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
 
-6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
+5. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
 
 ![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
@@ -205,8 +205,6 @@ During deployment, you will need to map your desired users or groups to the **Se
        ![Readme 14](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme14.png)
     -  Choose **Install > Browse the EAR > Next > Choose Detailed**   
        ![Readme 15](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme15.png)
-    -  Click on **Step 4**.  Verify the **CustomerOrderServicesApp** line has a reference to the **IBM WebSphere Application Server traditional V7.0 JAX-RS Library**.
-       ![Readme 16](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme16.png)
     -  Click on **Step 12**.  Customize the environment variables for your system. This is most likely just going to be the **DBUNIT_SCHEMA**, **DBUNIT_USERNAME**, and **DBUNIT_PASSWORD** fields. Those values need to be specific to your local DB2 installation.
        ![Readme 17](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme17.png)
     -  Click on **Step 13**.  Verify the **SecureShopper** role is mapped to the **SecureShopper** group (or a corresponding group in your application server's user registry).
