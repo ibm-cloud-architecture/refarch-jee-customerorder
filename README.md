@@ -85,18 +85,18 @@ Websphere environment configuration can be setup using the automation script or 
 
 1. Log into the Admin Console via http://localhost:9043/admin.
 
-3. In the Global security section, check **Enable application security** and click **Save**.
+2. In the Global security section, check **Enable application security** and click **Save**.
 
 ![Readme 1](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme1.png)
 
-4. In the **Users and Groups** section, select **Manage Users** and create the following users:
+3. In the **Users and Groups** section, select **Manage Users** and create the following users:
 
 - username: **rbarcia**  password: **bl0wfish**
 - username: **kbrown**   password: **bl0wfish**
 
 ![Readme 2](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme2.png)
 
-5. In the **Users and Groups** section, select **Manage Groups** and create the following group:
+4. In the **Users and Groups** section, select **Manage Groups** and create the following group:
 
 - group name: **SecureShopper**
 
@@ -108,7 +108,7 @@ During deployment, you will need to map your desired users or groups to the **Se
 
 <sup>\*</sup>_Alternatively, you can leverage an external security registry such as an LDAP server for your users and groups.  This is the path that the reference architecture has taken for this application which gets described in the different phases in [here](https://github.com/ibm-cloud-architecture/refarch-jee)._
 
-6. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
+5. Under **Global Security**, select **J2C authentication data**. Create a new user named **DBUser** using your db2 instance and password.
 
 ![Readme 4](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme4.png)
 
@@ -189,7 +189,7 @@ During deployment, you will need to map your desired users or groups to the **Se
     -  Install Maven and run `mvn -v` to test your version
     -  `cd CustomerOrderServicesProject`
     -  `mvn clean package`
-    -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear`.
+    -  You will have an EAR built in the `CustomerOrderServicesApp/target` subdirectory, named `CustomerOrderServicesApp-X.Y.Z-SNAPSHOT.ear`.
 
 2. Install the EAR to http://localhost:9060/ibm/console
 
