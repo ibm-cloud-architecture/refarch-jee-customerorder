@@ -65,7 +65,7 @@ Websphere environment configuration can be setup using the automation script or 
 
 #### Using the Configuration Script
 
-1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Common/WAS_Config/WAS_config.py). It resides in the 'Common' sub-directory.
+1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/WAS_Config/WAS_config.py). It resides in the 'Common' sub-directory.
 
 2. Start the WebSphere Application Server.
 
