@@ -65,7 +65,7 @@ Websphere environment configuration can be setup using the automation script or 
 
 #### Using the Configuration Script
 
-1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Common/WAS_Config/WAS_config.py). It resides in the 'Common' sub-directory.
+1. The configuration file (Jython script) can be accessed here [WAS_config.py](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-prod/Common/WAS_Config/WAS_config.py). It resides in the 'Common' sub-directory.
 
 2. Start the WebSphere Application Server.
 
@@ -180,7 +180,7 @@ During deployment, you will need to map your desired users or groups to the **Se
       - Container-managed authentication alias: **DB2User**
 9. Remember to save and test the connection again.
 
-##### Configuring JPA
+##### Configure JPA
 
 1. Go to the **Application servers > server1 > Default Java Persistence API settings**
 2. Select 2.0 as the JPA Specification
@@ -188,6 +188,14 @@ During deployment, you will need to map your desired users or groups to the **Se
 4. Click Apply and Save.
 
 ![Readme 23](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme23.png)
+
+##### Configure JAX-RS
+
+1. Go to the **Application servers > server1 > Default JAXRS provider settings**
+2. Select 1.1 as the JAX-RS provider
+3. Click Apply and Save.
+
+![Readme 24](https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/imgs/Customer_README/Readme24.png)
 
 ### 5. Installing the Application in WAS9
 
