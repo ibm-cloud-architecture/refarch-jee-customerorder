@@ -305,5 +305,9 @@ echo "AdminTask.showJPASpecLevel(Server)">> ${FILE}
 echo "AdminTask.modifyJPASpecLevel(Server, '[ -specLevel 2.0]')">> ${FILE}
 echo "AdminTask.showJPASpecLevel(Server)">> ${FILE}
 
+echo "# Configuring JAX-RS Specification" >> ${FILE}
+
+echo "AdminTask.modifyJaxrsProvider(Server, '[ -provider 1.1]')" >> ${FILE}
+
 
 echo "AdminConfig.save()" >> ${FILE}

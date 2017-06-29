@@ -94,4 +94,6 @@ AdminTask.listSupportedJPASpecifications('[-versionOnly]')
 AdminTask.showJPASpecLevel(Server)
 AdminTask.modifyJPASpecLevel(Server, '[ -specLevel 2.0]')
 AdminTask.showJPASpecLevel(Server)
+# Configuring JAX-RS Specification
+AdminTask.modifyJaxrsProvider(Server, '[ -provider 1.1]')
 AdminConfig.save()
