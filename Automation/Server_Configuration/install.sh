@@ -70,7 +70,6 @@ $WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -usernam
 
 ### Server restart
 
-#$WAS_HOME/bin/stopServer.sh server1 -username uid=wasadmin,ou=caseinc,o=sample
 $WAS_PROFILE/DefaultAppSrv01/bin/stopServer.sh server1 -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser!
 sleep 5
 $WAS_PROFILE/DefaultAppSrv01/bin//startServer.sh server1
