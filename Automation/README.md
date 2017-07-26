@@ -121,10 +121,23 @@ D. You should now be able to access the WASaaS Admin Console by selecting "Open 
 1. We have provided a built EAR for installation on WAS V.9.0. It is available at https://github.com/ibm-cloud-architecture/refarch-jee/raw/master/static/artifacts/end-to-end-tutorial1/WAS9/CustomerOrderServicesApp-0.2.0-WAS9.ear for download.
 2. Download the EAR and place it in **refarch-jee-customerorder > Automation > Application_Deployment**
 3. Now, you have all the resources with you and let us put them on WAS instance.
+
+**For Linux and MAC**
 - Open your terminal.
 - Run this command
   
   `scp -rp <Path of the Automation directory> root@<your-host>:/root` where **your_host** is the Host address of your WAS instance displayed in Application Hosts/Nodes section.
+- This prompts you for the password. Please enter the password provided in your bluemix instance.
+  In Application Hosts/Nodes, by expanding the Traditional WebSphere Base option, you can find the details of your OS distribution, Admin username, Admin password and Key Store password.
+
+**For Windows**
+- Open your command prompt.
+- Download [pscp.exe](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html). 
+  You can either go to the path where it got downloaded or set the path 
+  `set path=C:\...\folder of pscp`
+- Run this command
+
+  `pscp -r <Path of the Automation directory> root@<your-host>:/root` where **your_host** is the Host address of your WAS instance displayed in Application Hosts/Nodes section.
 - This prompts you for the password. Please enter the password provided in your bluemix instance.
   In Application Hosts/Nodes, by expanding the Traditional WebSphere Base option, you can find the details of your OS distribution, Admin username, Admin password and Key Store password.
 
@@ -153,6 +166,8 @@ Here you should be able to see **Application_Deployment** and **Server_Configura
 
 `chmod u+x install.sh`
 
+Before doing **./install.sh**, if you are on a **Windows** system, please run `sed -i -e 's/\r$//' install.sh` because Linux uses the line feed character to mark the end of a line, whereas Windows uses the two-character sequence CR LF. Since we copied it from Winndows, the file has Windows line endings, which will confuse Linux.
+
 `./install.sh`
 
 ![Server Configuration](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/automation/server.png)
@@ -171,6 +186,8 @@ Please have a look at the [Server Configuration scripts](https://github.com/ibm-
 `cd Application_Deployment`
 
 `chmod u+x install.sh`
+
+Before doing **./install.sh**, if you are on a **Windows** system, please run `sed -i -e 's/\r$//' install.sh` because Linux uses the line feed character to mark the end of a line, whereas Windows uses the two-character sequence CR LF. Since we copied it from Winndows, the file has Windows line endings, which will confuse Linux.
 
 `./install.sh`
 
