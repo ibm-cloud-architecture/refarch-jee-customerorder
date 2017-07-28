@@ -20,7 +20,7 @@ This the installation script that invokes all the jython scripts which deploys t
 2.	Exports the WebSphere Home and Profile paths. 
 3.	Exports the location of the Application EAR, deployer email, database connection url, database schema, database username, and database password.
 4.	Exports the application name, security group name, web endpoint name, test endpoint name and their urls.
-5.	Calls the jython script for deploying the application ([app.jy](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Automation/Application_Deployment/app.jy).
+5.	Calls the jython script for deploying the application ([app.jy](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Automation/Application_Deployment/app.jy)).
 6.	Restarts the server.
 
 If you have any changes in your application build, you can install the new EAR running this script again.
