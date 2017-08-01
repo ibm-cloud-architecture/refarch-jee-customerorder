@@ -172,10 +172,7 @@ Before doing **./install.sh**, if you are on a **Windows** system, please run `s
 
 ![Server Configuration](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/automation/server.png)
 
-At this point, if you want to log back into the Admin Console, you should use a different set of credentials, now that we're connected to the remote LDAP as our user registry.  Use the credentials below to login to the Admin Console:
-
-**Username:** `uid=wasadmin,ou=caseinc,o=sample`  
-**Password:** `websphereUser!`
+At this point, if you want to log back into the Admin Console, you should use a different set of credentials, now that we're connected to the remote LDAP as our user registry.  Use the new credentials to login to the Admin Console.
 
 Please have a look at the [Server Configuration scripts](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-dev/Automation/Server_Configuration) to know them in detail.
 
