@@ -14,10 +14,9 @@ export LDAP_HOST=cap-sg-prd-4.integration.ibmcloud.com
 export LDAP_PORT=17830
 export LDAP_SERVER_TYPE=IBM_DIRECTORY_SERVER
 export BIND_DN=cn=root
-export BIND_PASSWORD=purpleTDS!
-export PRIMARY_ADMIN_ID=uid=wasadmin,ou=caseinc,o=sample
-export DN=ou=caseinc,o=sample
-export LDAPPASSWORD=websphereUser!
+export BIND_PASSWORD=<Please insert your bind password>
+export PRIMARY_ADMIN_ID=uid=<Please insert your primary admin id>
+export LDAPPASSWORD=<Please insert your LDAP password>
 
 $WAS_HOME//virtual/bin/openFirewallPorts.sh -ports 50000:tcp,17830:tcp -persist true
 
@@ -32,16 +31,16 @@ $WAS_PROFILE/DefaultAppSrv01/bin//startServer.sh server1
 ### Creating J2C authentication alias
 
 export DB2USER=bluadmin
-export DB2PASSWORD=ZTA2YzVmYjA2MjU3
+export DB2PASSWORD=<Please insert the Database Password>
 export AUTHALIAS=DBUser-ORDERDB
 
-$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser! -f $curdir/j2cauth.jy -username uid=wasadmin,ou=caseinc,o=sample
+$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD -f $curdir/j2cauth.jy -username $PRIMARY_ADMIN_ID
 
 export DB2USER=bluadmin
-export DB2PASSWORD=OWI1OTI0YTgxYzZi
+export DB2PASSWORD=<Please insert the Database Password>
 export AUTHALIAS=DB2User-INVENTORYDB
 
-$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser! -f $curdir/j2cauth.jy -username uid=wasadmin,ou=caseinc,o=sample
+$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD -f $curdir/j2cauth.jy -username $PRIMARY_ADMIN_ID
 
 ### Creating JDBC provider and Data Sources
 
@@ -53,7 +52,7 @@ export DB2PORT=50000
 export DSNAME=OrderDS
 export DSJNDI=jdbc/orderds
 export AUTHALIAS=DBUser-ORDERDB
-$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser! -f $curdir/DataSource.jy -username uid=wasadmin,ou=caseinc,o=sample
+$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD -f $curdir/DataSource.jy -username $PRIMARY_ADMIN_ID
 
 
 export DB2HOST=dashdb-txn-flex-yp-dal09-61.services.dal.bluemix.net
@@ -62,14 +61,14 @@ export DB2PORT=50000
 export DSNAME=INDS
 export DSJNDI=jdbc/inds
 export AUTHALIAS=DB2User-INVENTORYDB
-$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser! -f $curdir/DataSource.jy -username uid=wasadmin,ou=caseinc,o=sample
+$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD -f $curdir/DataSource.jy -username $PRIMARY_ADMIN_ID
 
 ### JPA and JAX-RS Specifications
 
-$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser! -f $curdir/specs.jy -username uid=wasadmin,ou=caseinc,o=sample
+$WAS_PROFILE/DefaultAppSrv01/bin/wsadmin.sh -lang jython -conntype SOAP -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD -f $curdir/specs.jy -username $PRIMARY_ADMIN_ID
 
 ### Server restart
 
-$WAS_PROFILE/DefaultAppSrv01/bin/stopServer.sh server1 -username uid=wasadmin,ou=caseinc,o=sample -password websphereUser!
+$WAS_PROFILE/DefaultAppSrv01/bin/stopServer.sh server1 -username $PRIMARY_ADMIN_ID -password $LDAPPASSWORD
 sleep 5
 $WAS_PROFILE/DefaultAppSrv01/bin//startServer.sh server1
