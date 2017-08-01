@@ -4,6 +4,8 @@
 
 `chmod u+x install.sh`
 
+Before running install.sh, open [install.sh](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Automation/Server_Configuration/install.sh), please fill in the details reqired and then run it.
+
 `./install.sh`
 
 That's it ... you are done with server configuration. **install.sh** does all the magic. Let's have a look at it.
