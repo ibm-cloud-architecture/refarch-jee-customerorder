@@ -6,6 +6,8 @@ Firstly copy the **EAR** of your application into the **Application_Deployment**
 
 `chmod u+x install.sh`
 
+Before running ./install.sh, open [install.sh](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/was90-dev/Automation/Application_Deployment/install.sh), please fill in the details required and then run it.
+
 `./install.sh`
 
 That's it ... you are done with application_deployment. **install.sh** does all the magic. Let's have a look at it.
