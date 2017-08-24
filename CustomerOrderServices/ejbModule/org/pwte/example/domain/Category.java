@@ -13,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 @Entity
@@ -31,10 +33,11 @@ public class Category implements Serializable {
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="PARENT_CAT")
+	@JsonBackReference
 	private Category parent;
 	
-	
 	@OneToMany(mappedBy="parent",fetch=FetchType.EAGER)
+	@JsonManagedReference
 	private Collection<Category> subCategories;
 	
 	@ManyToMany(mappedBy="categories",fetch=FetchType.LAZY)

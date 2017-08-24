@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
@@ -42,6 +43,7 @@ public class Order implements Serializable {
 	protected AbstractCustomer customer;
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,mappedBy="order")
+	@JsonBackReference
 	protected Set<LineItem> lineitems;
 	  
 	@Version

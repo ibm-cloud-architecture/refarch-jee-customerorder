@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 @Entity
 @Table(name = "LINE_ITEM")
@@ -41,6 +42,7 @@ public class LineItem implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ORDER_ID", referencedColumnName = "ORDER_ID")
+	@JsonManagedReference
 	protected Order order;
 
 	@Transient
