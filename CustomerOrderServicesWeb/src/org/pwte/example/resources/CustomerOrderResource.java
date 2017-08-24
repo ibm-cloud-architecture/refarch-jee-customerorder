@@ -50,7 +50,7 @@ public class CustomerOrderResource {
 	{
 		try {
 			InitialContext ctx = new InitialContext();
-			customerOrderServices = (CustomerOrderServices) ctx.lookup("ejblocal:org.pwte.example.service.CustomerOrderServices");
+			customerOrderServices = (CustomerOrderServices) ctx.lookup("java:global/CustomerOrderServicesApp/CustomerOrderServices/CustomerOrderServicesImpl!org.pwte.example.service.CustomerOrderServices");
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} 

@@ -35,7 +35,7 @@ public class ProductResource {
 		public ProductResource() throws NamingException
 		{
 			//Work around until Java EE 6
-	productSearch = (ProductSearchService) new InitialContext().lookup("ejblocal:org.pwte.example.service.ProductSearchService");
+	productSearch = (ProductSearchService) new InitialContext().lookup("java:global/CustomerOrderServicesApp/CustomerOrderServices/ProductSearchServiceImpl!org.pwte.example.service.ProductSearchService");
 		}
 		
 		@GET
