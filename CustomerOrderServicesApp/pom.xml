@@ -55,6 +55,7 @@
             <ejbModule>
               <groupId>org.pwte.example</groupId>
               <artifactId>CustomerOrderServices</artifactId>
+              <bundleFileName>CustomerOrderServices.jar</bundleFileName>
             </ejbModule>
             <webModule>
               <groupId>org.pwte.example</groupId>
