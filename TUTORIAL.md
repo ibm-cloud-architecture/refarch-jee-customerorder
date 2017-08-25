@@ -1,14 +1,120 @@
 # Step 1. Perform transformation from WAS7 to Liberty (Optional)
 
+In this step, we are going to make the modifications needed both at the application level and the server configuration level to migrate our WebSphere Application Server 7 application to run in WebSphere Liberty.
+
+**_(To be discussed. We might one to do the config migration before the source migration since we will need the config to run the application to complete the source migration process)_**
+
+1.  [Source Code Migration](#source-code-migration)
+2.  [WebSphere Configuration Migration](#websphere-configuration-migration)
+
+## Source Code Migration
+
+In order to migrate the code to get our WebSphere Application Server 7 application working on WebSphere Liberty, we are going to use the [WebSphere Application Server Migration Toolkit (WAMT)](https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Application_Server_Migration_Toolkit). The migration toolkit provides a rich set of tools that help you migrate applications from third-party application servers, between versions of WebSphere Application Server, to Liberty, and to cloud platforms such as Liberty for Java on IBM Bluemix, IBM WebSphere on Cloud and Docker.
+
+### Software Analyzer Configuration
+
+More precisely, we are going to use the Software Analyzer that the WAMT comes with. For doing so, we first need to have in our development environment eclipse opened with the WAMT installed on it and our WAS 7 application projects imported into the workspace. Once we have the above in place, click on **Run -> Analysis...** This will open the **Software Analyzer**.
+
+![Source migration 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source1.png)
+
+Now, **right-click** on _Sofwtare Analyzer_ and select **New**. Give a relevant and appropriate name to the new configuration and click on the **Rules** tab for this configuration. Select the **WebSphere Application Server Version Migration** option for the _Rule Sets_ dropdown menu and click **Set...**
+
+![Source migration 2](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source2.png)
+
+The Rule set configuration panel should be displayed. This panel must be configured so that the appropriate set of rules based on our migration requirements are applied during the software analysis of our applications.
+
+![Source migration 3](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source3.png)
+
+### Running the Software Analyzer
+
+After running the _Software Analyzer_ you should see a _Software Analyzer Results_ tab at the bottom. The Software Analyzer rules are categorised, and so are the errors and warnings produced in its report, in four categories: **Java Code Review, XML File Review, JSP Code Review and File Review**. We must go through each of these tabs/categories and review the errors and warnings as code/configuration changes might be needed.
+
+![Source migration 4](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source4.png)
+
+We will start off with the **File Review** analysis tab. As you can see in the image below, one warning that will always appear when you migrate your apps to a newer WebSphere Application Server version is the need to configure the appropriate target runtime for your applications. This is the first and foremost step:
+
+![Source migration 5](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source5.png)
+
+Along with the warning and errors reported, the WebSphere Application Migration Toolkit also comes with information about the rule that flagged the each error/warning and the possible solutions for them. In order to see this info and help, click on **Help -> Show Contextual Help**. This will open the help portlet in eclipse.
+
+![Source migration 6](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source6.png)
+
+If you scroll down to the bottom and press on the "detailed help" button it will show you additional ideas on how to resolve that problem.
+
+![Source migration 7](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source7.png)
+
+If we follow the instructions and go to Targeted Runtimes for any of the project we might find out that WebSphere Liberty does not seem to appear as an option.
+
+![Source migration 8](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source8.png)
+
+However, if we click on the Show all runtimes option, we see the other runtimes availabe in our environment. They now appear although they are greyed out. The reason is, as we can read at the bottom of the panel, that we might need to uninstall one or more of the currently installed project facets.
+
+![Source migration 9](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source9.png)
+
+In our case, the problem resides in the current WebSphere Application Server version 7 specific facets we have installed in our projects for them to properly run on that WebSphere version. As a result, we now need to uninstall them. For doing so, click on the Uninstall Facets... hyperlink presented on this panel and then deselect all WebSphere specific facets you might find active.
+
+![Source migration 10](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source10.png)
+
+Once you have deselected all active WebSphere specific facets installed for the project, click on Finish. You will get back to the targeted runtimes panel but you will not see the WebSphere Application Server Liberty option available to select just yet until you click on Apply. Hence, click on Apply, deselect the existing WebSphere Application Server traditional V7.0 option, select the WebSphere Application Server Liberty option and click on Apply and OK. **Repeat the same process for all four projects**
+
+![Source migration 11](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source11.png)
+
+If we ran the Software Analyzer again, we should see the File Review tab empty.
+
+Moving on to the **Java Code Review** category tab, these are the aspects the WebSphere Application Migration Toolkit warns us about:
+
+![Source migration 12](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source12.png)
+
+The first warning we see in there is about using the default initalContext JNDI properties. In order to understand more about the problem, we click on it and read what the Help portlet says about it. If we still want or need more information, we can always click on the Detailed help link displayed within the portlet for a deeper and longer explanation:
+
+![Source migration 13](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source13.png)
+
+Now that we have understood what the problem is, we can double click on the file pointed out by the Software Analyzer to inspect the actual code and determine whether this warning affects our application or not:
+
+![Source migration 14](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source14.png)
+
+As you can see by looking at the code, we are not using any of the two default initialContext JNDI properties this warning is about so we do not need to care about their default values. As a result, we can ignore this warning and move on to the next one.
+
+**_(Need to complete JAX-RS error once I sync up with Rick)_**
+
+Last aspect in this **Java Code Review** section has to do with a change in the JPA cascade strategy and its detailed information says the following:
+
+![Source migration 15](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source15.png)
+
+As we can read in the detailed info above, the change in the JPA cascade strategy is not expected to affect most applications. Also, this new cascade strategy can be mitigated by simply reverting to the previous behaviour by setting the _openjpa.Compatibility_ peroperty in the _persistence.xml_ file. Anyway, newer WebSphere Application Server versions can always be configured to run on previous or older version for most of the JEE technologies. JPA is one of them and you can see in the server.xml file that we are using tje jpa-2.0 feature so that the warning above does not affect our app at all.
+
+Finally, moving on to the last **XML File Review** section in the Software Analyzer results, we see a problem with how we are currently doing the Enterprise JavaBeans lookups:
+
+![Source migration 16](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source16.png)
+
+And this is what the detailed help says about it:
+
+![Source migration 17](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source17.png)
+
+So basically, we must change the way we look up our EJB components in Liberty since the namespaces have changed to be now the Java standard namespaces. As a result, we need to click on each of the files raised by the Sowtware Analyzer and modify such lookup.
+
+As an example, we now have these lookups in the following format:
+
+**_(TBD since this is for the test project which we might not be including into the lab)_**
+
+### Running the application
+
+In order to locally run our application now that we seem to have the appropriate source code of the application and the server configuration migrated to WebSphere Liberty, we right-click on the CustomerOrderServicesApp project and select export -->
+
+**_(To be completed. Need to write about other errors that happen when you run the app but the Software Analyzer does not bring up)_**
+
+
+## WebSphere Configuration Migration
+
 **Output: server.xml**
 
-## Create the Liberty server.xml file
+### Create the Liberty server.xml file
 
 Configuration of the traditional WebSphere should be migrated to Liberty before deploying the application to Liberty. In Liberty, the runtime environment operates from a set of built-in configuration default settings, and the configuration can be specified by overriding the default settings. 
 
 For this, you can make use of available tools or it can be done manually.
 
-### [Eclipse based configuration migration tool]( https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Configuration_Migration_Tool)
+#### [Eclipse based configuration migration tool]( https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Configuration_Migration_Tool)
 
 [Eclipse-based WebSphere Configuration Migration tool](https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Configuration_Migration_Tool) can be used to migrate the configuration from different types of servers to WebSphere application server. This can also be used to migrate the configuration of traditional WebSphere to Liberty.
 
@@ -36,7 +142,7 @@ At the end, you will have server.xml file generated. Save it.
 
 After generating my.props file, you can also make use of [WebSphere Configuration Migration Toolkit: WebSphere Migration](https://ibm.biz/WCMT_Web) available online. This is just a replacement to the Eclipse plugin. Both of them works in the same way.
 
-### [WebSphere Configuration Migration Toolkit: WebSphere Migration](https://ibm.biz/WCMT_Web)
+#### [WebSphere Configuration Migration Toolkit: WebSphere Migration](https://ibm.biz/WCMT_Web)
 
 ![Web Tool 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool1.png)
 
@@ -52,7 +158,7 @@ After generating my.props file, you can also make use of [WebSphere Configuratio
 
 Finally, you will have a server.xml file generated.
 
-### server.xml manual modifications
+#### server.xml manual modifications
 
 Open your liberty server.xml and replace the contents of it with the one we just generated.
 
@@ -112,7 +218,7 @@ However, the migration tool kit doesnot have access to the code. So, some of the
     ```
 Once you are done with all these modifications, your server.xml should look like [this]() - Link to be added
 
-## Liberty server Configuration
+### Liberty server Configuration
 
 1. Using command prompt, go to the Liberty/bin directory.
 2. Use this command, install all the missing features.
@@ -123,7 +229,7 @@ Once you are done with all these modifications, your server.xml should look like
 
 Your server is ready now with all the necessary features installed. 
 
-## Deploying your application using Liberty server.
+### Deploying your application using Liberty server.
 
 This can be done in two ways. You can use server.xml or dropins folder.
 
