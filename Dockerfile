@@ -1,7 +1,8 @@
 FROM websphere-liberty:webProfile7
 
 COPY Common/server.xml /config
-COPY CustomerOrderServicesProject/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
+COPY Common/server.env.remote /config/server.env
+COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
     appSecurity-2.0 \

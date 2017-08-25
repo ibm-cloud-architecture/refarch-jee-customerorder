@@ -32,7 +32,7 @@
     <idsFilters groupFilter="(&amp;(cn=%v)(objectclass=groupOfUniqueNames))" groupIdMap="*:cn" groupMemberIdMap="mycompany-allGroups:member;mycompany-allGroups:uniqueMember;groupOfNames:member;groupOfUniqueNames:uniqueMember" userFilter="(&amp;(uid=%v)(objectclass=inetorgperson))" userIdMap="*:uid">
     </idsFilters>
   </ldapRegistry>
-  <application id="customerOrderServicesApp" name="CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" type="ear" location="${shared.app.dir}/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear">
+  <application id="customerOrderServicesApp" name="CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" type="ear" location="${server.config.dir}/apps/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear">
     <classloader apiTypeVisibility="spec, ibm-api, third-party" />
   </application>
 </server>
