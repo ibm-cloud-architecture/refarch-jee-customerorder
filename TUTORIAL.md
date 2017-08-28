@@ -250,14 +250,15 @@ However, the migration tool kit doesnot have access to the code. So, some of the
 
      ```
      <featureManager>
-        <feature>jsp-2.3</feature>
-        <feature>jdbc-4.1</feature>
-        <feature>jaxrs-1.1</feature>
-        <feature>jpa-2.0</feature>
-        <feature>ejbLite-3.1</feature>
-        <feature>appSecurity-2.0</feature>
-        <feature>ldapRegistry-3.0</feature>
-        <feature>localConnector-1.0</feature>
+      <feature>localConnector-1.0</feature>
+      <feature>jsp-2.3</feature>
+      <feature>jpa-2.0</feature>
+      <feature>jaxrs-1.1</feature>
+      <feature>servlet-3.1</feature>
+      <feature>jdbc-4.1</feature>
+      <feature>ejbLite-3.1</feature>
+      <feature>appSecurity-2.0</feature>
+      <feature>ldapRegistry-3.0</feature>
      </featureManager>
      ```
   
@@ -272,33 +273,35 @@ However, the migration tool kit doesnot have access to the code. So, some of the
 3. Modify the datasource definition, as the migration tool kit grabbed the default ones for traditional server, replace them in such a way that they are preferred for Liberty.
  
      ```
-     <dataSource id="OrderDS" jdbcDriverRef="DB2_Using_IBM_JCC_Driver_(XA)" jndiName="jdbc/orderds">
-        <properties.db2.jcc databaseName="ORDERDB" portNumber="50000" serverName="localhost" user="db2inst1" password="db2inst1-pwd" />
+     <dataSource id="OrderDS" type="javax.sql.XADataSource" jndiName="jdbc/orderds">
+      <jdbcDriver libraryRef="DB2Lib"/>
+      <properties.db2.jcc  user="${env.DB2_USER_ORDER}" password="${env.DB2_PASSWORD_ORDER}" databaseName="${env.DB2_DBNAME_ORDER}" serverName="${env.DB2_HOST_ORDER}" portNumber="${env.DB2_PORT_ORDER}"/>
+      <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
      </dataSource>
-     <dataSource id="INDS" jdbcDriverRef="DB2_Using_IBM_JCC_Driver_(XA)" jndiName="jdbc/inds">
-        <properties.db2.jcc databaseName="INDB" portNumber="50000" serverName="localhost" user="db2inst1" password="db2inst1-pwd"/>
+     <dataSource id="INDS" type="javax.sql.XADataSource" jndiName="jdbc/inds">
+      <jdbcDriver libraryRef="DB2Lib"/>
+      <properties.db2.jcc  user="${env.DB2_USER_INVENTORY}" password="${env.DB2_PASSWORD_INVENTORY}" databaseName="${env.DB2_DBNAME_INVENTORY}" serverName="${env.DB2_HOST_INVENTORY}" portNumber="${env.DB2_PORT_INVENTORY}"/>
+      <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
      </dataSource>
      ```
      
 4. jdbcDriver definition should be modified pointing the location of jars.
 
      ```
-     <jdbcDriver id="DB2_Using_IBM_JCC_Driver_(XA)" javax.sql.DataSource="com.ibm.db2.jcc.DB2XADataSource">
-        <library id="DB2JCC4Lib">
-          <fileset dir="/opt/ibm/db2/V11.1/java" includes="db2jcc4.jar db2jcc_license_cu.jar db2jcc_license_cisuz.jar" />
-        </library>
-     </jdbcDriver>
+     <library id="DB2Lib">
+      <fileset dir="${env.DB2_JARS}" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
+     </library>
      ```
 
 5. As we are using LDAP in the sample application, LDAP registry definition must be added.
 
      ```
-     <ldapRegistry baseDN="" bindDN="**Use your bind DN**" bindPassword="**Use your bind password**" host="**use your host name**" id="ldap" ignoreCase="true" ldapType="IBM Tivoli Directory Server" port="**use your port number**" realm="SampleLdapIDSRealm">
-    <idsFilters groupFilter="(&amp;(cn=%v)(objectclass=groupOfUniqueNames))" groupIdMap="*:cn" groupMemberIdMap="mycompany-allGroups:member;mycompany-allGroups:uniqueMember;groupOfNames:member;groupOfUniqueNames:uniqueMember" userFilter="(&amp;(uid=%v)(objectclass=inetorgperson))" userIdMap="*:uid">
-    </idsFilters>
+     <ldapRegistry id="ldap" host="${env.LDAP_HOST}" port="${env.LDAP_PORT}" baseDN="${env.LDAP_BASE_DN}" bindDN="${env.LDAP_BIND_DN}" bindPassword="${env.LDAP_BIND_PASSWORD}" realm="${env.LDAP_REALM}" ignoreCase="true" ldapType="IBM Tivoli Directory Server">
+      <idsFilters groupFilter="(&amp;(cn=%v)(objectclass=groupOfUniqueNames))" groupIdMap="*:cn" groupMemberIdMap="mycompany-allGroups:member;mycompany-allGroups:uniqueMember;groupOfNames:member;groupOfUniqueNames:uniqueMember" userFilter="(&amp;(uid=%v)(objectclass=inetorgperson))" userIdMap="*:uid">
+      </idsFilters>
     </ldapRegistry>
     ```
-Once you are done with all these modifications, your server.xml should look like [this]() - Link to be added
+Once you are done with all these modifications, your server.xml should look like [this](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/toLiberty/Common/server.xml) and the env variables are defined in [server.env](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/toLiberty/Common/server.env)
 
 ### Liberty server Configuration
 
