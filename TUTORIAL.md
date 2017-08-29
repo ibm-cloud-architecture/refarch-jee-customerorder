@@ -195,7 +195,7 @@ Again, save all the changes, export the EAR project to the WebSphere Liberty fol
 
 ### Create the Liberty server.xml file
 
-Configuration of the traditional WebSphere should be migrated to Liberty before deploying the application to Liberty. In Liberty, the runtime environment operates from a set of built-in configuration default settings, and the configuration can be specified by overriding the default settings. 
+Configuration of the traditional WebSphere should be migrated to Liberty before deploying the application to Liberty. In Liberty, the runtime environment operates from a set of built-in configuration default settings, and the configuration can be specified by overriding the default settings.
 
 For this, you can make use of available tools or it can be done manually.
 
@@ -264,7 +264,7 @@ However, the migration tool kit doesnot have access to the code. So, some of the
       <feature>ldapRegistry-3.0</feature>
      </featureManager>
      ```
-  
+
 2. Configure the http port.
 
      ```
@@ -272,9 +272,9 @@ However, the migration tool kit doesnot have access to the code. So, some of the
       <tcpOptions soReuseAddr="true"/>
      </httpEndpoint>
      ```
-     
+
 3. Modify the datasource definition, as the migration tool kit grabbed the default ones for traditional server, replace them in such a way that they are preferred for Liberty.
- 
+
      ```
      <dataSource id="OrderDS" type="javax.sql.XADataSource" jndiName="jdbc/orderds">
       <jdbcDriver libraryRef="DB2Lib"/>
@@ -287,7 +287,7 @@ However, the migration tool kit doesnot have access to the code. So, some of the
       <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
      </dataSource>
      ```
-     
+
 4. jdbcDriver definition should be modified pointing the location of jars.
 
      ```
@@ -310,12 +310,12 @@ Once you are done with all these modifications, your server.xml should look like
 
 1. Using command prompt, go to the Liberty/bin directory.
 2. Use this command, install all the missing features.
-   
+
    `installUtility install server_name`
-   
+
    During the installation, it prompts to accept the licenses. Please accept them.
 
-Your server is ready now with all the necessary features installed. 
+Your server is ready now with all the necessary features installed.
 
 ### Deploying your application using Liberty server.
 
@@ -327,6 +327,23 @@ This can be done in two ways. You can use server.xml or dropins folder.
    <application id="CustomerOrderServices" location="path/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" name="CustomerOrderServices"></application>
    ```
 2. Instead of this, you can also deploy the application by placing the ear file in the **dropins** folder.
-   
+
    `Place your ear in Liberty dir/usr/servers/server_name/dropins`
 
+# Extra Credit
+
+Now that you've got a traditional Liberty application up and running on the platform, it's time to evolve it!  The first step in approaching microservices from the current application is going to be modularization and refactoring.  This can be done easily to align along the components we have in Customer Order Services - front-end services and back-end services.
+
+Breaking the application into two separate Liberty applications is a great next step to become more comfortable with the application and platform.  If you followed the optional Step 1, you have a fully functional development environment which you can build, test, and deploy future iterations of this application.
+
+The logical steps you will need to complete this Extra Credit work are as follows:
+
+1. Break down the application into 2 separate Liberty apps & containers - backend (REST & EJBs) & frontend (Dojo Javascript).
+
+  Note you will have to solve the problem of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) upon moving the Javascript and REST services into separate applications.  You can see one solution to this problem via an implementation available on our [GitHub](https://github.com/ibm-cloud-architecture/refarch-jee-monolith-to-microservices)
+
+2. Deploy Backend application through Kubernetes YAMLs (including a Service and Deployment), specifying the correct information via configMap entries as other steps in this tutorial have shown.
+
+3. Deploy Front-End application through Kubernetes YAMLs, specifying the Backend service you will need to communicate with via configMaps.
+
+4. Validate the new modular application works, allowing you the freedom to actively change the front-end without having to touch the back-end REST & EJB services!
