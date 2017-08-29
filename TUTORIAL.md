@@ -340,7 +340,7 @@ The logical steps you will need to complete this Extra Credit work are as follow
 
 1. Break down the application into 2 separate Liberty apps & containers - backend (REST & EJBs) & frontend (Dojo Javascript).
 
-  Note you will have to solve the problem of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) upon moving the Javascript and REST services into separate applications.  You can see one solution to this problem via an implementation available on our [GitHub](https://github.com/ibm-cloud-architecture/refarch-jee-monolith-to-microservices)
+   Note you will have to solve the problem of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) upon moving the Javascript and REST services into separate applications.  You can see one solution to this problem via an implementation available on our [GitHub](https://github.com/ibm-cloud-architecture/refarch-jee-monolith-to-microservices)
 
 2. Deploy Backend application through Kubernetes YAMLs (including a Service and Deployment), specifying the correct information via configMap entries as other steps in this tutorial have shown.
 
