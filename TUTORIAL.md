@@ -5,6 +5,9 @@ In this step, we are going to make the modifications needed both at the applicat
 **_(To be discussed. We might one to do the config migration before the source migration since we will need the config to run the application to complete the source migration process)_**
 
 1.  [Source Code Migration](#source-code-migration)
+    - [Software Analyzer Configuration](#software-analyzer-configuration)
+    - [Running the Software Analyzer](#running-the-software-analyzer)
+    - [Running the application](#running-the-application)
 2.  [WebSphere Configuration Migration](#websphere-configuration-migration)
 
 ## Source Code Migration
