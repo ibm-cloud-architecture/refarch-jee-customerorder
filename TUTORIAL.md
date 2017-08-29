@@ -1,3 +1,9 @@
+# Prerequisites
+
+The following are prerequisites for completing this tutorial:
+
+**TBD**
+
 # Step 1. Perform transformation from WAS7 to Liberty (Optional)
 
 In this step, we are going to make the modifications needed both at the application level and the server configuration level to migrate our WebSphere Application Server 7 application to run in WebSphere Liberty.
@@ -329,6 +335,86 @@ This can be done in two ways. You can use server.xml or dropins folder.
 2. Instead of this, you can also deploy the application by placing the ear file in the **dropins** folder.
 
    `Place your ear in Liberty dir/usr/servers/server_name/dropins`
+   
+# Step 2. Build & run Liberty app locally
+
+**Getting the project repository**
+
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
+
+1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
+2. `cd refarch-jee-customerorder`
+3. `git checkout liberty`
+
+Once you checked out the appropriate brach,
+
+1. `cd Common`
+2. `vi server.env.remote`
+3. Replace DB2_PASSWORD_ORDER and DB2_PASSWORD_INVENTORY with **your database password**.
+4. `cd ..`
+
+Start **Docker** in your machine.
+
+1. Build the docker image.
+
+`docker build -t "customer-order-services:liberty" .`
+
+You can verify your docker image using the command `docker images`. You will find the image.
+
+```
+REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
+customer-order-services                             liberty             8c3e4d876dad        2 hours ago         424MB
+```
+
+2. Run the docker image.
+
+`docker run -p 9080 customer-order-services:liberty`
+
+When it is complete, you can see the below output.
+
+```
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://4963b17bece0:9080/CustomerOrderServicesWeb/
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://4963b17bece0:9080/CustomerOrderServicesTest/
+[AUDIT   ] CWWKZ0001I: Application CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear started in 2.366 seconds.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, ejbLite-3.1, servlet-3.1, ssl-1.0, jndi-1.0, localConnector-1.0, federatedRegistry-1.0, appSecurity-2.0, jdbc-4.1, jaxrs-1.1, el-3.0, ldapRegistry-3.0, json-1.0, distributedMap-1.0, beanValidation-1.0, jpa-2.0].
+[AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
+```
+Now you can run the application locally.
+
+1. Go to your browser.
+2. Access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**.
+ 
+To get your port,
+ - Use the command `docker ps`
+ ```
+ CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
+4963b17bece0   customer-order-services:liberty   "/opt/ibm/docker/d..."   3 minutes ago       Up 3 minutes        
+
+PORTS                                     NAMES
+9443/tcp, 0.0.0.0:32768->9080/tcp         distracted_shirley
+ ```
+ 
+Grab the port and replace it in the url. In this case, port will be 32768.
+
+3. Once you access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**, it prompts you for username and password.
+
+4. Login as the user `rbarcia` with the password of `bl0wfish`.
+
+<p align="center">
+<img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/AppRunningLocally.png">
+</p>
+
+# Step 3. Push your app to ICp container registry
+
+TBD
+
+# Step 4. Write Kubernetes YAMLs, including Deployment and Services stanzas
+
+TBD
+
+# Step 5. Deploy Liberty app to ICp through kubectl CLI
+
+TBD
 
 # Extra Credit
 
