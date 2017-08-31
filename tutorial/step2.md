@@ -84,8 +84,8 @@ This command will build **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear** in **tar
 Now, you are done with the configuration and the app is ready to deploy. To run the app on Liberty,
 
 1. Open your terminal.
-2. `cd home/skytap/PurpleCompute/wlp/bin`
-3. Before starting the server, to make sure all the utilities are installed, run `./installUtility install deafultServer`. It prompts you to accept the license by pressing 1. Please accept it.
+2. `cd /home/skytap/PurpleCompute/wlp/bin`
+3. Before starting the server, to make sure all the utilities are installed, run `./installUtility install defaultServer`. It prompts you to accept the license by pressing 1. Please accept it.
 3. Start the server - Run `./server start defaultServer`
 4. Open your browser.
 5. Access http://localhost:9080/CustomerOrderServicesWeb/#shopPage, it prompts you for username and password.
