@@ -3,67 +3,27 @@
 In this final step, we are going to deploy our Liberty app to our IBM Cloud private through the Kubernetes command line interface or the ICp dashboard.
 
 
-## Prerequisites
+### Prerequisites
 * kubectl
-* Docker CLI
 
-## Preparation steps
-
-Before we start deployment we will create a separate user and namespace in kubernetes where the application will be hosted.
-Namespacing is a concept in Kubernetes that allows isolation of applications and other resourcs.
-
-### Create user and namespace
-1. In your webbroswer login to the the ICp Dashboard on `https://10.0.0.1:8443` as a system administrator, username `admin` password `admin`.
-#### Creating a namespace
-1. From the navigation menu, select System > Namespaces.
-1. Click New Namespace.
-1. Enter a namespace name `websphere'
-1. Click Add Namespace.
-#### Adding a user to a namespace
-1. Navigate to the `Users` tab.
-1. Click New User.
-1. Enter "user1" as the user name, and provide a password and email address.
-1. Select Namespace `websphere`.
-1. Click Add User
-
-### Push image to ICp Image Repository
-ICp provides a docker compatible image repository out of the box, which is available on the server `master.cfc` port `8500`
-
-### Re-Tag image
-To be able to push the image we build in the previous step into the ICp Image Repository, we'll need to add an additional tag to the image we built.
-
-From the command line, enter the following command
-```
-$ docker tag customer-order-services:liberty master.cfc:8500/websphere/customer-order-services:liberty
-```
-This extra information in the tag tells docker that this image belongs to the repository `websphere` on the `master.cfc:8500` server, which maps to the namespace we created above.
-
-### Push image
-To make the image available to use in Kubernetes enter the following commands
-1. `$ docker login login master.cfc:8500` providing `user1` as the user and the password you created above
-1. `$ docker push master.cfc:8500/websphere/customer-order-services:liberty`
-
-
-You will now be able to see the image in the ICp Dashboard under *Infrastructure -> Images*
-
-
-
-# Deploy application
+## Deploy application
 Applications can be deployed both from the ICp Dashboard or using the Kubenetes command line tool `kubectl`
 Both approaches will be described in this guide.
 
 ### From GUI
+
+Log in to ICp Dashboard with username `user1` and the password you created in previous step
 
 ####  Create ConfigMaps
 The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod.
 This information will include connectivity details for the Order database, the Inventory database and the LDAP server.
 
 1. Log in to the ICp Dashboard as user `user1`
-1. From the navigation menu, select Configs
+1. From the navigation menu, select `Configs`
 1. Click Create Configmap
-1. In the dialog box, provide the name ```orderdb```
-1. Toggle the ```JSON mode``` button to enter JSON mode
-1. in the ```data``` key enter the following map
+1. In the dialog box, provide the name `orderdb`
+1. Toggle the `JSON mode` button to enter JSON mode
+1. in the `data` key enter the following JSON snippet
 
     ```
     "DB2_HOST_ORDER": "cap-sg-prd-2.integration.ibmcloud.com",
@@ -73,7 +33,7 @@ This information will include connectivity details for the Order database, the I
     "DB2_PASSWORD_ORDER": "insert password here"
     ```
 
-1. Click ```Create```
+1. Click `Create`
 
 1. Click Create Configmap
 1. In the dialog box, provide the name ```inventorydb```
@@ -108,6 +68,8 @@ This information will include connectivity details for the Order database, the I
 
 
 #### Deploy application
+When deploying the application from GUI you will see that the interface will create a similar deployment manifest as you created in step 4, but in JSON format.
+You can compare the JSON that the GUI creates with the yaml you created in step 4 to see the similarities.
 
 1. From navigation menu, select Applications.
 1. Select Deploy Application.
@@ -165,6 +127,14 @@ To be able to connect to the application from our workstation we need to expose 
 1. Validate that the shop loads with product listings
 
 ### From kubectl
+To authenticate kubectl you need to grab token and associated information from the ICp Dashboard.
+To do that follow these steps:
+1. Login to ICp Dashboard as `user1`
+2. In the top right corner in the dropdown by the username select `Configure Client`
+3. Copy the text in the textbox
+4. Paste the text into a terminal window
+
+You are now authenticated and can use kubectl
 
 ####  Create ConfigMaps
 The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod.
@@ -174,78 +144,20 @@ We will load the variables from properties files located in the Common directory
 1. Update the passwords for the database settings
 
     ```
-    sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/order-db.properties
-    sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/inventory-db.properties
+    $ sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/order-db.properties
+    $ sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/inventory-db.properties
     ```
 1. Create the ConfigMaps
     
     ```
-    kubectl create configmap orderdb --from-file=order-db.properties
-    kubectl create configmap inventorydb --from-file=inventory-db.properties
-    kubectl create configmap ldap --from-file=ldap.properties
-
-
-#### Generate deployment.yaml
-Our deployment file will look like this
-
+    $ kubectl create configmap orderdb --from-file=order-db.properties
+    $ kubectl create configmap inventorydb --from-file=inventory-db.properties
+    $ kubectl create configmap ldap --from-file=ldap.properties
     ```
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: customerorderservices
-      labels:
-        app: customerorderservices
-    spec:
-      ports:
-        - port: 80
-          targetPort: 9080
-      selector:
-        app: customerorderservices
-      type: ClusterIP
-      
-    ---
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    metadata:
-      labels:
-        app: customerorderservices
-      name: customerorderservices
-    spec:
-      replicas: 1
-      template:
-        metadata:
-          labels:
-            app: customerorderservices
-        spec:
-          containers:
-          - image: master.cfc:8500/websphere/customer-order-services:liberty
-            name: customerorderservices
-            ports:
-            - containerPort: 9080
-              protocol: TCP
-            envFrom:
-            - configMapRef:
-                name: orderdb
-            - configMapRef:
-                name: inventorydb
-            - configMapRef:
-                name: ldap 
-          imagePullSecrets:
-          - name: user1.registrykey
-    ```
-
-You can see there are two sections in this file, separated by `---`. The three dashes is a yaml construct that allows us to put the content of multiple files in a single file.
-
-Above the dashes is the Service, indicated by `kind: Service`. Here we describe how we like the application to be exposed. In our case we choose to use ClusterIP, which means the application will receive an IP address from the 10.1.0.0/16 IP address range
-
-The next part is the deployment part, indicated by `kind: Deployment`. Here we describe what we want the target state of the application to be.
-
-The envFrom section enables the data we entered in the ConfigMaps in previous steps to be consumed by the application in the containers as environment variables.
-
 
 1. Run kubectl to apply the deployment
 
-    ```kubectl apply -f deployment.yaml```
+    `$ kubectl apply -f deployment.yaml`
     
 #### Validate 
 
@@ -258,3 +170,40 @@ Using a web broswer, navigate to the IP address for the Cluster with the path of
 ```
 http://10.0.0.147/CustomerOrderServicesWeb/
 ```
+
+There are some handy kubectl commands to interrogate the application and do debugging
+
+1. To get a list of pods
+   `$ kubectl get pods`
+```
+NAME                                        READY     STATUS    RESTARTS   AGE
+customerorderservices-3052797159-wgv0c      1/1       Running   0          24s
+websphere-jenkins-jenkin-2215263535-hqbqv   1/1       Running   0          6d
+```
+1. To see the container log of a pod
+   `$ kubectl logs customerorderservices<pod-id>` 
+```
+Launching defaultServer (WebSphere Application Server 17.0.0.2/wlp-1.0.17.cl170220170523-1818) on IBM J9 VM, version pxa6480sr4fp10-20170727_01 (SR4 FP10) (en_US)
+[AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[AUDIT   ] CWWKE0100I: This product is licensed for development, and limited production use. The full license terms can be viewed here: https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/license/base_ilan/ilan/17.0.0.2/lafiles/en.html
+[AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ibm/wlp/usr/servers/defaultServer/configDropins/defaults/keystore.xml
+[WARNING ] CWWKG0011W: The configuration validation did not succeed. Found conflicting settings for defaultKeyStore instance of keyStore configuration.
+  Property password has conflicting values:
+    Secure value is set in file:/opt/ibm/wlp/usr/servers/defaultServer/configDropins/defaults/keystore.xml.
+    Secure value is set in file:/opt/ibm/wlp/usr/servers/defaultServer/server.xml.
+  Property password will be set to the value defined in file:/opt/ibm/wlp/usr/servers/defaultServer/server.xml.
+
+[AUDIT   ] CWWKZ0058I: Monitoring dropins for applications. 
+[AUDIT   ] CWWKS4104A: LTPA keys created in 1.723 seconds. LTPA key file: /opt/ibm/wlp/output/defaultServer/resources/security/ltpa.keys
+[AUDIT   ] CWPKI0803A: SSL certificate created in 2.228 seconds. SSL key file: /opt/ibm/wlp/output/defaultServer/resources/security/key.jks
+com.ibm.net.SocketKeepAliveParameters
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://customerorderservices-3052797159-wgv0c:9080/CustomerOrderServicesWeb/
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://customerorderservices-3052797159-wgv0c:9080/CustomerOrderServicesTest/
+[AUDIT   ] CWWKZ0001I: Application CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear started in 3.772 seconds.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, ejbLite-3.1, servlet-3.1, ssl-1.0, jndi-1.0, localConnector-1.0, federatedRegistry-1.0, appSecurity-2.0, jdbc-4.1, jaxrs-1.1, el-3.0, ldapRegistry-3.0, json-1.0, distributedMap-1.0, beanValidation-1.0, jpa-2.0].
+[AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
+```   
+1. To see some information about a given pod
+   `$ kubectl describe pod customerorderservices<pod-id>
+
+`
