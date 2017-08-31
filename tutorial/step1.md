@@ -1,10 +1,4 @@
-# Prerequisites
-
-The following are prerequisites for completing this tutorial:
-
-**TBD**
-
-# Step 1. Perform transformation from WAS7 to Liberty (Optional)
+# Step 1. Modernise application to run on WebSphere Liberty profile (Optional)
 
 In this step, we are going to make the modifications needed both at the application level and the server configuration level to migrate our WebSphere Application Server 7 application to run in WebSphere Liberty.
 
@@ -12,9 +6,9 @@ In this step, we are going to make the modifications needed both at the applicat
 
 1.  [Source Code Migration](#source-code-migration)
     - [Software Analyzer Configuration](#software-analyzer-configuration)
-    - [Running the Software Analyzer](#running-the-software-analyzer)
-    - [Running the application](#running-the-application)
-2.  [WebSphere Configuration Migration](#websphere-configuration-migration)
+    - [Run the Software Analyzer](#run-the-software-analyzer)
+2. [Configure the Liberty Server](#configure-the-liberty-server)
+3. [Run the application](#run-the-application)
 
 ## Source Code Migration
 
@@ -34,7 +28,7 @@ The Rule set configuration panel should be displayed. This panel must be configu
 
 ![Source migration 3](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source3.png)
 
-### Running the Software Analyzer
+### Run the Software Analyzer
 
 After running the _Software Analyzer_ you should see a _Software Analyzer Results_ tab at the bottom. The Software Analyzer rules are categorised, and so are the errors and warnings produced in its report, in four categories: **Java Code Review, XML File Review, JSP Code Review and File Review**. We must go through each of these tabs/categories and review the errors and warnings as code/configuration changes might be needed.
 
@@ -96,7 +90,7 @@ However, that does not seem like enough information in order to figure out what 
 
 ![Source migration 20](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source20.png)
 
-With the information gathered along the links we have visited above, we now realise we need to configure the application in the server.xml file to be able to access third-party libraries by adding the following:
+With the information gathered along the links we have visited above, we now realise we need to configure the Liberty server to be able to allow the application access to third-party libraries. We do so by adding the following to the server.xml configuration file (this will be done in the next [Configure the Liberty Server](#configure-the-liberty-server) section):
 
 ```
 <application id="customerOrderServicesApp" name="CustomerOrderServicesApp.ear" type="ear" location="${shared.app.dir}/CustomerOrderServicesApp.ear">
@@ -129,8 +123,108 @@ Therefore, we need to change it to
 ```
 java:app/CustomerOrderServices/ProductSearchServiceImpl!org.pwte.example.service.ProductSearchService
 ```
+## Configure the Liberty Server
 
-### Running the application
+In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can configure it manually by following the steps below or you can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml).
+
+The IBM WebSphere Application Server Liberty Profile is a composable, dynamic application server environment that supports development and testing of Java EE Full Platform web applications.
+
+The Liberty profile is a simplified, lightweight development and application runtime environment that has the following characteristics:
+
+* Simple to configure. Configuration is read from an XML file with text-editor-friendly syntax.
+* Dynamic and flexible. The run time loads only what your application needs and recomposes the run time in response to configuration changes.
+* Fast. The server starts in under 5 seconds with a basic web application.
+* Extensible. The Liberty profile provides support for user and product extensions, which can use System Programming Interfaces (SPIs) to extend the run time.
+
+The application server configuration is described in a series of elements in the server.xml configuration file. We are now going to see what we need to describe in that server.xml configuration file to get our Liberty server prepared to successfully run our Customer Order Services application.
+
+#### 1. Features
+
+First of all, we need to identy the Java EE features we want our Liberty server to provide us with in order to run our application. In our Customer Order Services application, the main Java EE features we use are:
+
+* JPA
+* JAX-RS
+* SERVLET
+* JDBC
+* EJB
+
+However, we also use other Java features such as JDBC, JSON and Java Application Security. As a result, we need to get these featues installed in our Liberty server. We do so by definiing these featues in the server.xml file by adding the following lines to it
+```
+<!-- Enable features -->
+<featureManager>
+    <feature>jpa-2.0</feature>
+    <feature>jaxrs-1.1</feature>
+    <feature>jsonp-1.0</feature>
+    <feature>servlet-3.1</feature>
+    <feature>jdbc-4.1</feature>
+    <feature>ejbLite-3.1</feature>
+    <feature>appSecurity-2.0</feature>
+    <feature>localConnector-1.0</feature>
+</featureManager>
+```
+
+#### 2. Application
+
+Add the following lines to your server.xml file to tell the Liberty server what application to run and their class loaders:
+
+```
+<!-- Define application and its classloaders -->
+<application id="customerOrderServicesApp" location="${shared.app.dir}/CustomerOrderServicesApp.ear" name="CustomerOrderServicesApp.ear" type="ear">
+    <classloader apiTypeVisibility="spec, ibm-api, third-party"/>
+</application>
+```
+
+#### 3. Http Endpoint
+
+Add the following lines to your server.xml file to tell the Liberty server what is going to be the http endpoint for the Customer Order Services web application:
+
+```
+<!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+```
+
+#### 4. Application security
+
+Add the following lines to your server.xml file to set you application security so that only secure users can access the application:
+
+```
+<!-- User and group security definitions -->
+<basicRegistry id="basic" realm="customRealm">
+    <user name="rbarcia" password="bl0wfish"/>
+    <group name="SecureShopper">
+        <member name="rbarcia"/>
+    </group>
+</basicRegistry>
+```
+
+#### 5. Data sources
+
+Add the following lines to your server.xml file to define your application data sources as well as what jdbc drivers and properties the Liberty server needs to use in order to access the application's data:
+
+```
+<!-- DB2 library definition -->
+<library apiTypeVisibility="spec, ibm-api, third-party" id="DB2JCC4Lib">
+    <fileset dir="/opt/ibm/db2/V11.1/java/" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
+</library>
+    
+<!-- Data source definition -->
+<dataSource id="OrderDS" jndiName="jdbc/orderds" type="javax.sql.XADataSource">
+    <jdbcDriver libraryRef="DB2JCC4Lib"/>
+    <properties.db2.jcc databaseName="ORDERDB" password="db2inst1-pwd" portNumber="50000" serverName="localhost" user="db2inst1"/>
+</dataSource>
+```
+#### 6. Expand WAR and EAR files
+
+Add the following lines to your server.xml file to configure your Liberty server to expand WAR and EAR files at startup so that you dont need to it manually:
+
+```
+<!-- Automatically expand WAR files and EAR files -->
+<applicationManager autoExpand="true"/>
+```
+
+At this point, you should already have the server.xml with the needed configuration to successfully run the Customer Order Services application.
+
+## Run the application
 
 In order to locally run our application now that we seem to have the appropriate source code of the application and the server configuration migrated to WebSphere Liberty, we right-click on the CustomerOrderServicesApp project and select export --> EAR file
 
@@ -148,7 +242,7 @@ You will first be presented with a log in dialog since we have security for our 
 
 ![Source migration 23](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source23.png)
 
-Introduce **rbarcia or kbrown** as the username and **bl0wfish** as the password for the credentials. Once you have done that, you should be able to see the Customer Order Services Web Application displayed in your web browser. However you will most likely be presented with an error on screen:
+Introduce **rbarcia** as the username and **bl0wfish** as the password for the credentials. Once you have done that, you should be able to see the Customer Order Services Web Application displayed in your web browser. However you will most likely be presented with an error on screen:
 
 ![Source migration 24](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source24.png)
 
@@ -194,242 +288,3 @@ The reason for this is that the OpenJPA driver treats booleans differently based
 Again, save all the changes, export the EAR project to the WebSphere Liberty folder and start the Server up. You should now see the Customer Order Services web application with no errors at all either on the browser or in the Console tab for WebSphere Liberty in eclipse:
 
 ![Source migration 33](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source33.png)
-
-## WebSphere Configuration Migration
-
-**Output: server.xml**
-
-### Create the Liberty server.xml file
-
-Configuration of the traditional WebSphere should be migrated to Liberty before deploying the application to Liberty. In Liberty, the runtime environment operates from a set of built-in configuration default settings, and the configuration can be specified by overriding the default settings.
-
-For this, you can make use of available tools or it can be done manually.
-
-#### [Eclipse based configuration migration tool]( https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Configuration_Migration_Tool)
-
-[Eclipse-based WebSphere Configuration Migration tool](https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Configuration_Migration_Tool) can be used to migrate the configuration from different types of servers to WebSphere application server. This can also be used to migrate the configuration of traditional WebSphere to Liberty.
-
-Once this tool gets installed in your IDE, you can access it using the option Migration Tools.
-
-![Eclipse Plugin1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/EclipseMigToolkit.png)
-
-Choose your environment and proceed with the migration.
-
-![Eclipse Plugin2](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/ConfigMigToolPropsFile.png)
-
-`./wsadmin.sh –lang jython –c “AdminTask.extractConfigProperties(‘[-propertiesFileName my.props]’)”`
-
-After executing this command, my.props file will be generated. The properties file for this sample application can be accessed here [my.props](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/phases/phase1_assets/my.props)
-
-Choose WebSphere Liberty as the target environment and continue the process.
-
-![Eclipse Plugin3](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/ConfigMigToolTarget.png)
-
-![Eclipse Plugin4](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/ConfigMigToolResources.png)
-
-![Eclipse Plugin5](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/FinalServerXML.png)
-
-At the end, you will have server.xml file generated. Save it.
-
-After generating my.props file, you can also make use of [WebSphere Configuration Migration Toolkit: WebSphere Migration](https://ibm.biz/WCMT_Web) available online. This is just a replacement to the Eclipse plugin. Both of them works in the same way.
-
-#### [WebSphere Configuration Migration Toolkit: WebSphere Migration](https://ibm.biz/WCMT_Web)
-
-![Web Tool 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool1.png)
-
-![Web Tool 2](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool2.png)
-
-![Web Tool 3](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool3.png)
-
-![Web Tool 4](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool4.png)
-
-![Web Tool 5](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool5.png)
-
-![Web Tool 6](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/WebTool6.png)
-
-Finally, you will have a server.xml file generated.
-
-#### server.xml manual modifications
-
-Open your liberty server.xml and replace the contents of it with the one we just generated.
-
-However, the migration tool kit doesnot have access to the code. So, some of the modification must be done manually depending on the application you deploy.
-
-1. The feature list must be replaced with the following.
-
-     ```
-     <featureManager>
-      <feature>localConnector-1.0</feature>
-      <feature>jsp-2.3</feature>
-      <feature>jpa-2.0</feature>
-      <feature>jaxrs-1.1</feature>
-      <feature>servlet-3.1</feature>
-      <feature>jdbc-4.1</feature>
-      <feature>ejbLite-3.1</feature>
-      <feature>appSecurity-2.0</feature>
-      <feature>ldapRegistry-3.0</feature>
-     </featureManager>
-     ```
-
-2. Configure the http port.
-
-     ```
-     <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint">
-      <tcpOptions soReuseAddr="true"/>
-     </httpEndpoint>
-     ```
-
-3. Modify the datasource definition, as the migration tool kit grabbed the default ones for traditional server, replace them in such a way that they are preferred for Liberty.
-
-     ```
-     <dataSource id="OrderDS" type="javax.sql.XADataSource" jndiName="jdbc/orderds">
-      <jdbcDriver libraryRef="DB2Lib"/>
-      <properties.db2.jcc  user="${env.DB2_USER_ORDER}" password="${env.DB2_PASSWORD_ORDER}" databaseName="${env.DB2_DBNAME_ORDER}" serverName="${env.DB2_HOST_ORDER}" portNumber="${env.DB2_PORT_ORDER}"/>
-      <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
-     </dataSource>
-     <dataSource id="INDS" type="javax.sql.XADataSource" jndiName="jdbc/inds">
-      <jdbcDriver libraryRef="DB2Lib"/>
-      <properties.db2.jcc  user="${env.DB2_USER_INVENTORY}" password="${env.DB2_PASSWORD_INVENTORY}" databaseName="${env.DB2_DBNAME_INVENTORY}" serverName="${env.DB2_HOST_INVENTORY}" portNumber="${env.DB2_PORT_INVENTORY}"/>
-      <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
-     </dataSource>
-     ```
-
-4. jdbcDriver definition should be modified pointing the location of jars.
-
-     ```
-     <library id="DB2Lib">
-      <fileset dir="${env.DB2_JARS}" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
-     </library>
-     ```
-
-5. As we are using LDAP in the sample application, LDAP registry definition must be added.
-
-     ```
-     <ldapRegistry id="ldap" host="${env.LDAP_HOST}" port="${env.LDAP_PORT}" baseDN="${env.LDAP_BASE_DN}" bindDN="${env.LDAP_BIND_DN}" bindPassword="${env.LDAP_BIND_PASSWORD}" realm="${env.LDAP_REALM}" ignoreCase="true" ldapType="IBM Tivoli Directory Server">
-      <idsFilters groupFilter="(&amp;(cn=%v)(objectclass=groupOfUniqueNames))" groupIdMap="*:cn" groupMemberIdMap="mycompany-allGroups:member;mycompany-allGroups:uniqueMember;groupOfNames:member;groupOfUniqueNames:uniqueMember" userFilter="(&amp;(uid=%v)(objectclass=inetorgperson))" userIdMap="*:uid">
-      </idsFilters>
-    </ldapRegistry>
-    ```
-Once you are done with all these modifications, your server.xml should look like [this](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/toLiberty/Common/server.xml) and the env variables are defined in [server.env](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/toLiberty/Common/server.env)
-
-### Liberty server Configuration
-
-1. Using command prompt, go to the Liberty/bin directory.
-2. Use this command, install all the missing features.
-
-   `installUtility install server_name`
-
-   During the installation, it prompts to accept the licenses. Please accept them.
-
-Your server is ready now with all the necessary features installed.
-
-### Deploying your application using Liberty server.
-
-This can be done in two ways. You can use server.xml or dropins folder.
-
-1. Using server.xml, you can deploy the application by adding the following lines to your server.xml.
-
-   ```
-   <application id="CustomerOrderServices" location="path/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" name="CustomerOrderServices"></application>
-   ```
-2. Instead of this, you can also deploy the application by placing the ear file in the **dropins** folder.
-
-   `Place your ear in Liberty dir/usr/servers/server_name/dropins`
-   
-# Step 2. Build & run Liberty app locally
-
-**Getting the project repository**
-
-You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
-
-1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
-2. `cd refarch-jee-customerorder`
-3. `git checkout liberty`
-
-Once you checked out the appropriate brach,
-
-1. `cd Common`
-2. `vi server.env.remote`
-3. Replace DB2_PASSWORD_ORDER and DB2_PASSWORD_INVENTORY with **your database password**.
-4. `cd ..`
-
-Start **Docker** in your machine.
-
-1. Build the docker image.
-
-`docker build -t "customer-order-services:liberty" .`
-
-You can verify your docker image using the command `docker images`. You will find the image.
-
-```
-REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
-customer-order-services                             liberty             8c3e4d876dad        2 hours ago         424MB
-```
-
-2. Run the docker image.
-
-`docker run -p 9080 customer-order-services:liberty`
-
-When it is complete, you can see the below output.
-
-```
-[AUDIT   ] CWWKT0016I: Web application available (default_host): http://4963b17bece0:9080/CustomerOrderServicesWeb/
-[AUDIT   ] CWWKT0016I: Web application available (default_host): http://4963b17bece0:9080/CustomerOrderServicesTest/
-[AUDIT   ] CWWKZ0001I: Application CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear started in 2.366 seconds.
-[AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, ejbLite-3.1, servlet-3.1, ssl-1.0, jndi-1.0, localConnector-1.0, federatedRegistry-1.0, appSecurity-2.0, jdbc-4.1, jaxrs-1.1, el-3.0, ldapRegistry-3.0, json-1.0, distributedMap-1.0, beanValidation-1.0, jpa-2.0].
-[AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
-```
-Now you can run the application locally.
-
-1. Go to your browser.
-2. Access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**.
- 
-To get your port,
- - Use the command `docker ps`
- ```
- CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
-4963b17bece0   customer-order-services:liberty   "/opt/ibm/docker/d..."   3 minutes ago       Up 3 minutes        
-
-PORTS                                     NAMES
-9443/tcp, 0.0.0.0:32768->9080/tcp         distracted_shirley
- ```
- 
-Grab the port and replace it in the url. In this case, port will be 32768.
-
-3. Once you access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**, it prompts you for username and password.
-
-4. Login as the user `rbarcia` with the password of `bl0wfish`.
-
-<p align="center">
-<img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/AppRunningLocally.png">
-</p>
-
-# Step 3. Push your app to ICp container registry
-
-TBD
-
-# Step 4. Write Kubernetes YAMLs, including Deployment and Services stanzas
-
-TBD
-
-# Step 5. Deploy Liberty app to ICp through kubectl CLI
-
-TBD
-
-# Extra Credit
-
-Now that you've got a traditional Liberty application up and running on the platform, it's time to evolve it!  The first step in approaching microservices from the current application is going to be modularization and refactoring.  This can be done easily to align along the components we have in Customer Order Services - front-end services and back-end services.
-
-Breaking the application into two separate Liberty applications is a great next step to become more comfortable with the application and platform.  If you followed the optional Step 1, you have a fully functional development environment which you can build, test, and deploy future iterations of this application.
-
-The logical steps you will need to complete this Extra Credit work are as follows:
-
-1. Break down the application into 2 separate Liberty apps & containers - backend (REST & EJBs) & frontend (Dojo Javascript).
-
-   Note you will have to solve the problem of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) upon moving the Javascript and REST services into separate applications.  You can see one solution to this problem via an implementation available on our [GitHub](https://github.com/ibm-cloud-architecture/refarch-jee-monolith-to-microservices)
-
-2. Deploy Backend application through Kubernetes YAMLs (including a Service and Deployment), specifying the correct information via configMap entries as other steps in this tutorial have shown.
-
-3. Deploy Front-End application through Kubernetes YAMLs, specifying the Backend service you will need to communicate with via configMaps.
-
-4. Validate the new modular application works, allowing you the freedom to actively change the front-end without having to touch the back-end REST & EJB services!
