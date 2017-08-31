@@ -62,12 +62,20 @@ Then use `sudo docker images`
 REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
 hello-world                                         latest              1815c82652c0        2 months ago        1.84kB
 ```
+Before building the docker image, replace the database password in the **server.env.remote** with **your database password**.
+
+- Navigate to **/home/skytap/PurpleCompute/refarch-jee-customerorder/Common/server.env.remote** and replace the password.
+
+
+Navigate to this path as the docker file resides here.
+
+`cd /home/skytap/PurpleCompute/refarch-jee-customerorder`
 
 #### Build the docker image.
 
-`docker build -t "customer-order-services:liberty" .`
+`sudo docker build -t "customer-order-services:liberty" .`
 
-You can verify your docker image using the command `docker images`. You will find the image.
+You can verify your docker image using the command `sudo docker images`. You will find the image.
 
 ```
 REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
@@ -78,7 +86,7 @@ customer-order-services                             liberty             8c3e4d87
 
 Run the docker image.
 
-`docker run -p 9080 customer-order-services:liberty`
+`sudo docker run -p 9080 customer-order-services:liberty`
 
 When it is complete, you can see the below output.
 
@@ -95,7 +103,7 @@ Now your application is running locally.
 2. Access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**.
  
 To get your port,
- - Use the command `docker ps`
+ - Use the command `sudo docker ps`
  ```
  CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
 4963b17bece0   customer-order-services:liberty   "/opt/ibm/docker/d..."   3 minutes ago       Up 3 minutes        
