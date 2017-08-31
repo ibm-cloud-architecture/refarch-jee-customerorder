@@ -2,7 +2,6 @@
 
 In this final step, we are going to deploy our Liberty app to our IBM Cloud private through the Kubernetes command line interface or the ICp dashboard.
 
-# Building and deploying 
 
 ## Prerequisites
 * kubectl
@@ -27,7 +26,7 @@ Namespacing is a concept in Kubernetes that allows isolation of applications and
 1. Select Namespace `websphere`.
 1. Click Add User
 
-# Push image to ICp Image Repository
+### Push image to ICp Image Repository
 ICp provides a docker compatible image repository out of the box, which is available on the server `master.cfc` port `8500`
 
 ### Re-Tag image
