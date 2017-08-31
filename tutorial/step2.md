@@ -57,15 +57,15 @@ This command will build **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear** in **tar
   
   - You will find a **server.xml** file.
     
-    - Replace the contents of this file with contents of 
+    - Replace this file with
       
-      **refarch-jee-customerorder/tutorial/tutorialConfigFiles/server.xml**
+      **/home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.xml**
     
   - Now, you can see one other file named **server.env**.
   
-    - Replace the contents of this file with contents of 
+    - Replace this file with 
       
-      **refarch-jee-customerorder/tutorial/tutorialConfigFiles/server.env.remote**
+      **/home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.env**
       
     - Replace the database password with **your database password**.
     
