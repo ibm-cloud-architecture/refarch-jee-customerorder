@@ -31,6 +31,12 @@ ICp provides a docker compatible image repository out of the box, which is avail
 #### Re-Tag image
 To be able to push the image we build in the previous step into the ICp Image Repository, we'll need to add an additional tag to the image we built.
 
+**Note** - While using docker commands, if you are getting the following message in your skytap environment, please add `sudo` before your instruction.
+
+```
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.30/images/json: dial unix /var/run/docker.sock: connect: permission denied
+```
+
 From the command line, enter the following command
 ```
 $ docker tag customer-order-services:liberty master.cfc:8500/websphere/customer-order-services:liberty
@@ -39,7 +45,7 @@ This extra information in the tag tells docker that this image belongs to the re
 
 #### Push image
 To make the image available to use in Kubernetes enter the following commands
-1. `$ docker login login master.cfc:8500` providing `user1` as the user and the password you created above
+1. `$ docker login master.cfc:8500` providing `user1` as the user and the password you created above
 1. `$ docker push master.cfc:8500/websphere/customer-order-services:liberty`
 
 
