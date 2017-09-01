@@ -22,13 +22,13 @@
      
      <!-- DB2 library definition -->
     <library apiTypeVisibility="spec, ibm-api, third-party" id="DB2JCC4Lib">
-    	<fileset dir="/opt/ibm/db2/V11.1/java/" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
-	</library>
+    	<fileset dir="/home/skytap/PurpleCompute/db2lib" includes="db2jcc4.jar db2jcc_license_cu.jar"/>
+    </library>
     
     <!-- Data source definition -->
     <dataSource id="OrderDS" jndiName="jdbc/orderds" type="javax.sql.XADataSource">
     	<jdbcDriver libraryRef="DB2JCC4Lib"/>
-    	<properties.db2.jcc databaseName="ORDERDB" password="db2inst1-pwd" portNumber="50000" serverName="localhost" user="db2inst1"/>
+    	<properties.db2.jcc databaseName="ORDERDB" password="db2user01" portNumber="50000" serverName="10.0.0.7" user="db2inst1"/>
 	</dataSource>
     
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
