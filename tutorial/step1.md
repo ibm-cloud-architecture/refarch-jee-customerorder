@@ -2,9 +2,8 @@
 
 In this step, we are going to make the modifications needed both at the application level and the server configuration level to migrate our WebSphere Application Server 7 application to run in WebSphere Liberty.
 
-**_(To be discussed. We might one to do the config migration before the source migration since we will need the config to run the application to complete the source migration process)_**
-
 1.  [Source Code Migration](#source-code-migration)
+    - [Get the code](#get-the-code)
     - [Software Analyzer Configuration](#software-analyzer-configuration)
     - [Run the Software Analyzer](#run-the-software-analyzer)
 2. [Configure the Liberty Server](#configure-the-liberty-server)
@@ -13,6 +12,52 @@ In this step, we are going to make the modifications needed both at the applicat
 ## Source Code Migration
 
 In order to migrate the code to get our WebSphere Application Server 7 application working on WebSphere Liberty, we are going to use the [WebSphere Application Server Migration Toolkit (WAMT)](https://developer.ibm.com/wasdev/downloads/#asset/tools-WebSphere_Application_Server_Migration_Toolkit). The migration toolkit provides a rich set of tools that help you migrate applications from third-party application servers, between versions of WebSphere Application Server, to Liberty, and to cloud platforms such as Liberty for Java on IBM Bluemix, IBM WebSphere on Cloud and Docker.
+
+### Get the code
+
+The migration toolkit is eclipse based. Therefore, these are the steps to be taken to get the code into eclipse to run the migration toolkit on it:
+
+1. Download Customer Order Services application's source code from GitHub
+
+```
+cd ~/PurpleCompute/git
+git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git
+```
+![Source migration 35](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source35.png)
+
+2. Switch to the WAS 7 development branch
+
+```
+cd refarch-jee-customerorder
+git checkout was70-dev
+```
+![Source migration 36](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source36.png)
+
+3. Open eclipse
+
+```
+cd ~/PurpleCompute/eclipse
+./eclipse
+```
+
+4. Import projects
+
+- Click on File --> Import...
+- On the dialog that pops up, select Existing Projects into Workspace in the General folder.
+
+![Source migration 37](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source37.png)
+
+- In the next dialog, browse to ```~/PurpleCompute/git/refarch-jee-customerorder``` for the root directory and click ok. 
+
+![Source migration 38](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source38.png)
+
+- Eclipse will directly detect all the projects within that fodler and select them all. Click Finish.
+
+A migration dialog might pop up after importing the projects into the eclipse workspace since eclipse will detect such projects are configured to run on a runtime that it is not aware of. As a result, it pops up with a workspace migration dialog
+
+![Source migration 39](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source39.png)
+
+Disregard this piece of advice by clicking on cancel. The runtime migration will be done in the following sections.
 
 ### Software Analyzer Configuration
 
