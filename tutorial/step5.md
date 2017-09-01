@@ -26,11 +26,11 @@ This information will include connectivity details for the Order database, the I
 1. in the `data` key enter the following JSON snippet
 
     ```
-    "DB2_HOST_ORDER": "cap-sg-prd-2.integration.ibmcloud.com",
-    "DB2_PORT_ORDER": "16516",
+    "DB2_HOST_ORDER": "10.0.0.7",
+    "DB2_PORT_ORDER": "50000",
     "DB2_DBNAME_ORDER": "ORDERDB",
     "DB2_USER_ORDER": "db2inst1",
-    "DB2_PASSWORD_ORDER": "insert password here"
+    "DB2_PASSWORD_ORDER": "db2user01"
     ```
 
 1. Click `Create`
@@ -41,11 +41,11 @@ This information will include connectivity details for the Order database, the I
 1. in the ```data``` key enter the following map
 
     ```
-    "DB2_HOST_INVENTORY": "cap-sg-prd-2.integration.ibmcloud.com",
-    "DB2_PORT_INVENTORY": "16516",
+    "DB2_HOST_INVENTORY": "10.0.0.7",
+    "DB2_PORT_INVENTORY": "50000",
     "DB2_DBNAME_INVENTORY": "INDB",
     "DB2_USER_INVENTORY": "db2inst1",
-    "DB2_PASSWORD_INVENTORY": "insert password here"
+    "DB2_PASSWORD_INVENTORY": "db2user01"
     ```
 
 1. Click ```Create```
@@ -139,20 +139,16 @@ You are now authenticated and can use kubectl
 ####  Create ConfigMaps
 The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod.
 This information will include connectivity details for the Order database, the Inventory database and the LDAP server.
-We will load the variables from properties files located in the Common directory.
+We will load the variables from properties files located in the tutorial/tutorialConfigFiles/step5 directory.
 
-1. Update the passwords for the database settings
 
-    ```
-    $ sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/order-db.properties
-    $ sed -i 's/___TOBEREPLACED___/insertPassword/g' Common/inventory-db.properties
     ```
 1. Create the ConfigMaps
     
     ```
-    $ kubectl create configmap orderdb --from-file=order-db.properties
-    $ kubectl create configmap inventorydb --from-file=inventory-db.properties
-    $ kubectl create configmap ldap --from-file=ldap.properties
+    $ kubectl create configmap orderdb --from-file=tutorial/tutorialConfigFiles/step5/order-db.properties
+    $ kubectl create configmap inventorydb --from-file=tutorial/tutorialConfigFiles/step5/inventory-db.properties
+    $ kubectl create configmap ldap --from-file=tutorial/tutorialConfigFiles/step5/ldap.properties
     ```
 
 1. Run kubectl to apply the deployment
