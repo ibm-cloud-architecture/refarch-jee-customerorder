@@ -1,8 +1,15 @@
-### Step 3. Containerize the Liberty app
+# Step 3. Containerize the Liberty app
 
 In this step, we are going to use Docker technology to containerise our Liberty application so that it can be then deployed to a virtualized infrastructure using a containers orchestrator such as Kubernetes.
 
-### Containerising the app
+1. [Containerise the app](#containerise-the-app)
+    * [Dockerfile](#dockerfile)
+    * [Build the container image from Dockerfile](#build-container-image-from-dockerfile)
+    * [Run the containerised app](#run-the-containerised-app)
+
+### Containerise the app
+
+#### Dockerfile
 
 We are using Docker to containerize the app. Using Docker, we can pack, ship and easily run the apps on a portable lightweight container that can run anywhere virtually.
 
@@ -44,10 +51,11 @@ ADD http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc
 
 Using this docker file, we build a docker image and using this image we will launch the docker container.
 
-#### Creating the container from dockerfile
+#### Build the container image from Dockerfile
 
 Start **Docker** in your machine.
 
+----
 **Note** - While using docker commands, if you are getting the following message in your skytap environment, please add `sudo` before your instruction.
 
 Eg. `docker images`
@@ -62,18 +70,17 @@ Then use `sudo docker images`
 REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
 hello-world                                         latest              1815c82652c0        2 months ago        1.84kB
 ```
-Before building the docker image, replace the database password in the **server.env.remote** with **your database password**.
+----
 
-- Navigate to **/home/skytap/PurpleCompute/refarch-jee-customerorder/Common/server.env.remote** and replace the password.
+Before building the docker image, replace the server.xml and server.env.remote files used by Dockerfile for the ones provided for this tutorial
 
+1. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.xml /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
+2. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.env.remote /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
 
-Navigate to this path as the docker file resides here.
+Finally, we are now ready to build the container:
 
-`cd /home/skytap/PurpleCompute/refarch-jee-customerorder`
-
-#### Build the docker image.
-
-`sudo docker build -t "customer-order-services:liberty" .`
+1. `cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder`
+2. `sudo docker build -t "customer-order-services:liberty" .`
 
 You can verify your docker image using the command `sudo docker images`. You will find the image.
 
@@ -84,9 +91,7 @@ customer-order-services                             liberty             8c3e4d87
 
 #### Run the containerised app
 
-Run the docker image.
-
-`sudo docker run -p 9080 customer-order-services:liberty`
+Run the docker image: `sudo docker run -p 9080 customer-order-services:liberty`
 
 When it is complete, you can see the below output.
 
@@ -97,26 +102,23 @@ When it is complete, you can see the below output.
 [AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, ejbLite-3.1, servlet-3.1, ssl-1.0, jndi-1.0, localConnector-1.0, federatedRegistry-1.0, appSecurity-2.0, jdbc-4.1, jaxrs-1.1, el-3.0, ldapRegistry-3.0, json-1.0, distributedMap-1.0, beanValidation-1.0, jpa-2.0].
 [AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
 ```
-Now your application is running locally.
+Now your application is running locally. To check it out, open your browser and point it out to
 
-1. Go to your browser.
-2. Access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**.
+http://localhost:{PORT}/CustomerOrderServicesWeb/#shopPage
  
-To get your port,
- - Use the command `sudo docker ps`
- ```
+To get your port, use the command: `sudo docker ps`
+
+```
  CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
 4963b17bece0   customer-order-services:liberty   "/opt/ibm/docker/d..."   3 minutes ago       Up 3 minutes        
 
 PORTS                                     NAMES
 9443/tcp, 0.0.0.0:32768->9080/tcp         distracted_shirley
- ```
+```
  
-Grab the port and replace it in the url. In this case, port will be 32768.
+Grab the port and replace it in the url. In this case, port would be **32768**.
 
-3. Once you access **http://<i>localhost</i>:<i>your port</i>/CustomerOrderServicesWeb/#shopPage**, it prompts you for username and password.
-
-4. Login as the user `rbarcia` with the password of `bl0wfish`.
+As usual, login as the user `rbarcia` with the password of `bl0wfish`.
 
 <p align="center">
 <img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/AppRunningLocally.png">
