@@ -2,6 +2,14 @@
 
 In this step, we are going to build and run the Liberty app locally and connect it to the remote DB2 and LDAP servers simulating what would be a real production scenario.
 
+1. [Get Started](#get-started)
+2. [Build the Liberty app](#build-the-liberty-app)
+    * [Get the project repository](#get-the-project-repository)
+    * [Build the ear file using Maven](#build-the-ear-file-using-maven)
+3. [Configure the Liberty server](#configure-the-liberty-server)
+4. [Deploy and run the app](#deploy-and-run-the-app)
+
+
 ### Get started
 
 Before building the application, on your skytap machine, go to **/home/skytap/PurpleCompute**. This is the home directory from where we run the lab:
@@ -12,7 +20,7 @@ Before building the application, on your skytap machine, go to **/home/skytap/Pu
 
 ### Build the Liberty app
 
-**Getting the project repository**
+#### Get the project repository
 
 You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
 
@@ -21,7 +29,7 @@ You can clone the repository from its main GitHub repository page and checkout t
 3. `cd refarch-jee-customerorder`
 4. `git checkout liberty`
 
-**Building the ear file using Maven**
+#### Build the ear file using Maven
 
 Maven is a good project management tool. It is based on Project Object Model (POM). Maven is generally used for projects build, dependency and documentation. Basically, it simplifies the project build. We are using Maven for building our project ear.
 
@@ -48,7 +56,7 @@ This command will build **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear** in **tar
 [INFO] ------------------------------------------------------------------------
 ```
 
-### Run the Liberty app
+### Configure the Liberty server
 
 Before running the application on the Liberty server, we need to configure it. As we said in this tutorial in step 1, the Liberty server is configured by using config files rather than through an administration console as in previous WebSphere Application Server versions. These configuration files are called **server.xml** and **server.env** which reside in the liberty server directory.
 
@@ -67,7 +75,7 @@ cp /home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigF
 
 ![Step 2 img 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/step2-1.png)
     
-**Deploying the app**
+### Deploy and run the app
 
 Now, we want to deploy the ear file our Customer Order Services application got build into. In order to do so, we need to drop this ear file into an specific folder within the Liberty server installation directory.
 
