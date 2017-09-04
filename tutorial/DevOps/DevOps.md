@@ -11,7 +11,8 @@ The pipeline steps will be provided to Jenkins from a Jenkinsfile in github each
 
 ### Install and access Jenkins
 1. Install Jenkins from app center
-1. Open Jenkins UI (access http)
+1. Open Jenkins UI by clicking the **access http** link on the application page in ICp
+<br />![Open Jenkins URL](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/OpenJenkins.png)<br />
 1. Login as user admin password admin
 
 ### Install required Plugins
