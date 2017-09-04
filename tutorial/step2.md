@@ -2,11 +2,13 @@
 
 In this step, we are going to build and run the Liberty app locally and connect it to the remote DB2 and LDAP servers simulating what would be a real production scenario.
 
-Before building the application, on your skytap machine, go to **/home/skytap/PurpleCompute**. This is the home directory from where we run the lab.
+### Get started
 
-- Login to your skytap machine.
-- Open your terminal.
-- Enter `cd PurpleCompute`
+Before building the application, on your skytap machine, go to **/home/skytap/PurpleCompute**. This is the home directory from where we run the lab:
+
+1. Login to your skytap machine.
+2. Open your terminal.
+3. Enter `cd PurpleCompute`
 
 ### Build the Liberty app
 
@@ -14,9 +16,10 @@ Before building the application, on your skytap machine, go to **/home/skytap/Pu
 
 You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
 
-1. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
-2. `cd refarch-jee-customerorder`
-3. `git checkout liberty`
+1. `cd git`
+2. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
+3. `cd refarch-jee-customerorder`
+4. `git checkout liberty`
 
 **Building the ear file using Maven**
 
@@ -47,55 +50,44 @@ This command will build **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear** in **tar
 
 ### Run the Liberty app
 
-**Configuring the Liberty Server**
+Before running the application on the Liberty server, we need to configure it. As we said in this tutorial in step 1, the Liberty server is configured by using config files rather than through an administration console as in previous WebSphere Application Server versions. These configuration files are called **server.xml** and **server.env** which reside in the liberty server directory.
 
-1. Go to the installation location of your Liberty server.
+For this tutorial, we provide you with these configuration files ready to be used out of the box so that the Customer Order Services application works right away in Liberty. You only need to copy them from the GitHub repository location, which you have just downloaded to your machine, to the Liberty server directory on your machine:
 
-- Go to **defaultServer** folder .
-  
-  Path ... **Home > PurpleCompute > wlp > usr > servers > defaultServer**
-  
-  - You will find a **server.xml** file.
-    
-    - Replace this file with
-      
-      **/home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.xml**
-    
-  - Now, you can see one other file named **server.env**.
-  
-    - Replace this file with 
-      
-      **/home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.env**
-      
-    - Replace the database password with **your database password**.
-    
-    - Also, verify **DB2_JARS**. Check if the location mentioned contains the necessary JARs.
-    
-      In this environment, the JARs (db2jcc4.jar and db2jcc_license_cu.jar) are placed in **Home > PurpleCompute > db2lib**. 
+1. Copy server.xml into the Liberty server directory
+```
+cp /home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.xml \
+   /home/skytap/PurpleCompute/wlp/usr/servers/defaultServer
+```
+2. Copy server.env into the Liberty server directory 
+```
+cp /home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.env \
+   /home/skytap/PurpleCompute/wlp/usr/servers/defaultServer
+```
+
+![Step 2 img 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/step2-1.png)
     
 **Deploying the app**
- 
-- Go to **Home > PurpleCompute > refarch-jee-customerorder > CustomerOrderServicesApp > target**
-- You will see **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear**
-- Copy this ear file into **apps** folder of your liberty server.
-  
-  Path ... **Home > PurpleCompute > wlp > usr > servers > defaultServer > apps**
-  
-Now, you are done with the configuration and the app is ready to deploy. To run the app on Liberty,
 
-1. Open your terminal.
-2. `cd /home/skytap/PurpleCompute/wlp/bin`
-3. Before starting the server, to make sure all the utilities are installed, run `./installUtility install defaultServer`. If it prompts you to accept the license by pressing 1, please accept it.
-3. Start the server - Run `./server start defaultServer`
-4. Open your browser.
-5. Access http://localhost:9080/CustomerOrderServicesWeb/#shopPage, it prompts you for username and password.
-6. Login as the user `rbarcia` with the password of `bl0wfish`.
+Now, we want to deploy the ear file our Customer Order Services application got build into. In order to do so, we need to drop this ear file into an specific folder within the Liberty server installation directory.
+
+1. `cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/CustomerOrderServicesApp/target` <sup>\*</sup>_(You should see the build output ear file called **CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear**)_
+2. `cp CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /home/skytap/PurpleCompute/wlp/usr/servers/defaultServer/apps`
+  
+  
+Now, you are done with the configuration and the app is ready for deployment. To run the app on Liberty,
+
+1. Go into the Liberty server binaries folder: `cd /home/skytap/PurpleCompute/wlp/bin`
+2. Before starting the server, to make sure all the utilities are installed, run the following command: `./installUtility install defaultServer` <sup>\*</sup>_(If it prompts you to accept the license by pressing 1, please accept it)_
+3. Start the server: `./server start defaultServer`
+4. Open your browser and point it to http://localhost:9080/CustomerOrderServicesWeb/#shopPage
+6. Login as the user `rbarcia` with the password of `bl0wfish`
 
 <p align="center">
 <img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/step2apprunning.png">
 </p>
 
-7.Now to stop the server - Run `./server stop defaultServer`
+7. Finally, stop the server: `./server stop defaultServer`
 
 
 
