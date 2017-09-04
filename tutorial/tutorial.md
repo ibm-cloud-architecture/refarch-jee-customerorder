@@ -55,9 +55,16 @@ In this final step, we are going to deploy our Liberty app to our IBM Cloud priv
 
 Click [here](step5.md) for the instructions.
 
+### DevOps - Build and deploy using Jenkins 
+--------------------------------------------
+
+There is always time to be lazy. All steps above to compile, build and deploy the application can be automated.
+Read [these](DevOps/DevOps.md) instructions to setup Jenkins on ICp to do the job for you.
+
 ### (Extra) Homework. Evolve your monolithic application into microservices
 ---------------------------------------------------------------------------
 
 Now that you've got a traditional Liberty application up and running on the platform, it's time to evolve it!
 
 Check [this](extra.md) out!
+
