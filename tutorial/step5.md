@@ -34,9 +34,7 @@ This information will include connectivity details for the Order database, the I
     ```
 
 1. Click `Create`
-![orderdb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/orderdbConfigMapJson.png)
-
-
+<br />![orderdb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/orderdbConfigMapJson.png)<br />
 1. Click Create Configmap
 1. In the dialog box, provide the name ```inventorydb```
 1. Toggle the ```JSON mode``` button to enter JSON mode
@@ -98,7 +96,7 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
     ],
 
     ```
-![Deploy Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/DeployJSON.png)
+<br />![Deploy Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/DeployJSON.png)</br>
 1.Select Deploy.
 
 #### Expose the application
