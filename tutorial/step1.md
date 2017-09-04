@@ -4,6 +4,7 @@ In this step, we are going to make the modifications needed both at the applicat
 
 1.  [Source Code Migration](#source-code-migration)
     - [Get the code](#get-the-code)
+    - [Tidy your development environment](#tidy-your-development-environment)
     - [Software Analyzer Configuration](#software-analyzer-configuration)
     - [Run the Software Analyzer](#run-the-software-analyzer)
 2. [Configure the Liberty Server](#configure-the-liberty-server)
@@ -58,6 +59,46 @@ A migration dialog might pop up after importing the projects into the eclipse wo
 ![Source migration 39](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source39.png)
 
 Disregard this piece of advice by clicking on cancel. The runtime migration will be done in the following sections.
+
+### Tidy your development environment
+
+When we use/create a new development environment, it is most likely that we will need to tidy it up a bit since installation paths, development tools versions and things like that might very well be different from the original development environment.
+
+As you can see when you import the projects into eclipse, we get those projects with red error marks.
+
+![Source migration 40](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source40.png)
+
+You can open the problems view (Window --> Show view --> Other...) in order to see what the problems in your workspace are. If you do so, you should be able to find errors for each of the projects regarding the build path. That is, the references to the Java and WebSphere libraries we have in our projects need to be updated for our new development environment.
+
+Hence, right click on each of the projects and go to Properties. Once the properties dialog opens up, go to Java Build Path on the left hand side sections panel and then click on the Libraries tab. You should now see something similar to the following:
+
+![Source migration 41](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source41.png)
+
+We then need to fix the paths for the two **unbound** libaries which are the JRE System Library and the Server Library. As you can see, both are yet pointing to the WebSphere Application Server traditional V7.0 libraries from the old/original development environment. To update those libraries to point to the appropriate path in your environment, you need to select each of the libraries and click on the edit button on the right hand side of the properties dialog.
+
+For the JRE System Library, select the last option which says Workspace default JRE.
+
+![Source migration 42](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source42.png)
+
+For the Server Library, select the only WebSphere Application Server Liberty option.
+
+![Source migration 43](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source43.png)
+
+**Repeat the above for all the projects**
+
+After updating the references to our actual Server and JRE System libraries, we should clean and rebuild the entire workspace. For doing so, click on Project --> Clean...
+
+![Source migration 45](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source45.png)
+
+If we look now to the Problems view, we should see many less problems:
+
+![Source migration 44](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source44.png)
+
+However, we still see problems. In this case, we want to sort out the Xpath is invalid error. To sort it out, click on CustomerOrderServicesWeb project, which is the one the errors are found on, and select properties. On the properties dialog, go to Validation section on the left hand side, scroll down to the last validator which is XSL Validator and right click on it. Deselect both Manual and Build options.
+
+![Source migration 46](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source46.png)
+
+Finally, clean and build the workspace. You should now see only Target runtime errors which we will get fixed in the next section.
 
 ### Software Analyzer Configuration
 
