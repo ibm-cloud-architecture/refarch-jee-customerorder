@@ -139,8 +139,8 @@ We will load the variables from properties files located in the tutorial/tutoria
 1. Create the ConfigMaps
     
     ```
-    $ kubectl create configmap orderdb --from-file=tutorial/tutorialConfigFiles/step5/order-db.properties
-    $ kubectl create configmap inventorydb --from-file=tutorial/tutorialConfigFiles/step5/inventory-db.properties
+    $ kubectl create configmap orderdb --from-file=tutorial/tutorialConfigFiles/step5/orderdb.properties
+    $ kubectl create configmap inventorydb --from-file=tutorial/tutorialConfigFiles/step5/inventorydb.properties
     $ kubectl create configmap ldap --from-file=tutorial/tutorialConfigFiles/step5/ldap.properties
     ```
 
