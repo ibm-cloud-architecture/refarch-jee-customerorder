@@ -34,6 +34,8 @@ This information will include connectivity details for the Order database, the I
     ```
 
 1. Click `Create`
+![orderdb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/orderdbConfigMapJson.png)
+
 
 1. Click Create Configmap
 1. In the dialog box, provide the name ```inventorydb```
@@ -87,23 +89,16 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
     ```
     "envFrom": [
         {
-            "configMapRef": {
-                "name": "orderdb"
-            }
-        },
-        {
-            "configMapRef": {
-                "name": "inventorydb"
-            }
-        },
-        {
-            "configMapRef": {
-                "name": "ldap"
-            }
+            "configMapRef": { "name": "orderdb" }
+        },{
+            "configMapRef": { "name": "inventorydb" }
+        },{
+            "configMapRef": { "name": "ldap"}
         }
     ],
-    
+
     ```
+![Deploy Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/DeployJSON.png)
 1.Select Deploy.
 
 #### Expose the application
@@ -142,7 +137,7 @@ This information will include connectivity details for the Order database, the I
 We will load the variables from properties files located in the tutorial/tutorialConfigFiles/step5 directory.
 
 
-    ```
+
 1. Create the ConfigMaps
     
     ```
@@ -176,7 +171,7 @@ NAME                                        READY     STATUS    RESTARTS   AGE
 customerorderservices-3052797159-wgv0c      1/1       Running   0          24s
 websphere-jenkins-jenkin-2215263535-hqbqv   1/1       Running   0          6d
 ```
-1. To see the container log of a pod
+2. To see the container log of a pod
    `$ kubectl logs customerorderservices<pod-id>` 
 ```
 Launching defaultServer (WebSphere Application Server 17.0.0.2/wlp-1.0.17.cl170220170523-1818) on IBM J9 VM, version pxa6480sr4fp10-20170727_01 (SR4 FP10) (en_US)
@@ -199,7 +194,5 @@ com.ibm.net.SocketKeepAliveParameters
 [AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, ejbLite-3.1, servlet-3.1, ssl-1.0, jndi-1.0, localConnector-1.0, federatedRegistry-1.0, appSecurity-2.0, jdbc-4.1, jaxrs-1.1, el-3.0, ldapRegistry-3.0, json-1.0, distributedMap-1.0, beanValidation-1.0, jpa-2.0].
 [AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
 ```   
-1. To see some information about a given pod
-   `$ kubectl describe pod customerorderservices<pod-id>
-
-`
+3. To see some information about a given pod
+   `$ kubectl describe pod customerorderservices<pod-id>`
