@@ -44,7 +44,7 @@ cd ~/PurpleCompute/eclipse
 4. Import projects
 
 - Click on File --> Import...
-- On the dialog that pops up, select Existing Projects into Workspace in the General folder.
+- On the dialog that pops up, select Existing Projects into Workspace in the General folder and click Next.
 
 ![Source migration 37](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source37.png)
 
