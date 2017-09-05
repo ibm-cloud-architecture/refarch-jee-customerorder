@@ -22,7 +22,7 @@ Before building the application, on your skytap machine, go to **/home/skytap/Pu
 
 #### Get the project repository
 
-You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application. If you already completed a clone in Step 1 of this tutorial, skip that line in the below steps.
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application. 
 
 1. `cd git`
 2. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
@@ -64,12 +64,12 @@ For this tutorial, we provide you with these configuration files ready to be use
 
 1. Copy server.xml into the Liberty server directory
 ```
-cp /home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.xml \
+cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.xml \
    /home/skytap/PurpleCompute/wlp/usr/servers/defaultServer
 ```
 2. Copy server.env into the Liberty server directory 
 ```
-cp /home/skytap/PurpleCompute/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.env \
+cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step2/server.env \
    /home/skytap/PurpleCompute/wlp/usr/servers/defaultServer
 ```
 
