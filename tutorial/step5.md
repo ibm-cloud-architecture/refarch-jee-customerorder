@@ -1,29 +1,34 @@
-# Step 5. Deploy the Liberty app to IBM Cloud private
+# Step 5. Deploy the Liberty app on your IBM Cloud private
 
-In this final step, we are going to deploy our Liberty app to our IBM Cloud private through the Kubernetes command line interface or the ICp dashboard.
+In this final step, we are going to deploy our containerised Liberty app to our IBM Cloud private through the Kubernetes command line interface and the IBM Cloud private dashboard.
 
+1. [Deploy Liberty app from GUI](#deploy-liberty-app-from-gui)
+    * [Create ConfigMaps (GUI)](#create-configmaps-gui)
+    * [Deploy application (GUI)](#deploy-application-gui)
+    * [Expose the application (GUI)](#expose-the-application-gui)
+    * [Validate application (GUI)](#validate-application-gui)
+2. [Deploy Liberty app from CLI using kubectl](#deploy-liberty-app-from-cli-using-kubectl)
+    * [Create ConfigMaps (CLI)](#create-configmaps-cli)
+    * [Deploy application (CLI)](#deploy-application-cli)
+    * [Validate application (CLI)](#validate-application-cli)
 
-### Prerequisites
-* kubectl
+### Deploy Liberty app from GUI
 
-## Deploy application
-Applications can be deployed both from the ICp Dashboard or using the Kubenetes command line tool `kubectl`
-Both approaches will be described in this guide.
+In order to deploy our Liberty app through the ICp dashboard, we must first log in to ICp Dashboard with username `user1` and the password you created in the previous step.
 
-### From GUI
+####  Create ConfigMaps (GUI)
 
-Log in to ICp Dashboard with username `user1` and the password you created in previous step
-
-####  Create ConfigMaps
-The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod.
-This information will include connectivity details for the Order database, the Inventory database and the LDAP server.
+The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod. This information will include connectivity details for the Order database, the Inventory database and the LDAP server.
 
 1. Log in to the ICp Dashboard as user `user1`
-1. From the navigation menu, select `Configs`
+2. From the navigation menu, select `Workloads --> Configs`
+
+**Order DB Configmap**
+
 1. Click Create Configmap
-1. In the dialog box, provide the name `orderdb`
-1. Toggle the `JSON mode` button to enter JSON mode
-1. in the `data` key enter the following JSON snippet
+2. In the dialog box, provide the name `orderdb`
+3. Toggle the `JSON mode` button to enter into JSON mode
+4. In the `data` JSON parameter, enter the following JSON snippet as its value
 
     ```
     "DB2_HOST_ORDER": "10.0.0.7",
@@ -32,13 +37,16 @@ This information will include connectivity details for the Order database, the I
     "DB2_USER_ORDER": "db2inst1",
     "DB2_PASSWORD_ORDER": "db2user01"
     ```
+![orderdb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/orderdbConfigMapJson.png)
 
-1. Click `Create`
-<br />![orderdb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/orderdbConfigMapJson.png)<br />
+5. Click `Create`
+
+**Inventory DB Configmap**
+
 1. Click Create Configmap
-1. In the dialog box, provide the name ```inventorydb```
-1. Toggle the ```JSON mode``` button to enter JSON mode
-1. in the ```data``` key enter the following map
+2. In the dialog box, provide the name `inventorydb`
+3. Toggle the `JSON mode` button to enter into JSON mode
+4. in the `data` JSON parameter, enter the following JSON snippet as its value
 
     ```
     "DB2_HOST_INVENTORY": "10.0.0.7",
@@ -48,12 +56,16 @@ This information will include connectivity details for the Order database, the I
     "DB2_PASSWORD_INVENTORY": "db2user01"
     ```
 
-1. Click ```Create```
+![indb ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/indbConfigMapJson.png)
+
+5. Click ```Create```
+
+**LDAP Configmap**
 
 1. Click Create Configmap
-1. In the dialog box, provide the name ```ldap```
-1. Toggle the ```JSON mode``` button to enter JSON mode
-1. in the ```data``` key enter the following map
+2. In the dialog box, provide the name `ldap`
+3. Toggle the `JSON mode` button to enter into JSON mode
+4. in the `data` JSON parameter, enter the following JSON snippet as its value
 
     ```
     "LDAP_HOST": "cap-sg-prd-4.integration.ibmcloud.com",
@@ -64,64 +76,73 @@ This information will include connectivity details for the Order database, the I
     "LDAP_REALM": "SampleLdapIDSRealm"
     ```
 
-1. Click ```Create```
+![ldap ConfigMap Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/ldapConfigMapJson.png)
 
+5. Click ```Create```
 
-#### Deploy application
+#### Deploy application (GUI)
+
 When deploying the application from GUI you will see that the interface will create a similar deployment manifest as you created in step 4, but in JSON format.
+
 You can compare the JSON that the GUI creates with the yaml you created in step 4 to see the similarities.
 
-1. From navigation menu, select Applications.
-1. Select Deploy Application.
-1. On the General tab, provide an application name.
-1. On the Container Settings tab, provide a container name, image name, and port.​​​​​​
+1. From navigation menu, select `Workloads --> Applications`
+2. Select Deploy Application
+3. On the General tab, provide `customerorderservices` as the application name
+4. On the Container Settings tab, provide a container name, image name, and port
     
-    * Application name: customerorderservices
     * Container name: customerorderservices
     * Image name: master.cfc:8500/websphere/customer-order-services:liberty
     * Container port: 9080
 
-1. To be able to expose the information we stored in the ConfigMaps we need to create some entries in the JSON files manually
-   To see underpinning JSON file toggle `JSON mode`
-1. Under `containers` enter
+5. To be able to expose the information we stored in the ConfigMaps we need to create some entries in the JSON files manually. Therefore, toggle the `JSON mode` button to enter into JSON mode
+6. Under `containers` enter
+    
     ```
     "envFrom": [
         {
             "configMapRef": { "name": "orderdb" }
-        },{
+        },
+        {
             "configMapRef": { "name": "inventorydb" }
-        },{
+        },
+        {
             "configMapRef": { "name": "ldap"}
         }
     ],
 
     ```
-<br />![Deploy Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/DeployJSON.png)</br>
-1.Select Deploy.
+    
+![Deploy Json](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/DeployJSON.png)
 
-#### Expose the application
+7. Select Deploy.
+
+#### Expose the application (GUI)
+
 To be able to connect to the application from our workstation we need to expose the application to the external network.
 
-1. From the Applications view, right click the cog wheel for the application and select `Expose`
-1. Fill in Expose Method, Port and Target port. The other fields can be left blank or as default values
+1. From the `Workloads --> Applications` view, click on the settings wheel under the `ACTION` column for the `cusotmerorderservices` application and select `Expose`
+2. Fill in Expose Method, Port and Target port. The other fields can be left blank or as default values
+
     * Expose Method: ClusterIP
     * Port: 80
     * Target Port: 9080
 
-#### Validate application
+#### Validate application (GUI)
 
-1. From the Application View locate the application and click on the application name. 
-1. In the application overview page, locate the `Expose details` section
-1. Click on the `access 80` link
-1. In the new web broswer tab that opens, append `CustomerOrderServicesWeb/` to the URL, resulting in a URL similar to this:
+1. From the `Workloads --> Application` view, locate the application and click on the application name. 
+2. In the application overview page, locate the `Expose details` section
+3. Click on the `access 80` link
+4. In the new web broswer tab that opens, append `CustomerOrderServicesWeb/` to the URL, resulting in a URL similar to this:
     ```
     https://10.0.0.1:8443/kubernetes/api/v1/proxy/namespaces/websphere/services/customerorderservices:80/CustomerOrderServicesWeb/
     ```
-1. Validate that the shop loads with product listings
+5. Validate that the shop loads with product listings
 
-### From kubectl
-To authenticate kubectl you need to grab token and associated information from the ICp Dashboard.
-To do that follow these steps:
+### Deploy Liberty app from CLI using kubectl
+
+To authenticate kubectl you need to grab token and associated information from the ICp Dashboard. To do that follow these steps:
+
 1. Login to ICp Dashboard as `user1`
 2. In the top right corner in the dropdown by the username select `Configure Client`
 3. Copy the text in the textbox
@@ -129,26 +150,26 @@ To do that follow these steps:
 
 You are now authenticated and can use kubectl
 
-####  Create ConfigMaps
-The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod.
-This information will include connectivity details for the Order database, the Inventory database and the LDAP server.
-We will load the variables from properties files located in the tutorial/tutorialConfigFiles/step5 directory.
+####  Create ConfigMaps (CLI)
 
+The environment specific runtime variables for the application will be held in ConfigMaps. We use ConfigMaps to hold deployment specific variables, such that images and deployment manifests can be independent of individual deployments, making it easy to reuse the majority of assets across different environments such as pre-prod and prod. This information will include connectivity details for the Order database, the Inventory database and the LDAP server. We will load the variables from properties files located in the tutorial/tutorialConfigFiles/step5 directory.
 
-
-1. Create the ConfigMaps
+To create the ConfigMaps execute the following:
     
-    ```
-    $ kubectl create configmap orderdb --from-file=tutorial/tutorialConfigFiles/step5/orderdb.properties
-    $ kubectl create configmap inventorydb --from-file=tutorial/tutorialConfigFiles/step5/inventorydb.properties
-    $ kubectl create configmap ldap --from-file=tutorial/tutorialConfigFiles/step5/ldap.properties
-    ```
+```
+cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step5/
+kubectl create configmap orderdb --from-file=orderdb.properties
+kubectl create configmap inventorydb --from-file=inventorydb.properties
+kubectl create configmap ldap --from-file=ldap.properties
+```
 
-1. Run kubectl to apply the deployment
+#### Deploy application (CLI)
 
-    `$ kubectl apply -f deployment.yaml`
+In order to deploye our Customer Order Services application through the command line interface using kubectl, you need to execute:
+
+`kubectl apply -f deployment.yaml`
     
-#### Validate 
+#### Validate application (CLI)
 
 To validate that the application is running properly, grab the Clusters IP address using kubectl
 ```
