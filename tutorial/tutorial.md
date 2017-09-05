@@ -63,7 +63,7 @@ Click [here](step5.md) for the instructions.
 
 ## Extra - Advanced topics
 
-The following are extra work we have done for the Customer Order Services application which are not part of this tutorial goals but are essential topics these days, resulting on a good learning piece for any reader.
+The following are extra work we have done for the CustomerOrderServices application which are not part of this tutorial goals but are essential topics these days, resulting on a good learning piece for any reader.
 
 ### Evolve your monolithic application into microservices
 ---------------------------------------------------------
