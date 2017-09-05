@@ -379,3 +379,5 @@ The reason for this is that the OpenJPA driver treats booleans differently based
 Again, save all the changes, export the EAR project to the WebSphere Liberty folder and start the Server up. You should now see the Customer Order Services web application with no errors at all either on the browser or in the Console tab for WebSphere Liberty in eclipse:
 
 ![Source migration 33](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source33.png)
+
+When completed, stop the Liberty server.
