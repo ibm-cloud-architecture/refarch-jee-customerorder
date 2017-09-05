@@ -48,10 +48,10 @@ node {
         #!/bin/bash
         alias kubectl=kubectl-1.6.1
         
-        # Create configmaps if they dont exist
+        # Create or update configmaps for this environment
         for map in ldap orderdb inventorydb 
         do
-          kubectl get configmap $map || kubectl create configmap $map --from-file=tutorial/tutorialConfigFiles/step5/${map}.properties
+          kubectl apply -f tutorial/tutorialConfigFiles/step5/env-${map}.yaml
         done
         
         # Apply the deployment

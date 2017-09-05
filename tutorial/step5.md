@@ -158,11 +158,10 @@ To create the ConfigMaps execute the following:
     
 ```
 cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step5/
-kubectl create configmap orderdb --from-file=orderdb.properties
-kubectl create configmap inventorydb --from-file=inventorydb.properties
-kubectl create configmap ldap --from-file=ldap.properties
+kubectl apply -f env-inventorydb.yaml  
+kubectl apply -f env-ldap.yaml  
+kubectl apply -f env-orderdb.yaml
 ```
-![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
 
 #### Deploy application (CLI)
 
