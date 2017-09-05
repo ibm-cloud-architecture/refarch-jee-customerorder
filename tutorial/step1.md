@@ -214,9 +214,9 @@ java:app/CustomerOrderServices/ProductSearchServiceImpl!org.pwte.example.service
 
 Save and close the file.
 
-## Configure the Liberty Server
+## Configure the Liberty Server (read only section)
 
-In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can configure it manually by following the steps below or you can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml).
+In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can configure it manually by following the steps below or you can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml). However, this section is completed for you and you can verify the content in the server.xml file.
 
 The IBM WebSphere Application Server Liberty Profile is a composable, dynamic application server environment that supports development and testing of Java EE Full Platform web applications.
 
@@ -317,9 +317,9 @@ At this point, you should already have the server.xml with the needed configurat
 
 ## Run the application
 
-In order to locally run our application now that we seem to have the appropriate source code of the application and the server configuration migrated to WebSphere Liberty, we right-click on the CustomerOrderServicesApp project and select export --> EAR file
+In order to locally run our application now that we seem to have the appropriate source code of the application and the server configuration migrated to WebSphere Liberty, we right-click on the CustomerOrderServicesApp project and select Export --> EAR file.
 
-We are presented with a dialog to export our project as an EAR file. In this dialog, we must give our EAR project the appropriate name **CustomerOrderServicesApp** and the proper destination **_WebSphere-Liberty-Installation-path_/usr/shared/apps**. Finally, we optimize the application to run on WebSphere Application Server Liberty and select the Overwrite existing file option in case there was an existing application with he same name already.
+We are presented with a dialog to export our project as an EAR file. In this dialog, we must give our EAR project the appropriate name **CustomerOrderServicesApp** and the proper destination **/home/skytap/PurpleCompute/wlp/usr/shared/apps**. Finally, we optimize the application to run on WebSphere Application Server Liberty and select the Overwrite existing file option in case there was an existing application with he same name already.
 
 ![Source migration 21](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source21.png)
 
