@@ -20,6 +20,12 @@ In order to carry out this tutorial, you will need a development environment wit
 
 In our case, a skytap development environment will be provided with the tools aforementioned already installed on it.
 
+### SkyTap images ###
+
+Use the PurpleCompute series of SkyTap images for this tutorial.
+Login to your skytap machine on the NFS/Jumpbox vm image.
+Use the password: A1rb0rn3
+
 ### Step 1. Modernise application to run on WebSphere Liberty profile (Optional)
 --------------------------------------------------------------------------------
 
