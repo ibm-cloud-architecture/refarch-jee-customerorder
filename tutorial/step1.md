@@ -76,17 +76,19 @@ Hence, right click on each of the projects and go to Properties. Once the proper
 
 We then need to fix the paths for the two **unbound** libaries which are the JRE System Library and the Server Library. As you can see, both are yet pointing to the WebSphere Application Server traditional V7.0 libraries from the old/original development environment. To update those libraries to point to the appropriate path in your environment, you need to select each of the libraries and click on the edit button on the right hand side of the properties dialog.
 
-For the JRE System Library, select the last option which says Workspace default JRE.
+For the JRE System Library, select the last option which says Workspace default JRE and click Finish.
 
 ![Source migration 42](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source42.png)
 
-For the Server Library, select the only WebSphere Application Server Liberty option.
+For the Server Library, repeat the steps but select the only WebSphere Application Server Liberty option and click Finish.
 
 ![Source migration 43](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source43.png)
 
-**Repeat the above for all the projects**
+Click OK to close the properties window.
 
-After updating the references to our actual Server and JRE System libraries, we should clean and rebuild the entire workspace. For doing so, click on Project --> Clean...
+**Repeat the above for all the projects!**
+
+After updating the references to our actual Server and JRE System libraries, we should clean and rebuild the entire workspace. For doing so, click on Project --> Clean... Verify Clean all projects is selected and click OK.
 
 ![Source migration 45](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source45.png)
 
@@ -94,11 +96,11 @@ If we look now to the Problems view, we should see many less problems:
 
 ![Source migration 44](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source44.png)
 
-However, we still see problems. In this case, we want to sort out the Xpath is invalid error. To sort it out, click on CustomerOrderServicesWeb project, which is the one the errors are found on, and select properties. On the properties dialog, go to Validation section on the left hand side, scroll down to the last validator which is XSL Validator and right click on it. Deselect both Manual and Build options.
+However, we still see problems. In this case, we want to sort out the Xpath is invalid error. To sort it out, click on CustomerOrderServicesWeb project, which is the one the errors are found on, and select Properties. On the properties dialog, select Validation on the left hand side, scroll down to the last validator which is XSL Validator and right click on it. Deselect both Manual and Build options.
 
 ![Source migration 46](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source46.png)
 
-Finally, clean and build the workspace. You should now see only Target runtime errors which we will get fixed in the next section.
+Click Apply and OK. Finally, clean and build the workspace. You should now see only Target runtime errors which we will get fixed in the next section.
 
 ### Software Analyzer Configuration
 
@@ -106,17 +108,17 @@ More precisely, we are going to use the Software Analyzer that the WAMT comes wi
 
 ![Source migration 1](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source1.png)
 
-Now, **right-click** on _Sofwtare Analyzer_ and select **New**. Give a relevant and appropriate name to the new configuration and click on the **Rules** tab for this configuration. Select the **WebSphere Application Server Version Migration** option for the _Rule Sets_ dropdown menu and click **Set...**
+Now, **right-click** on _Sofwtare Analyzer_ and select **New**. Give a relevant and appropriate name to the new configuration and click on the **Rules** tab for this configuration. Select the **WebSphere Application Server Version Migration** option for the _Rule Sets_ dropdown menu and click **Set...**  If this step is already completed for you, just select the Rule set and examine the details.
 
 ![Source migration 2](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source2.png)
 
-The Rule set configuration panel should be displayed. This panel must be configured so that the appropriate set of rules based on our migration requirements are applied during the software analysis of our applications.
+The Rule set configuration panel should be displayed. This panel must be configured so that the appropriate set of rules based on our migration requirements are applied during the software analysis of our applications. Click OK when done.
 
 ![Source migration 3](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source3.png)
 
 ### Run the Software Analyzer
 
-After running the _Software Analyzer_ you should see a _Software Analyzer Results_ tab at the bottom. The Software Analyzer rules are categorised, and so are the errors and warnings produced in its report, in four categories: **Java Code Review, XML File Review, JSP Code Review and File Review**. We must go through each of these tabs/categories and review the errors and warnings as code/configuration changes might be needed.
+Click Analyze. After running the _Software Analyzer_ you should see a _Software Analyzer Results_ tab at the bottom. The Software Analyzer rules are categorised, and so are the errors and warnings produced in its report, in four categories: **Java Code Review, XML File Review, JSP Code Review and File Review**. We must go through each of these tabs/categories and review the errors and warnings as code/configuration changes might be needed.
 
 ![Source migration 4](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source4.png)
 
@@ -128,7 +130,7 @@ Along with the warning and errors reported, the WebSphere Application Migration 
 
 ![Source migration 6](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source6.png)
 
-If you scroll down to the bottom and press on the "detailed help" button it will show you additional ideas on how to resolve that problem.
+If you scroll down to the bottom and click Detailed help, it will show you additional ideas on how to resolve that problem.
 
 ![Source migration 7](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source7.png)
 
@@ -140,7 +142,7 @@ However, if we click on the Show all runtimes option, we see the other runtimes 
 
 ![Source migration 9](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source9.png)
 
-In our case, the problem resides in the current WebSphere Application Server version 7 specific facets we have installed in our projects for them to properly run on that WebSphere version. As a result, we now need to uninstall them. For doing so, click on the Uninstall Facets... hyperlink presented on this panel and then deselect all WebSphere specific facets you might find active.
+In our case, the problem resides in the current WebSphere Application Server version 7 specific facets we have installed in our projects for them to properly run on that WebSphere version. As a result, we now need to uninstall them. For doing so, click the Uninstall Facets... hyperlink presented on this panel and then deselect all WebSphere specific facets you might find active.
 
 ![Source migration 10](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source10.png)
 
@@ -209,6 +211,9 @@ Therefore, we need to change it to
 ```
 java:app/CustomerOrderServices/ProductSearchServiceImpl!org.pwte.example.service.ProductSearchService
 ```
+
+Save and close the file.
+
 ## Configure the Liberty Server
 
 In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can configure it manually by following the steps below or you can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml).
