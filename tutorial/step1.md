@@ -58,7 +58,7 @@ A migration dialog will pop up after importing the projects into the eclipse wor
 
 ![Source migration 39](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source39.png)
 
-Disregard this piece of advice by clicking on Cancel. The runtime migration will be done in the following sections.
+Disregard this piece of advice by clicking on Cancel. In the migration cancel window, click OK. The runtime migration will be done in the following sections.
 
 ### Tidy your development environment
 
