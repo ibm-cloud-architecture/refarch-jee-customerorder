@@ -48,23 +48,27 @@ In this step, we are going to write the needed configuration files, deployment f
 
 Click [here](step4.md) for the instructions.
 
-### Step 5. Deploy the Liberty app to IBM Cloud private
--------------------------------------------------------
+### Step 5. Deploy the Liberty app on your IBM Cloud private
+------------------------------------------------------------
 
 In this final step, we are going to deploy our Liberty app to our IBM Cloud private through the Kubernetes command line interface.
 
 Click [here](step5.md) for the instructions.
 
-### DevOps - Build and deploy using Jenkins 
---------------------------------------------
+## Extra - Advanced topics
 
-There is always time to be lazy. All steps above to compile, build and deploy the application can be automated.
-Read [these](DevOps/DevOps.md) instructions to setup Jenkins on ICp to do the job for you.
+The following are extra work we have done for the Customer Order Services application which are not part of this tutorial goals but are essential topics these days, resulting on a good learning piece for any reader.
 
-### (Extra) Homework. Evolve your monolithic application into microservices
----------------------------------------------------------------------------
+### Evolve your monolithic application into microservices
+---------------------------------------------------------
 
 Now that you've got a traditional Liberty application up and running on the platform, it's time to evolve it!
 
 Check [this](extra.md) out!
+
+### DevOps - Build and deploy using Jenkins 
+--------------------------------------------
+
+There is always time to be lazy. All steps above to compile, build and deploy the application can be automated.
+Read [these](DevOps/DevOps.md) instructions to setup Jenkins on IBM Cloud private to do the job for you.
 
