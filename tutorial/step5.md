@@ -1,6 +1,6 @@
 # Step 5. Deploy the Liberty app on your IBM Cloud private
 
-In this final step, we are going to deploy our containerised Liberty app to our IBM Cloud private through the Kubernetes command line interface and the IBM Cloud private dashboard.
+In this final step, we are going to deploy our containerized Liberty app to our IBM Cloud private (ICp) through the Kubernetes command line interface and the IBM Cloud private dashboard.
 
 1. [Deploy Liberty app from GUI](#deploy-liberty-app-from-gui)
     * [Create ConfigMaps (GUI)](#create-configmaps-gui)
