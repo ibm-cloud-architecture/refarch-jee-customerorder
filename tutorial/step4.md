@@ -2,16 +2,16 @@
 
 In this step, we are going to write the needed configuration files, deployment files, etc for a container orchestrator such as Kubernetes to get our Liberty app appropriately deployed onto our virtulized infrastructure.
 
-1. [Preparation steps](#preparation-steps)
+
     * [Create user and namespace](#create-user-and-namespace)
-2. [Push image to ICp Image Repository](#push-image-to-icp-image-repository)
+1. [Push image to ICp Image Repository](#push-image-to-icp-image-repository)
     * [Re-Tag image](#re-tag-image)
     * [Push image](#push-image)
-3. [Generate deployment yaml file](#generate-deployment-yaml-file)
+2. [Generate deployment yaml file](#generate-deployment-yaml-file)
 
-### Preparation steps
+### Push image to ICp Image Repository
 
-Before we upload images and start deployment we will create a separate user and namespace in kubernetes where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
+IBM Cloud private provides a docker compatible image repository out of the box, which is available on the server `master.cfc` port `8500`. However, before we upload container/docker images and start deploying these, we will create a separate user and namespace in kubernetes for us, where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
 
 #### Create user and namespace
 
@@ -31,10 +31,6 @@ In order to add a user to a namespace,
 3. Enter `user1` as the user name, and provide a password and email address.
 4. Select Namespace `websphere`
 5. Click Add User
-
-### Push image to ICp Image Repository
-
-ICp provides a docker compatible image repository out of the box, which is available on the server `master.cfc` port `8500`
 
 #### Re-Tag image
 
@@ -66,7 +62,7 @@ You will now be able to see the image in the ICp Dashboard under *Infrastructure
 
 ### Generate deployment yaml file
 
-Our deployment file will look like this
+Our [deployment yaml file](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/blob/liberty/tutorial/tutorialConfigFiles/step5/deployment.yaml), which specifies how we want our application (i.e. the container) to be deployed, looks like this:
 
 ```
 apiVersion: v1
@@ -116,8 +112,8 @@ spec:
 
 You can see there are two parts in this file, separated by `---`. The three dashes is a yaml construct that allows us to put the content of multiple files in a single file.
 
-Above the dashes is the Service, indicated by `kind: Service`. Here we describe how we like the application to be exposed. In our case we choose to use ClusterIP, which means the application will receive an IP address from the 10.1.0.0/16 IP address range
+Above the dashes is the **Service**, indicated by `kind: Service`. Here we describe how we like the application to be exposed. In our case, we choose to use ClusterIP, which means the application will receive an IP address from the 10.1.0.0/16 IP address range.
 
-The next part is the deployment part, indicated by `kind: Deployment`. Here we describe what we want the target state of the application to be. In our example instruct a single container to be named `customerorderservices` and created from the image we pushed to our image repository
+The next part is the **deployment** part, indicated by `kind: Deployment`. Here we describe what we want the target state of the application to be. In our example, we instruct a single container to be named `customerorderservices` and created from the image we pushed to our image repository previously.
 
-The envFrom section tells kubernetes to populate the containers environment variables from a ConfigMap which we will create in Step 5. These variables holds deployment specific information, such as database host,port,user,password. This enables us to reuse the same image and deployment manifests in multiple deployment environments such as pre-prod and prod at the same time.
+The envFrom section tells kubernetes to populate the containers environment variables from a ConfigMap, which we will create in Step 5. These variables holds deployment specific information such as database host, port, user and password. This enables us to reuse the same image and deployment manifests in multiple deployment environments such as pre-prod and prod at the same time having their specifics set aside in separate ConfigMap files.
