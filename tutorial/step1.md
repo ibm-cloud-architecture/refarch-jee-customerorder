@@ -54,11 +54,11 @@ cd ~/PurpleCompute/eclipse
 
 - Eclipse will directly detect all the projects within that fodler and select them all. Click Finish.
 
-A migration dialog might pop up after importing the projects into the eclipse workspace since eclipse will detect such projects are configured to run on a runtime that it is not aware of. As a result, it pops up with a workspace migration dialog
+A migration dialog will pop up after importing the projects into the eclipse workspace since eclipse will detect such projects are configured to run on a runtime that it is not aware of. As a result, it pops up with a workspace migration dialog.
 
 ![Source migration 39](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source39.png)
 
-Disregard this piece of advice by clicking on cancel. The runtime migration will be done in the following sections.
+Disregard this piece of advice by clicking on Cancel. The runtime migration will be done in the following sections.
 
 ### Tidy your development environment
 
