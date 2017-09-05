@@ -1,4 +1,4 @@
-# Step 4. Write Kubernetes YAMLs, including Deployment and Services stanzas.
+# Step 4. Write Kubernetes YAMLs, including Deployment and Services stanzas
 
 In this step, we are going to write the needed configuration files, deployment files, etc for a container orchestrator such as Kubernetes to get our Liberty app appropriately deployed onto our virtulized infrastructure.
 
@@ -27,9 +27,9 @@ In order to add a user to a namespace,
 
 1. Navigate to the `Users` tab.
 2. Click New User.
-3. Enter `user1` as the user name, and provide a password and email address.
-4. Select Namespace `websphere`
-5. Click Add User
+3. Enter `user1` as the name, and provide a password and email address.
+4. Select Namespace `websphere`.
+5. Click Add User.
 
 #### Re-Tag image
 
