@@ -162,6 +162,7 @@ kubectl apply -f env-inventorydb.yaml
 kubectl apply -f env-ldap.yaml  
 kubectl apply -f env-orderdb.yaml
 ```
+![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
 
 #### Deploy application (CLI)
 
