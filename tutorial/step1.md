@@ -48,7 +48,7 @@ cd ~/PurpleCompute/eclipse
 
 ![Source migration 37](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source37.png)
 
-- In the next dialog, browse to ```~/PurpleCompute/git/refarch-jee-customerorder``` for the root directory and click ok. 
+- In the next dialog, browse to ```/home/skytap/PurpleCompute/git/refarch-jee-customerorder``` for the root directory and click Browse. 
 
 ![Source migration 38](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source38.png)
 
