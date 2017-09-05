@@ -53,23 +53,6 @@ Using this docker file, we build a docker image and using this image we will lau
 
 #### Build the container image from Dockerfile
 
-Start **Docker** in your machine.
-
-----
-**Note** - While using docker commands, if you are getting the following message in your skytap environment, please add `sudo` before your instruction.
-
-Eg. `docker images`
-
-```
-Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.30/images/json: dial unix /var/run/docker.sock: connect: permission denied
-```
-
-Then use `sudo docker images`
-
-```
-REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
-hello-world                                         latest              1815c82652c0        2 months ago        1.84kB
-```
 ----
 
 Before building the docker image, replace the server.xml and server.env.remote files used by Dockerfile for the ones provided for this tutorial
@@ -80,9 +63,9 @@ Before building the docker image, replace the server.xml and server.env.remote f
 Finally, we are now ready to build the container:
 
 1. `cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder`
-2. `sudo docker build -t "customer-order-services:liberty" .`
+2. `docker build -t "customer-order-services:liberty" .`
 
-You can verify your docker image using the command `sudo docker images`. You will find the image.
+You can verify your docker image using the command `docker images`. You will find the image.
 
 ```
 REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
@@ -91,7 +74,7 @@ customer-order-services                             liberty             8c3e4d87
 
 #### Run the containerised app
 
-Run the docker image: `sudo docker run -p 9080 customer-order-services:liberty`
+Run the docker image: `docker run -p 9080 customer-order-services:liberty`
 
 When it is complete, you can see the below output.
 
@@ -106,7 +89,7 @@ Now your application is running locally. To check it out, open your browser and 
 
 http://localhost:{PORT}/CustomerOrderServicesWeb/#shopPage
  
-To get your port, use the command: `sudo docker ps`
+To get your port, use the command: `docker ps`
 
 ```
  CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
