@@ -68,7 +68,7 @@ As you can see when you import the projects into eclipse, we get those projects 
 
 ![Source migration 40](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source40.png)
 
-You can open the problems view (Window --> Show view --> Other...) in order to see what the problems in your workspace are. If you do so, you should be able to find errors for each of the projects regarding the build path. That is, the references to the Java and WebSphere libraries we have in our projects need to be updated for our new development environment.
+You can open the problems view (Window --> Show View --> Other... --> Problems) in order to see what the problems in your workspace are. If you do so, you should be able to find errors for each of the projects regarding the build path. That is, the references to the Java and WebSphere libraries we have in our projects need to be updated for our new development environment.
 
 Hence, right click on each of the projects and go to Properties. Once the properties dialog opens up, go to Java Build Path on the left hand side sections panel and then click on the Libraries tab. You should now see something similar to the following:
 
