@@ -14,15 +14,15 @@ In this step, we are going to build and run the Liberty app locally and connect 
 
 Before building the application, on your skytap machine, go to **/home/skytap/PurpleCompute**. This is the home directory from where we run the lab:
 
-1. Login to your skytap machine.
+1. Login to your skytap machine on the NFS/Jumpbox vm image.
 2. Open your terminal.
-3. Enter `cd PurpleCompute`
+3. Enter `cd ~/PurpleCompute`
 
 ### Build the Liberty app
 
 #### Get the project repository
 
-You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application. If you already completed a clone in Step 1 of this tutorial, skip that line in the below steps.
 
 1. `cd git`
 2. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
