@@ -162,13 +162,16 @@ kubectl create configmap orderdb --from-file=orderdb.properties
 kubectl create configmap inventorydb --from-file=inventorydb.properties
 kubectl create configmap ldap --from-file=ldap.properties
 ```
+![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
 
 #### Deploy application (CLI)
 
 In order to deploye our Customer Order Services application through the command line interface using kubectl, you need to execute:
 
 `kubectl apply -f deployment.yaml`
-    
+
+![CLI deply](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/deployCLI.png)
+
 #### Validate application (CLI)
 
 To validate that the application is running properly, grab the Clusters IP address using kubectl
@@ -176,9 +179,12 @@ To validate that the application is running properly, grab the Clusters IP addre
 kubectl get service customerorderservices
 ```
 
+![CLI service](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/serviceCLI.png)
+
+
 Using a web broswer, navigate to the IP address for the Cluster with the path of `CustomerOrderServicesWeb`, so the full URL should look something this:
 ```
-http://10.0.0.147/CustomerOrderServicesWeb/
+http://10.0.1.9/CustomerOrderServicesWeb/
 ```
 
 There are some handy kubectl commands to interrogate the application and do debugging
