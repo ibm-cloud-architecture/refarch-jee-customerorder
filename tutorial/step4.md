@@ -2,9 +2,8 @@
 
 In this step, we are going to write the needed configuration files, deployment files, etc for a container orchestrator such as Kubernetes to get our Liberty app appropriately deployed onto our virtulized infrastructure.
 
-
-    * [Create user and namespace](#create-user-and-namespace)
 1. [Push image to ICp Image Repository](#push-image-to-icp-image-repository)
+    * [Create user and namespace](#create-user-and-namespace)
     * [Re-Tag image](#re-tag-image)
     * [Push image](#push-image)
 2. [Generate deployment yaml file](#generate-deployment-yaml-file)
