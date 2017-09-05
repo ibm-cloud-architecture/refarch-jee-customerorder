@@ -89,13 +89,13 @@ Now, you are done with the configuration and the app is ready for deployment. To
 2. Before starting the server, to make sure all the utilities are installed, run the following command: `./installUtility install defaultServer` <sup>\*</sup>_(If it prompts you to accept the license by pressing 1, please accept it)_
 3. Start the server: `./server start defaultServer`
 4. Open your browser and point it to http://localhost:9080/CustomerOrderServicesWeb/#shopPage
-6. Login as the user `rbarcia` with the password of `bl0wfish`
+5. Login as the user `rbarcia` with the password of `bl0wfish`
 
 <p align="center">
 <img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/step2apprunning.png">
 </p>
 
-7. Finally, stop the server: `./server stop defaultServer`
+6. Finally, stop the server: `./server stop defaultServer`
 
 
 
