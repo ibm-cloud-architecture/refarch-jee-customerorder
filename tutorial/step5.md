@@ -93,7 +93,7 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
     
     * Container name: customerorderservices
     * Image name: master.cfc:8500/websphere/customer-order-services:liberty
-    * Container port: 9080
+    * Container Port: 9080
 
 5. To be able to expose the information we stored in the ConfigMaps we need to create some entries in the JSON files manually. Therefore, toggle the `JSON mode` button to enter into JSON mode.
 6. Under `containers` enter:
@@ -122,15 +122,17 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
 To be able to connect to the application from our workstation we need to expose the application to the external network.
 
 1. From the `Workloads --> Applications` view, click on the settings wheel under the `ACTION` column for the `cusotmerorderservices` application and select `Expose`.
-2. Fill in Expose Method, Port and Target port. The other fields can be left blank or as default values
+2. Fill in Expose method, Port and Target Port. The other fields can be left blank or as default values
 
-    * Expose Method: ClusterIP
+    * Expose method: ClusterIP
     * Port: 80
     * Target Port: 9080
+    
+ 3. Click `Expose`.   
 
 #### Validate application (GUI)
 
-1. From the `Workloads --> Application` view, locate the application and click on the application name. 
+1. From the `Workloads --> Application` view, locate the application and click on the application name, customerorderservices. 
 2. In the Application Overview page, locate the `Expose Details` section.
 3. Click on the `access 80` endpoint link.
 4. In the new web broswer tab that opens, append `CustomerOrderServicesWeb/` to the URL, resulting in a URL similar to this:
@@ -141,9 +143,9 @@ To be able to connect to the application from our workstation we need to expose 
 
 ### Deploy Liberty app from CLI using kubectl
 
-To authenticate kubectl you need to grab token and associated information from the ICp dashboard. To do that follow these steps:
+To authenticate kubectl you need to grab token and associated information from the ICp Dashboard. To do that follow these steps:
 
-1. Login to ICp dashboard as `user1`.
+1. Verify that you are logged in to the ICp dashboard as `user1`.
 2. In the top right corner in the dropdown by the username select `Configure Client`.
 3. Copy the text in the textbox.
 4. Paste the text into a terminal window.
@@ -186,6 +188,8 @@ Using a web broswer, navigate to the IP address for the Cluster with the path of
 ```
 http://10.0.1.9/CustomerOrderServicesWeb/
 ```
+
+Verify that the page loads properly.
 
 There are some handy kubectl commands to interrogate the application and do debugging
 
