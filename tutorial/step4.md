@@ -20,7 +20,7 @@ In order to create a namespace,
 
 1. From the navigation menu, select System > Namespaces.
 2. Click New Namespace.
-3. Enter a namespace name `websphere`
+3. Enter a namespace name: `websphere`
 4. Click Add Namespace.
 
 In order to add a user to a namespace,
@@ -48,9 +48,9 @@ To make the image available to use in Kubernetes enter the following commands
 1. `docker login master.cfc:8500` providing `user1` as the user and the password you created above
 2. `docker push master.cfc:8500/websphere/customer-order-services:liberty`
 
-You will now be able to see the image in the ICp Dashboard under *Infrastructure -> Images*
+You will now be able to see the image in the ICp Dashboard under *Infrastructure -> Images*.
 
-When completed, sign out of the ICp Dashboard.
+When completed, sign out of the ICp dashboard.
 
 ### Generate deployment yaml file
 
