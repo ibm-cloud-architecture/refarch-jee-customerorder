@@ -216,7 +216,7 @@ Save and close the file.
 
 ## Configure the Liberty Server 
 
-In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml). After you download the server.xml file, you examine the file.
+In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml). After you download the server.xml file, you examine the contents of the file. No changes need to be made in this section.
 
 The IBM WebSphere Application Server Liberty Profile is a composable, dynamic application server environment that supports development and testing of Java EE Full Platform web applications.
 
