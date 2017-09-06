@@ -107,4 +107,4 @@ As usual, login as the user `rbarcia` with the password of `bl0wfish`.
 <img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/AppRunningLocally.png">
 </p>
 
-After doing all the desired verifications, stop the running container by pressing `ctrl+c`
+After doing all the desired verifications, stop the running container by pressing `ctrl+c` in the terminal window where the server is started.
