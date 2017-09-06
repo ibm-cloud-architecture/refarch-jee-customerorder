@@ -198,7 +198,6 @@ There are some handy kubectl commands to interrogate the application and do debu
 ```
 NAME                                        READY     STATUS    RESTARTS   AGE
 customerorderservices-3052797159-wgv0c      1/1       Running   0          24s
-websphere-jenkins-jenkin-2215263535-hqbqv   1/1       Running   0          6d
 ```
 2. To see the container log of a pod
    `$ kubectl logs customerorderservices<pod-id>` 
