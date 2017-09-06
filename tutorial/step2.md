@@ -22,7 +22,7 @@ Before building the application, on your skytap machine, go to **/home/skytap/Pu
 
 #### Get the project repository
 
-You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application. 
+You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application. If you completed Step1.md in this tutorial, then skip the git clone command as this is already completed on the image.
 
 1. `cd git`
 2. `git clone https://github.com/ibm-cloud-architecture/refarch-jee-customerorder.git`
