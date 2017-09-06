@@ -14,7 +14,7 @@ IBM Cloud private (ICp) provides a docker compatible image repository out of the
 
 #### Create user and namespace
 
-In your web broswer login to the the ICp dashboard on `https://10.0.0.1:8443` as a system administrator, username `admin` and password `admin`.
+In your web broswer login to the the ICp Dashboard on `https://10.0.0.1:8443` as a system administrator, username `admin` and password `admin`.
 
 In order to create a namespace,
 
