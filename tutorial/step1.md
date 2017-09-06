@@ -216,8 +216,6 @@ Save and close the file.
 
 ## Configure the Liberty Server 
 
-In this section, we are going to see how the Liberty server is configured in order to run the Customer Order Services application. As you will read below, this is done through a configuration file called server.xml which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. You can download an already configured version of it [here](tutorialConfigFiles/step1/server.xml). After you download the server.xml file, you examine the contents of the file. No changes need to be made in this section.
-
 The IBM WebSphere Application Server Liberty Profile is a composable, dynamic application server environment that supports development and testing of Java EE Full Platform web applications.
 
 The Liberty profile is a simplified, lightweight development and application runtime environment that has the following characteristics:
@@ -228,6 +226,14 @@ The Liberty profile is a simplified, lightweight development and application run
 * Extensible. The Liberty profile provides support for user and product extensions, which can use System Programming Interfaces (SPIs) to extend the run time.
 
 The application server configuration is described in a series of elements in the server.xml configuration file. We are now going to see what we need to describe in that server.xml configuration file to get our Liberty server prepared to successfully run our Customer Order Services application.
+
+In this section, we are going to see the different configuration pieces for the Liberty server to run the Customer Order Services application. As said above, this is done by editing the server.xml file which lives in `/home/skytap/PurpleCompute/wlp/usr/servers/defaultServer`. 
+
+You can manually edit this server.xml file yourself using your prefered editor or you can also do so in eclipse:
+
+![Source migration 47](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/toLiberty/Source47.png)
+
+<sup>*</sup>Also, you can directly replace your existing server.xml file with an already configured server.xml version that can be found [here](tutorialConfigFiles/step1/server.xml) and just read through the below explanation of it for your information.
 
 #### 1. Features
 
