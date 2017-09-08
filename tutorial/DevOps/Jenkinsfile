@@ -43,6 +43,9 @@ node {
     stage('Deploy application') {
         /* Update deployment to use latest image */
       sh "sed -i 's/customer-order-services:liberty/customer-order-services:${env.BUILD_NUMBER}/g' tutorial/DevOps/deployment.yaml "
+      
+      /* Update make sure deployment uses the namespace we pushed the image to */
+      sh "sed -i 's|/websphere/customer-order-services|/${params.namespace}/customer-order-services|g' tutorial/DevOps/deployment.yaml "
 
       sh '''
         #!/bin/bash
