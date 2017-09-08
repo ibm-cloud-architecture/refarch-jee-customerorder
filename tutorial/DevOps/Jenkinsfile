@@ -49,7 +49,6 @@ node {
 
       sh '''
         #!/bin/bash
-        alias kubectl=kubectl-1.6.1
         
         # Create or update configmaps for this environment
         for map in ldap orderdb inventorydb 
