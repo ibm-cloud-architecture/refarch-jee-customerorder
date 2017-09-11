@@ -160,9 +160,9 @@ To create the ConfigMaps execute the following:
     
 ```
 cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/
-kubectl create configmap ldap from-env-file=ldap.env
-kubectl create configmap inventorydb from-env-file=inventorydb.env
-kubectl create configmap orderdb from-env-file=orderdb.env
+kubectl create configmap ldap --from-env-file=ldap.env
+kubectl create configmap inventorydb --from-env-file=inventorydb.env
+kubectl create configmap orderdb --from-env-file=orderdb.env
 ```
 ![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
 
@@ -170,7 +170,10 @@ kubectl create configmap orderdb from-env-file=orderdb.env
 
 In order to deploye our Customer Order Services application through the command line interface using kubectl, you need to execute:
 
-`kubectl apply -f deployment.yaml`
+```
+cd step5
+kubectl apply -f deployment.yaml
+```
 
 ![CLI deply](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/deployCLI.png)
 
