@@ -19,7 +19,7 @@ Lets have a look at our [Docker file](https://github.com/ibm-cloud-architecture/
 FROM websphere-liberty:webProfile7
 
 COPY Common/server.xml /config
-COPY Common/server.env.remote /config/server.env
+COPY Common/server.env.docker /config/server.env
 COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
@@ -42,7 +42,7 @@ ADD http://download.osgeo.org/webdav/geotools/com/ibm/db2jcc_license_cu/9/db2jcc
 1. **FROM** instruction is used to set the base image. We are setting the base image to **websphere-liberty:webProfile7**.
 2. **COPY** instruction is used to copy directories and files from a source specified to a destination in the container file system.
    - We are copying the **server.xml** from **Common** directory to **config** folder in the container.
-   - We are replacing the contents of **server.env** in **config** folder with contents of **server.env.remote** in **Common** directory.
+   - We are replacing the contents of **server.env** in **config** folder with contents of **server.env.docker** in **Common** directory.
    - We are also copying the **ear** file from **CustomerOrderServicesApp** and placing it in **apps** folder residing in **config**.
 3. **RUN** instruction helps us to execute the commands. 
    - Here we have a pre-condition to install all the utilities in server.xml. We can use RUN command to install them on top of the base image.
@@ -55,10 +55,10 @@ Using this docker file, we build a docker image and using this image we will lau
 
 ----
 
-Before building the docker image, replace the server.xml and server.env.remote files used by Dockerfile for the ones provided for this tutorial
+Before building the docker image, replace the server.xml file used by Dockerfile for the one provided for this tutorial
 
 1. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.xml /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
-2. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.env.remote /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
+2. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.env.docker /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
 
 Finally, we are now ready to build the container:
 
@@ -73,8 +73,19 @@ customer-order-services                             liberty             8c3e4d87
 ```
 
 #### Run the containerised app
+When starting the container, we feed in environment specific variables to direct the application to the db2 and ldap servers for the lab environment.
+There are three specific files configured: `orderdb.env`, `inventordydb.env` and `ldap.env`. These files are located in `/home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles`
 
-Run the docker image: `docker run -p 9080:9080 customer-order-services:liberty`
+
+Run the docker image: 
+
+```
+docker run \
+  --env-file tutorial/tutorialConfigFiles/ldap.env \
+  --env-file tutorial/tutorialConfigFiles/orderdb.env \
+  --env-file tutorial/tutorialConfigFiles/inventorydb.env \
+  -p 9080:9080 customer-order-services:liberty
+```
 
 When it is complete, you can see the below output.
 

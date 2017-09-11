@@ -1,7 +1,7 @@
 FROM websphere-liberty:webProfile7
 
 COPY Common/server.xml /config
-COPY Common/server.env.remote /config/server.env
+COPY Common/server.env.docker /config/server.env
 COPY CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear /config/apps
 
 RUN /opt/ibm/wlp/bin/installUtility install  --acceptLicense \
