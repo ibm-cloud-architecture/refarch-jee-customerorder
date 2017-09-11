@@ -41,10 +41,11 @@ node {
       sh '''
         #!/bin/bash
         
-        # Create or update configmaps for this environment
-        for map in ldap orderdb inventorydb 
+        
+        # Create configmaps if they dont exist
+        for map in ldap orderdb inventorydb
         do
-          kubectl apply -f tutorial/tutorialConfigFiles/step5/env-${map}.yaml
+          kubectl get configmap $map || kubectl create configmap $map --from-env-file=tutorial/tutorialConfigFiles/${map}.env
         done
         
         # Apply the deployment

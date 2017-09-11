@@ -159,10 +159,10 @@ The environment specific runtime variables for the application will be held in C
 To create the ConfigMaps execute the following:
     
 ```
-cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step5/
-kubectl apply -f env-inventorydb.yaml  
-kubectl apply -f env-ldap.yaml  
-kubectl apply -f env-orderdb.yaml
+cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/
+kubectl create configmap ldap from-env-file=ldap.env
+kubectl create configmap inventorydb from-env-file=inventorydb.env
+kubectl create configmap orderdb from-env-file=orderdb.env
 ```
 ![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
 
