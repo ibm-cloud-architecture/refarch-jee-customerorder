@@ -1,6 +1,6 @@
 # Step 3. Containerize the Liberty app
 
-In this step, we are going to use Docker technology to containerize our Liberty application so that it can be then deployed to a virtualized infrastructure using a containers orchestrator such as Kubernetes.
+In this step, we are going to use Docker technology to containerise our Liberty application so that it can be then deployed to a virtualized infrastructure using a containers orchestrator such as Kubernetes.
 
 1. [Containerise the app](#containerise-the-app)
     * [Dockerfile](#dockerfile)
@@ -74,7 +74,7 @@ customer-order-services                             liberty             8c3e4d87
 
 #### Run the containerised app
 
-Run the docker image: `docker run -p 9080 customer-order-services:liberty`
+Run the docker image: `docker run -p 9080:9080 customer-order-services:liberty`
 
 When it is complete, you can see the below output.
 
@@ -87,24 +87,13 @@ When it is complete, you can see the below output.
 ```
 Now your application is running locally. To check it out, open your browser and point it out to
 
-http://localhost:{PORT}/CustomerOrderServicesWeb/#shopPage
+http://localhost:9080/CustomerOrderServicesWeb/#shopPage
  
-To get your port, use the command: `docker ps`
-
-```
- CONTAINER ID  IMAGE                             COMMAND                  CREATED             STATUS                                             
-4963b17bece0   customer-order-services:liberty   "/opt/ibm/docker/d..."   3 minutes ago       Up 3 minutes        
-
-PORTS                                     NAMES
-9443/tcp, 0.0.0.0:32768->9080/tcp         distracted_shirley
-```
  
-Grab the port and replace it in the url. In this case, port would be **32768**.
-
 As usual, login as the user `rbarcia` with the password of `bl0wfish`.
 
 <p align="center">
 <img src="https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/AppRunningLocally.png">
 </p>
 
-After doing all the desired verifications, stop the running container by pressing `ctrl+c` in the terminal window where the server is started.
+After doing all the desired verifications, stop the running container by pressing `ctrl+c`
