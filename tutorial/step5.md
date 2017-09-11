@@ -164,7 +164,7 @@ kubectl create configmap ldap --from-env-file=ldap.env
 kubectl create configmap inventorydb --from-env-file=inventorydb.env
 kubectl create configmap orderdb --from-env-file=orderdb.env
 ```
-![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/configMapCLI.png)
+![CLI ConfigMaps](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/LibertyToolKit/configmaps.png)
 
 #### Deploy application (CLI)
 
