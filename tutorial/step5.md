@@ -92,7 +92,7 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
 4. On the Container Settings tab, provide a container name, image name, and port:
     
     * Container name: customerorderservices
-    * Image name: master.cfc:8500/websphere/customer-order-services:liberty
+    * Image name: mycluster:8500/websphere/customer-order-services:liberty
     * Container Port: 9080
 
 5. To be able to expose the information we stored in the ConfigMaps we need to create some entries in the JSON files manually. Therefore, toggle the `JSON mode` button to enter into JSON mode.

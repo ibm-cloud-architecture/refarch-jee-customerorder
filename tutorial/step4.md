@@ -10,7 +10,7 @@ In this step, we are going to write the needed configuration files, deployment f
 
 ### Push image to ICp Image Repository
 
-IBM Cloud private (ICp) provides a docker compatible image repository out of the box, which is available on the server `master.cfc` port `8500`. However, before we upload container/docker images and start deploying these, we will create a separate user and namespace in kubernetes for us, where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
+IBM Cloud private (ICp) provides a docker compatible image repository out of the box, which is available on the server `mycluster` port `8500`. However, before we upload container/docker images and start deploying these, we will create a separate user and namespace in kubernetes for us, where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
 
 #### Create user and namespace
 
@@ -37,16 +37,16 @@ To be able to push the image we build in the previous step into the ICp Image Re
 
 From the command line, enter the following command
 ```
-docker tag customer-order-services:liberty master.cfc:8500/websphere/customer-order-services:liberty
+docker tag customer-order-services:liberty mycluster:8500/websphere/customer-order-services:liberty
 ```
-This extra information in the tag tells docker that this image belongs to the repository `websphere` on the `master.cfc:8500` server, which maps to the namespace we created above.
+This extra information in the tag tells docker that this image belongs to the repository `websphere` on the `mycluster:8500` server, which maps to the namespace we created above.
 
 #### Push image
 
 To make the image available to use in Kubernetes enter the following commands
 
-1. `docker login master.cfc:8500` providing `user1` as the user and the password you created above
-2. `docker push master.cfc:8500/websphere/customer-order-services:liberty`
+1. `docker login mycluster:8500` providing `user1` as the user and the password you created above
+2. `docker push mycluster:8500/websphere/customer-order-services:liberty`
 
 You will now be able to see the image in the ICp Dashboard under *Infrastructure -> Images*.
 
@@ -86,7 +86,7 @@ spec:
         app: customerorderservices
     spec:
       containers:
-      - image: master.cfc:8500/websphere/customer-order-services:liberty
+      - image: mycluster:8500/websphere/customer-order-services:liberty
         name: customerorderservices
         ports:
         - containerPort: 9080
