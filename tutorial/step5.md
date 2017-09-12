@@ -1,6 +1,6 @@
-# Step 5. Deploy the Liberty app on your IBM Cloud private
+# Step 5. Deploy the Liberty app on your IBM Cloud Private
 
-In this final step, we are going to deploy our containerized Liberty app to our IBM Cloud private (ICp) through the Kubernetes command line interface and the ICp Dashboard.
+In this final step, we are going to deploy our containerized Liberty app to our IBM Cloud Private (ICP) through the Kubernetes command line interface and the ICP Dashboard.
 
 1. [Deploy Liberty app from GUI](#deploy-liberty-app-from-gui)
     * [Create ConfigMaps (GUI)](#create-configmaps-gui)
@@ -14,7 +14,7 @@ In this final step, we are going to deploy our containerized Liberty app to our 
 
 ### Deploy Liberty app from GUI
 
-In order to deploy our Liberty app through the ICp Dashboard, we must first log in to ICp Dashboard with username `user1` and the password you created in the previous step.
+In order to deploy our Liberty app through the ICP Dashboard, we must first log in to ICP Dashboard with username `user1` and the password you created in the previous step.
 
 ####  Create ConfigMaps (GUI)
 
@@ -96,7 +96,7 @@ You can compare the JSON that the GUI creates with the yaml you created in step 
     * Container Port: 9080
 
 5. To be able to expose the information we stored in the ConfigMaps we need to create some entries in the JSON files manually. Therefore, toggle the `JSON mode` button to enter into JSON mode.
-6. Under `containers` enter:
+6. Within the `containers` attribute, where the deployment definition lists all the containers to be deployed, we should find only one conatiner. This container should be named `customerorderservices`. In order to get this container to read the config maps we created before, we need to add the following attribute below the `port` attribute to the container definition:
     
     ```
     "envFrom": [
@@ -134,11 +134,11 @@ To be able to connect to the application from our workstation we need to expose 
 
 1. From the `Workloads --> Application` view, locate the application and click on the application name, customerorderservices. 
 2. In the Application Overview page, locate the `Expose Details` section.
-3. Click on the `access 80` endpoint link.
-4. In the new web broswer tab that opens, append `CustomerOrderServicesWeb/` to the URL, resulting in a URL similar to this:
-    ```
-    https://10.0.0.1:8443/kubernetes/api/v1/proxy/namespaces/websphere/services/customerorderservices:80/CustomerOrderServicesWeb/
-    ```
+3. Grab the `Cluster IP` ip address.
+4. Open a new web browser tab and point it to the `Cluster IP` ip address from previous step appending `CustomerOrderServicesWeb` at the end of it. The complete address should look like:
+   ```
+   http://10.0.1.127/CustomerOrderServicesWeb/
+   ```
 5. Validate that the shop loads with product listings.
 
 ### Deploy Liberty app from CLI using kubectl
