@@ -53,9 +53,7 @@ Using this docker file, we build a docker image and using this image we will lau
 
 #### Build the container image from Dockerfile
 
-----
-
-Before building the docker image, replace the server.xml file used by Dockerfile for the one provided for this tutorial
+Because the Dockerfile is set to use the files in the `Common` directory from the source code github repo, we must then replace those files with our tutorial specific configuration files before building the Docker image. That is, we need to copy server.xml and server.env.docker files into the `Common` folder.
 
 1. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.xml /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
 2. `cp /home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles/step3/server.env.docker /home/skytap/PurpleCompute/git/refarch-jee-customerorder/Common/`
@@ -63,18 +61,20 @@ Before building the docker image, replace the server.xml file used by Dockerfile
 Finally, we are now ready to build the container:
 
 1. `cd /home/skytap/PurpleCompute/git/refarch-jee-customerorder`
-2. `docker build -t "customer-order-services:liberty" .`
+2. `docker build -t "customer-order-services:liberty" .` (mind the dot at the end)
 
 You can verify your docker image using the command `docker images`. You will find the image.
 
 ```
 REPOSITORY                                          TAG                 IMAGE ID            CREATED             SIZE
 customer-order-services                             liberty             8c3e4d876dad        2 hours ago         424MB
+websphere-liberty                                   webProfile7         5fd996d31e9f        11 hours ago        392MB
 ```
 
 #### Run the containerised app
 When starting the container, we feed in environment specific variables to direct the application to the db2 and ldap servers for the lab environment.
-There are three specific files configured: `orderdb.env`, `inventordydb.env` and `ldap.env`. These files are located in `/home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles`
+There are three specific files configured: `orderdb.env`, `inventordydb.env` and `ldap.env`.
+These files are located in `/home/skytap/PurpleCompute/git/refarch-jee-customerorder/tutorial/tutorialConfigFiles`
 
 
 Run the docker image: 
