@@ -2,19 +2,19 @@
 
 In this step, we are going to write the needed configuration files, deployment files, etc for a container orchestrator such as Kubernetes to get our Liberty app appropriately deployed onto our virtulized infrastructure.
 
-1. [Push image to ICp Image Repository](#push-image-to-icp-image-repository)
+1. [Push image to ICP Image Repository](#push-image-to-icp-image-repository)
     * [Create user and namespace](#create-user-and-namespace)
     * [Re-Tag image](#re-tag-image)
     * [Push image](#push-image)
 2. [Generate deployment yaml file](#generate-deployment-yaml-file)
 
-### Push image to ICp Image Repository
+### Push image to ICP Image Repository
 
-IBM Cloud private (ICp) provides a docker compatible image repository out of the box, which is available on the server `mycluster` port `8500`. However, before we upload container/docker images and start deploying these, we will create a separate user and namespace in kubernetes for us, where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
+IBM Cloud Private (ICP) provides a docker compatible image repository out of the box, which is available on the server `mycluster` port `8500`. However, before we upload container/docker images and start deploying these, we will create a separate user and namespace in kubernetes for us, where the application will be hosted. Namespacing is a concept in Kubernetes that allows isolation of applications and other resources.
 
 #### Create user and namespace
 
-In your web broswer login to the the ICp Dashboard on `https://10.0.0.1:8443` as a system administrator, username `admin` and password `admin`.
+In your web broswer login to the the ICP Dashboard on `https://10.0.0.1:8443` as a system administrator, username `admin` and password `admin`.
 
 In order to create a namespace,
 
@@ -33,7 +33,7 @@ In order to add a user to a namespace,
 
 #### Re-Tag image
 
-To be able to push the image we build in the previous step into the ICp Image Repository, we'll need to add an additional tag to the image we built.
+To be able to push the image we build in the previous step into the ICP Image Repository, we'll need to add an additional tag to the image we built.
 
 From the command line, enter the following command
 ```
@@ -48,9 +48,9 @@ To make the image available to use in Kubernetes enter the following commands
 1. `docker login mycluster:8500` providing `user1` as the user and the password you created above
 2. `docker push mycluster:8500/websphere/customer-order-services:liberty`
 
-You will now be able to see the image in the ICp Dashboard under *Infrastructure -> Images*.
+You will now be able to see the image in the ICP Dashboard under `Infrastructure -> Images`.
 
-When completed, sign out of the ICp dashboard.
+When completed, **sign out of the ICP dashboard**.
 
 ### Generate deployment yaml file
 
