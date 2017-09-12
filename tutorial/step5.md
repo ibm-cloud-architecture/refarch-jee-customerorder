@@ -8,6 +8,7 @@ In this final step, we are going to deploy our containerized Liberty app to our 
     * [Expose the application (GUI)](#expose-the-application-gui)
     * [Validate application (GUI)](#validate-application-gui)
 2. [Deploy Liberty app from CLI using kubectl](#deploy-liberty-app-from-cli-using-kubectl)
+    * [Clean Environment (CLI)](#clean-environment-cli)
     * [Create ConfigMaps (CLI)](#create-configmaps-cli)
     * [Deploy application (CLI)](#deploy-application-cli)
     * [Validate application (CLI)](#validate-application-cli)
@@ -151,6 +152,17 @@ To authenticate kubectl you need to grab token and associated information from t
 4. Paste the text into a terminal window.
 
 You are now authenticated and can use kubectl.
+
+####  Clean Environment (CLI)
+
+If you went through the deployment of the Customer Order Services application using the GUI above, you must clean the environmnet before doing the same using the CLI. For cleaning the environment you must execute the following on your terminal:
+
+```
+kubectl delete all --all
+kubectl delete configmaps --all
+```
+
+![Clean Env](https://github.com/ibm-cloud-architecture/refarch-jee/blob/master/static/imgs/ICp/cleanenv.png)
 
 ####  Create ConfigMaps (CLI)
 
