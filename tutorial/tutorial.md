@@ -1,6 +1,6 @@
-# Tutorial - WebSphere on IBM Cloud private
+# Tutorial - WebSphere on IBM Cloud Private
 
-This tutorial aims to drive readers throughout the process of migrating an existing WebSphere Application Server 7 application to run on the new WebSphere Application Server Liberty profile to then containerise it and deploy it to the on premises IBM Cloud private, orchestrated by Kubernetes.
+This tutorial aims to drive readers throughout the process of migrating an existing WebSphere Application Server 7 application to run on the new WebSphere Application Server Liberty profile to then containerise it and deploy it to the on premises IBM Cloud Private, orchestrated by Kubernetes.
 
 For doing so, we are going to go through the following steps below. Each step will have its instructions on a separate readme file for clarity and simplicity.
 
@@ -54,10 +54,10 @@ In this step, we are going to write the needed configuration files, deployment f
 
 Click [here](step4.md) for the instructions.
 
-### Step 5. Deploy the Liberty app on your IBM Cloud private
+### Step 5. Deploy the Liberty app on your IBM Cloud Private
 ------------------------------------------------------------
 
-In this final step, we are going to deploy our Liberty app to our IBM Cloud private through the Kubernetes command line interface.
+In this final step, we are going to deploy our Liberty app to our IBM Cloud Private through the Kubernetes command line interface.
 
 Click [here](step5.md) for the instructions.
 
@@ -76,5 +76,5 @@ Check [this](extra.md) out!
 --------------------------------------------
 
 There is always time to be lazy. All steps above to compile, build and deploy the application can be automated.
-Read [these](DevOps/DevOps.md) instructions to setup Jenkins on IBM Cloud private to do the job for you.
+Read [these](DevOps/DevOps.md) instructions to setup Jenkins on IBM Cloud Private to do the job for you.
 
