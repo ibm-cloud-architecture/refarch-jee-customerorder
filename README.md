@@ -7,6 +7,7 @@
 * [was70-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-prod) - Production branch for WebSphere Application Server V7.0 application code. Does not contain any IDE specific file. Builds only using Maven.
 * [was90-dev](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-dev) - Development branch for WebSphere Application Server V9.0 application code. Development Environment: eclipse MARS 2 + WAS V9.0. Builds either from eclipse or using Maven.
 * [was90-prod](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was90-prod) - Production branch for WebSphere Application Server V9.0 application code. Does not contain any IDE specific file. Builds only using Maven.
+* [liberty](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/liberty) - Development branch for WebSphere Liberty application code. Builds using Maven and a Dockerfile to conatinerize the application.
 
 ## [WebSphere Application Server Version 7](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/was70-dev)
 
