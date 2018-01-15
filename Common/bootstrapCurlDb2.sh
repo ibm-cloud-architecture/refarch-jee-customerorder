@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
 ##############################################################################
-##
 ##  Wrapper script to manually pull SQL & init database
 ##
 ##  Environment Variables:
 ##  - COS_GIT_ORG     (Defaults to ibm-cloud-architecture)
 ##  - COS_GIT_BRANCH  (Defaults to liberty)
 ##  - ORDERDB_NAME    (Defaults to ORDERDB)
+##  - COS_VERBOSE     (Defaults to unset, use any non-empty value to activate)
+##############################################################################
+
+
+##############################################################################
+## Setup
 ##############################################################################
 
 #Environment variable set by the initial container creation
@@ -38,8 +43,6 @@ file_list=(
   createOrderDB.sql
   initialDataSet.sql
 )
-#InventoryDdl.sql
-#InventoryData.sql
 
 CURL_BIN=$(which curl)
 if [ ${?} -ne 0 ]; then
@@ -53,7 +56,20 @@ if [ ${?} -ne 0 ]; then
   exit 1
 fi
 
-echo "${grn}Downloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...${end}"
+DB2_VERBOSE="tvf"
+DB2_QUIET="tf"
+
+DB2_SWITCH=${DB2}
+if [ -s ${COS_VERBOSE} ];
+then
+  DB2_SWITCH=${VERBOSE_DB2}
+fi
+
+##############################################################################
+## Script
+##############################################################################
+
+echo "${grn}Downloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...\n${end}"
 base_url="https://raw.githubusercontent.com/${git_org}/refarch-jee-customerorder/${git_branch}/Common"
 
 WORKING_DIR=bootstrap-data
@@ -69,24 +85,15 @@ done
 
 printf "\n${grn}Successfully downloaded required database files from branch:${git_branch}\n${end}"
 
-#printf "\n${grn}Attempting to create 'ORDERDB'\n${end}"
-#${DB2_BIN} create database ORDERDB
-#error_check "ORDERDB creation failed."
-
 local_order_db_name=${ORDERDB_NAME:-ORDERDB}
 printf "\n${grn}Attempting to connect to '${local_order_db_name}'\n${end}"
 ${DB2_BIN} connect to ${local_order_db_name}
 error_check "Failed to connect to ${local_order_db_name}."
 
 printf "\n${grn}Attempting to create schema for '${local_order_db_name}'\n${end}"
-${DB2_BIN} -tvf ${WORKING_DIR}/createOrderDB.sql
+${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/createOrderDB.sql
 
 printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'\n${end}"
-${DB2_BIN} -tvf ${WORKING_DIR}/initialDataSet.sql
+${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/initialDataSet.sql
 
 printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.\n${end}"
-
-#db2 create database INDB
-#db2 connect to INDB
-#db2 -tf Common/InventoryDdl.sql
-#db2 -tf Common/InventoryData.sql
