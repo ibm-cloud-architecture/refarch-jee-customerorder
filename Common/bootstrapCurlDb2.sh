@@ -13,7 +13,12 @@
 ##  Environment Variables:
 ##  - COS_GIT_ORG     (Defaults to ibm-cloud-architecture)
 ##  - COS_GIT_BRANCH  (Defaults to liberty)
+##  - ORDERDB_NAME    (Defaults to ORDERDB)
 ##############################################################################
+
+#Environment variable set by the initial container creation
+DB2_USER=${DB2INSTANCE:-db2inst1}
+su - ${DB2_USER}
 
 # Terminal Colors
 red=$'\e[1;31m'
@@ -55,8 +60,6 @@ if [ ${?} -ne 0 ]; then
   exit 1
 fi
 
-# clone repos
-#currepo=$(git rev-parse --show-toplevel|awk -F '/' '{print $NF}')
 echo "${grn}Downloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...${end}"
 base_url="https://raw.githubusercontent.com/${git_org}/refarch-jee-customerorder/${git_branch}/Common"
 
@@ -73,15 +76,22 @@ done
 
 printf "\n${grn}Successfully downloaded required database files from branch:${git_branch}\n${end}"
 
-printf "\n${grn}Attempting to create 'ORDERDB'\n${end}"
-${DB2_BIN} create database ORDERDB
-error_check "ORDERDB creation failed."
+#printf "\n${grn}Attempting to create 'ORDERDB'\n${end}"
+#${DB2_BIN} create database ORDERDB
+#error_check "ORDERDB creation failed."
 
-${DB2_BIN} connect to ORDERDB
-error_check "Failed to connect to ORDERDB."
+local_order_db_name=${ORDERDB_NAME:-ORDERDB}
+printf "\n${grn}Attempting to connect to '${local_order_db_name}'\n${end}"
+${DB2_BIN} connect to ${local_order_db_name}
+error_check "Failed to connect to ${local_order_db_name}."
 
-${DB2_BIN} -tvf Common/createOrderDB.sql
-error_check "ORDERDB SQL execution failed."
+printf "\n${grn}Attempting to create schema for '${local_order_db_name}'\n${end}"
+${DB2_BIN} -tvf ${WORKING_DIR}/createOrderDB.sql
+
+printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'\n${end}"
+${DB2_BIN} -tvf ${WORKING_DIR}/initialDataSet.sql
+
+printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.\n${end}"
 
 #db2 create database INDB
 #db2 connect to INDB
