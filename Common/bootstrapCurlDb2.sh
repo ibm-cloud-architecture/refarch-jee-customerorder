@@ -7,9 +7,7 @@
 ##  - COS_GIT_ORG     (Defaults to ibm-cloud-architecture)
 ##  - COS_GIT_BRANCH  (Defaults to liberty)
 ##  - ORDERDB_NAME    (Defaults to ORDERDB)
-##  - COS_VERBOSE     (Defaults to unset, use any non-empty value to activate)
 ##############################################################################
-
 
 ##############################################################################
 ## Setup
@@ -56,11 +54,6 @@ if [ ${?} -ne 0 ]; then
   exit 1
 fi
 
-DB2_QUIET="tf"
-DB2_VERBOSE="tvf"
-
-[ -z ${COS_VERBOSE} ] && DB2_SWITCH=${DB2_VERBOSE} || DB2_SWITCH=${DB2_QUIET}
-
 ##############################################################################
 ## Script
 ##############################################################################
@@ -87,9 +80,9 @@ ${DB2_BIN} connect to ${local_order_db_name}
 error_check "Failed to connect to ${local_order_db_name}."
 
 printf "\n${grn}Attempting to create schema for '${local_order_db_name}'${end}\n"
-${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/createOrderDB.sql
+${DB2_BIN} -tf ${WORKING_DIR}/createOrderDB.sql
 
 printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'${end}\n"
-${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/initialDataSet.sql
+${DB2_BIN} -tf ${WORKING_DIR}/initialDataSet.sql
 
 printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.${end}\n"
