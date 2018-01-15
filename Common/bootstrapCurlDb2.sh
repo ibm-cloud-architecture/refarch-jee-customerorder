@@ -31,7 +31,7 @@ coffee3="${coffee} ${coffee} ${coffee}"
 
 function error_check {
   if [ ${?} -ne 0 ]; then
-    echo "${red}${1}${end}"
+    echo "\n${red}${1}${end}\n"
     exit 1
   fi
 }
@@ -56,20 +56,17 @@ if [ ${?} -ne 0 ]; then
   exit 1
 fi
 
-DB2_VERBOSE="tvf"
 DB2_QUIET="tf"
+DB2_VERBOSE="tvf"
 
 DB2_SWITCH=${DB2_QUIET}
-if [ -s ${COS_VERBOSE} ];
-then
-  DB2_SWITCH=${DB2_VERBOSE}
-fi
+[ -z ${COS_VERBOSE} ] && DB2_SWITCH=${DB2_VERBOSE}
 
 ##############################################################################
 ## Script
 ##############################################################################
 
-echo "${grn}\nDownloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...\n${end}"
+echo "\n${grn}Downloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...${end}\n"
 base_url="https://raw.githubusercontent.com/${git_org}/refarch-jee-customerorder/${git_branch}/Common"
 
 WORKING_DIR=bootstrap-data
@@ -79,21 +76,21 @@ mkdir ${WORKING_DIR}
 for file in ${file_list[@]}
 do
   file_url="${base_url}/${file}"
-  printf "\n\n${grn}Downloading ${file_url}...\n${end}"
+  printf "\n${grn}Downloading ${file_url}...${end}\n"
   ${CURL_BIN} --output ${WORKING_DIR}/${file} --progress-bar ${file_url}
 done
 
-printf "\n${grn}Successfully downloaded required database files from branch:${git_branch}\n${end}"
+printf "\n${grn}Successfully downloaded required database files from branch:${git_branch}${end}\n"
 
 local_order_db_name=${ORDERDB_NAME:-ORDERDB}
-printf "\n${grn}Attempting to connect to '${local_order_db_name}'\n${end}"
+printf "\n${grn}Attempting to connect to '${local_order_db_name}'${end}\n"
 ${DB2_BIN} connect to ${local_order_db_name}
 error_check "Failed to connect to ${local_order_db_name}."
 
-printf "\n${grn}Attempting to create schema for '${local_order_db_name}'\n${end}"
+printf "\n${grn}Attempting to create schema for '${local_order_db_name}'${end}\n"
 ${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/createOrderDB.sql
 
-printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'\n${end}"
+printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'${end}\n"
 ${DB2_BIN} -${DB2_SWITCH} ${WORKING_DIR}/initialDataSet.sql
 
-printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.\n${end}"
+printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.${end}\n"
