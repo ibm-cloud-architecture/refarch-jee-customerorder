@@ -59,17 +59,17 @@ fi
 DB2_VERBOSE="tvf"
 DB2_QUIET="tf"
 
-DB2_SWITCH=${DB2}
+DB2_SWITCH=${DB2_QUIET}
 if [ -s ${COS_VERBOSE} ];
 then
-  DB2_SWITCH=${VERBOSE_DB2}
+  DB2_SWITCH=${DB2_VERBOSE}
 fi
 
 ##############################################################################
 ## Script
 ##############################################################################
 
-echo "${grn}Downloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...\n${end}"
+echo "${grn}\nDownloading database files from ${git_org}/refarch-jee-customerorder branch:${origin_branch}...\n${end}"
 base_url="https://raw.githubusercontent.com/${git_org}/refarch-jee-customerorder/${git_branch}/Common"
 
 WORKING_DIR=bootstrap-data
