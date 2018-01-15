@@ -80,9 +80,9 @@ ${DB2_BIN} connect to ${local_order_db_name}
 error_check "Failed to connect to ${local_order_db_name}."
 
 printf "\n${grn}Attempting to create schema for '${local_order_db_name}'${end}\n"
-${DB2_BIN} -tf ${WORKING_DIR}/createOrderDB.sql
+${DB2_BIN} -tvf ${WORKING_DIR}/createOrderDB.sql
 
 printf "\n${grn}Attempting to load initial data for '${local_order_db_name}'${end}\n"
-${DB2_BIN} -tf ${WORKING_DIR}/initialDataSet.sql
+${DB2_BIN} -tvf ${WORKING_DIR}/initialDataSet.sql
 
 printf "\n${grn}Database '${local_order_db_name}' bootstrapped for application use.${end}\n"
