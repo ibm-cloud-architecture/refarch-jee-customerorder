@@ -4,12 +4,6 @@
 ##
 ##  Wrapper script to manually pull SQL & init database
 ##
-##  Parameters:
-##  - DB2_HOST
-##  - DB2_PORT        (Defaults to 50000)
-##  - DB2_USER        (Defaults to db2inst1)
-##  - DB2_PASSWORD
-##
 ##  Environment Variables:
 ##  - COS_GIT_ORG     (Defaults to ibm-cloud-architecture)
 ##  - COS_GIT_BRANCH  (Defaults to liberty)
@@ -18,7 +12,6 @@
 
 #Environment variable set by the initial container creation
 DB2_USER=${DB2INSTANCE:-db2inst1}
-su - ${DB2_USER}
 
 # Terminal Colors
 red=$'\e[1;31m'
@@ -43,10 +36,10 @@ git_org=${COS_GIT_ORG:-ibm-cloud-architecture}
 git_branch=${COS_GIT_BRANCH:-liberty}
 file_list=(
   createOrderDB.sql
-  InventoryDdl.sql
-  InventoryData.sql
   initialDataSet.sql
 )
+#InventoryDdl.sql
+#InventoryData.sql
 
 CURL_BIN=$(which curl)
 if [ ${?} -ne 0 ]; then
