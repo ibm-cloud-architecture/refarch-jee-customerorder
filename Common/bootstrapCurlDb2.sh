@@ -59,8 +59,7 @@ fi
 DB2_QUIET="tf"
 DB2_VERBOSE="tvf"
 
-DB2_SWITCH=${DB2_QUIET}
-[ -z ${COS_VERBOSE} ] && DB2_SWITCH=${DB2_VERBOSE}
+[ -z ${COS_VERBOSE} ] && DB2_SWITCH=${DB2_VERBOSE} || DB2_SWITCH=${DB2_QUIET}
 
 ##############################################################################
 ## Script
