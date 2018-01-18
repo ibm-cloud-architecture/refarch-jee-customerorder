@@ -44,13 +44,13 @@ file_list=(
 
 CURL_BIN=$(which curl)
 if [ ${?} -ne 0 ]; then
-  echo "${red}'curl' not found on your local system.${end} Please install git and try again."
+  echo "${red}'curl' not found on your local system.${end} Please install curl and try again."
   exit 1
 fi
 
 DB2_BIN=$(which db2)
 if [ ${?} -ne 0 ]; then
-  echo "${red}'db2' not found on your local system.${end} Please install git and try again."
+  echo "${red}'db2' not found on your local system.${end} Please install db2 and try again."
   exit 1
 fi
 
