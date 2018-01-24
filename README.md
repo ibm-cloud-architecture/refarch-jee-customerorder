@@ -44,14 +44,8 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 As said in the prerequisites section above, the Customer Order Services application uses uses DB2 as its database. Follow these steps to create the appropriate database, tables and data the application needs to:
 
-1. Copy the [**createOrderDB.sql**](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/createOrderDB.sql) and [**initialDataSet.sql**](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/initialDataSet.sql) files you can find in the [**Common**](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/liberty/Common) directory of this repository over to the db2 host machine (or git clone the repository) in order to execute them later.
-2. Ssh into the db2 host
-3. Change to the db2 instance user: `su {database_instance_name}`
-4. Start db2: `db2start`
-5. Create the **ODRDERDB** database: `db2 create database ORDERDB`
-6. Connect to the **ORDERDB** database: `db2 connect to ORDERDB`
-7. Execute the **createOrderDB.sql** script you copied over in step 1 in order to create the appropriate tables, relationships, primary keys, etc: `db2 -tf createOrderDB.sql`
-8. Execute the **initialDataSet.sql** script you copied over in step 1 to populate the **ORDERDB** database with the needed initial data set: `db2 -tf initialDataSet.sql`
+1. Ssh into the db2 host
+2. Execute `su - ${DB2INSTANCE} -c "bash <(curl -s https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/bootstrapCurlDb2.sh)"` where `${DB2INSTANCE}` is the db2 instance user you set up (it usually is _db2inst1_)
 
 If you want to re-run the scripts, please make sure you drop the databases and create them again.
 
