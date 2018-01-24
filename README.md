@@ -124,6 +124,6 @@ You should now be able to log into the Customer Order Services application with 
 
 We are now ready to run the application. We just need to copy the output of building our application with Maven in step 3 to the appropriate location in our WebSphere Liberty Server installation directory and start the server:
 
-1. `cp CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear <wlp_installation_directory>/wlp/usr/servers/<server_name>/apps`
+1. `cp CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear <wlp_installation_directory>/wlp/usr/shared/apps`
 2. `cd <wlp_installation_directory>/wlp/bin`
 3. `./server start`
