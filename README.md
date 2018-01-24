@@ -32,6 +32,15 @@ In order to build, deploy and run the Customer Order Services application we wil
 2. [Maven](https://maven.apache.org/install.html)
 3. [WebSphere Application Server Liberty Server](https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_inst.html) *(The installation consist of only unzipping a zip file. Also, follow README.TXT inside this unzipped directory)*
 
+#### Create a Liberty server
+
+In oder to create a liberty server:
+
+1. `cd <wlp_installation_directory>/wlp/bin`, where `<wlp_installation_directory>` is a the Liberty Server installation directory of your choice.
+2. `./server create <server_name>`, where `<server_name>` is the name for the Liberty Server you are about to create.
+
+IMPORTANT: Remember `<wlp_installation_directory>` and `<server_name>` which will be used throughout these instructions.
+
 #### Getting the project repository
 
 You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
@@ -44,8 +53,14 @@ You can clone the repository from its main GitHub repository page and checkout t
 
 As said in the prerequisites section above, the Customer Order Services application uses uses DB2 as its database. Follow these steps to create the appropriate database, tables and data the application needs to:
 
-1. Ssh into the db2 host
-2. Execute `su - ${DB2INSTANCE} -c "bash <(curl -s https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/bootstrapCurlDb2.sh)"` where `${DB2INSTANCE}` is the db2 instance user you set up (it usually is _db2inst1_)
+1. Copy the [**createOrderDB.sql**](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/createOrderDB.sql) and [**initialDataSet.sql**](https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common/initialDataSet.sql) files you can find in the [**Common**](https://github.com/ibm-cloud-architecture/refarch-jee-customerorder/tree/liberty/Common) directory of this repository over to the db2 host machine (or git clone the repository) in order to execute them later.
+2. Ssh into the db2 host
+3. Change to the db2 instance user: `su {database_instance_name}`
+4. Start db2: `db2start`
+5. Create the **ODRDERDB** database: `db2 create database ORDERDB`
+6. Connect to the **ORDERDB** database: `db2 connect to ORDERDB`
+7. Execute the **createOrderDB.sql** script you copied over in step 1 in order to create the appropriate tables, relationships, primary keys, etc: `db2 -tf createOrderDB.sql`
+8. Execute the **initialDataSet.sql** script you copied over in step 1 to populate the **ORDERDB** database with the needed initial data set: `db2 -tf initialDataSet.sql`
 
 If you want to re-run the scripts, please make sure you drop the databases and create them again.
 
@@ -69,13 +84,11 @@ The Liberty profile is a simplified, lightweight development and application run
 
 [Here](https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_feat.html) you can see the technologies that the WebSphere Application Server Liberty support on its different flavors.
 
-The application server configuration is described in a series of elements in the server.xml configuration file. This file can be found in **<wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml**, where
-- *<wlp_installation_directory>* is the directory where the WebSphere Application Server Liberty Server has been installed and
-- *<server_name>* the name of the Liberty Server you created in the [tools](#tools) section above by following the README.TXT file that comes within the *<wlp_installation_directory>*.
+The application server configuration is described in a series of elements in the server.xml configuration file. This file can be found in **<wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml**.
 
 In order to get our Liberty server prepared to successfully run our Customer Order Services application, we need to replace the default server.xml and server.env files with the ones provided in the **Common** folder of this repo:
 
-- **server_ldap.xml and server_ldap.env** if you want to integrate the application with an existing LDAP server
+- **server_ldap.xml** and **server_ldap.env** if you want to integrate the application with an existing LDAP server
 
 ```
 cp Common/server_ldap.xml <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml
@@ -84,14 +97,14 @@ cp Common/server_ldap.env <wlp_installation_directory>/wlp/usr/servers/<server_n
 
 or
 
-- **server_no_ldap.xml and server_no_ldap.env** if you do not have an LDAP server to integrate the application with
+- **server_no_ldap.xml** and **server_no_ldap.env** if you do not have an LDAP server to integrate the application with
 
 ```
 cp Common/server_no_ldap.xml <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml
 cp Common/server_no_ldap.env <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.env
 ```
 
-**IMPORTANT:** the .env file declares the values for the variables the server.xml file depends on. That is, you need to define the appropriate values in there for your DB2 (and LDAP) configuration.
+**IMPORTANT:** the .env file declares the values for the variables the server.xml file depends on. That is, you **must to define the appropriate values in there for your DB2 (and LDAP) configuration**.
 
 Finally, you **must** provide the Customer Order Services application with the appropriate DB2 jar files for a JEE application to interact with a DB2 database. These jar files are the **db2jcc4.jar** and the **db2jcc_license_cu.jar** files. You should be able to find them by issuing the command `find / -name "<jar_file_name>"` on the host where your DB2 instance is installed on.
 You **must** copy these DB2 jar files onto the machine you will run the Customer Order Services application on and specify the location of them in the **server.env** file mentioned above as the value of the variable **DB2_JARS**.
@@ -120,4 +133,9 @@ We are now ready to run the application. We just need to copy the output of buil
 
 1. `cp CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear <wlp_installation_directory>/wlp/usr/shared/apps`
 2. `cd <wlp_installation_directory>/wlp/bin`
-3. `./server start`
+3. `./server start <server_name>`
+
+### 7. Verify the application
+
+In order to verify whether our application is working or not, point your web browser to `http://localhost:9081/CustomerOrderServicesWeb/`.
+If the application does not show up properly or any error occurs, please check the Liberty Server log files at `<wlp_installation_directory>/wlp/usr/servers/<server_name>/logs`

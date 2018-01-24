@@ -19,7 +19,7 @@
     <properties.db2.jcc  user="${env.DB2_USER}" password="${env.DB2_PASSWORD}" databaseName="${env.DB2_DBNAME}" serverName="${env.DB2_HOST}" portNumber="${env.DB2_PORT}"/>
     <connectionManager agedTimeout="0" connectionTimeout="180" maxIdleTime="1800" maxPoolSize="10" minPoolSize="1" reapTime="180"/>
   </dataSource>
-  <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint">
+  <httpEndpoint host="*" httpPort="9081" httpsPort="9444" id="defaultHttpEndpoint">
     <tcpOptions soReuseAddr="true"/>
   </httpEndpoint>
   <keyStore id="defaultKeyStore" password="${env.KEYSTORE_PASSWORD}"/>
@@ -27,7 +27,7 @@
     <idsFilters groupFilter="(&amp;(cn=%v)(objectclass=groupOfUniqueNames))" groupIdMap="*:cn" groupMemberIdMap="mycompany-allGroups:member;mycompany-allGroups:uniqueMember;groupOfNames:member;groupOfUniqueNames:uniqueMember" userFilter="(&amp;(uid=%v)(objectclass=inetorgperson))" userIdMap="*:uid">
     </idsFilters>
   </ldapRegistry>
-  <application id="customerOrderServicesApp" name="CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" type="ear" location="${shared.app.dir}/apps/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear">
+  <application id="customerOrderServicesApp" name="CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear" type="ear" location="${shared.app.dir}/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear">
     <classloader apiTypeVisibility="spec, ibm-api, third-party" />
   </application>
 </server>
