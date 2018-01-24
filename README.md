@@ -106,8 +106,68 @@ cp Common/server_no_ldap.env <wlp_installation_directory>/wlp/usr/servers/<serve
 
 **IMPORTANT:** the .env file declares the values for the variables the server.xml file depends on. That is, you **must to define the appropriate values in there for your DB2 (and LDAP) configuration**.
 
-Finally, you **must** provide the Customer Order Services application with the appropriate DB2 jar files for a JEE application to interact with a DB2 database. These jar files are the **db2jcc4.jar** and the **db2jcc_license_cu.jar** files. You should be able to find them by issuing the command `find / -name "<jar_file_name>"` on the host where your DB2 instance is installed on.
+Next, you **must** provide the Customer Order Services application with the appropriate DB2 jar files for a JEE application to interact with a DB2 database. These jar files are the **db2jcc4.jar** and the **db2jcc_license_cu.jar** files. You should be able to find them by issuing the command `find / -name "<jar_file_name>"` on the host where your DB2 instance is installed on.
 You **must** copy these DB2 jar files onto the machine you will run the Customer Order Services application on and specify the location of them in the **server.env** file mentioned above as the value of the variable **DB2_JARS**.
+
+Finally, you need to install all the utilities our Liberty Server will use. For doing so,
+
+1. `cd <wlp_installation_directory>/wlp/bin`
+2. `./installUtility install <server_name>`
+
+You should see an output similar to:
+
+```
+./installUtility install defaultServer
+Checking for missing features required by the server ...
+The server requires the following additional features: jaxrs-1.1 ejblite-3.1 jpa-2.0.  Installing features from the repository ...
+Establishing a connection to the configured repositories ...
+This process might take several minutes to complete.
+
+Successfully connected to all configured repositories.
+
+Preparing assets for installation. This process might take several minutes to complete.
+
+Additional Liberty features must be installed for this server.
+
+To install the additional features, review and accept the feature license agreement:
+
+Additional Features Terms & Conditions:
+By clicking on the "I agree" button , you agree that the program code,
+samples, updates, fixes and related licensed materials such as keys and
+documentation ("Code") that you are about to download are subject to
+the terms of the license agreement that you accepted when you acquired
+the Program for which you are obtaining the Code. You further agree
+that you will install or use the Code solely as part of a Program for
+which you have a valid agreement or Proof of Entitlement. The terms
+"Program" and "Proof of Entitlement" have the same meaning as in the
+IBM International Program License Agreement ("IPLA"). The IPLA is
+available for reference at http://www.ibm.com/software/sla/
+
+
+
+Select [1] I Agree, or [2] I do not Agree:  1
+
+Step 1 of 14: Downloading jdbc-4.0 ...
+Step 2 of 14: Installing jdbc-4.0 ...
+Step 3 of 14: Downloading servlet-3.0 ...
+Step 4 of 14: Installing servlet-3.0 ...
+Step 5 of 14: Downloading beanValidation-1.0 ...
+Step 6 of 14: Installing beanValidation-1.0 ...
+Step 7 of 14: Downloading jpa-2.0 ...
+Step 8 of 14: Installing jpa-2.0 ...
+Step 9 of 14: Downloading jaxrs-1.1 ...
+Step 10 of 14: Installing jaxrs-1.1 ...
+Step 11 of 14: Downloading ejbLite-3.1 ...
+Step 12 of 14: Installing ejbLite-3.1 ...
+Step 13 of 14: Validating installed fixes ...
+Step 14 of 14: Cleaning up temporary files ...
+
+
+All assets were successfully installed.
+
+Start product validation...
+Product validation completed successfully.
+```
 
 ### 5. Users
 
@@ -138,4 +198,5 @@ We are now ready to run the application. We just need to copy the output of buil
 ### 7. Verify the application
 
 In order to verify whether our application is working or not, point your web browser to `http://localhost:9081/CustomerOrderServicesWeb/`.
+
 If the application does not show up properly or any error occurs, please check the Liberty Server log files at `<wlp_installation_directory>/wlp/usr/servers/<server_name>/logs`
