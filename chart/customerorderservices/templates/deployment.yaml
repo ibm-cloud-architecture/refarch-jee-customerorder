@@ -27,10 +27,6 @@ spec:
           requests:
             cpu: "{{ .Values.image.resources.requests.cpu }}"
             memory: "{{ .Values.image.resources.requests.memory }}"
-        volumeMounts:
-        - name: config
-          mountPath: /config
-      volumes:
-      - name: config
-        configMap:
-          name: {{ .Release.Name }}-{{ .Chart.Name }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-{{ .Chart.Name }}
