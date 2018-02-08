@@ -20,6 +20,8 @@ db2:
   port:
   user:
   password:
+  populate:
+  populate_sql_scripts_location: "https://raw.githubusercontent.com/ibm-cloud-architecture/refarch-jee-customerorder/liberty/Common"
 ldap:
   host:
   port:
