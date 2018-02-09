@@ -2,7 +2,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: populate-cos-db-job
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ .Chart.Name }}
 spec:
   template:
     spec:
@@ -26,7 +31,9 @@ spec:
 
               echo "Executing SQL files against ORDERDB" &&
               /home/db2inst1/sqllib/bin/db2cli execsql -dsn order -user {{ .Values.db2.user }} -passwd {{ .Values.db2.password }} -inputsql createOrderDB_job.sql &&
-              /home/db2inst1/sqllib/bin/db2cli execsql -dsn order -user {{ .Values.db2.user }} -passwd {{ .Values.db2.password }} -inputsql initialDataSet_job.sql
+              /home/db2inst1/sqllib/bin/db2cli execsql -dsn order -user {{ .Values.db2.user }} -passwd {{ .Values.db2.password }} -inputsql initialDataSet_job.sql &&
+              echo
+              echo "[SUCCESS]: Cusomer Order Services application's DB has been successfully populated."
         ports:
         - name: http
           containerPort: 50000
