@@ -32,6 +32,15 @@ In order to build, deploy and run the Customer Order Services application we wil
 2. [Maven](https://maven.apache.org/install.html)
 3. [WebSphere Application Server Liberty Server](https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_inst.html) *(The installation consist of only unzipping a zip file. Also, follow README.TXT inside this unzipped directory)*
 
+#### Create a Liberty server
+
+In oder to create a liberty server:
+
+1. `cd <wlp_installation_directory>/wlp/bin`, where `<wlp_installation_directory>` is a the Liberty Server installation directory of your choice.
+2. `./server create <server_name>`, where `<server_name>` is the name for the Liberty Server you are about to create.
+
+IMPORTANT: Remember `<wlp_installation_directory>` and `<server_name>` which will be used throughout these instructions.
+
 #### Getting the project repository
 
 You can clone the repository from its main GitHub repository page and checkout the appropriate branch for this version of the application.
@@ -75,13 +84,11 @@ The Liberty profile is a simplified, lightweight development and application run
 
 [Here](https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_feat.html) you can see the technologies that the WebSphere Application Server Liberty support on its different flavors.
 
-The application server configuration is described in a series of elements in the server.xml configuration file. This file can be found in **<wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml**, where
-- *<wlp_installation_directory>* is the directory where the WebSphere Application Server Liberty Server has been installed and
-- *<server_name>* the name of the Liberty Server you created in the [tools](#tools) section above by following the README.TXT file that comes within the *<wlp_installation_directory>*.
+The application server configuration is described in a series of elements in the server.xml configuration file. This file can be found in **<wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml**.
 
 In order to get our Liberty server prepared to successfully run our Customer Order Services application, we need to replace the default server.xml and server.env files with the ones provided in the **Common** folder of this repo:
 
-- **server_ldap.xml and server_ldap.env** if you want to integrate the application with an existing LDAP server
+- **server_ldap.xml** and **server_ldap.env** if you want to integrate the application with an existing LDAP server
 
 ```
 cp Common/server_ldap.xml <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml
@@ -90,17 +97,77 @@ cp Common/server_ldap.env <wlp_installation_directory>/wlp/usr/servers/<server_n
 
 or
 
-- **server_no_ldap.xml and server_no_ldap.env** if you do not have an LDAP server to integrate the application with
+- **server_no_ldap.xml** and **server_no_ldap.env** if you do not have an LDAP server to integrate the application with
 
 ```
 cp Common/server_no_ldap.xml <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.xml
 cp Common/server_no_ldap.env <wlp_installation_directory>/wlp/usr/servers/<server_name>/server.env
 ```
 
-**IMPORTANT:** the .env file declares the values for the variables the server.xml file depends on. That is, you need to define the appropriate values in there for your DB2 (and LDAP) configuration.
+**IMPORTANT:** the .env file declares the values for the variables the server.xml file depends on. That is, you **must to define the appropriate values in there for your DB2 (and LDAP) configuration**.
 
-Finally, you **must** provide the Customer Order Services application with the appropriate DB2 jar files for a JEE application to interact with a DB2 database. These jar files are the **db2jcc4.jar** and the **db2jcc_license_cu.jar** files. You should be able to find them by issuing the command `find / -name "<jar_file_name>"` on the host where your DB2 instance is installed on.
+Next, you **must** provide the Customer Order Services application with the appropriate DB2 jar files for a JEE application to interact with a DB2 database. These jar files are the **db2jcc4.jar** and the **db2jcc_license_cu.jar** files. You should be able to find them by issuing the command `find / -name "<jar_file_name>"` on the host where your DB2 instance is installed on.
 You **must** copy these DB2 jar files onto the machine you will run the Customer Order Services application on and specify the location of them in the **server.env** file mentioned above as the value of the variable **DB2_JARS**.
+
+Finally, you need to install all the utilities our Liberty Server will use. For doing so,
+
+1. `cd <wlp_installation_directory>/wlp/bin`
+2. `./installUtility install <server_name>`
+
+You should see an output similar to:
+
+```
+./installUtility install defaultServer
+Checking for missing features required by the server ...
+The server requires the following additional features: jaxrs-1.1 ejblite-3.1 jpa-2.0.  Installing features from the repository ...
+Establishing a connection to the configured repositories ...
+This process might take several minutes to complete.
+
+Successfully connected to all configured repositories.
+
+Preparing assets for installation. This process might take several minutes to complete.
+
+Additional Liberty features must be installed for this server.
+
+To install the additional features, review and accept the feature license agreement:
+
+Additional Features Terms & Conditions:
+By clicking on the "I agree" button , you agree that the program code,
+samples, updates, fixes and related licensed materials such as keys and
+documentation ("Code") that you are about to download are subject to
+the terms of the license agreement that you accepted when you acquired
+the Program for which you are obtaining the Code. You further agree
+that you will install or use the Code solely as part of a Program for
+which you have a valid agreement or Proof of Entitlement. The terms
+"Program" and "Proof of Entitlement" have the same meaning as in the
+IBM International Program License Agreement ("IPLA"). The IPLA is
+available for reference at http://www.ibm.com/software/sla/
+
+
+
+Select [1] I Agree, or [2] I do not Agree:  1
+
+Step 1 of 14: Downloading jdbc-4.0 ...
+Step 2 of 14: Installing jdbc-4.0 ...
+Step 3 of 14: Downloading servlet-3.0 ...
+Step 4 of 14: Installing servlet-3.0 ...
+Step 5 of 14: Downloading beanValidation-1.0 ...
+Step 6 of 14: Installing beanValidation-1.0 ...
+Step 7 of 14: Downloading jpa-2.0 ...
+Step 8 of 14: Installing jpa-2.0 ...
+Step 9 of 14: Downloading jaxrs-1.1 ...
+Step 10 of 14: Installing jaxrs-1.1 ...
+Step 11 of 14: Downloading ejbLite-3.1 ...
+Step 12 of 14: Installing ejbLite-3.1 ...
+Step 13 of 14: Validating installed fixes ...
+Step 14 of 14: Cleaning up temporary files ...
+
+
+All assets were successfully installed.
+
+Start product validation...
+Product validation completed successfully.
+```
 
 ### 5. Users
 
@@ -124,6 +191,12 @@ You should now be able to log into the Customer Order Services application with 
 
 We are now ready to run the application. We just need to copy the output of building our application with Maven in step 3 to the appropriate location in our WebSphere Liberty Server installation directory and start the server:
 
-1. `cp CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear <wlp_installation_directory>/wlp/usr/servers/<server_name>/apps`
+1. `cp CustomerOrderServicesApp/target/CustomerOrderServicesApp-0.1.0-SNAPSHOT.ear <wlp_installation_directory>/wlp/usr/shared/apps`
 2. `cd <wlp_installation_directory>/wlp/bin`
-3. `./server start`
+3. `./server start <server_name>`
+
+### 7. Verify the application
+
+In order to verify whether our application is working or not, point your web browser to `http://localhost:9081/CustomerOrderServicesWeb/`.
+
+If the application does not show up properly or any error occurs, please check the Liberty Server log files at `<wlp_installation_directory>/wlp/usr/servers/<server_name>/logs`
