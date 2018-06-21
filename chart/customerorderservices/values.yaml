@@ -15,6 +15,9 @@ image:
 service:
   type: NodePort
   servicePort: 9080
+ingress:
+  enabled: true
+  path: /CustomerOrderServicesWeb
 db2:
   host:
   port:
