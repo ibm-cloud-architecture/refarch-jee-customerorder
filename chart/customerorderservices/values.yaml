@@ -15,6 +15,14 @@ image:
 service:
   type: NodePort
   servicePort: 9080
+ingress:
+  enabled: true
+  path: /CustomerOrderServicesWeb
+  rewriteTarget: /CustomerOrderServicesWeb
+  #Currently 'path' and 'rewriteTarget' should match, based on the way 
+  #the application handles absolute paths to certain Javascript assets.
+  #Additional investigation will be done to determine potential combinations
+  #that allow for non-default context-roots.
 db2:
   host:
   port:

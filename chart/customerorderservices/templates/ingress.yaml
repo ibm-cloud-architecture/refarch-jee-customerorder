@@ -1,0 +1,25 @@
+{{ if .Values.ingress.enabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  labels:
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ .Chart.Name }}
+  annotations:
+    ingress.kubernetes.io/proxy-body-size: "500m"
+    ingress.kubernetes.io/proxy-connect-timeout: "600"
+    ingress.kubernetes.io/proxy-read-timeout: "600"
+    ingress.kubernetes.io/proxy-send-timeout: "600"
+    ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.rewriteTarget}}
+spec:
+  rules:
+  - http: 
+      paths:
+      - backend:
+          serviceName: {{ .Release.Name }}-{{ .Chart.Name }}
+          servicePort: {{ .Values.service.servicePort }}
+        path: {{ .Values.ingress.path }}
+{{ end }}
